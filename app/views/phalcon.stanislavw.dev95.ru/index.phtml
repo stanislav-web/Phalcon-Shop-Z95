@@ -1,0 +1,43 @@
+<?php use Phalcon\Tag as Tag; ?>
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <link rel="shortcut icon" href="favicon.ico" />
+        <?php 
+        	echo Tag::getTitle();
+        	echo Tag::stylesheetLink('http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css');
+        	echo Tag::stylesheetLink('http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css');
+        ?>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+	<div class="navbar">
+		<div class="navbar-inner">
+			<div class="container">
+				<?php echo Tag::image(array('img/logo.png', 'width' => 80)) ?> <h1 class="logo-text"><?php echo $layoutTranslate['TITLE'] ?></h1>
+				<form action="/" method="post" class="navbar-search pull-right">
+					<input type="text" name="pattern" class="search-query" placeholder="<?php echo $layoutTranslate['SEARCH_FOR'] ?>">
+				</form>
+			</div>
+		</div>
+		<div class="navbar-inner navbar-menu">
+			<nav>
+				<!-- Меню навигации -->
+
+				<!-- Меню навигации -->
+			</nav>
+		</div>
+	</div>
+		<?php
+            echo $this->getContent();
+        	echo Tag::javascriptInclude('http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js');
+        	echo Tag::javascriptInclude('http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js');
+        ?>
+		<footer>
+			<div class="language">
+				<?php echo $layoutTranslate['CHANGE_LANGUE'] ?>: <?php echo Tag::linkTo("language/en", "English") ?>  | <?php echo Tag::linkTo("language/ru", "Русский") ?>
+			</div>
+		</footer>
+    </body>
+</html>

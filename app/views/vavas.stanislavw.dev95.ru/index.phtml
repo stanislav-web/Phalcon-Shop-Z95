@@ -1,4 +1,17 @@
 <?php use Phalcon\Tag as Tag; ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<link rel="shortcut icon" href="favicon.ico" />
+	<?php
+		echo Tag::getTitle();
+		echo Tag::stylesheetLink('http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css');
+		echo Tag::stylesheetLink('http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css');
+	?>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
 <div class="navbar">
 	<div class="navbar-inner">
 		<div class="container">
@@ -11,24 +24,20 @@
 	<div class="navbar-inner navbar-menu">
 		<nav>
 			<!-- Меню навигации -->
-			<?php //echo UIElements::getMenu($this, $layoutTranslate) ?>
+
 			<!-- Меню навигации -->
 		</nav>
 	</div>
 </div>
-
-<div class="container">
-	<!-- Выдача контента -->
-	<?php echo $this->getContent() ?>
-	<!-- Выдача контента -->
-	<hr>
-</div>
-
+<?php
+	echo $this->getContent();
+	echo Tag::javascriptInclude('http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js');
+	echo Tag::javascriptInclude('http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js');
+?>
 <footer>
-	<div class="copyright">
-		<?php echo Tag::linkTo("copyright", "Copyright © 2014 Stanislav WEB") ?>
-	</div>
 	<div class="language">
 		<?php echo $layoutTranslate['CHANGE_LANGUE'] ?>: <?php echo Tag::linkTo("language/en", "English") ?>  | <?php echo Tag::linkTo("language/ru", "Русский") ?>
 	</div>
 </footer>
+</body>
+</html>

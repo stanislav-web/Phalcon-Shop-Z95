@@ -11,7 +11,6 @@ class IndexController extends ControllerBase
 	public function initialize()
 	{
 		// устанавливаю шаблон и загружаю локализацию
-		$this->view->setTemplateAfter('main');
 		$this->loadCustomTrans('index');
 		parent::initialize();
 	}
@@ -22,21 +21,19 @@ class IndexController extends ControllerBase
 	 */
 	public function indexAction()
 	{
-		// язык по умолчанию
-		$language = $this->session->get('language');
 
 		// проверка страницы в кэше
-		$exists = $this->view->getCache()->exists($language.'-index');
+		$exists = $this->view->getCache()->exists($this->cachePage(__FUNCTION__));
 		if(!$exists)
 		{
 			//@TODO передать какие нибыдь параметры в $this->viеws
 			$this->view->setVar("name", "Mike");
 		}
-		$this->view->cache(array("lifetime" => 86400, "key" => $language.'-index'));
+		//$this->view->cache(array("lifetime" => 1, "key" => $this->cachePage(__FUNCTION__)));
 	}
 
 	/**
-	 * languageAction() Действие смены локализации на сайте
+	 * languageAction() Смена локализации на сайте
 	 * @access public
 	 */
 	public function languageAction($language = '')
@@ -54,6 +51,5 @@ class IndexController extends ControllerBase
 		else
 			return $this->dispatcher->forward(['controller' => 'index', 'action' => 'index']);
 	}
-
 }
 
