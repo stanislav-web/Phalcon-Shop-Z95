@@ -1,20 +1,30 @@
 <?php
-
-return new \Phalcon\Config(array(
-    'database' => array(
-        'adapter'     => 'Mysql',
+/**
+ * Конфигурация Phalcon
+ */
+$config =  new \Phalcon\Config([
+    'database' => [
+		'adapter'     => 'Mysql',
         'host'        => 'localhost',
         'username'    => 'root',
-        'password'    => '',
-        'dbname'      => 'test',
-    ),
-    'application' => array(
+        'password'    => 'd9eb77mms',
+        'dbname'      => 'Shop',
+    ],
+    'application' => [
         'controllersDir' => __DIR__ . '/../../app/controllers/',
-        'modelsDir'      => __DIR__ . '/../../app/models/',
-        'viewsDir'       => __DIR__ . '/../../app/views/',
+		'helpersDir'     => __DIR__ . '/../../app/helpers/',
+		'librariesDir'   => __DIR__ . '/../../app/libraries/',
+		'messagesDir'    => __DIR__ . '/../../app/messages/',
+		'modelsDir'      => __DIR__ . '/../../app/models/',
+		'viewsDir'       => __DIR__ . '/../../app/views/',
         'pluginsDir'     => __DIR__ . '/../../app/plugins/',
-        'libraryDir'     => __DIR__ . '/../../app/library/',
         'cacheDir'       => __DIR__ . '/../../app/cache/',
-        'baseUri'        => '/../../phalcon.local/',
-    )
-));
+        'baseUri'        => __DIR__ .'/',
+    ],
+    'models' => [
+	    'metadata' => [
+		    'adapter' => 'Apc',
+		    'lifetime' => 86400
+	    ]
+    ]
+]);
