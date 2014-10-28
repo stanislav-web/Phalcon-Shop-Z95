@@ -1,0 +1,57 @@
+/**
+ * Object Common
+ * Управляющий класс
+ */
+var Common =   {
+
+    /**
+     * redirect : function(param) Filter redirect
+     * @param param string
+     * @return null
+     */
+    redirect : function(param) {
+        if(!param ) window.location.assign(location.pathname);
+        else
+        {
+            // filter query or path
+
+            param = param.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+            var regex = new RegExp("[\\?&]" + param + "=([^&#]*)"),
+                results = regex.exec(location.search);
+
+            if(results === null)    // redirect to direct path
+                window.location.assign(param);
+            else // redirect to query string
+                window.location.assign(location.pathname +'?' +decodeURIComponent(results[1].replace(/\+/g, " ")));
+        }
+        return;
+    },
+
+    /**
+     * typeNumber : function(e) onKeydown numeric validation
+     * @param event e (onKeydown)
+     * @access simulate private
+     * return event
+     */
+    typeNumber : function(e) {
+        var theEvent = e || window.event;
+        var key = theEvent.keyCode || theEvent.which;
+        key = String.fromCharCode( key );
+        var regex = /[A-Z]|\./;
+        if(regex.test(key) )
+        {
+            theEvent.returnValue = false;
+            if(theEvent.preventDefault) theEvent.preventDefault();
+        }
+    },
+
+    /**
+     * isNumber : function(n) Check num value
+     * @var int n
+     * @access simulate private
+     * @return boolean
+     */
+    isNumber : function(n) {
+        return !isNaN(parseFloat(n)) && isFinite(n);
+    }
+}

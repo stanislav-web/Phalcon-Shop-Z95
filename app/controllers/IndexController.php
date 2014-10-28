@@ -13,6 +13,9 @@ class IndexController extends ControllerBase
 		// устанавливаю шаблон и загружаю локализацию
 		$this->loadCustomTrans('index');
 		parent::initialize();
+
+		// Заголовок страницы
+		$this->tag->setTitle($this->_shop->title);
 	}
 
 	/**
@@ -21,6 +24,7 @@ class IndexController extends ControllerBase
 	 */
 	public function indexAction()
 	{
+
 		// проверка страницы в кэше
 		$exists = $this->view->getCache()->exists($this->cachePage(__FUNCTION__));
 
@@ -98,7 +102,9 @@ class IndexController extends ControllerBase
 		// Ставлю переадресацию обратно откуда зашел
 
 		$referer = $this->request->getHTTPReferer();
-		if(strpos($referer, $this->request->getHttpHost()."/")!==false) return $this->response->setHeader("Location", $referer);
+
+		if(strpos($referer, $this->request->getHttpHost()."/")!==false)
+			return $this->response->setHeader("Location", $referer);
 		else
 			return $this->dispatcher->forward(['controller' => 'index', 'action' => 'index']);
 	}

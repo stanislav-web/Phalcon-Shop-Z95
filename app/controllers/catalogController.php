@@ -13,8 +13,8 @@ class CatalogController extends ControllerBase
 		$this->loadCustomTrans('catalog');
 		parent::initialize();
 
+		// Заголовок страницы
 		$this->tag->setTitle($this->_shop->title);
-
 
 	}
 

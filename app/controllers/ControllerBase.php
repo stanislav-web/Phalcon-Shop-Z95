@@ -8,7 +8,7 @@
 			 * Допустимые для магазина языки
 			 * @var null
 			 */
-			$_languages   	=   ['ru', 'en'],
+			$_languages   	=   ['ru' => 'Русский', 'en' => 'English'],
 
 			/**
 			 * Текущая локаль
@@ -54,7 +54,7 @@
 			if(!$language)
 			{
 				// устанавливаю язык по умолчанию
-				$this->_language = array_values($this->_languages)[0];
+				$this->_language = array_values(array_flip($this->_languages))[0];
 
 				$this->session->set("language", $this->_language);
 
@@ -63,7 +63,7 @@
 			}
 			else
 			{
-				if(in_array($language, $this->_languages))
+				if(in_array($language, array_flip($this->_languages)))
 				{
 					$this->_language = $language;
 					$this->session->set("language", $this->_language);
@@ -71,7 +71,7 @@
 				}
 				else
 				{
-					$this->_language = array_values($this->_languages)[0];
+					$this->_language = array_values(array_flip($this->_languages))[0];
 					$this->session->set("language", $this->_language);
 				}
 
@@ -152,8 +152,10 @@
 			);
 
 			$this->view->setVars([
-				'shop' 		=> $this->_shop,
-				'topnav' 	=> $nav,
+				'language'	=>	$this->_language,
+				'languages'	=>	$this->_languages,
+				'shop' 		=> 	$this->_shop,
+				'topnav' 	=> 	$nav,
 			]);
 		}
 

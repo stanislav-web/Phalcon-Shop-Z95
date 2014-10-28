@@ -10,7 +10,6 @@
 		public function initialize()
 		{
 			// устанавливаю шаблон и загружаю локализацию
-			$this->view->setTemplateAfter('main');
 			$this->loadCustomTrans('index');
 			parent::initialize();
 		}

@@ -49,64 +49,20 @@
 	<!-- /Block usmodule NAV -->
 	<!-- Block languages module -->
 	<div id="languages-block-top" class="languages-block">
-		<div class="current">
-			<img src="assets/<?php echo $shop->code ?>/images/1.jpg" alt="en" width="16" height="11">
-			<span>English</span>
-		</div>
-		<ul id="first-languages" class="languages-block_ul toogle_content">
-			<li class="selected">
-				<img src="assets/<?php echo $shop->code ?>/images/1.jpg" alt="en" width="16" height="11">
-				<span>English</span>
-			</li>
-			<li>
-				<a href="" title="Français (French)">
-					<img src="assets/<?php echo $shop->code ?>/images/2.jpg" alt="fr" width="16" height="11">
-					<span>Français</span>
-				</a>
-			</li>
-			<li>
-				<a href="" title="Deutsch (German)">
-					<img src="assets/<?php echo $shop->code ?>/images/3.jpg" alt="de" width="16" height="11">
-					<span>Deutsch</span>
-				</a>
-			</li>
-			<li>
-				<a href="" title="Portuguese-Brazil">
-					<img src="assets/<?php echo $shop->code ?>/images/4.jpg" alt="br" width="16" height="11">
-					<span>Portuguese-Brazil</span>
-				</a>
-			</li>
-			<li>
-				<a href="" title="Italiano (Italian)">
-					<img src="assets/<?php echo $shop->code ?>/images/5.jpg" alt="it" width="16" height="11">
-					<span>Italiano</span>
-				</a>
-			</li>
-			<li>
-				<a href="" title="Español (Spanish)">
-					<img src="assets/<?php echo $shop->code ?>/images/6.jpg" alt="es" width="16" height="11">
-					<span>Español</span>
-				</a>
-			</li>
-			<li>
-				<a href="" title="Russian">
-					<img src="assets/<?php echo $shop->code ?>/images/7.jpg" alt="ru" width="16" height="11">
-					<span>Russian</span>
-				</a>
-			</li>
-			<li>
-				<a href="" title="Polish">
-					<img src="assets/<?php echo $shop->code ?>/images/8.jpg" alt="pl" width="16" height="11">
-					<span>Polish</span>
-				</a>
-			</li>
-			<li>
-				<a href="" title="Arabic">
-					<img src="assets/<?php echo $shop->code ?>/images/9.jpg" alt="ar" width="16" height="11">
-					<span>Arabic</span>
-				</a>
-			</li>
-		</ul>
+		<?php if(!empty($languages)): ?>
+			<div class="current">
+				<img src="/assets/<?php echo $shop->code ?>/images/<?=$language;?>.jpg" alt="<?=$language;?>" width="16" height="11">
+				<span><?=$languages[$language];?></span>
+			</div>
+			<ul id="first-languages" class="languages-block_ul toogle_content">
+			<?foreach($languages as $code => $name): ?>
+				<li <?=($code == $language) ? 'class="selected"' : ''?> onclick="Common.redirect('/language/<?=$code;?>');">
+					<img src="/assets/<?php echo $shop->code ?>/images/<?=$code;?>.jpg" alt="<?=$code;?>" width="16" height="11">
+					<span><?=$name;?></span>
+				</li>
+			<?php endforeach; ?>
+			</ul>
+		<?endif;?>
 	</div>
 	<!-- /Block languages module -->
 	<!-- Block currencies module -->
@@ -276,9 +232,8 @@
 					$(".groupe-btn", this)
 						.click(function() {
 							content.toggleClass("show");
-						});
+					});
 				});
-
 		});
 	</script>
 	<!-- Block search module TOP -->

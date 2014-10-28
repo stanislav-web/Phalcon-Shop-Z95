@@ -7,6 +7,8 @@
 		return new \Phalcon\Config($config);
 	});
 
+	// Компонент Navigation. Управление навигацией на сайте
+
 	$di->set('navigation', function() use ($di) {
 		return new \Navigation\Navigation($di->get('config'));
 	}, true);
@@ -70,13 +72,13 @@
 	});
 
 	// Компонент Session. Стартую сессию
-	$di->set('session', function() {
+	$di->setShared('session', function() {
 		$session = new Phalcon\Session\Adapter\Files();
 		$session->start();
 		return $session;
 	});
 
-	// Компонент Cookies. Стартую сессию
+	// Компонент Cookies. Стартую куки
 	$di->set('cookies', function() {
 		$cookies = new Phalcon\Http\Response\Cookies();
 		$cookies->useEncryption(false);
