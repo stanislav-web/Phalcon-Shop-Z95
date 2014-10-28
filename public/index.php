@@ -16,7 +16,7 @@
 
 		require __DIR__.'/../app/config/di.php';
 
-		// Регистрирую пути MVC
+		// Регистрирую  ДИРЕКТОРИИ
 
 		$loader->registerDirs([
 				$config['application']['controllersDir'],

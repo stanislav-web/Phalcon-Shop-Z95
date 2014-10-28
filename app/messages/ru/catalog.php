@@ -1,7 +1,8 @@
 <?php
 	/**
-	 * English localization file for IndexController
+	 * English localization file for CatalogController
 	 */
 	$messages = [
-		"TITLE"                     =>  "Our Shop",
+		"TITLE"                     =>  "Каталог",
+		"COUNT_PRODUCTS"			=>	"Тут %d товаров",
 	];

@@ -17,6 +17,12 @@
 			$_language   	=   null,
 
 			/**
+			 * Обьъект переводов (можно юзать в контроллерах)
+			 * @var object Phalcon\Translate\Adapter\NativeArray
+			 */
+			$_translate   	=   null,
+
+			/**
 			 * Текущий машагин
 			 * @var array
 			 */
@@ -99,12 +105,12 @@
 			require $translationPath.'/'.$transFile.'.php';
 
 			//Return a translation object
-			$controllerTranslate = new Phalcon\Translate\Adapter\NativeArray([
+			$this->_translate = new Phalcon\Translate\Adapter\NativeArray([
 				"content" => $messages
 			]);
 
 			// $viewTranslate - главный объект переводов во views
-			$this->view->setVar("viewTranslate", $controllerTranslate);
+			$this->view->setVar("viewTranslate", $this->_translate);
 		}
 
 		/**
@@ -120,10 +126,11 @@
 
 			// Инициализация магазина
 
-			$shop = Shops::findFirst(array(
-				"host = '{$this->request->getHttpHost()}'",
-				"limit" => 1
-			));
+			$sql = "SELECT ".Shops::TABLE.".*
+				FROM ".Shops::TABLE." WHERE ".Shops::TABLE.".host = '".$this->request->getHttpHost()."' LIMIT 1";
+
+			$shop = (object)$this->db->query($sql)->fetch();
+
 			$this->_shop = $shop;
 
 			// Глобальная видимость во всех шаблонах $this->shop->....

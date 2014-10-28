@@ -1,6 +1,8 @@
 <?php
 class Categories extends \Phalcon\Mvc\Model
 {
+	const TABLE = 'categories';
+
 	/**
 	 * Декларация полей
 	 * @var
