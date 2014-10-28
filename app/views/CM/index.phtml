@@ -13,7 +13,6 @@
 <html class="no-js ie9" lang="en">
 <![endif]-->
 <html lang="en" class="">
-
 <head>
 	<meta charset='utf-8'>
 	<meta name="description" content="">
@@ -93,21 +92,23 @@
 	</script>
 </head>
 <body id="index" class="index hide-left-column hide-right-column lang_en fullwidth">
-<section id="page" data-column="col-xs-12 col-sm-12 col-md-3" data-type="grid">
+	<section id="page" data-column="col-xs-12 col-sm-12 col-md-3" data-type="grid">
 
-	<!-- Header -->
-	<?php $this->partial('partials/header'); ?>
+		<!-- Header -->
+		<?php $this->partial('partials/header'); ?>
+		<!-- /Header -->
 
-	<!-- Top Navigation -->
-	<?php $this->partial('partials/topnavigation'); ?>
-	<!-- /Top Navigation -->
+		<!-- Top Navigation -->
+		<?php $this->partial('partials/topnavigation', array('categories' => $categories, 'newProducts' => $newProducts)); ?>
+		<!-- /Top Navigation -->
 
 		<!-- Content -->
 		<?php echo $this->getContent(); ?>
 		<!-- /Content -->
-	<!-- Footer -->
-	<?php $this->partial('partials/footer'); ?>
-	<!-- Footer -->
+
+		<!-- Footer -->
+		<?php $this->partial('partials/footer'); ?>
+		<!-- Footer -->
 	</section>
 
 	<?php

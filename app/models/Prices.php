@@ -1,4 +1,6 @@
 <?php
+namespace Models;
+
 class Prices extends \Phalcon\Mvc\Model
 {
 	const TABLE = 'prices';

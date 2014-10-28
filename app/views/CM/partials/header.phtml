@@ -1,3 +1,5 @@
+<?php use Phalcon\Tag as Tag; ?>
+
 <header id="header">
 <section class="header-container">
 <div id="topbar">
@@ -51,13 +53,13 @@
 	<div id="languages-block-top" class="languages-block">
 		<?php if(!empty($languages)): ?>
 			<div class="current">
-				<img src="/assets/<?php echo $shop->code ?>/images/<?=$language;?>.jpg" alt="<?=$language;?>" width="16" height="11">
+				<?=Tag::image(array('assets/'.$shop->code.'/images/'.$language.'.jpg', "alt" => $language));?>
 				<span><?=$languages[$language];?></span>
 			</div>
 			<ul id="first-languages" class="languages-block_ul toogle_content">
 			<?foreach($languages as $code => $name): ?>
 				<li <?=($code == $language) ? 'class="selected"' : ''?> onclick="Common.redirect('/language/<?=$code;?>');">
-					<img src="/assets/<?php echo $shop->code ?>/images/<?=$code;?>.jpg" alt="<?=$code;?>" width="16" height="11">
+					<?=Tag::image(array('assets/'.$shop->code.'/images/'.$code.'.jpg', "alt" => $name));?>
 					<span><?=$name;?></span>
 				</li>
 			<?php endforeach; ?>

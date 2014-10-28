@@ -5319,6 +5319,7 @@ header ul.toogle_content {
   left: auto;
 }
 header ul.toogle_content li {
+    cursor: pointer;
   line-height: 18px;
   margin-bottom: 5px;
   color: #dddddd;

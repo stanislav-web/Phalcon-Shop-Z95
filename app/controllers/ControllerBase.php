@@ -139,6 +139,23 @@
 			$shop = new Models\Shops();
 			$this->_shop = $shop->get(['host'	=>	$this->request->getHttpHost()],[], 1);
 
+			$sqlCategories = "SELECT ".Models\Categories::TABLE.".*
+				FROM ".Models\Categories::TABLE." WHERE ".Models\Categories::TABLE.".parent_id = 0";
+			
+			$categories = (object)$this->db->query($sqlCategories)->fetchAll();
+
+			$sqlNewProducts = "SELECT ".Models\Products::TABLE.".*, ".Models\Prices::TABLE.".price
+				 FROM ".Models\Products::TABLE."
+				 INNER JOIN ".Models\Prices::TABLE." ON ".Models\Products::TABLE.".id = ".Models\Prices::TABLE.".product_id
+				 WHERE ".Models\Products::TABLE.".published = 1
+				 AND ".Models\Prices::TABLE.".id = " . $this->_shop->id .
+				 " ORDER BY ".Models\Products::TABLE.".date_create DESC LIMIT 6";
+
+			$newProducts = $this->db->query($sqlNewProducts)->fetchAll();
+			$this->view->setVars(array('shop' => $shop,
+									   'categories' => $categories,
+									   'newProducts' => $newProducts
+								));
 			// Установка директории с шаблонами
 			$this->view->setViewsDir($this->_config->application->viewsDir.'/'.$this->_shop->code);
 

@@ -33,6 +33,13 @@ class IndexController extends ControllerBase
 			//@TODO передать какие нибыдь параметры в $this->viеws
 			$this->view->setVar("name", "Mike");
 		}
+		$modelProducts = new \Models\Products();
+		$newProducts = $modelProducts->get(array(), array('id' => 'DESC'), 10);
+		$this->view->setVar("newProducts", $newProducts);
+
+		$topProducts = $modelProducts->get(array(), array('rating' => 'DESC'), 10);
+		$this->view->setVar("topProducts", $topProducts);
+
 		//$this->view->cache(array("lifetime" => 1, "key" => $this->cachePage(__FUNCTION__)));
 	}
 
@@ -50,6 +57,7 @@ class IndexController extends ControllerBase
 			//@TODO передать какие нибыдь параметры в $this->viеws
 			$this->view->setVar("name", "Mike");
 		}
+		
 		//$this->view->cache(array("lifetime" => 1, "key" => $this->cachePage(__FUNCTION__)));
 	}
 
