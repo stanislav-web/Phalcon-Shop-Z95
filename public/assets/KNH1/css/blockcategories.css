@@ -1,0 +1,107 @@
+/* RIGHT TO LEFT */
+#categories_block_top {
+  clear: both;
+  position: relative;
+  top: 30px;
+}
+#categories_block_top .sf-menu {
+  position: relative;
+}
+#categories_block_top .sf-menu > li {
+  position: static;
+}
+#categories_block_top .sf-menu > li > ul {
+  width: 100%;
+  top: 60px;
+  margin: 0 20px;
+}
+#categories_block_top .sf-menu > li > ul > li {
+  display: block;
+  float: left;
+  width: 20%;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  padding: 0 10px;
+}
+.rtl #categories_block_top .sf-menu > li > ul > li {
+  float: right;
+}
+#categories_block_top .sf-menu > li > ul > .category_thumb {
+  display: block;
+  clear: both;
+  overflow: hidden;
+  width: 100%;
+}
+#categories_block_top .sf-menu > li > ul > .category_thumb img {
+  display: inline-block;
+  width: 33%;
+}
+#categories_block_top .sf-menu > li h4 a {
+  font-size: 1.1em;
+}
+#categories_block_top .sf-menu > li h4 a:before {
+  display: none;
+}
+#categories_block_top .sf-menu > li .main-level-submenus {
+  position: relative;
+  display: block !important;
+  visibility: visible !important;
+  top: 0;
+  background: none;
+  box-shadow: none;
+  padding: 0;
+  left: 0;
+}
+#categories_block_top .sf-menu .category_thumb {
+  display: none;
+}
+
+.leo-qty {
+  margin-top: 9px;
+  background: none;
+  color: white;
+  background-color: #666666;
+  border-radius: 100%;
+}
+
+#categories_block_left li {
+  position: relative;
+}
+#categories_block_left li span.grower {
+  display: block;
+  float: right;
+  cursor: pointer;
+  font-family: "FontAwesome";
+}
+.rtl #categories_block_left li span.grower {
+  float: left;
+}
+#categories_block_left li span.grower.OPEN:before, #categories_block_left li span.grower.CLOSE:before {
+  content: "\f068";
+  display: block;
+  vertical-align: middle;
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+  text-align: center;
+  font-size: 10px;
+  margin-top: 8px;
+}
+#categories_block_left li span.grower.CLOSE:before {
+  content: "\f067";
+}
+#categories_block_left li li a {
+  padding-left: 25px;
+}
+#categories_block_left li li a:before {
+  content: "\f105";
+  font-family: "FontAwesome";
+  line-height: 29px;
+}
+#categories_block_left li li li a {
+  padding-left: 35px;
+}
+#categories_block_left li li li li a {
+  padding-left: 45px;
+}
