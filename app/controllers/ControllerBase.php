@@ -130,9 +130,24 @@
 				FROM ".Shops::TABLE." WHERE ".Shops::TABLE.".host = '".$this->request->getHttpHost()."' LIMIT 1";
 
 			$shop = (object)$this->db->query($sql)->fetch();
-
 			$this->_shop = $shop;
-			$this->view->setVars(array('shop' => $shop));
+
+			$sqlCategories = "SELECT ".Categories::TABLE.".*
+				FROM ".Categories::TABLE." WHERE ".Categories::TABLE.".parent_id = 0";
+			$categories = (object)$this->db->query($sqlCategories)->fetchAll();
+
+			$sqlNewProducts = "SELECT ".Products::TABLE.".*, ".Prices::TABLE.".price
+				 FROM ".Products::TABLE."
+				 INNER JOIN ".Prices::TABLE." ON ".Products::TABLE.".id = ".Prices::TABLE.".product_id
+				 WHERE ".Products::TABLE.".published = 1
+				 AND ".Prices::TABLE.".id = " . $shop->id .
+				 " ORDER BY ".Products::TABLE.".date_create DESC LIMIT 6";
+
+			$newProducts = $this->db->query($sqlNewProducts)->fetchAll();
+			$this->view->setVars(array('shop' => $shop,
+									   'categories' => $categories,
+									   'newProducts' => $newProducts
+								));
 			// Установка директории с шаблонами
 			$this->view->setViewsDir($this->di->get('config')->application->viewsDir.'/'.$this->_shop->code);
 		}
@@ -147,4 +162,8 @@
 			if($this->_shop)
 				return strtolower($this->_shop->code.'-'.$this->_language.'-'.substr($method, 0, -6));
 		}
+
+
+
+
 	}

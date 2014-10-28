@@ -7,6 +7,9 @@
 <html lang="en" class="">
 
 <head>
+	<meta charset='utf-8'>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta http-equiv="Content-Language" content="en">
 	<meta name="description" content="">
 	<meta name="generator" content="">
 	<meta name="robots" content="index,follow">
@@ -120,7 +123,7 @@
 	<?php $this->partial('partials/header'); ?>
 
 	<!-- Top Navigation -->
-	<?php $this->partial('partials/topnavigation'); ?>
+	<?php $this->partial('partials/topnavigation', array('categories' => $categories, 'newProducts' => $newProducts)); ?>
 
 		<?php echo $this->getContent(); ?>
 
