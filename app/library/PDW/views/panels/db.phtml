@@ -49,10 +49,12 @@
 			</tr>
 			<?php
 				foreach($descriptors as $k=>$v):
-					echo "<tr>";
+					if(!is_array($v)) {
+						echo "<tr>";
 						echo "<td>{$k}</td>";
 						echo "<td>{$v}</td>";
-					echo "</tr>";
+						echo "</tr>";
+					}
 				endforeach;
 			?>
 			</tbody>
