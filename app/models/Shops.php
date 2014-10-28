@@ -1,6 +1,9 @@
 <?php
 class Shops extends \Phalcon\Mvc\Model
 {
+
+	const TABLE = 'shops';
+
 	/**
 	 * Декларация полей
 	 * @var

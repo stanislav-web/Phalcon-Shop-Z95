@@ -21,14 +21,15 @@ class IndexController extends ControllerBase
 	 */
 	public function indexAction()
 	{
-
 		// проверка страницы в кэше
 		$exists = $this->view->getCache()->exists($this->cachePage(__FUNCTION__));
+
 		if(!$exists)
 		{
 			//@TODO передать какие нибыдь параметры в $this->viеws
 			$this->view->setVar("name", "Mike");
 		}
+
 		//$this->view->cache(array("lifetime" => 1, "key" => $this->cachePage(__FUNCTION__)));
 	}
 
