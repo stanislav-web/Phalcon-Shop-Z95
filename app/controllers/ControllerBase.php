@@ -17,13 +17,19 @@
 			$_language   	=   null,
 
 			/**
+			 * Объект конфигурации
+			 * @var object Phalcon\Config()
+			 */
+			$_config = null,
+
+			/**
 			 * Обьъект переводов (можно юзать в контроллерах)
 			 * @var object Phalcon\Translate\Adapter\NativeArray
 			 */
 			$_translate   	=   null,
 
 			/**
-			 * Текущий машагин
+			 * Текущий магазин
 			 * @var array
 			 */
 			$_shop       	=   [],
@@ -120,21 +126,35 @@
 		 */
 		public function initialize()
 		{
+			// Загрузка конфигураций
+
+			$this->_config	=	$this->di->get('config');
+
 			// Загрузка локалей
 
 			$this->loadMainTrans();
 
 			// Инициализация магазина
 
-			$sql = "SELECT ".Shops::TABLE.".*
-				FROM ".Shops::TABLE." WHERE ".Shops::TABLE.".host = '".$this->request->getHttpHost()."' LIMIT 1";
+			$shop = new Models\Shops();
+			$this->_shop = $shop->get(['host'	=>	$this->request->getHttpHost()],[], 1);
 
-			$shop = (object)$this->db->query($sql)->fetch();
-
-			$this->_shop = $shop;
-			$this->view->setVars(array('shop' => $shop));
 			// Установка директории с шаблонами
-			$this->view->setViewsDir($this->di->get('config')->application->viewsDir.'/'.$this->_shop->code);
+			$this->view->setViewsDir($this->_config->application->viewsDir.'/'.$this->_shop->code);
+
+			// Инициализация навигации
+
+			$nav = $this->di->get('navigation');
+
+			$nav->setActiveNode(
+				$this->router->getActionName(),
+				$this->router->getControllerName()
+			);
+
+			$this->view->setVars([
+				'shop' 		=> $this->_shop,
+				'topnav' 	=> $nav,
+			]);
 		}
 
 		/**

@@ -7,6 +7,10 @@
 		return new \Phalcon\Config($config);
 	});
 
+	$di->set('navigation', function() use ($di) {
+		return new \Navigation\Navigation($di->get('config'));
+	}, true);
+
 	// Компонент Router. Регистрирую конфигурацию роутинга из внешнего файла
 
 	$di->set('router', function() {
@@ -27,7 +31,6 @@
 
 	$di->set('view', function() use ($config) {
 		$view = new \Phalcon\Mvc\View();
-		//$view->setViewsDir($config['application']['viewsDir']);
 		return $view;
 	});
 
@@ -57,6 +60,12 @@
 			"username"  => 	$config['database']['username'],
 			"password"  => 	$config['database']['password'],
 			"dbname"    => 	$config['database']['dbname'],
+			"options" => array(
+				PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'UTF8'",
+				PDO::ATTR_CASE 		=> PDO::CASE_LOWER,
+				PDO::ATTR_ERRMODE	=> PDO::ERRMODE_EXCEPTION,
+				PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ
+			)
 		]);
 	});
 
