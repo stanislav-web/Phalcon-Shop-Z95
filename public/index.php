@@ -1,7 +1,4 @@
 <?php
-	// Подключение отладки
-
-	defined('PHALCONDEBUG') || define('PHALCONDEBUG', true);
 
 	try {
 
@@ -13,22 +10,31 @@
 
 		$loader = new \Phalcon\Loader();
 
-		// Регистрирую модули, отвечающие за работу приложения
-
-		$loader->registerDirs(
-			[
-				$config['application']['controllersDir'],
-				$config['application']['libraryDir'],
-				$config['application']['helpersDir'],
-				$config['application']['modelsDir']
-			]
-		)->register();
-
 		// Создаю контейнер зафисимости классов
 
 		$di = new Phalcon\DI\FactoryDefault();
 
 		require __DIR__.'/../app/config/di.php';
+
+		// Регистрирую пути MVC
+
+		$loader->registerDirs([
+				$config['application']['controllersDir'],
+				$config['application']['libraryDir'],
+				$config['application']['helpersDir'],
+				$config['application']['modelsDir'],
+		])
+
+		// Регистрация пространств имен
+		->registerNamespaces([
+			"PDW"         	=> $config['application']['libraryDir'].'PDW',
+		])
+		->register();
+
+		if($config['profiler'])
+		{
+			$debugWidget = new \PDW\DebugWidget($di);
+		}
 
 		// Рендеринг контента приложения
 

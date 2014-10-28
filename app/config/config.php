@@ -3,13 +3,15 @@
 	 * Конфигурация Phalcon
 	 */
 	$config =  [
+
+		'profiler'	=> true,		// Включение отладки
+
 		'database' => [
 			'adapter'     => 'Mysql',
 			'host'        => 'localhost',
 			'username'    => 'root',
 			'password'    => 'd9eb77mms',
 			'dbname'      => 'Shop',
-			'profiler'	=> true,
 		],
 		'application' => [
 			'controllersDir' => __DIR__ . '/../../app/controllers/',

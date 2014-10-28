@@ -57,7 +57,6 @@
 			"username"  => 	$config['database']['username'],
 			"password"  => 	$config['database']['password'],
 			"dbname"    => 	$config['database']['dbname'],
-			"profiler"	=>	$config['database']['profiler']
 		]);
 	});
 
