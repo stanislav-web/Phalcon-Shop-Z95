@@ -126,9 +126,11 @@
 			));
 			$this->_shop = $shop;
 
-			// Установка директории с шаблонами
+			// Глобальная видимость во всех шаблонах $this->shop->....
+			$this->view->setVar('shop', $shop);
 
-			$this->view->setViewsDir($this->di->get('config')->application->viewsDir.'/'.$this->_shop->host);
+			// Установка директории с шаблонами
+			$this->view->setViewsDir($this->di->get('config')->application->viewsDir.'/'.$this->_shop->code);
 		}
 
 		/**

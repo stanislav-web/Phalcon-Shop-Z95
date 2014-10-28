@@ -1,7 +1,10 @@
 <?php
 	/**
-	 * English localization file for IndexController
+	 * English localization file for Layouts
 	 */
 	$messages = [
-		"TITLE"                     =>  "Our Shop",
+		"TITLE"                     =>  "Out Shop",
+		"CHANGE_LANGUE"             =>  "Change language",
+		"SEARCH_FOR"                =>  "Look for...",
+		"UNDER_DEVELOPMENT"         =>  "Under development..."
 	];

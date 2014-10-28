@@ -6,6 +6,7 @@
         <link rel="shortcut icon" href="favicon.ico" />
         <?php 
         	echo Tag::getTitle();
+			echo Tag::stylesheetLink('assets/css/bootstrap(1).css');
         	echo Tag::stylesheetLink('http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css');
         	echo Tag::stylesheetLink('http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css');
         ?>
@@ -24,7 +25,6 @@
 		<div class="navbar-inner navbar-menu">
 			<nav>
 				<!-- Меню навигации -->
-
 				<!-- Меню навигации -->
 			</nav>
 		</div>
@@ -36,7 +36,7 @@
         ?>
 		<footer>
 			<div class="language">
-				<?php echo $layoutTranslate['CHANGE_LANGUE'] ?>: <?php echo Tag::linkTo("language/en", "English") ?>  | <?php echo Tag::linkTo("language/ru", "Русский") ?>
+				<?php echo $layoutTranslate['CHANGE_LANGUE'] ?>: <?php echo $this->tag->linkTo("language/en", "English") ?>  | <?php echo $this->tag->linkTo("language/ru", "Русский") ?>
 			</div>
 		</footer>
     </body>

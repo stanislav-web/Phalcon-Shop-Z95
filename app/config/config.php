@@ -20,7 +20,7 @@
 			'viewsDir'       => __DIR__ . '/../../app/views/',
 			'pluginsDir'     => __DIR__ . '/../../app/plugins/',
 			'cacheDir'       => __DIR__ . '/../../app/cache/',
-			'baseUri'        => __DIR__ .'/',
+			'baseUri'        => '/',
 		],
 		'models' => [
 			'metadata' => [

@@ -1,4 +1,7 @@
 <?php
+	// Подключение отладки
+
+	defined('PHALCONDEBUG') || define('PHALCONDEBUG', true);
 
 	try {
 
