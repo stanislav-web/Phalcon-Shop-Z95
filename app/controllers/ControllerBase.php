@@ -139,19 +139,17 @@
 			$shop = new Models\Shops();
 			$this->_shop = $shop->get(['host'	=>	$this->request->getHttpHost()],[], 1);
 
-			$shop = (object)$this->db->query($sql)->fetch();
-			$this->_shop = $shop;
-
-			$sqlCategories = "SELECT ".Categories::TABLE.".*
-				FROM ".Categories::TABLE." WHERE ".Categories::TABLE.".parent_id = 0";
+			$sqlCategories = "SELECT ".Models\Categories::TABLE.".*
+				FROM ".Models\Categories::TABLE." WHERE ".Models\Categories::TABLE.".parent_id = 0";
+			
 			$categories = (object)$this->db->query($sqlCategories)->fetchAll();
 
-			$sqlNewProducts = "SELECT ".Products::TABLE.".*, ".Prices::TABLE.".price
-				 FROM ".Products::TABLE."
-				 INNER JOIN ".Prices::TABLE." ON ".Products::TABLE.".id = ".Prices::TABLE.".product_id
-				 WHERE ".Products::TABLE.".published = 1
-				 AND ".Prices::TABLE.".id = " . $shop->id .
-				 " ORDER BY ".Products::TABLE.".date_create DESC LIMIT 6";
+			$sqlNewProducts = "SELECT ".Models\Products::TABLE.".*, ".Models\Prices::TABLE.".price
+				 FROM ".Models\Products::TABLE."
+				 INNER JOIN ".Models\Prices::TABLE." ON ".Models\Products::TABLE.".id = ".Models\Prices::TABLE.".product_id
+				 WHERE ".Models\Products::TABLE.".published = 1
+				 AND ".Models\Prices::TABLE.".id = " . $this->_shop->id .
+				 " ORDER BY ".Models\Products::TABLE.".date_create DESC LIMIT 6";
 
 			$newProducts = $this->db->query($sqlNewProducts)->fetchAll();
 			$this->view->setVars(array('shop' => $shop,

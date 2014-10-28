@@ -53,8 +53,13 @@ class Products extends \Phalcon\Mvc\Model
 
 		if(null != $limit) $sql .= " LIMIT ".$limit;
 
+		if(null != $limit && $limit > 1) {
+			$result = $this->getReadConnection()->query($sql)->fetchAll();
+		} else {
+			$result = $this->getReadConnection()->query($sql)->fetch();
+		}
 		// Вывод результата
-		$result = $this->getReadConnection()->query($sql)->fetch();
+
 		return $result;
 	}
 }
