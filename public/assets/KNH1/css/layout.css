@@ -1,0 +1,171 @@
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+html,body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+}
+body {
+    font-family: "Open Sans",Arial,Helvetica,Sans-Serif!important;
+    font-size: 13px;
+    font-weight: 300;
+}
+h1,h2,h3,h4 { font-weight:bold; }
+.clearfix:after {
+	content: ".";
+	display: block;
+	clear: both;
+	visibility: hidden;
+	line-height: 0;
+	height: 0;
+}
+.clearfix {
+	display: inline-block;
+}
+html[xmlns] .clearfix {
+	display: block;
+}
+* html .clearfix {
+	height: 1%;
+}
+
+
+iframe {
+	background:none;
+	border:0;
+	z-index:9;
+	position:absolute;
+	top:0;
+	left:0;
+	display:block;
+	margin:auto;
+	 height:100%;
+	 width:100%;
+}
+
+#myModal{ 
+  margin: -280px 0 0 -473px;
+    outline: medium none;
+    position: fixed;
+
+    width: 930px;
+    z-index: 1050
+ }
+ #myModal .modal-body{
+	max-height:500px;
+ }
+ 
+   .demos-wrap  .demo-item{
+		float:left; 
+		margin:12px; 
+		height:auto;
+		overflow:hidden;
+		background:#FFF;
+		position:relative;
+		border:solid 1px #ccc;
+		
+   }
+   .demos-wrap  .demo-item:hover{
+		border-color:#000;
+   }
+   .demos-wrap  .demo-item h4{
+	 background: none repeat scroll 0 0 #555555;
+    bottom: 0;
+    color: #FFFFFF;
+    display: block;
+    font-size: 11px;
+    padding: 2px 12px;
+    position: absolute;
+    width: 100%;
+	
+   }
+   .demos-wrap  .active,.demos-wrap  .demo-item:hover{  border-color:#B94A48; }
+   
+	   .demos-wrap  .active:after, .demos-wrap  .demo-item:hover:after {
+		color: #B94A48;
+		content: "";
+		font-family: 'IcoMoon';
+		font-size: 16px;
+		height: 16px;
+		position: absolute;
+		right: 5px;
+		top: 5px;
+		width: 16px;
+	}
+
+
+  #myModal img{  width:130px; }
+   
+   #frameDemo {  }
+    #frameDemo .desktop{ border:none;
+	
+		  height: 100%;
+		  margin: auto;
+		  width: 100%;
+		
+	 }
+   .tabless,.tablessl{ margin-top:30px ; margin-bottom:30px; border: solid 18px  #000;	}
+   .mobile,.mobilel{ margin-top:130px ; border: solid 11px  #000; }
+   .tabless,.tablessl,.mobile,.mobilel{ 
+		-webkit-border-radius: 8px;
+		-moz-border-radius: 8px;
+		border-radius: 8px;
+   }
+   .tablessl ,.mobilel { border-left-width:60px;border-right-width:60px; 
+   }
+   .tabless, .mobile{   border-top-width:60px;border-bottom-width:60px ;  }
+   
+   .btn-flip .win-commandimage {
+	 -webkit-transform: rotate(-90deg); 
+	-moz-transform: rotate(-90deg);  
+   } 
+   
+   .buttons-wrap{ padding-bottom:12px }
+   .K2FeedFullText{ display:none ; }
+   .K2FeedImage{ float:left; margin-right:16px }
+   
+   
+   .toolbar .btn-action{ visibility:hidden;   
+    margin: 20px 0;
+    padding: 12px; }
+   .toolbar:hover .btn-action{ visibility:visible }
+   .toolbar .close{ visibility:visible; } 
+   
+   
+   
+ 
+   #leftbar{ position:fixed; bottom:10%; left:0; z-index:9 }
+   #leftbar  .toolbar{ margin:0!important }
+   #leftbar  .toolbar-content{
+		background:#FFF;
+		border:solid 1px #000;
+		border-left:none;
+	 -webkit-box-shadow: 0 1px 3px #888;
+     -moz-box-shadow: 0 1px 3px #888;
+          box-shadow: 0 1px 3px #888;
+   }
+
+   footer .win-commandimage{
+	width:30px;
+	height:30px;
+	line-height:30px; 
+
+   } 
+ footer  a.win-command, footer button.win-command{ 	min-width:40px;  }
+ .monitortools{ position:fixed; right:10px; bottom:00px; z-index:90999; max-width:400px}
+ 
+ .months {
+   
+}
+.demos-wrap h3 {
+    background: none repeat scroll 0 0 #000000;
+    color: #FFFFFF;
+    padding: 1px 12px;
+}

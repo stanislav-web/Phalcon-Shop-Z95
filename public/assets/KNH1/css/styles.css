@@ -1,0 +1,115 @@
+/* RIGHT TO LEFT */
+.carousel-control {
+  z-index: 99;
+  top: -25px;
+}
+
+.carousel-control.left,
+.carousel-control.right {
+  background: none;
+  color: #000;
+}
+
+.custom_slide a:first-child img {
+  margin-bottom: 20px;
+}
+
+/* Eff */
+.view-fifth {
+  position: relative;
+  overflow: hidden;
+}
+
+.view-fifth .mask {
+  position: absolute;
+  background-color: #333333;
+  top: 0;
+  height: 100%;
+  color: #fff;
+  width: 100%;
+  text-align: center;
+  -webkit-transform: translateX(-100%);
+  -moz-transform: translateX(-100%);
+  -o-transform: translateX(-100%);
+  -ms-transform: translateX(-100%);
+  transform: translateX(-100%);
+  -ms-filter: "progid: DXImageTransform.Microsoft.Alpha(Opacity=100)";
+  filter: alpha(opacity=100);
+  opacity: 1;
+  -webkit-transition: all 0.5s ease-in-out;
+  -moz-transition: all 0.5s ease-in-out;
+  -o-transition: all 0.5s ease-in-out;
+  transition: all 0.5s ease-in-out;
+}
+
+.view-fifth .mask > div {
+  padding: 0 10px;
+}
+
+.view a.info {
+  background: #000;
+  border-radius: 4px;
+  color: #fff;
+  display: inline-block;
+  padding: 4px 15px;
+  text-decoration: none;
+  text-transform: uppercase;
+  margin-top: 10px;
+}
+
+.view a.info:hover {
+  background-color: #57AFDA;
+}
+
+.view-fifth img {
+  -webkit-transition: all 0.5s ease-in-out;
+  -moz-transition: all 0.5s ease-in-out;
+  -o-transition: all 0.5s ease-in-out;
+  -ms-transition: all 0.5s ease-in-out;
+  transition: all 0.5s ease-in-out;
+}
+
+.view-fifth:hover img {
+  -webkit-transform: translateX(100%);
+  -moz-transform: translateX(100%);
+  -o-transform: translateX(100%);
+  -ms-transform: translateX(100%);
+  transform: translateX(100%);
+}
+
+.view-fifth:hover .mask {
+  -webkit-transform: translateX(0);
+  -moz-transform: translateX(0);
+  -o-transform: translateX(0);
+  -ms-transform: translateX(0);
+  transform: translateX(0);
+}
+
+.block_content .contact-us li {
+  line-height: 35px;
+}
+.block_content .contact-us li em {
+  background: #4A4A4A;
+  border-radius: 2px;
+  color: #D4D4D4;
+  display: inline-block;
+  font-size: 18px;
+  margin-right: 10px;
+  text-align: center;
+  width: 28px;
+  padding: 3px 0 3px 4px;
+}
+.rtl .block_content .contact-us li em {
+  margin-left: 10px;
+  margin-right: inherit;
+}
+.rtl .block_content .contact-us li em {
+  padding: 3px 4px 3px 0;
+}
+.block_content .contact-us li:hover em {
+  background-color: black;
+  color: white;
+}
+.dark .block_content .contact-us li:hover em {
+  background-color: #896b5a;
+}

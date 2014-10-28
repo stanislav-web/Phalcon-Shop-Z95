@@ -1,0 +1,378 @@
+/* RIGHT TO LEFT */
+/**********************************/
+.paneltool.themetool .panelcontent {
+  min-height: 210px;
+}
+
+.paneltool {
+  position: fixed;
+  top: 5px;
+  transition: all 0.6s;
+  left: -325px;
+  border: solid 1px #CCC;
+  -webkit-box-shadow: 1px -1px 3px #888888;
+  box-shadow: 1px -1px 3px #888888;
+  z-index: 999;
+}
+.rtl .paneltool {
+  right: -325px;
+  left: auto;
+}
+.paneltool.active {
+  left: 0;
+  transition: all 0.6s;
+}
+.rtl .paneltool.active {
+  right: 0;
+  left: auto;
+}
+.paneltool.active .panelbutton {
+  color: red;
+}
+.paneltool .panelcontent {
+  background: #FFF;
+  width: 320px;
+  min-height: 340px;
+}
+.paneltool .panelcontent > div {
+  padding: 15px 15px 15px 15px;
+}
+.rtl .paneltool .panelcontent > div {
+  padding: 15px 15px 15px 15px;
+}
+
+.paneltool.themetool {
+  top: 70px;
+}
+
+.panelbutton {
+  border: solid 1px #CCC;
+  background: #FFF;
+  padding: 9px 11px;
+  position: absolute;
+  right: -33px;
+  top: 10px;
+  border-left: none;
+  cursor: hand;
+  cursor: pointer;
+  -webkit-box-shadow: 3px -1px 2px #888888;
+  box-shadow: 3px -1px 2px #888888;
+}
+.rtl .panelbutton {
+  left: -33px;
+  right: auto;
+}
+
+.rtl .panelbutton {
+  left: -33px;
+  right: auto;
+}
+
+.editortool .panelbutton {
+  top: 290px;
+}
+
+#leo-paneltool.panel-open .panel-inner {
+  right: 0;
+}
+.rtl #leo-paneltool.panel-open .panel-inner {
+  left: 0;
+  right: auto;
+}
+
+#leo-paneltool h4 {
+  margin-bottom: 10px;
+  margin-top: 0;
+}
+
+#leo-paneltool .accordion-group {
+  margin-bottom: 5px;
+}
+
+#leo-paneltool form .group-input {
+  margin-bottom: 10px;
+}
+
+#leo-paneltool select {
+  padding: 5px;
+}
+
+.box-patterns div {
+  display: block;
+  width: 38px;
+  height: 38px;
+  float: left;
+  cursor: hand;
+  cursor: pointer;
+  border: solid 1px #f3f3f3;
+  margin: 6px;
+  border: 1px solid #ccc;
+}
+.rtl .box-patterns div {
+  float: right;
+}
+
+.box-patterns div.active {
+  border: solid 1px red;
+}
+
+#leo-paneltool .nav-tabs > li:before,
+#leo-paneltool .nav-tabs > li:after {
+  display: none;
+}
+
+#customize-form {
+  position: relative;
+}
+
+#main-preview {
+  bottom: 0;
+  height: 100%;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  margin-left: 300px;
+  transition-duration: 0.2s;
+  transition-property: left, right, top, bottom, width, margin;
+}
+.rtl #main-preview {
+  right: 0;
+  left: auto;
+}
+.rtl #main-preview {
+  left: 0;
+  right: auto;
+}
+.rtl #main-preview {
+  margin-right: 300px;
+  margin-left: inherit;
+}
+
+#main-preview iframe {
+  height: 100%;
+  width: 100%;
+}
+
+.main-preview #leo-paneltool {
+  display: none;
+}
+
+.colorpicker {
+  z-index: 99999;
+}
+
+#leo-paneltool {
+  width: 300px;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: -320px;
+  z-index: 9999;
+  box-shadow: 0 1px 3px #999;
+  transition-duration: 0.2s;
+  transition-property: left, right, top, bottom, width, margin;
+  background: none repeat scroll 0 0 #F5F5F5;
+  border-right: 1px solid rgba(0, 0, 0, 0.2);
+}
+.rtl #leo-paneltool {
+  right: -320px;
+  left: auto;
+}
+
+#leo-paneltool .wrapper {
+  padding: 12px;
+}
+
+#customize-body input[type="text"], #customize-body select {
+  border: 1px solid #E2E2E2;
+  border-radius: 2px 2px 2px 2px;
+  color: #FFFFFF;
+  font-size: 11px;
+  margin: 0 5px 0 0;
+  padding: 2px 3px;
+  width: 65px;
+  height: auto;
+  display: inline-block;
+}
+
+#customize-body select {
+  color: #888;
+}
+
+#customize-body .accordion-group label {
+  color: #888;
+  font-size: 11px;
+  font-weight: normal;
+}
+
+#customize-body .panel-heading {
+  padding: 5px 6px;
+  font-weight: bold;
+  font-size: 11px;
+}
+
+#customize-body .accordion-group .input-group .input-group-addon {
+  padding: 0;
+  background: transparent;
+  border: 0;
+  float: right;
+  margin-top: 2px;
+  width: 20px;
+}
+.rtl #customize-body .accordion-group .input-group .input-group-addon {
+  float: left;
+}
+
+#customize-body .panel-heading a {
+  display: block;
+}
+
+.form-group {
+  margin-right: 6px;
+}
+.rtl .form-group {
+  margin-left: 6px;
+  margin-right: inherit;
+}
+
+.accordion-group label, .form-group label {
+  display: block;
+}
+
+.accordion-group label {
+  min-width: 100px;
+}
+
+#leo-paneltool .btn {
+  padding: 4px 12px;
+  font-size: 11px;
+  font-weight: bold;
+}
+
+#leo-paneltool .btn-show {
+  position: absolute;
+  top: 39px;
+  padding: 6px 18px;
+  background: #CCC;
+  right: 11px;
+  z-index: 99;
+  -webkit-transition: all 1.2s;
+  transition: all 1.2s;
+  cursor: hand;
+  cursor: pointer;
+}
+.rtl #leo-paneltool .btn-show {
+  left: 11px;
+  right: auto;
+}
+
+#customize-body .nav-tabs {
+  border-bottom: 1px solid #d7d7d7;
+}
+
+#customize-body .nav-tabs a {
+  border: none;
+}
+
+#customize-body .nav-tabs a {
+  font-weight: bold;
+  font-size: 11px;
+  padding: 6px 12px;
+}
+
+#customize-body .nav-tabs .active a {
+  background: #58B0DA;
+  border-top: none;
+  border-right: none;
+  border-left: none;
+  color: #FFFFFF;
+}
+
+.accordion-heading .accordion-toggle {
+  font-size: 11px;
+}
+
+#customize-body .form-group {
+  margin-bottom: 10px;
+  margin-right: 0;
+}
+.rtl #customize-body .form-group {
+  margin-left: 0;
+  margin-right: inherit;
+}
+
+#customize-body .accordion-inner .form-group .input-group {
+  display: inline-block;
+  width: 92px;
+  float: left;
+}
+.rtl #customize-body .accordion-inner .form-group .input-group {
+  float: right;
+}
+
+.clear-bg {
+  padding: 3px 6px;
+  margin-left: 5px;
+}
+
+/* .tab-content > .tab-pane, .pill-content > .pill-pane {
+    background: none repeat scroll 0 0 #FFFFFF;
+    padding: 13px;
+} */
+.bi-wrapper > div {
+  float: left;
+  width: 25px;
+  height: 25px;
+  margin: 3px 4px;
+  border: solid 1px #999;
+  cursor: hand;
+  cursor: pointer;
+}
+.rtl .bi-wrapper > div {
+  float: right;
+}
+
+.bi-wrapper > div.active {
+  border-color: red;
+}
+
+.btn-small {
+  border-radius: 0;
+  background-color: #58B0DA;
+  color: #fff;
+  padding: 3px 6px;
+}
+
+.btn-small:hover {
+  background-color: #C83A3A;
+  color: #fff;
+}
+
+.editortool .label-customize {
+  background-image: url("../img/default/label_customize.png");
+  background-color: transparent;
+  background-position: 0 0;
+  background-repeat: no-repeat;
+  border: 0 none;
+  border-radius: 0;
+  box-shadow: none;
+  height: 74px;
+  padding: 0;
+  position: absolute;
+  right: -155px;
+  top: 250px;
+  width: 115px;
+}
+.rtl .editortool .label-customize {
+  left: -155px;
+  right: auto;
+}
+
+.editortool .label-customize:hover {
+  background-position: 0 -111px;
+}
+
+.paneltool.active .label-customize {
+  display: none;
+}

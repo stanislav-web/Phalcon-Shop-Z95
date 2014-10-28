@@ -2,6 +2,10 @@
 
 	try {
 
+		defined('PUBLIC_PATH') || define('PUBLIC_PATH', dirname(__FILE__));
+		defined('APP_PATH') || define('APP_PATH', realpath(dirname(__FILE__) . '/../app'));
+
+		
 		// Читаю файл конфигураций
 
 		require __DIR__.'/../app/config/config.php';

@@ -132,10 +132,7 @@
 			$shop = (object)$this->db->query($sql)->fetch();
 
 			$this->_shop = $shop;
-
-			// Глобальная видимость во всех шаблонах $this->shop->....
-			$this->view->setVar('shop', $shop);
-
+			$this->view->setVars(array('shop' => $shop));
 			// Установка директории с шаблонами
 			$this->view->setViewsDir($this->di->get('config')->application->viewsDir.'/'.$this->_shop->code);
 		}
