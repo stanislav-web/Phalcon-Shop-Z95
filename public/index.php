@@ -31,13 +31,13 @@
 
 		// Регистрация пространств имен
 		->registerNamespaces([
-			"PDW"         	=> $config['application']['libraryDir'].'PDW',
+			"Models"         	=> $config['application']['modelsDir'],
 		])
 		->register();
 
 		if($config['profiler'])
 		{
-			$debugWidget = new \PDW\DebugWidget($di);
+			$debugWidget = new PDW\DebugWidget($di);
 		}
 
 		// Рендеринг контента приложения

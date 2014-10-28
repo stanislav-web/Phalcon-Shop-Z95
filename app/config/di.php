@@ -7,6 +7,10 @@
 		return new \Phalcon\Config($config);
 	});
 
+	$di->set('navigation', function() use ($di) {
+		return new \Navigation\Navigation($di->get('config'));
+	}, true);
+
 	// Компонент Router. Регистрирую конфигурацию роутинга из внешнего файла
 
 	$di->set('router', function() {
@@ -27,7 +31,6 @@
 
 	$di->set('view', function() use ($config) {
 		$view = new \Phalcon\Mvc\View();
-		//$view->setViewsDir($config['application']['viewsDir']);
 		return $view;
 	});
 

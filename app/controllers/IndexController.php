@@ -29,9 +29,59 @@ class IndexController extends ControllerBase
 			//@TODO передать какие нибыдь параметры в $this->viеws
 			$this->view->setVar("name", "Mike");
 		}
-
 		//$this->view->cache(array("lifetime" => 1, "key" => $this->cachePage(__FUNCTION__)));
 	}
+
+	/**
+	 * aboutAction() Страница "О НАС"
+	 * @access public
+	 */
+	public function aboutAction()
+	{
+		// проверка страницы в кэше
+		$exists = $this->view->getCache()->exists($this->cachePage(__FUNCTION__));
+
+		if(!$exists)
+		{
+			//@TODO передать какие нибыдь параметры в $this->viеws
+			$this->view->setVar("name", "Mike");
+		}
+		//$this->view->cache(array("lifetime" => 1, "key" => $this->cachePage(__FUNCTION__)));
+	}
+
+	/**
+	 * communityAction() Страница "СООБЩЕСТВО"
+	 * @access public
+	 */
+	public function communityAction()
+	{
+		// проверка страницы в кэше
+		$exists = $this->view->getCache()->exists($this->cachePage(__FUNCTION__));
+
+		if(!$exists)
+		{
+			//@TODO передать какие нибыдь параметры в $this->viеws
+		}
+		//$this->view->cache(array("lifetime" => 1, "key" => $this->cachePage(__FUNCTION__)));
+	}
+
+	/**
+	 * deliveryAction() Страница "ДОСТАВКА"
+	 * @access public
+	 */
+	public function deliveryAction()
+	{
+		// проверка страницы в кэше
+		$exists = $this->view->getCache()->exists($this->cachePage(__FUNCTION__));
+
+		if(!$exists)
+		{
+			//@TODO передать какие нибыдь параметры в $this->viеws
+			$this->view->setVar("name", "Mike");
+		}
+		//$this->view->cache(array("lifetime" => 1, "key" => $this->cachePage(__FUNCTION__)));
+	}
+
 
 	/**
 	 * languageAction() Смена локализации на сайте
