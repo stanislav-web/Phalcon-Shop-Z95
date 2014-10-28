@@ -129,7 +129,7 @@
 			// Установка директории с шаблонами
 
 			// Установка директории с шаблонами
-			$this->view->setViewsDir($this->di->get('config')->application->viewsDir.'/'.$this->_shop->code);
+			$this->view->setViewsDir($this->di->get('config')->application->viewsDir.$this->_shop->code);
 		}
 
 		/**
