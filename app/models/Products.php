@@ -94,4 +94,18 @@ class Products extends \Phalcon\Mvc\Model
 
 		return $result;
 	}
+
+
+	public function getNewProducts($limit, $cache = false)
+	{
+		$sqlNewProducts = "SELECT ".Models\Products::TABLE.".*, ".Models\Prices::TABLE.".price
+				 FROM ".Models\Products::TABLE."
+				 INNER JOIN ".Models\Prices::TABLE." ON ".Models\Products::TABLE.".id = ".Models\Prices::TABLE.".product_id
+				 WHERE ".Models\Products::TABLE.".published = 1
+				 AND ".Models\Prices::TABLE.".id = " . $this->_shop->id .
+			" ORDER BY ".Models\Products::TABLE.".date_create DESC LIMIT 6";
+		$this->db->query($sqlNewProducts)->fetchAll();
+		return $result;
+
+	}
 }

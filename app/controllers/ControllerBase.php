@@ -176,19 +176,13 @@ class ControllerBase extends Phalcon\Mvc\Controller
 
 		$this->_shop = $this->shopModel->get(['host'	=>	$this->request->getHttpHost()],[], 1, true);
 
-		$sqlCategories = "SELECT ".Models\Categories::TABLE.".*
-			FROM ".Models\Categories::TABLE." WHERE ".Models\Categories::TABLE.".parent_id = 0";
+		//$newProducts = $this->productsModel->getNewProducts(6, false);
 
-		$categories = (object)$this->db->query($sqlCategories)->fetchAll();
+		//$sqlCategories = "SELECT ".Models\Categories::TABLE.".*
+		//	FROM ".Models\Categories::TABLE." WHERE ".Models\Categories::TABLE.".parent_id = 0";
 
-		$sqlNewProducts = "SELECT ".Models\Products::TABLE.".*, ".Models\Prices::TABLE.".price
-			FROM ".Models\Products::TABLE."
-			INNER JOIN ".Models\Prices::TABLE." ON ".Models\Products::TABLE.".id = ".Models\Prices::TABLE.".product_id
-			WHERE ".Models\Products::TABLE.".published = 1
-			AND ".Models\Prices::TABLE.".id = " . $this->_shop->id .
-			" ORDER BY ".Models\Products::TABLE.".date_create DESC LIMIT 6";
+		//$categories = (object)$this->db->query($sqlCategories)->fetchAll();
 
-		$newProducts = $this->db->query($sqlNewProducts)->fetchAll();
 
 		// Инициализация навигации
 
@@ -208,8 +202,8 @@ class ControllerBase extends Phalcon\Mvc\Controller
 			'languages'	    =>	$this->_languages,  // все доступные языки
 			'shop' 		    => 	$this->_shop,       // параметры магазина
 			'topnav' 	    => 	$nav,               // топ меню навигации
-			'categories'    =>  $categories,        // главные категории
-			'newProducts'   =>  $newProducts        // новые товары
+			//'categories'    =>  $categories,        // главные категории
+			//'newProducts'   =>  $newProducts        // новые товары
 		]);
 	}
 

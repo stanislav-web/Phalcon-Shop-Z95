@@ -58,6 +58,16 @@
 				// Содержимое контроллера для формирования выдачи
 
 
+				//$modelProducts = new \Models\Products();
+				//$newProducts = $modelProducts->get(array(), array('id' => 'DESC'), 2);
+				//$this->view->setVar("newProducts", $newProducts);
+
+				//$topProducts = $modelProducts->get(array(), array('rating' => 'DESC'), 2);
+				//$this->view->setVar("topProducts", $topProducts);
+
+				//$featuredProducts = $modelProducts->get(array(), array('date_create' => 'DESC'), 2);
+				//$this->view->setVar('featuredProducts', $featuredProducts);
+
 				// Сохраняем вывод в кэш
 				if($this->_config->cache->frontend) $this->_cache->save();
 			}
@@ -141,13 +151,13 @@
 		}
 
 
-		/**
-		 * languageAction() Смена локализации на сайте
-		 * @access public
-		 */
-		public function languageAction($language = '')
-		{
-			// Смена языка и перезагрузка файла локализации
+	/**
+	 * languageAction() Смена локализации на сайте
+	 * @access public
+	 */
+	public function languageAction($language = '')
+	{
+		// Смена языка и перезагрузка файла локализации
 
 			$this->session->set('language', $language);
 			$this->loadMainTrans();
