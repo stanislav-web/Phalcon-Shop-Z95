@@ -4,13 +4,13 @@
 	 */
 	$config =  [
 
-		'profiler'	        => false,		// Включение отладки
+		'profiler'	        => true,		// Включение отладки
 		'cache'	  =>    [   // Кэширование
 			'frontend'                  =>  false,
 			'cache_frontend_lifetime'   =>  300,        // Время сохранения в сек.
 			'cache_frontend_prefix'     => 'page-',	    // Префикс страниц в кэше
 
-		    'backend'                   =>  false,
+		    'backend'                   =>  true,
 		    'cache_backend_lifetime'    =>  300,        // Время сохранения в сек.
 		    'cache_backend_adapter'     =>  'File'      // Адаптер File, Apc, XCache
 		],
@@ -23,6 +23,7 @@
 			'username'    => 'root',
 			'password'    => 'd9eb77mms',
 			'dbname'      => 'Shop',
+			'persistent'  => true
 		],
 
 		// Настройка директорий

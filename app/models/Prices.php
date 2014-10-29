@@ -4,21 +4,44 @@ namespace Models;
 /**
  * Class Prices Модель для `prices`
  *
+ * Получает идентификатор соединения $this->_db = $this->getReadConnection();
+ *
  * @package Shop
  * @subpackage Models
  */
 class Prices extends \Phalcon\Mvc\Model
 {
+	/**
+	 * Таблица
+	 * @const TABLE
+	 */
 	const TABLE = 'prices';
+
+	private
+
+		/**
+		 * Идентификатор соединения
+		 * @var null
+		 */
+		$_db 	= 	false,
+
+		/**
+		 * Статус кэширования
+		 * @var boolean
+		 */
+		$_cache	=	false;
+
 	/**
 	 * Инициализация соединения
 	 * @return \Phalcon\Db\Adapter\PDO
 	 */
 	public function initialize()
 	{
-		if(!$this->db)
-			$this->db = $this->getReadConnection();
-		return $this->db;
+		if(!$this->_db)
+			$this->_db = $this->getReadConnection();
+
+		if(!$this->_cache)
+			$this->_cache = $this->getDI()->get('config')->cache->backend;
 	}
 
 	/**
@@ -34,7 +57,7 @@ class Prices extends \Phalcon\Mvc\Model
 	{
 		$result = null;
 
-		if($cache && $this->getDI()->get('config')->cache->backend) {
+		if($cache && $this->_cache) {
 			$backendCache = $this->getDI()->get('backendCache');
 			$result = $backendCache->get(self::TABLE.'-'.serialize($data).'.cache');
 		}
@@ -59,13 +82,13 @@ class Prices extends \Phalcon\Mvc\Model
 			if(null != $limit) $sql .= " LIMIT ".$limit;
 
 			if(null != $limit && $limit > 1) {
-				$result = $this->db->query($sql)->fetchAll();
+				$result = $this->_db->query($sql)->fetchAll();
 			} else {
-				$result = $this->db->query($sql)->fetch();
+				$result = $this->_db->query($sql)->fetch();
 			}
 
 			// Сохраняем запрос в кэше
-			if($cache) $backendCache->save(self::TABLE.'-'.serialize($data).'.cache', $result);
+			if($cache && $this->_cache) $backendCache->save(self::TABLE.'-'.serialize($data).'.cache', $result);
 		}
 
 		return $result;

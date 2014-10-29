@@ -4,22 +4,32 @@ namespace Models;
 /**
  * Class Shops Модель для `shops`
  *
+ * Получает идентификатор соединения $this->_db = $this->getReadConnection();
+ *
  * @package Shop
  * @subpackage Models
  */
 class Shops extends \Phalcon\Mvc\Model
 {
 	/**
-	 * Идентификатор соединений
-	 * @var null
-	 */
-	public $db = false;
-
-	/**
 	 * Таблица в базе
 	 * @const
 	 */
 	const TABLE = 'shops';
+
+	private
+
+		/**
+		 * Идентификатор соединения
+		 * @var null
+		 */
+		$_db 	= 	false,
+
+		/**
+		 * Статус кэширования
+	 	 * @var boolean
+	 	 */
+		$_cache	=	false;
 
 	/**
 	 * Инициализация соединения
@@ -27,9 +37,13 @@ class Shops extends \Phalcon\Mvc\Model
 	 */
 	public function initialize()
 	{
-		if(!$this->db)
-			$this->db = $this->getReadConnection();
-		return $this->db;
+		if(!$this->_db)
+			$this->_db = $this->getReadConnection();
+
+		if(!$this->_cache)
+			$this->_cache = $this->getDI()->get('config')->cache->backend;
+
+		return $this->_db;
 	}
 
 	/**
@@ -45,9 +59,9 @@ class Shops extends \Phalcon\Mvc\Model
 	{
 		$result = null;
 
-		if($cache && $this->getDI()->get('config')->cache->backend) {
+		if($cache && $this->_cache) {
 			$backendCache = $this->getDI()->get('backendCache');
-			$result = $backendCache->get(self::TABLE.'-'.serialize($data).'.cache');
+			$result = $backendCache->get(self::TABLE.'-'.join('-', $data).'.cache');
 		}
 
 		if($result === null) {    // Выполняем запрос из MySQL
@@ -70,13 +84,13 @@ class Shops extends \Phalcon\Mvc\Model
 			if(null != $limit) $sql .= " LIMIT ".$limit;
 
 			if(null != $limit && $limit > 1) {
-				$result = $this->db->query($sql)->fetchAll();
+				$result = $this->_db->query($sql)->fetchAll();
 			} else {
-				$result = $this->db->query($sql)->fetch();
+				$result = $this->_db->query($sql)->fetch();
 			}
 
 			// Сохраняем запрос в кэше
-			if($cache) $backendCache->save(self::TABLE.'-'.serialize($data).'.cache', $result);
+			if($cache && $this->_cache) $backendCache->save(self::TABLE.'-'.join('-', $data).'.cache', $result);
 		}
 
 		return $result;

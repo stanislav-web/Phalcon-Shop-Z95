@@ -41,12 +41,12 @@
 	$di->set('backendCache', function() use ($config) {
 
 		// Кэширование данных (запросы, конструкции, json итп)
-		$backCache = new Phalcon\Cache\Frontend([
-			"lifetime" => $config['cache_backend_lifetime']
+		$backCache = new Phalcon\Cache\Frontend\Data([
+			"lifetime" => $config['cache']['cache_backend_lifetime']
 		]);
 
 		// Настройки файлов кэша
-		$Adapter = "Phalcon\\Cache\\Backend\\{$config['cache_backend_adapter']}";
+		$Adapter = "Phalcon\\Cache\\Backend\\{$config['cache']['cache_backend_adapter']}";
 
 		$cache = new $Adapter($backCache, [
 			"cacheDir"  =>  $config['application']['cacheDir'].'/backend/',
@@ -61,13 +61,13 @@
 
 		// Кэширование Frontend (шаблоны, стили, скрипты)
 		$frontCache = new Phalcon\Cache\Frontend\Output([
-			"lifetime" => $config['cache_frontend_lifetime']
+			"lifetime" => $config['cache']['cache_frontend_lifetime']
 		]);
 
 		// Настройки файлов кэша
 		$cache = new Phalcon\Cache\Backend\File($frontCache, [
 			"cacheDir"  => $config['application']['cacheDir'].'/frontend/',
-			"prefix"    => $config['cache_frontend_prefix']
+			"prefix"    => $config['cache']['cache_frontend_prefix']
 		]);
 		return $cache;
 	});
@@ -81,6 +81,7 @@
 			"username"  => 	$config['database']['username'],
 			"password"  => 	$config['database']['password'],
 			"dbname"    => 	$config['database']['dbname'],
+			"persistent"    => 	$config['database']['persistent'],
 			"options" => array(
 				PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'UTF8'",
 				PDO::ATTR_CASE 		=> PDO::CASE_LOWER,
