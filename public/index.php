@@ -32,6 +32,7 @@
 		// Регистрация пространств имен
 		->registerNamespaces([
 			"Models"         	=> $config['application']['modelsDir'],
+			"Helpers"			=> $config['application']['helpersDir']
 		])
 		->register();
 

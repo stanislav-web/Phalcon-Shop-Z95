@@ -99,18 +99,18 @@ class Products extends \Phalcon\Mvc\Model
 	public function getNewProducts($price_id, $limit = 1, $cache = false)
 	{
 		$result = null;
-
 		if($cache && $this->_cache) {
 			$backendCache = $this->getDI()->get('backendCache');
 			$result = $backendCache->get(self::TABLE.'-'.__FUNCTION__.'-'.$limit.'.cache');
 		}
 		if($result === null) {
-				$sqlNewProducts = "SELECT ".Products::TABLE.".*, ".Prices::TABLE.".price
+				$sqlNewProducts = "SELECT ".Products::TABLE.".*, ".Prices::TABLE.".price, brands.name AS brand, brands.alias AS brands_alias
 					 FROM ".Products::TABLE."
 					 INNER JOIN ".Prices::TABLE." ON ".Products::TABLE.".id = ".Prices::TABLE.".product_id
+					 INNER JOIN ".Brands::TABLE." ON ".Products::TABLE.".brand_id = ".Brands::TABLE.".id
 					 WHERE ".Products::TABLE.".published = 1
 					 AND ".Prices::TABLE.".id = " . $price_id .
-				" ORDER BY ".Products::TABLE.".date_create DESC LIMIT " . $limit;
+				" ORDER BY ".Products::TABLE.".id DESC LIMIT " . $limit;
 
 			$result = $this->_db->query($sqlNewProducts)->fetchAll();
 
@@ -118,6 +118,29 @@ class Products extends \Phalcon\Mvc\Model
 			if($cache && $this->_cache) $backendCache->save(self::TABLE.'-'.__FUNCTION__.'-'.$limit.'.cache', $result);
 		}
 		return $result;
+	}
 
+	public function getTopProducts($price_id, $limit = 1, $cache = false)
+	{
+		$result = null;
+		if($cache && $this->_cache) {
+			$backendCache = $this->getDI()->get('backendCache');
+			$result = $backendCache->get(self::TABLE.'-'.__FUNCTION__.'-'.$limit.'.cache');
+		}
+		if($result === null) {
+			$sqlNewProducts = "SELECT ".Products::TABLE.".*, ".Prices::TABLE.".price, brands.name AS brand, brands.alias AS brands_alias
+					 FROM ".Products::TABLE."
+					 INNER JOIN ".Prices::TABLE." ON ".Products::TABLE.".id = ".Prices::TABLE.".product_id
+					 INNER JOIN ".Brands::TABLE." ON ".Products::TABLE.".brand_id = ".Brands::TABLE.".id
+					 WHERE ".Products::TABLE.".published = 1
+					 AND ".Prices::TABLE.".id = " . $price_id .
+				" ORDER BY ".Products::TABLE.".rating DESC LIMIT " . $limit;
+
+			$result = $this->_db->query($sqlNewProducts)->fetchAll();
+
+			// Сохраняем запрос в кэше
+			if($cache && $this->_cache) $backendCache->save(self::TABLE.'-'.__FUNCTION__.'-'.$limit.'.cache', $result);
+		}
+		return $result;
 	}
 }

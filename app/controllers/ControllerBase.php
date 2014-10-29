@@ -185,7 +185,8 @@ class ControllerBase extends Phalcon\Mvc\Controller
 		);
 
 		// Установка директории с шаблонами
-		$this->view->setViewsDir($this->_config->application->viewsDir.'/'.$this->_shop->code);
+//		$this->view->setViewsDir($this->_config->application->viewsDir.'/'.$this->_shop->code);
+		$this->view->setViewsDir($this->_config->application->viewsDir.'/KNH1');
 
 		// В конце запись переменных для шаблонов
 		$this->view->setVars([

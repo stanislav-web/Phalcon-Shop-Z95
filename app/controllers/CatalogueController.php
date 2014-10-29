@@ -21,7 +21,7 @@
  * @package Shop
  * @subpackage Controllers
  */
-class CatalogController extends ControllerBase
+class CatalogueController extends ControllerBase
 {
 
 	/**
@@ -46,6 +46,7 @@ class CatalogController extends ControllerBase
 	 */
 	public function indexAction()
 	{
+
 		$this->tag->appendTitle('- '.$this->_translate['TITLE']);
 
 		// Подсчет всех опубликованных товаров
@@ -56,6 +57,14 @@ class CatalogController extends ControllerBase
 		$this->view->setVars(array(
 			'products_count'	=>	$products->products_count
 		));
+	}
+
+	public function itemAction()
+	{
+
+		var_dump($this->request->getURI());
+		die;
+
 	}
 }
 
