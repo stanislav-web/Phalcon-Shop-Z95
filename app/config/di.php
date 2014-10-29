@@ -45,19 +45,44 @@
 			"lifetime" => $config['cache']['cache_backend_lifetime']
 		]);
 
-		// Настройки файлов кэша
-		$Adapter = "Phalcon\\Cache\\Backend\\{$config['cache']['cache_backend_adapter']}";
+		// Выбор системы хранения
 
-		$cache = new $Adapter($backCache, [
-			"cacheDir"  =>  $config['application']['cacheDir'].'/backend/',
-		    "prefix"    =>  strtolower($Adapter).'-'
-		]);
+		switch($config['cache']['cache_backend_adapter'])
+		{
+			case 'File':
+				$cache = new Phalcon\Cache\Backend\File($backCache, [
+					"cacheDir"  =>  $config['application']['cacheDir'].'/backend/',
+					"prefix"    =>  'file-'
+				]);
+			break;
+
+			case 'Apc':
+				$cache = new Phalcon\Cache\Backend\Apc($backCache, [
+					"prefix" => 'apc-'
+				]);
+			break;
+
+			case 'XCache':
+				$cache = new Phalcon\Cache\Backend\Xcache($backCache, [
+					"prefix"    =>  'xcache-',
+				]);
+			break;
+
+			case 'Memcache':
+				$cache = new Phalcon\Cache\Backend\Memcache($backCache, [
+					"prefix"    =>  'memcache-',
+					"host" 		=>  $config['cache']['memcache_host'],
+        			"port" 		=>  $config['cache']['memcache_port'],
+					"persistent"=>	true,
+				]);
+			break;
+		}
 		return $cache;
 	});
 
 	// Компонент frontendCache для кэширования Frontend (шаблоны, стили, скрипты)
 
-	$di->set('frontendCache', function() use ($config) {
+	$di->set('viewCache', function() use ($config) {
 
 		// Кэширование Frontend (шаблоны, стили, скрипты)
 		$frontCache = new Phalcon\Cache\Frontend\Output([

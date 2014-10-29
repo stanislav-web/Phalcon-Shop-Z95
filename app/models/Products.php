@@ -96,15 +96,27 @@ class Products extends \Phalcon\Mvc\Model
 	}
 
 
-	public function getNewProducts($limit, $cache = false)
+	public function getNewProducts($price_id, $limit = 1, $cache = false)
 	{
-		$sqlNewProducts = "SELECT ".Models\Products::TABLE.".*, ".Models\Prices::TABLE.".price
-				 FROM ".Models\Products::TABLE."
-				 INNER JOIN ".Models\Prices::TABLE." ON ".Models\Products::TABLE.".id = ".Models\Prices::TABLE.".product_id
-				 WHERE ".Models\Products::TABLE.".published = 1
-				 AND ".Models\Prices::TABLE.".id = " . $this->_shop->id .
-			" ORDER BY ".Models\Products::TABLE.".date_create DESC LIMIT 6";
-		$this->db->query($sqlNewProducts)->fetchAll();
+		$result = null;
+
+		if($cache && $this->_cache) {
+			$backendCache = $this->getDI()->get('backendCache');
+			$result = $backendCache->get(self::TABLE.'-'.__FUNCTION__.'-'.$limit.'.cache');
+		}
+		if($result === null) {
+				$sqlNewProducts = "SELECT ".Products::TABLE.".*, ".Prices::TABLE.".price
+					 FROM ".Products::TABLE."
+					 INNER JOIN ".Prices::TABLE." ON ".Products::TABLE.".id = ".Prices::TABLE.".product_id
+					 WHERE ".Products::TABLE.".published = 1
+					 AND ".Prices::TABLE.".id = " . $price_id .
+				" ORDER BY ".Products::TABLE.".date_create DESC LIMIT " . $limit;
+
+			$result = $this->_db->query($sqlNewProducts)->fetchAll();
+
+			// Сохраняем запрос в кэше
+			if($cache && $this->_cache) $backendCache->save(self::TABLE.'-'.__FUNCTION__.'-'.$limit.'.cache', $result);
+		}
 		return $result;
 
 	}

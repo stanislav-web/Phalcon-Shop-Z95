@@ -43,14 +43,32 @@ class CartController extends ControllerBase
 	 */
 	public function indexAction()
 	{
-
 		// проверка страницы в кэше
-		$exists = $this->view->getCache()->exists($this->cachePage(__FUNCTION__));
-		if(!$exists)
+
+		$content = null;
+		if($this->_config->cache->frontend)
 		{
-			$this->view->setVar("name", "vavas");
+			$content = $this->view->getCache()->exists($this->cachePage(__FUNCTION__));
 		}
-		//$this->view->cache(array("lifetime" => 1, "key" => $this->cachePage(__FUNCTION__)));
+
+		if($content === null)
+		{
+			// Содержимое контроллера для формирования выдачи
+
+
+			//$modelProducts = new \Models\Products();
+			//$newProducts = $modelProducts->get(array(), array('id' => 'DESC'), 2);
+			//$this->view->setVar("newProducts", $newProducts);
+
+			//$topProducts = $modelProducts->get(array(), array('rating' => 'DESC'), 2);
+			//$this->view->setVar("topProducts", $topProducts);
+
+			//$featuredProducts = $modelProducts->get(array(), array('date_create' => 'DESC'), 2);
+			//$this->view->setVar('featuredProducts', $featuredProducts);
+
+		}
+		// Сохраняем вывод в кэш
+		if($this->_config->cache->frontend) $this->view->cache(array("key" => $this->cachePage(__FUNCTION__)));
 	}
 
 }

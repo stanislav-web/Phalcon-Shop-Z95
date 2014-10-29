@@ -43,12 +43,6 @@ class ControllerBase extends Phalcon\Mvc\Controller
 		$_config        = null,
 
 		/**
-		 * Объект Кэширования из Di
-		 * @var object Phalcon\DI
-		 */
-		$_cache        = null,
-
-		/**
 		 * Объект переводов (можно юзать в контроллерах)
 		 * @var object Phalcon\Translate\Adapter\NativeArray()
 		 */
@@ -58,7 +52,9 @@ class ControllerBase extends Phalcon\Mvc\Controller
 		 * Текущий магазин
 		 * @var object
 		 */
-		$_shop       	=   null;
+		$_shop       	=   null,
+
+		$_mainCategories = null;
 
 	public
 
@@ -159,7 +155,6 @@ class ControllerBase extends Phalcon\Mvc\Controller
 		// Загрузка конфигураций
 
 		$this->_config	=	$this->di->get('config');
-		$this->_cache   =   $this->di->get('frontendCache');
 
 		// Загрузка локалей
 
@@ -176,13 +171,7 @@ class ControllerBase extends Phalcon\Mvc\Controller
 
 		$this->_shop = $this->shopModel->get(['host'	=>	$this->request->getHttpHost()],[], 1, true);
 
-		//$newProducts = $this->productsModel->getNewProducts(6, false);
-
-		//$sqlCategories = "SELECT ".Models\Categories::TABLE.".*
-		//	FROM ".Models\Categories::TABLE." WHERE ".Models\Categories::TABLE.".parent_id = 0";
-
-		//$categories = (object)$this->db->query($sqlCategories)->fetchAll();
-
+		$this->_mainCategories = $this->categoriesModel->get(array('parent_id' => 0), array('id' => 'ASC'), 30);
 
 		// Инициализация навигации
 
@@ -194,7 +183,8 @@ class ControllerBase extends Phalcon\Mvc\Controller
 		);
 
 		// Установка директории с шаблонами
-		$this->view->setViewsDir($this->_config->application->viewsDir.'/'.$this->_shop->code);
+		//$this->view->setViewsDir($this->_config->application->viewsDir.'/'.$this->_shop->code);
+		$this->view->setViewsDir($this->_config->application->viewsDir.'/KNH1');
 
 		// В конце запись переменных для шаблонов
 		$this->view->setVars([
@@ -202,8 +192,8 @@ class ControllerBase extends Phalcon\Mvc\Controller
 			'languages'	    =>	$this->_languages,  // все доступные языки
 			'shop' 		    => 	$this->_shop,       // параметры магазина
 			'topnav' 	    => 	$nav,               // топ меню навигации
-			//'categories'    =>  $categories,        // главные категории
-			//'newProducts'   =>  $newProducts        // новые товары
+			'categories'    =>  $this->_mainCategories,        // главные категории
+			'newProducts'   =>  $this->productsModel->getNewProducts($this->_shop->price_id, 6,  false)       // новые товары
 		]);
 	}
 

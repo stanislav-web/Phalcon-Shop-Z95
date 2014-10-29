@@ -12,7 +12,10 @@
 
 		    'backend'                   =>  true,
 		    'cache_backend_lifetime'    =>  300,        // Время сохранения в сек.
-		    'cache_backend_adapter'     =>  'File'      // Адаптер File, Apc, XCache
+		    'cache_backend_adapter'     =>  'File',     // Адаптер File, Apc, XCache
+
+			'memcache_host'				=>	'localhost',// Хост для Memcache
+			'memcache_port'				=>	'11211',	// Порт для Memcache
 		],
 
 		// Коннект к базе
