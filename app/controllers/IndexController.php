@@ -56,17 +56,14 @@
 			if($content === null)
 			{
 				// Содержимое контроллера для формирования выдачи
+				$newProducts = $this->productsModel->getNewProducts($this->_shop->price_id, 10, true);
+				$this->view->setVar("latestProducts", $newProducts);
 
+				$topProducts = $this->productsModel->getTopProducts($this->_shop->price_id, 5, true);
+				$this->view->setVar("topProducts", $topProducts);
 
-				//$modelProducts = new \Models\Products();
-				//$newProducts = $modelProducts->get(array(), array('id' => 'DESC'), 2);
-				//$this->view->setVar("newProducts", $newProducts);
-
-				//$topProducts = $modelProducts->get(array(), array('rating' => 'DESC'), 2);
-				//$this->view->setVar("topProducts", $topProducts);
-
-				//$featuredProducts = $modelProducts->get(array(), array('date_create' => 'DESC'), 2);
-				//$this->view->setVar('featuredProducts', $featuredProducts);
+				$featuredProducts = $this->productsModel->get(array(), array('date_create' => 'DESC'), 2, true);
+				$this->view->setVar('featuredProducts', $featuredProducts);
 
 			}
 			// Сохраняем вывод в кэш

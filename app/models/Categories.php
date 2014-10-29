@@ -47,6 +47,7 @@ class Categories extends \Phalcon\Mvc\Model
 
 	/**
 	 * Получение данных из таблицы
+	 * @param array $fields pair fields | empty          	Параметр SELECT
 	 * @param array $data pair field=value | empty          Параметр WHERE
 	 * @param array $order pair field=sort type | empty     Сортировка: поле => порядок
 	 * @param int $limit 0123... |                          Лимит выборки
@@ -54,7 +55,7 @@ class Categories extends \Phalcon\Mvc\Model
 	 * @access public
 	 * @return null | array
 	 */
-	public function get(array $data, $order = [], $limit = null, $cache = false)
+	public function get(array $fields = [], array $data = [], $order = [], $limit = null, $cache = false)
 	{
 		$result = null;
 
@@ -65,8 +66,12 @@ class Categories extends \Phalcon\Mvc\Model
 
 		if ($result === null) {    // Выполняем запрос из MySQL
 
-			$sql = "SELECT " . self::TABLE . ".*
-				FROM " . self::TABLE;
+			if(!empty($fields))
+				$sql = "SELECT " . rtrim(implode(",",$fields), ",") . "
+					FROM " . self::TABLE;
+			else
+				$sql = "SELECT " . self::TABLE. ".*
+					FROM " . self::TABLE;
 
 			if (!empty($data)) {
 				foreach ($data as $key => $value) {

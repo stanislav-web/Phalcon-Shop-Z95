@@ -12,6 +12,14 @@
 	class Common extends \Phalcon\Mvc\Model
 	{
 
+		/**
+		 * Таблицы
+		 * @const TABLE_PRODUCTS_REL
+		 * @const TABLE_CAT_SHOP_REL
+		 */
+		const TABLE_PRODUCTS_REL = 'products_relationship';
+		const TABLE_CAT_SHOP_REL = 'category_shop_relationship';
+
 		private
 
 			/**
@@ -25,6 +33,19 @@
 			 * @var boolean
 			 */
 			$_cache	=	false;
+
+
+			/**
+		 	 * Статус кэширования
+		 	 * @var boolean
+		 	 */
+			public
+
+				/**
+				 * Статус кэширования
+				 * @var boolean
+				 */
+				$result	=	null;
 
 		/**
 		 * Инициализация соединения
@@ -41,7 +62,13 @@
 
 		/**
 		 * Сбор данных из нескольких таблиц (предпочтительно забрать запрос в кэш)
-		 *
+		 * @example <code>
+		 *          	$this->_commonDataTables[]	= 	$this->commonModel->getCollectedData([
+		 *					Models\Categories::TABLE	=>	['id', 'name', 'parent_id', 'alias'],
+		 *					Models\Tags::TABLE			=>	['id', 'name', 'parent_id', 'alias'],
+		 *					Models\Brands::TABLE		=>	['id', 'name', 'alias'],
+		 *				]);
+		 *          </code>
 		 * @param array $tables
 		 * @param array $aliases
 		 * @param       $cache
@@ -50,8 +77,6 @@
 		 */
 		public function getCollectedData(array $tables, $cache = false)
 		{
-			$result = null;
-
 			if($cache && $this->_cache) {
 				$backendCache = $this->getDI()->get('backendCache');
 				$result = $backendCache->get(__FUNCTION__.'-'.serialize($tables).'.cache');
@@ -74,10 +99,45 @@
 				$sql .= " FROM ";
 				$sql .= implode(", ",array_keys($tables));
 
-				$result = $this->_db->query($sql)->fetchAll();
+				$this->result = $this->_db->query($sql)->fetchAll();
 
 				// Кеширую если кэш включен
 				if($cache && $this->_cache) $backendCache->save(__FUNCTION__.'-'.serialize($tables).'.cache', $result);
+			}
+			return $result;
+		}
+
+		/**
+		 * Получение категорий с дочерними по конкретному магазину
+		 *
+		 * @param      $shop_id
+		 * @param bool $cache
+		 * @return null
+		 */
+		public function getShopCategories($shop_id, $cache = false)
+		{
+			$result = null;
+			if($cache && $this->_cache) {
+				$backendCache = $this->getDI()->get('backendCache');
+				$result = $backendCache->get(strtolower(__FUNCTION__).'-'.$shop_id.'.cache');
+			}
+
+			if($result === null)
+			{
+				$sql = "SELECT 	".Categories::TABLE.".id AS id, ".Categories::TABLE.".parent_id AS parent_id,
+							".Categories::TABLE.".name AS name, ".Categories::TABLE.".alias AS alias
+							FROM  ".self::TABLE_CAT_SHOP_REL."
+							INNER JOIN ".Categories::TABLE."
+							ON (
+									".self::TABLE_CAT_SHOP_REL.".category_id = ".Categories::TABLE.".id
+									&& ".self::TABLE_CAT_SHOP_REL.".category_parent_id = ".Categories::TABLE.".parent_id
+								)
+							WHERE ".self::TABLE_CAT_SHOP_REL.".shop_id = ".$shop_id;
+
+				$result = $this->_db->query($sql)->fetchAll();
+
+				// Сохраняем запрос в кэше
+				if($cache && $this->_cache) $backendCache->save(strtolower(__FUNCTION__).'-'.$shop_id.'.cache', $result);
 			}
 			return $result;
 		}

@@ -15,6 +15,8 @@
  * @var $this->_config      доступ ко всем настройкам
  * @var $this->_translate   доступ к переводчику
  * @var $this->_shop        параметры текущего магазина
+ * @var $this->_shopCategories        все категории магазина
+ * @var $this->_helper      помошник для каталога
  *
  * @package Shop
  * @subpackage Controllers
@@ -43,6 +45,18 @@ class ControllerBase extends Phalcon\Mvc\Controller
 		$_config        = null,
 
 		/**
+		 * Объект помощника
+		 * @var object Helpers\CatalogueTags()
+		 */
+		$_helper        = null,
+
+		/**
+		 * Объект Кэширования из Di
+		 * @var object Phalcon\DI
+		 */
+		$_cache        = null,
+
+		/**
 		 * Объект переводов (можно юзать в контроллерах)
 		 * @var object Phalcon\Translate\Adapter\NativeArray()
 		 */
@@ -55,16 +69,10 @@ class ControllerBase extends Phalcon\Mvc\Controller
 		$_shop       	=   null,
 
 		/**
-		 * Главные категории
+		 * Категории текущего магазина
 		 * @var null
 		 */
-		$_mainCategories = null,
-
-		/**
-		 * Совокупность данных из Categories, Tags, Brands ...
-		 * @var null
-		 */
-		$_commonDataTables = null;
+		$_shopCategories = null;
 
 	public
 
@@ -166,6 +174,7 @@ class ControllerBase extends Phalcon\Mvc\Controller
 		// Загрузка конфигураций
 
 		$this->_config	=	$this->di->get('config');
+		$this->_helper	=	new Helpers\CatalogueTags();
 
 		// Загрузка локалей
 
@@ -179,19 +188,12 @@ class ControllerBase extends Phalcon\Mvc\Controller
 		$this->categoriesModel  =   new Models\Categories();
 		$this->pricesModel      =   new Models\Prices();
 
-		// Получаю параметры всех тегов, категорий, и брендов (для построения роутов и деревьев)
-		$this->_commonDataTables	= 	$this->commonModel->getCollectedData([
-			Models\Categories::TABLE	=>	['id', 'name', 'parent_id', 'alias'],
-			Models\Tags::TABLE			=>	['id', 'name', 'parent_id', 'alias'],
-			Models\Brands::TABLE		=>	['id', 'name', 'alias'],
-		]);
-
-		exit('111');
 		// Получение параметров текущего магазина
 
 		$this->_shop = $this->shopModel->get(['host'	=>	$this->request->getHttpHost()],[], 1, true);
 
-		$this->_mainCategories = $this->categoriesModel->get(array('parent_id' => 0), array('id' => 'ASC'), 30, true);
+		// Получение категорий и аодкатегорий для текущего магазина
+		$this->_shopCategories = $this->commonModel->getShopCategories($this->_shop->id, true);							// LIMIT
 
 		// Инициализация навигации
 
@@ -212,8 +214,8 @@ class ControllerBase extends Phalcon\Mvc\Controller
 			'languages'	    =>	$this->_languages,  // все доступные языки
 			'shop' 		    => 	$this->_shop,       // параметры магазина
 			'topnav' 	    => 	$nav,               // топ меню навигации
-			'categories'    =>  $this->_mainCategories,        // главные категории
-			'newProducts'   =>  $this->productsModel->getNewProducts($this->_shop->price_id, 6,  false)       // новые товары
+			'categories'    =>  (object)$this->_helper->findInTree($this->_shopCategories, 'parent_id', '0'),        // главные категории
+			'newProducts'   =>  $this->productsModel->getNewProducts($this->_shop->price_id, 6,  true)       // новые товары
 		]);
 	}
 

@@ -27,6 +27,13 @@
  */
 class CatalogueController extends ControllerBase
 {
+	private
+
+		/**
+		 * Все категории каталога
+		 * @var bool
+		 */
+		$_routeTree = false;
 
 	/**
 	 * initialize() Инициализирую конструктор
@@ -55,8 +62,6 @@ class CatalogueController extends ControllerBase
 	 */
 	public function indexAction()
 	{
-
-
 		// проверка страницы в кэше
 
 		$content = null;
@@ -74,18 +79,42 @@ class CatalogueController extends ControllerBase
 
 			if($this->request->isGet())
 			{
-				$tree = Helpers\CatalogueTags::catalogueRouteTree($this->request->getURI(), [
+				$this->_routeTree = $this->_helper->catalogueRouteTree($this->request->getURI(), [
 					'categories', 'brands', 'tags'
 				]);
 
+				// Работа с категориями
+				if(isset($this->_routeTree['categories'])) 	$this->_categories();
 
-				$this->view->setVars([
+				// Работа с брендами
+				if(isset($this->_routeTree['brands']))		$this->_brands();
 
-				]);
+				// работа с тегами
+				if(isset($this->_routeTree['tags']))		$this->_tags();
 			}
 		}
 		// Сохраняем вывод в кэш
 		if($this->_config->cache->frontend) $this->view->cache(array("key" => $this->cachePage(__FUNCTION__)));
+	}
+
+	public function itemAction()
+	{
+
+		var_dump($this->request->getURI());
+		die;
+
+	}
+
+	private function _categories()
+	{
+		if(sizeof($this->_routeTree['categories']) == 1)
+		{
+			// если главная категория, ищу ее в списке категорий
+			$category = $this->_helper->findInTree($this->_shopCategories, 'alias', $this->_routeTree['categories'][0]);
+
+			// Получаю список всех товаров в категории
+
+		}
 	}
 }
 
