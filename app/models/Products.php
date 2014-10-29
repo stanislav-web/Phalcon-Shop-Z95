@@ -60,7 +60,7 @@ class Products extends \Phalcon\Mvc\Model
 
 		if($cache && $this->_cache) {
 			$backendCache = $this->getDI()->get('backendCache');
-			$result = $backendCache->get(self::TABLE.'-'.serialize($data).'.cache');
+			$result = $backendCache->get(self::TABLE.'-'.implode('-', $data).'.cache');
 		}
 
 		if($result === null) {    // Выполняем запрос из MySQL
@@ -89,7 +89,7 @@ class Products extends \Phalcon\Mvc\Model
 			}
 
 			// Сохраняем запрос в кэше
-			if($cache && $this->_cache) $backendCache->save(self::TABLE.'-'.serialize($data).'.cache', $result);
+			if($cache && $this->_cache) $backendCache->save(self::TABLE.'-'.implode('-', $data).'.cache', $result);
 		}
 
 		return $result;
@@ -110,7 +110,7 @@ class Products extends \Phalcon\Mvc\Model
 					 INNER JOIN ".Prices::TABLE." ON ".Products::TABLE.".id = ".Prices::TABLE.".product_id
 					 WHERE ".Products::TABLE.".published = 1
 					 AND ".Prices::TABLE.".id = " . $price_id .
-				" ORDER BY ".Products::TABLE.".date_create DESC LIMIT " . $limit;
+				" ORDER BY ".Products::TABLE.".id DESC LIMIT " . $limit;
 
 			$result = $this->_db->query($sqlNewProducts)->fetchAll();
 

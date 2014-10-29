@@ -3,13 +3,26 @@
 	 * Конфигурация роутера Phalcon
 	 */
 
+	// Смена языка
 	$router->add("/language/{language:[a-z]+}", [
 		'controller'    => 'index',
 		'action'        => 'language'
 	]);
 
-	$router->add("/catalog/", [
-		'controller'    => 'catalog',
+	// Роутер каталога
+
+	$router->addGet("/categories/:params", [
+		'controller'    => 'catalogue',
+		'action'        => 'index'
+	]);
+
+	$router->addGet("/tags/:params", [
+		'controller'    => 'catalogue',
+		'action'        => 'index'
+	]);
+
+	$router->addGet("/brands/:params", [
+		'controller'    => 'catalogue',
 		'action'        => 'index'
 	]);
 
@@ -17,3 +30,6 @@
 		'controller'    => 'cart',
 		'action'        => 'index',
 	]);
+
+	// Удаление косых в конце
+	$router->removeExtraSlashes(true);

@@ -10,9 +10,9 @@
 			'cache_frontend_lifetime'   =>  300,        // Время сохранения в сек.
 			'cache_frontend_prefix'     => 'page-',	    // Префикс страниц в кэше
 
-		    'backend'                   =>  true,
+		    'backend'                   =>  false,
 		    'cache_backend_lifetime'    =>  300,        // Время сохранения в сек.
-		    'cache_backend_adapter'     =>  'File',     // Адаптер File, Apc, XCache
+		    'cache_backend_adapter'     =>  'File',     // Адаптер File, Apc, XCache, Memcahce
 
 			'memcache_host'				=>	'localhost',// Хост для Memcache
 			'memcache_port'				=>	'11211',	// Порт для Memcache

@@ -2,20 +2,20 @@
 namespace Models;
 
 /**
- * Class Categories Модель для `categories`
+ * Class Tags Модель для `tags`
  *
  * Получает идентификатор соединения $this->_db = $this->getReadConnection();
  *
  * @package Shop
  * @subpackage Models
  */
-class Categories extends \Phalcon\Mvc\Model
+class Tags extends \Phalcon\Mvc\Model
 {
 	/**
 	 * Таблица в базе
 	 * @const
 	 */
-	const TABLE = 'categories';
+	const TABLE = 'tags';
 
 	private
 
@@ -27,8 +27,8 @@ class Categories extends \Phalcon\Mvc\Model
 
 		/**
 		 * Статус кэширования
-		 * @var boolean
-		 */
+	 	 * @var boolean
+	 	 */
 		$_cache	=	false;
 
 	/**
@@ -42,8 +42,9 @@ class Categories extends \Phalcon\Mvc\Model
 
 		if(!$this->_cache)
 			$this->_cache = $this->getDI()->get('config')->cache->backend;
-	}
 
+		return $this->_db;
+	}
 
 	/**
 	 * Получение данных из таблицы
@@ -58,37 +59,40 @@ class Categories extends \Phalcon\Mvc\Model
 	{
 		$result = null;
 
-		if ($cache && $this->_cache) {
+		if($cache && $this->_cache) {
 			$backendCache = $this->getDI()->get('backendCache');
-			$result = $backendCache->get(self::TABLE . '-' . implode('-', $data) . '.cache');
+			$result = $backendCache->get(self::TABLE.'-'.implode('-', $data).'.cache');
 		}
 
-		if ($result === null) {    // Выполняем запрос из MySQL
+		if($result === null) {    // Выполняем запрос из MySQL
 
-			$sql = "SELECT " . self::TABLE . ".*
-				FROM " . self::TABLE;
+			$sql = "SELECT ".self::TABLE.".*
+				FROM ".self::TABLE;
 
-			if (!empty($data)) {
-				foreach ($data as $key => $value) {
-					if (is_array($value))
-						$sql .= " WHERE " . $key . " IN(" . join(',', $value) . " ";
-					else $sql .= " WHERE " . $key . " = '" . $value . "'";
+			if(!empty($data))
+			{
+				foreach($data as $key => $value)
+				{
+					if(is_array($value))
+						$sql .= " WHERE ".$key." IN(".join(',', $value)." ";
+					else $sql .= " WHERE ".$key." = '".$value."'";
 				}
 			}
 
-			if (!empty($order)) $sql .= " ORDER BY " . key($order) . " " . $order[key($order)];
+			if(!empty($order)) $sql .= " ORDER BY ".key($order)." ".$order[key($order)];
 
-			if (null != $limit) $sql .= " LIMIT " . $limit;
+			if(null != $limit) $sql .= " LIMIT ".$limit;
 
-			if (null != $limit && $limit > 1) {
+			if(null != $limit && $limit > 1) {
 				$result = $this->_db->query($sql)->fetchAll();
 			} else {
 				$result = $this->_db->query($sql)->fetch();
 			}
 
 			// Сохраняем запрос в кэше
-			if ($cache && $this->_cache) $backendCache->save(self::TABLE . '-' . implode('-', $data) . '.cache', $result);
+			if($cache && $this->_cache) $backendCache->save(self::TABLE.'-'.implode('-', $data).'.cache', $result);
 		}
+
 		return $result;
 	}
 }

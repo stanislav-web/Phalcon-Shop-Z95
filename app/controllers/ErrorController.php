@@ -42,7 +42,7 @@ class ErrorController extends ControllerBase
 	 */
 	public function show404Action()
 	{
-		Phalcon\Tag::setTitle('NOT_FOUND');
+		Phalcon\Tag::setTitle($this->_translate['NOT_FOUND']);
 		$this->response->setStatusCode(404, 'Not Found');
 	}
 }

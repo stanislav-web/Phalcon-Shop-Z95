@@ -9,5 +9,5 @@
 		"SHOP"         				=>  "SHOP",
 		"DELIVERY"         			=>  "DELIVERY",
 		"ABOUT US"         			=>  "ABOUT US",
-	    "NOT_FOUNT"                 =>  "404 Page Not Found"
+	    "NOT_FOUND"                 =>  "404 Page Not Found"
 	];

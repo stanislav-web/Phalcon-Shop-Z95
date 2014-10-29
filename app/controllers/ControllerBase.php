@@ -54,7 +54,17 @@ class ControllerBase extends Phalcon\Mvc\Controller
 		 */
 		$_shop       	=   null,
 
-		$_mainCategories = null;
+		/**
+		 * Главные категории
+		 * @var null
+		 */
+		$_mainCategories = null,
+
+		/**
+		 * Совокупность данных из Categories, Tags, Brands ...
+		 * @var null
+		 */
+		$_commonDataTables = null;
 
 	public
 
@@ -63,6 +73,7 @@ class ControllerBase extends Phalcon\Mvc\Controller
 		 * @var bool | Instance objects
 		 */
 		$shopModel          =   false,
+		$commonModel        =   false,
 		$categoriesModel    =   false,
 		$productsModel      =   false,
 		$pricesModel        =   false;
@@ -162,16 +173,25 @@ class ControllerBase extends Phalcon\Mvc\Controller
 
 		// Инициализация моделей (объекты доступны в контроллерах и views)
 
+		$this->commonModel      =   new Models\Common();
 		$this->shopModel        =   new Models\Shops();
 		$this->productsModel    =   new Models\Products();
 		$this->categoriesModel  =   new Models\Categories();
 		$this->pricesModel      =   new Models\Prices();
 
+		// Получаю параметры всех тегов, категорий, и брендов (для построения роутов и деревьев)
+		$this->_commonDataTables	= 	$this->commonModel->getCollectedData([
+			Models\Categories::TABLE	=>	['id', 'name', 'parent_id', 'alias'],
+			Models\Tags::TABLE			=>	['id', 'name', 'parent_id', 'alias'],
+			Models\Brands::TABLE		=>	['id', 'name', 'alias'],
+		]);
+
+		exit('111');
 		// Получение параметров текущего магазина
 
 		$this->_shop = $this->shopModel->get(['host'	=>	$this->request->getHttpHost()],[], 1, true);
 
-		$this->_mainCategories = $this->categoriesModel->get(array('parent_id' => 0), array('id' => 'ASC'), 30);
+		$this->_mainCategories = $this->categoriesModel->get(array('parent_id' => 0), array('id' => 'ASC'), 30, true);
 
 		// Инициализация навигации
 
