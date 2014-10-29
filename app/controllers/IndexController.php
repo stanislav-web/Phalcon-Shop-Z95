@@ -50,7 +50,7 @@
 			$content = null;
 			if($this->_config->cache->frontend)
 			{
-				$content = $this->_cache->start($this->cachePage(__FUNCTION__));
+				$content = $this->view->getCache()->exists($this->cachePage(__FUNCTION__));
 			}
 
 			if($content === null)
@@ -68,10 +68,9 @@
 				//$featuredProducts = $modelProducts->get(array(), array('date_create' => 'DESC'), 2);
 				//$this->view->setVar('featuredProducts', $featuredProducts);
 
-				// Сохраняем вывод в кэш
-				if($this->_config->cache->frontend) $this->_cache->save();
 			}
-			else return $content;
+			// Сохраняем вывод в кэш
+			if($this->_config->cache->frontend) $this->view->cache(array("key" => $this->cachePage(__FUNCTION__)));
 		}
 
 		/**

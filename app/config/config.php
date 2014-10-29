@@ -10,7 +10,7 @@
 			'cache_frontend_lifetime'   =>  300,        // Время сохранения в сек.
 			'cache_frontend_prefix'     => 'page-',	    // Префикс страниц в кэше
 
-		    'backend'                   =>  true,
+		    'backend'                   =>  false,
 		    'cache_backend_lifetime'    =>  300,        // Время сохранения в сек.
 		    'cache_backend_adapter'     =>  'File'      // Адаптер File, Apc, XCache
 		],

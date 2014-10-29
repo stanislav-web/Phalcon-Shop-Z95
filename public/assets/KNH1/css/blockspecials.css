@@ -1,0 +1,7 @@
+/* RIGHT TO LEFT */
+#special_block_right li {
+  border: 0;
+}
+#special_block_right .button {
+  margin: 0px;
+}

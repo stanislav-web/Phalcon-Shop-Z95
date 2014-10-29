@@ -57,7 +57,7 @@
 
 	// Компонент frontendCache для кэширования Frontend (шаблоны, стили, скрипты)
 
-	$di->set('frontendCache', function() use ($config) {
+	$di->set('viewCache', function() use ($config) {
 
 		// Кэширование Frontend (шаблоны, стили, скрипты)
 		$frontCache = new Phalcon\Cache\Frontend\Output([
