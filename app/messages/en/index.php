@@ -1,6 +1,6 @@
 <?php
 	/**
-	 * English localization file for Layouts
+	 * English localization file for IndexController
 	 */
 	$messages = [
 		"TITLE"                     =>  "Out Shop",

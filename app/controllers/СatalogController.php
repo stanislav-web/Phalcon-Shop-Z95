@@ -1,7 +1,6 @@
 <?php
-
 /**
- * Class CartController Корзина и Checkout
+ * Class CatalogController Каталог (Карточка товара, вывод из категорий)
  *
  * Доступ к моделям
  *
@@ -22,7 +21,7 @@
  * @package Shop
  * @subpackage Controllers
  */
-class CartController extends ControllerBase
+class CatalogController extends ControllerBase
 {
 
 	/**
@@ -33,8 +32,12 @@ class CartController extends ControllerBase
 	public function initialize()
 	{
 		// устанавливаю шаблон и загружаю локализацию
-		$this->loadCustomTrans('index');
+		$this->loadCustomTrans('catalog');
 		parent::initialize();
+
+		// Заголовок страницы
+		$this->tag->setTitle($this->_shop->title);
+
 	}
 
 	/**
@@ -43,15 +46,16 @@ class CartController extends ControllerBase
 	 */
 	public function indexAction()
 	{
+		$this->tag->appendTitle('- '.$this->_translate['TITLE']);
 
-		// проверка страницы в кэше
-		$exists = $this->view->getCache()->exists($this->cachePage(__FUNCTION__));
-		if(!$exists)
-		{
-			$this->view->setVar("name", "vavas");
-		}
-		//$this->view->cache(array("lifetime" => 1, "key" => $this->cachePage(__FUNCTION__)));
+		// Подсчет всех опубликованных товаров
+		$psql = "SELECT COUNT(1) AS products_count
+				FROM ".Products::TABLE." WHERE ".Products::TABLE.".published = 1";
+		$products = (object)$this->db->query($psql)->fetch();
+
+		$this->view->setVars(array(
+			'products_count'	=>	$products->products_count
+		));
 	}
-
 }
 

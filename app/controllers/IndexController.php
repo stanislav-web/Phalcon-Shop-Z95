@@ -1,97 +1,154 @@
 <?php
 
-class IndexController extends ControllerBase
-{
-
 	/**
-	 * initialize() Инициализирую конструктор
-	 * @access public
-	 * @return null
+	 * Class IndexController Главная страница и статика
+	 *
+	 * Доступ к моделям
+	 *
+	 * @var $this->shopModel
+	 * @var $this->productsModel
+	 * @var $this->categoriesModel
+	 * @var $this->pricesModel
+	 *
+	 * @var $this->_config      доступ ко всем настройкам
+	 * @var $this->_translate   доступ к переводчику
+	 * @var $this->_shop        параметры текущего магазина
+	 *
+	 * @var $this->di           вызов компонентов из app/config/di.php
+	 * @var $this->session      вызов сессии
+	 * @var $this->request      информация об HTTP запросах
+	 * @var $this->router       посмотреть параметры текущего роута, настроить роуты
+	 *
+	 * @package Shop
+	 * @subpackage Controllers
 	 */
-	public function initialize()
+	class IndexController extends ControllerBase
 	{
-		// устанавливаю шаблон и загружаю локализацию
-		$this->loadCustomTrans('index');
-		parent::initialize();
-	}
-
-	/**
-	 * indexAction() По умолчанию главная страница
-	 * @access public
-	 */
-	public function indexAction()
-	{
-		// проверка страницы в кэше
-		$exists = $this->view->getCache()->exists($this->cachePage(__FUNCTION__));
-
-		if(!$exists)
+		/**
+		 * initialize() Инициализирую конструктор
+		 * @access public
+		 * @return null
+		 */
+		public function initialize()
 		{
-			//@TODO передать какие нибыдь параметры в $this->viеws
-			$this->view->setVar("name", "Mike");
+			// устанавливаю шаблон и загружаю локализацию
+			$this->loadCustomTrans('index');
+			parent::initialize();
+
+			// Заголовок страницы
+			$this->tag->setTitle($this->_shop->title);
 		}
-		$modelProducts = new \Models\Products();
-		$newProducts = $modelProducts->get(array(), array('id' => 'DESC'), 2);
-		$this->view->setVar("newProducts", $newProducts);
 
-		$topProducts = $modelProducts->get(array(), array('rating' => 'DESC'), 2);
-		$this->view->setVar("topProducts", $topProducts);
-
-		$featuredProducts = $modelProducts->get(array(), array('date_create' => 'DESC'), 2);
-		$this->view->setVar('featuredProducts', $featuredProducts);
-
-		//$this->view->cache(array("lifetime" => 1, "key" => $this->cachePage(__FUNCTION__)));
-	}
-
-	/**
-	 * aboutAction() Страница "О НАС"
-	 * @access public
-	 */
-	public function aboutAction()
-	{
-		// проверка страницы в кэше
-		$exists = $this->view->getCache()->exists($this->cachePage(__FUNCTION__));
-
-		if(!$exists)
+		/**
+		 * indexAction() По умолчанию главная страница
+		 * @access public
+		 */
+		public function indexAction()
 		{
-			//@TODO передать какие нибыдь параметры в $this->viеws
-			$this->view->setVar("name", "Mike");
+			// проверка страницы в кэше
+
+			$content = null;
+			if($this->_config->cache->frontend)
+			{
+				$content = $this->_cache->start($this->cachePage(__FUNCTION__));
+			}
+
+			if($content === null)
+			{
+				// Содержимое контроллера для формирования выдачи
+
+
+				//$modelProducts = new \Models\Products();
+				//$newProducts = $modelProducts->get(array(), array('id' => 'DESC'), 2);
+				//$this->view->setVar("newProducts", $newProducts);
+
+				//$topProducts = $modelProducts->get(array(), array('rating' => 'DESC'), 2);
+				//$this->view->setVar("topProducts", $topProducts);
+
+				//$featuredProducts = $modelProducts->get(array(), array('date_create' => 'DESC'), 2);
+				//$this->view->setVar('featuredProducts', $featuredProducts);
+
+				// Сохраняем вывод в кэш
+				if($this->_config->cache->frontend) $this->_cache->save();
+			}
+			else return $content;
 		}
-		
-		//$this->view->cache(array("lifetime" => 1, "key" => $this->cachePage(__FUNCTION__)));
-	}
 
-	/**
-	 * communityAction() Страница "СООБЩЕСТВО"
-	 * @access public
-	 */
-	public function communityAction()
-	{
-		// проверка страницы в кэше
-		$exists = $this->view->getCache()->exists($this->cachePage(__FUNCTION__));
-
-		if(!$exists)
+		/**
+		 * aboutAction() Страница "О НАС"
+		 * @access public
+		 */
+		public function aboutAction()
 		{
-			//@TODO передать какие нибыдь параметры в $this->viеws
+			// проверка страницы в кэше
+
+			$content = null;
+			if($this->_config->cache->frontend)
+			{
+				$content = $this->_cache->start($this->cachePage(__FUNCTION__));
+			}
+
+			if($content === null)
+			{
+				// Содержимое контроллера для формирования выдачи
+
+
+
+				// Сохраняем вывод в кэш
+				if($this->_config->cache->frontend) $this->_cache->save();
+			}
 		}
-		//$this->view->cache(array("lifetime" => 1, "key" => $this->cachePage(__FUNCTION__)));
-	}
 
-	/**
-	 * deliveryAction() Страница "ДОСТАВКА"
-	 * @access public
-	 */
-	public function deliveryAction()
-	{
-		// проверка страницы в кэше
-		$exists = $this->view->getCache()->exists($this->cachePage(__FUNCTION__));
-
-		if(!$exists)
+		/**
+		 * communityAction() Страница "СООБЩЕСТВО"
+		 * @access public
+		 */
+		public function communityAction()
 		{
-			//@TODO передать какие нибыдь параметры в $this->viеws
-			$this->view->setVar("name", "Mike");
+			// проверка страницы в кэше
+
+			$content = null;
+			if($this->_config->cache->frontend)
+			{
+				$content = $this->_cache->start($this->cachePage(__FUNCTION__));
+			}
+
+			if($content === null)
+			{
+				// Содержимое контроллера для формирования выдачи
+
+
+
+				// Сохраняем вывод в кэш
+				if($this->_config->cache->frontend) $this->_cache->save();
+			}
 		}
-		//$this->view->cache(array("lifetime" => 1, "key" => $this->cachePage(__FUNCTION__)));
-	}
+
+		/**
+		 * deliveryAction() Страница "ДОСТАВКА"
+		 * @access public
+		 */
+		public function deliveryAction()
+		{
+			// проверка страницы в кэше
+
+			$content = null;
+			if($this->_config->cache->frontend)
+			{
+				$content = $this->_cache->start($this->cachePage(__FUNCTION__));
+			}
+
+			if($content === null)
+			{
+				// Содержимое контроллера для формирования выдачи
+
+
+
+				// Сохраняем вывод в кэш
+				if($this->_config->cache->frontend) $this->_cache->save();
+
+			}
+		}
 
 
 	/**
@@ -102,16 +159,18 @@ class IndexController extends ControllerBase
 	{
 		// Смена языка и перезагрузка файла локализации
 
-		$this->session->set('language', $language);
-		$this->loadMainTrans();
-		$this->loadCustomTrans('index');
+			$this->session->set('language', $language);
+			$this->loadMainTrans();
+			$this->loadCustomTrans('index');
 
-		// Ставлю переадресацию обратно откуда зашел
+			// Ставлю переадресацию обратно откуда зашел
 
-		$referer = $this->request->getHTTPReferer();
-		if(strpos($referer, $this->request->getHttpHost()."/")!==false) return $this->response->setHeader("Location", $referer);
-		else
-			return $this->dispatcher->forward(['controller' => 'index', 'action' => 'index']);
+			$referer = $this->request->getHTTPReferer();
+
+			if(strpos($referer, $this->request->getHttpHost()."/")!==false)
+				return $this->response->setHeader("Location", $referer);
+			else
+				return $this->dispatcher->forward(['controller' => 'index', 'action' => 'index']);
+		}
 	}
-}
 

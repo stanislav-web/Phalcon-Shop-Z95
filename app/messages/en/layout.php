@@ -1,6 +1,6 @@
 <?php
 	/**
-	 * English localization file for Layouts
+	 * English localization file for Layout
 	 */
 	$messages = [
 		"HOME"                     	=>  "HOME",
@@ -9,4 +9,5 @@
 		"SHOP"         				=>  "SHOP",
 		"DELIVERY"         			=>  "DELIVERY",
 		"ABOUT US"         			=>  "ABOUT US",
+	    "NOT_FOUNT"                 =>  "404 Page Not Found"
 	];

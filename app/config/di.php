@@ -7,6 +7,8 @@
 		return new \Phalcon\Config($config);
 	});
 
+	// Компонент Navigation. Управление навигацией на сайте
+
 	$di->set('navigation', function() use ($di) {
 		return new \Navigation\Navigation($di->get('config'));
 	}, true);
@@ -29,25 +31,44 @@
 
 	// Компонент Views для вывода шаблонов
 
-	$di->set('view', function() use ($config) {
+	$di->set('view', function() {
 		$view = new \Phalcon\Mvc\View();
 		return $view;
 	});
 
-	// Компонент viewCache для кэширования фронтэнда
+	// Компонент frontendCache для кэширования Frontend (шаблоны, стили, скрипты)
 
-	$di->set('viewCache', function() use ($config) {
-		// время жизни кэша
+	$di->set('backendCache', function() use ($config) {
+
+		// Кэширование данных (запросы, конструкции, json итп)
+		$backCache = new Phalcon\Cache\Frontend\Data([
+			"lifetime" => $config['cache']['cache_backend_lifetime']
+		]);
+
+		// Настройки файлов кэша
+		$Adapter = "Phalcon\\Cache\\Backend\\{$config['cache']['cache_backend_adapter']}";
+
+		$cache = new $Adapter($backCache, [
+			"cacheDir"  =>  $config['application']['cacheDir'].'/backend/',
+		    "prefix"    =>  strtolower($Adapter).'-'
+		]);
+		return $cache;
+	});
+
+	// Компонент frontendCache для кэширования Frontend (шаблоны, стили, скрипты)
+
+	$di->set('frontendCache', function() use ($config) {
+
+		// Кэширование Frontend (шаблоны, стили, скрипты)
 		$frontCache = new Phalcon\Cache\Frontend\Output([
-			"lifetime" => 1
+			"lifetime" => $config['cache']['cache_frontend_lifetime']
 		]);
 
 		// Настройки файлов кэша
 		$cache = new Phalcon\Cache\Backend\File($frontCache, [
-			"cacheDir"  => $config['application']['cacheDir'],
-			"prefix"    => "page-"
+			"cacheDir"  => $config['application']['cacheDir'].'/frontend/',
+			"prefix"    => $config['cache']['cache_frontend_prefix']
 		]);
-
 		return $cache;
 	});
 
@@ -60,6 +81,7 @@
 			"username"  => 	$config['database']['username'],
 			"password"  => 	$config['database']['password'],
 			"dbname"    => 	$config['database']['dbname'],
+			"persistent"    => 	$config['database']['persistent'],
 			"options" => array(
 				PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'UTF8'",
 				PDO::ATTR_CASE 		=> PDO::CASE_LOWER,
@@ -70,20 +92,20 @@
 	});
 
 	// Компонент Session. Стартую сессию
-	$di->set('session', function() {
+	$di->setShared('session', function() {
 		$session = new Phalcon\Session\Adapter\Files();
 		$session->start();
 		return $session;
 	});
 
-	// Компонент Cookies. Стартую сессию
+	// Компонент Cookies. Стартую куки
 	$di->set('cookies', function() {
 		$cookies = new Phalcon\Http\Response\Cookies();
 		$cookies->useEncryption(false);
 		return $cookies;
 	});
 
-	// Компонент FlashMessenger. Ориентируюсь на Twitter Bootstrap классы для вывода окон
+	// Компонент FlashMessenger. Классы для вывода окон
 
 	$di->set('flash', function() {
 		$flash = new Phalcon\Flash\Direct([
@@ -94,7 +116,7 @@
 		return $flash;
 	});
 
-	// Обработчик ошибок
+	// Обработчик ошибок 404
 
 	$di->set('dispatcher', function() use ($di) {
 

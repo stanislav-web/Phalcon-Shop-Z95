@@ -1,6 +1,6 @@
 <?php
 	/**
-	 * English localization file for CatalogController
+	 *  Русская локализация для CatalogController
 	 */
 	$messages = [
 		"TITLE"                     =>  "Каталог",
