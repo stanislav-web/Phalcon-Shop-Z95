@@ -144,6 +144,8 @@
 			
 			$categories = (object)$this->db->query($sqlCategories)->fetchAll();
 
+
+
 			$sqlNewProducts = "SELECT ".Models\Products::TABLE.".*, ".Models\Prices::TABLE.".price
 				 FROM ".Models\Products::TABLE."
 				 INNER JOIN ".Models\Prices::TABLE." ON ".Models\Products::TABLE.".id = ".Models\Prices::TABLE.".product_id

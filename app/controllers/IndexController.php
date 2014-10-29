@@ -30,11 +30,14 @@ class IndexController extends ControllerBase
 			$this->view->setVar("name", "Mike");
 		}
 		$modelProducts = new \Models\Products();
-		$newProducts = $modelProducts->get(array(), array('id' => 'DESC'), 10);
+		$newProducts = $modelProducts->get(array(), array('id' => 'DESC'), 2);
 		$this->view->setVar("newProducts", $newProducts);
 
-		$topProducts = $modelProducts->get(array(), array('rating' => 'DESC'), 10);
+		$topProducts = $modelProducts->get(array(), array('rating' => 'DESC'), 2);
 		$this->view->setVar("topProducts", $topProducts);
+
+		$featuredProducts = $modelProducts->get(array(), array('date_create' => 'DESC'), 2);
+		$this->view->setVar('featuredProducts', $featuredProducts);
 
 		//$this->view->cache(array("lifetime" => 1, "key" => $this->cachePage(__FUNCTION__)));
 	}
