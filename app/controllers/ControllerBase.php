@@ -178,7 +178,7 @@ class ControllerBase extends Phalcon\Mvc\Controller
 
 		$sqlCategories = "SELECT ".Models\Categories::TABLE.".*
 			FROM ".Models\Categories::TABLE." WHERE ".Models\Categories::TABLE.".parent_id = 0";
-			
+
 		$categories = (object)$this->db->query($sqlCategories)->fetchAll();
 
 		$sqlNewProducts = "SELECT ".Models\Products::TABLE.".*, ".Models\Prices::TABLE.".price
