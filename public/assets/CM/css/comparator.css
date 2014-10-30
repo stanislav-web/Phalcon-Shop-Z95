@@ -1,0 +1,129 @@
+/* RIGHT TO LEFT */
+/********************************************************************
+					Compare Page Styles
+********************************************************************/
+table#product_comparison tbody tr td.product-block {
+  vertical-align: top;
+  padding: 14px 19px 19px;
+  text-align: center;
+}
+table#product_comparison tbody tr td.td_empty,
+table#product_comparison tbody tr td.feature-name, table#product_comparison tbody tr.comparison_header {
+  background: #fbfbfb;
+  color: #2e3039;
+}
+table#product_comparison tbody tr td.comparison_infos {
+  text-align: center;
+}
+table#product_comparison tbody tr td.comparison_infos div.center {
+  margin: 0 auto;
+  width: 80px;
+}
+table#product_comparison tbody tr td.td_empty {
+  vertical-align: bottom;
+}
+table#product_comparison tbody tr td.td_empty > span {
+  font: 600 18px/22px "brandon", serif;
+  text-transform: uppercase;
+  color: #555454;
+}
+table#product_comparison .remove {
+  text-align: right;
+  padding: 0 0 15px 0;
+}
+.rtl table#product_comparison .remove {
+  text-align: left;
+}
+table#product_comparison .remove a {
+  font-size: 23px;
+  line-height: 23px;
+  color: #c0c0c0;
+}
+table#product_comparison .remove a:hover {
+  color: black;
+}
+table#product_comparison .product-image-block {
+  display: inline-block;
+  position: relative;
+}
+table#product_comparison .product-image-block .product_image {
+  display: inline-block;
+  margin: 0 0 8px 0;
+}
+table#product_comparison .product-image-block .product_image img {
+  width: 100%;
+}
+table#product_comparison h5 {
+  padding: 0 0 8px 0;
+  min-height: 35px;
+}
+table#product_comparison .prices-container {
+  padding: 0 0 5px 0;
+}
+table#product_comparison .comparison_availability_statut {
+  display: none;
+  font-weight: 700;
+  color: #060;
+}
+table#product_comparison .product_discount {
+  padding-top: 5px;
+}
+table#product_comparison .product_discount .reduced-price {
+  color: #f94b4b;
+  font-weight: 700;
+}
+table#product_comparison .product_desc {
+  padding: 0 0 12px 0;
+}
+table#product_comparison .button-container a, table#product_comparison .button-container > span {
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  font-size: 11px;
+}
+table#product_comparison .comparison_unit_price {
+  font-size: 17px;
+  font-family: "brandon", serif;
+  color: black;
+  font-style: italic;
+}
+table#product_comparison .product-rating {
+  width: 80px;
+  margin: 0 auto;
+  overflow: hidden;
+}
+table#product_comparison .comparison_feature .product_name {
+  display: none;
+}
+
+.footer_link {
+  margin: 0 0 20px 0;
+}
+
+#stOCClose {
+  width: 29px !important;
+  height: 29px !important;
+}
+
+.stButton .stFb,
+.stButton .stTwbutton,
+.stButton .stMainServices,
+.stButton .stButton_gradient {
+  height: 22px !important;
+}
+
+.share strong {
+  display: block;
+  margin-bottom: 10px;
+}
+.share > div {
+  margin-bottom: 8px;
+}
+
+.stArrow {
+  display: none !important;
+}
+
+/***** IE code ****/
+.ie8 table#product_comparison .product-image-block .product_image img {
+  width: auto;
+}

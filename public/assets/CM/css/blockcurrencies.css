@@ -1,0 +1,16 @@
+/* RIGHT TO LEFT */
+#currencies-block-top {
+  float: right;
+  position: relative;
+  margin-left: 10px;
+}
+.rtl #currencies-block-top {
+  float: left;
+}
+.rtl #currencies-block-top {
+  margin-right: 10px;
+  margin-left: inherit;
+}
+#currencies-block-top span.firstWord {
+  display: none;
+}
