@@ -2,6 +2,10 @@
 app/cache
 logs/
 phalcon-devtools
+atlassian-ide-plugin.xml
 .phalcon
 .htaccess
 .idea
+Leo Fashion
+logs
+public/.htaccess

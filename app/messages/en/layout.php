@@ -1,10 +1,13 @@
 <?php
 	/**
-	 * English localization file for Layouts
+	 * English localization file for Layout
 	 */
 	$messages = [
-		"TITLE"                     =>  "Out Shop",
-		"CHANGE_LANGUE"             =>  "Change language",
-		"SEARCH_FOR"                =>  "Look for...",
-		"UNDER_DEVELOPMENT"         =>  "Under development..."
+		"HOME"                     	=>  "HOME",
+		"CATEGORIES"             	=>  "CATEGORIES",
+		"COMMUNITY"                	=>  "COMMUNITY",
+		"SHOP"         				=>  "SHOP",
+		"DELIVERY"         			=>  "DELIVERY",
+		"ABOUT US"         			=>  "ABOUT US",
+	    "NOT_FOUNT"                 =>  "404 Page Not Found"
 	];

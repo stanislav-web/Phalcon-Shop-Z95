@@ -1,10 +1,13 @@
 <?php
 	/**
-	 * English localization file for Layouts
+	 * Русская локализация для Layout
 	 */
 	$messages = [
-		"TITLE"                     =>  "Магазин",
-		"CHANGE_LANGUE"             =>  "Сменить язык",
-		"SEARCH_FOR"                =>  "Найти...",
-		"UNDER_DEVELOPMENT"         =>  "В разработке..."
+		"HOME"                     	=>  "ГЛАВНАЯ",
+		"CATEGORIES"             	=>  "КАТЕГОРИИ",
+		"COMMUNITY"                	=>  "СООБЩЕСТВО",
+		"SHOP"         				=>  "МАГАЗИН",
+		"DELIVERY"         			=>  "ДОСТАВКА",
+		"ABOUT US"         			=>  "О НАС",
+		"NOT_FOUNT"                 =>  "404 Страница не найдена"
 	];
