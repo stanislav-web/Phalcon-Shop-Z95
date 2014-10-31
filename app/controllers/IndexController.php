@@ -76,6 +76,8 @@
 		 */
 		public function aboutAction()
 		{
+			$this->tag->appendTitle('- '.$this->_translate['TITLE']);
+
 			// проверка страницы в кэше
 
 			$content = null;

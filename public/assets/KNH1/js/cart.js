@@ -4,6 +4,7 @@ var cart = {
 //        this.add_to_cart();
         this.remove_from_cart();
         this.quantity();
+        this.procced_to_back();
     },
     add_to_cart : function () {
 
@@ -111,6 +112,31 @@ var cart = {
         })
         $('#total_product span').html(total + '.00');
         $('#total_price_container span span').html(total + '.00');
+    },
+    procced_to_back : function() {
+        $('body #procced_to_back').on('click', function(){
+
+            var data = new Array();
+            $('table#cart_summary tbody tr').each(function(iterator, value){
+                data[$(value).data().articul] = {count : $(value).find('input.cart_quantity_input').val(),
+                                                size : $(value).find('.js-product_size span').html()};
+
+
+            })
+
+            console.log(data);
+
+            return false;
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: data,
+                success: function (data) {
+
+                },
+                dataType: 'json'
+            });
+        })
     }
 }
 $(document).ready(function(){

@@ -35,6 +35,8 @@ class CartController extends ControllerBase
 		// устанавливаю шаблон и загружаю локализацию
 		$this->loadCustomTrans('index');
 		parent::initialize();
+
+		$this->tag->setTitle($this->_shop->title);
 	}
 
 	/**
@@ -43,6 +45,7 @@ class CartController extends ControllerBase
 	 */
 	public function indexAction()
 	{
+		$this->tag->appendTitle('- '.$this->_translate['TITLE']);
 		// есть ли в корзине вещи
 
 		if($this->session->has('cart') && $this->session->get('cart') != '') {
@@ -59,17 +62,20 @@ class CartController extends ControllerBase
 	public function addToCartAction()
 	{
 
-		if($this->session->has('cart') ) {
+		
+		if($this->session->has('cart')) {
 			$session = $this->session->get('cart');
-			if(!empty($session) || $session != '') {
+		
+			if(!empty($session) || $session != '' || null !== $session) {
 				$session[$this->request->getPost('articul')] = $this->request->getPost();
+				$this->session->set("cart", $session);
 			} else {
 				$this->session->set("cart", array($this->request->getPost('articul') => $this->request->getPost()));
 			}
 		} else {
 			$this->session->set("cart", array($this->request->getPost('articul') => $this->request->getPost()));
 		}
-		$this->session->set("cart", $session);
+
 		$this->view->disable();
 
 		//Set the content of the response

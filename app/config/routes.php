@@ -36,5 +36,10 @@
 		'action'        => 'item'
 	]);
 
+	$router->add("/about", [
+		'controller'    => 'index',
+		'action'        => 'about',
+	]);
+
 	// Удаление косых в конце
 	$router->removeExtraSlashes(true);

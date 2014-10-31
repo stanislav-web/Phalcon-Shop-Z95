@@ -34,7 +34,7 @@
  <span id="summary_products_quantity">
 
 	 <span>
-		 <?php if(null !== $products || !empty($products)) { ?>
+		 <?php if(isset($products)) { ?>
 			 <?php $count = 0; ?>
 			 <?php foreach ($products as $product) { ?>
 				<?php $count = $count + $product->quantity_wanted; ?>
@@ -94,7 +94,7 @@
 
 
 <div id="order-detail-content" class="table_block table-responsive">
-	<?php if(null !== $products || !empty($products)) { ?>
+	<?php if(isset($products)) { ?>
 <table id="cart_summary" class="table table-bordered stock-management-on">
 <thead>
 <tr>
@@ -164,14 +164,14 @@
 <tbody>
 
 	<?php foreach ($products as $product) { ?>
-	<tr id="product_<?php echo $product->articul; ?>" class="cart_item first_item address_0 odd">
+	<tr id="product_<?php echo $product->articul; ?>" data-articul="<?php echo $product->articul; ?>" class="cart_item first_item address_0 odd">
 	<td class="cart_product">
 		<a href=""><img src="images/168-small_default.jpg" alt="<?php echo $product->brand; ?>&nbsp;<?php echo $product->product_name; ?>" width="81" height="117"></a>
 	</td>
 	<td class="cart_description">
 		<p class="product-name"><a href=""><?php echo $product->brand; ?>&nbsp;<?php echo $product->product_name; ?> </a></p>
 <!--		<small class="cart_ref">SKU : demo_8</small> -->
-		<small><a href="">Size : <?php echo $product->sizes; ?></a></small> </td>
+		<small><a href="" class="js-product_size">Size : <span><?php echo $product->sizes; ?></span></a></small> </td>
 	<td class="cart_avail"><span class="label label-success">In stock</span></td>
 	<td class="cart_unit" data-title="Unit price">
  <span class="" id="product_price_8_46_0">
@@ -216,7 +216,7 @@
 
 <div id="HOOK_SHOPPING_CART"></div>
 <p class="cart_navigation clearfix">
-	<a href="" class="button btn btn-default standard-checkout button-medium" title="Proceed to checkout">
+	<a href="" class="button btn btn-default standard-checkout button-medium" title="Proceed to checkout" id="procced_to_back">
 		<span>Proceed to checkout<i class="icon-chevron-right right"></i></span>
 	</a>
 	<a href="" class="button-exclusive btn btn-default" title="Continue shopping">
