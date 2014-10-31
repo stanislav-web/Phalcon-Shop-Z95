@@ -1,3 +1,4 @@
+<?php echo Phalcon\Tag::javascriptInclude('assets/' . $shop->code . '/js/cart.js'); ?>
 <section class="clearfix" id="breadcrumb">
 	<div class="container">
 		<div class="row">
@@ -30,7 +31,21 @@
 
 <h1 id="cart_title" class="page-heading">Shopping-cart summary
  <span class="heading-counter">Your shopping cart contains:
- <span id="summary_products_quantity">8 products</span>
+ <span id="summary_products_quantity">
+
+	 <span>
+		 <?php if(isset($products)) { ?>
+			 <?php $count = 0; ?>
+			 <?php foreach ($products as $product) { ?>
+				<?php $count = $count + $product->quantity_wanted; ?>
+			 <?php } ?>
+			<?php echo $count; ?>
+		 <?php } else { ?>
+			 0
+		 <?php } ?>
+	 </span>
+	 products
+ </span>
  </span>
 </h1>
 
@@ -79,6 +94,7 @@
 
 
 <div id="order-detail-content" class="table_block table-responsive">
+	<?php if(isset($products)) { ?>
 <table id="cart_summary" class="table table-bordered stock-management-on">
 <thead>
 <tr>
@@ -96,7 +112,16 @@
 	<td rowspan="3" colspan="3" id="cart_voucher" class="cart_voucher">
 	</td>
 	<td colspan="3" class="text-right">Total products</td>
-	<td colspan="2" class="price" id="total_product">$2,291.00</td>
+	<td colspan="2" class="price" id="total_product">$<span>
+			<?php if(null !== $products || !empty($products)) { ?>
+				<?php $count = 0; ?>
+				<?php foreach ($products as $product) { ?>
+					<?php $count = $count + $product->price * $product->quantity_wanted; ?>
+				<?php } ?>
+				<?php echo $count; ?>.00
+			<?php } else { ?>
+				0
+			<?php } ?></span></td>
 </tr>
 <tr style="display: none;">
 	<td colspan="3" class="text-right">
@@ -122,30 +147,50 @@
 		<span>Total</span>
 	</td>
 	<td colspan="2" class="price" id="total_price_container">
-		<span id="total_price">$2,293.00</span>
+		<span id="total_price">$<span>
+				<?php if(null !== $products || !empty($products)) { ?>
+					<?php $count = 0; ?>
+					<?php foreach ($products as $product) { ?>
+						<?php $count = $count + $product->price * $product->quantity_wanted; ?>
+					<?php } ?>
+					<?php echo $count; ?>.00
+				<?php } else { ?>
+					0
+				<?php } ?>
+		</span></span>
 	</td>
 </tr>
 </tfoot>
 <tbody>
 
-<tr id="product_8_46_0_0" class="cart_item first_item address_0 odd">
+	<?php foreach ($products as $product) { ?>
+	<tr id="product_<?php echo $product->articul; ?>" data-pid="<?php echo $product->product_id; ?>" data-articul="<?php echo $product->articul; ?>" class="cart_item first_item address_0 odd">
 	<td class="cart_product">
-		<a href=""><img src="images/168-small_default.jpg" alt="Vivamus condimentum" width="81" height="117"></a>
+		<a href="">
+			<?=$this->tag->image(array(
+				'assets/' . $shop->code . '/images/168-small_default.jpg',
+				'alt'   => $product->brand.' '.$product->product_name,
+				'title' => $product->brand.' '.$product->product_name,
+				'width' => 81,
+				'height'    => 117
+			)); ?>
+		</a>
 	</td>
 	<td class="cart_description">
-		<p class="product-name"><a href="">Vivamus condimentum</a></p>
-		<small class="cart_ref">SKU : demo_8</small> <small><a href="">Color : Yellow, Size : S</a></small> </td>
+		<p class="product-name"><a href=""><?php echo $product->brand; ?>&nbsp;<?php echo $product->product_name; ?> </a></p>
+<!--		<small class="cart_ref">SKU : demo_8</small> -->
+		<small><a href="" class="js-product_size">Size : <span><?php echo $product->sizes; ?></span></a></small> </td>
 	<td class="cart_avail"><span class="label label-success">In stock</span></td>
 	<td class="cart_unit" data-title="Unit price">
- <span class="price" id="product_price_8_46_0">
- <span class="price">$250.00</span>
+ <span class="" id="product_price_8_46_0">
+ <span class="price"><?php echo $shop->currency_symbol; ?><span><?php echo $product->price; ?></span></span>
  </span>
 	</td>
 
 	<td class="cart_quantity text-center">
 
 		<input type="hidden" value="2" name="quantity_8_46_0_0_hidden">
-		<input size="2" type="text" autocomplete="off" class="cart_quantity_input form-control grey" value="2" name="quantity_8_46_0_0">
+		<input size="2" type="text" autocomplete="off" class="cart_quantity_input form-control grey" value="<?php echo $product->quantity_wanted; ?>" name="quantity_8_46_0_0" onkeyup="cart.quantityKeyUp(this);" onkeypress="cart.quantityKeyPress(this);">
 		<div class="cart_quantity_button clearfix">
 			<a rel="nofollow" class="cart_quantity_down btn btn-default button-minus" id="cart_quantity_down_8_46_0_0" href="" title="Subtract">
 				<span><i class="icon-minus"></i></span>
@@ -154,171 +199,23 @@
 		</div>
 	</td>
 	<td class="cart_total" data-title="Total">
- <span class="price" id="total_product_price_8_46_0">
- $500.00 </span>
+	 <span class="price" id="total_product_price_8_46_0">
+		<?php echo $shop->currency_symbol; ?><span><?php echo $product->quantity_wanted * $product->price; ?>.00</span>
+	 </span>
 	</td>
 	<td class="cart_delete text-center" data-title="Delete">
 		<div>
-			<a rel="nofollow" title="Delete" class="cart_quantity_delete" id="8_46_0_0" href=""><i class="icon-trash"></i></a>
+			<a rel="nofollow" title="Delete" class="cart_quantity_delete" data-product_id="<?php echo $product->product_id; ?>" href="" data-articul="<?php echo $product->articul; ?>"><i class="icon-trash"></i></a>
 		</div>
 	</td>
 </tr>
+<?php } ?>
 
-
-
-<tr id="product_9_52_0_0" class="cart_item address_0 even">
-	<td class="cart_product">
-		<a href=""><img src="images/168-small_default.jpg" alt="Donec posuere metus" width="81" height="117"></a>
-	</td>
-	<td class="cart_description">
-		<p class="product-name"><a href="">Donec posuere metus</a></p>
-		<small class="cart_ref">SKU : demo_9</small> <small><a href="">Color : Yellow, Size : S</a></small> </td>
-	<td class="cart_avail"><span class="label label-success">In stock</span></td>
-	<td class="cart_unit" data-title="Unit price">
- <span class="price" id="product_price_9_52_0">
- <span class="price">$350.00</span>
- </span>
-	</td>
-
-	<td class="cart_quantity text-center">
-
-		<input type="hidden" value="1" name="quantity_9_52_0_0_hidden">
-		<input size="2" type="text" autocomplete="off" class="cart_quantity_input form-control grey" value="1" name="quantity_9_52_0_0">
-		<div class="cart_quantity_button clearfix">
-			<a rel="nofollow" class="cart_quantity_down btn btn-default button-minus" id="cart_quantity_down_9_52_0_0" href="" title="Subtract">
-				<span><i class="icon-minus"></i></span>
-			</a>
-			<a rel="nofollow" class="cart_quantity_up btn btn-default button-plus" id="cart_quantity_up_9_52_0_0" href="" title="Add"><span><i class="icon-plus"></i></span></a>
-		</div>
-	</td>
-	<td class="cart_total" data-title="Total">
- <span class="price" id="total_product_price_9_52_0">
- $350.00 </span>
-	</td>
-	<td class="cart_delete text-center" data-title="Delete">
-		<div>
-			<a rel="nofollow" title="Delete" class="cart_quantity_delete" id="9_52_0_0" href=""><i class="icon-trash"></i></a>
-		</div>
-	</td>
-</tr>
-
-
-
-<tr id="product_12_70_0_0" class="cart_item address_0 odd">
-	<td class="cart_product">
-		<a href=""><img src="images/156-small_default.jpg" alt="Morbi vitae cons" width="81" height="117"></a>
-	</td>
-	<td class="cart_description">
-		<p class="product-name"><a href="">Morbi vitae cons</a></p>
-		<small class="cart_ref">SKU : demo_12</small> <small><a href="">Color : Yellow, Size : S</a></small> </td>
-	<td class="cart_avail"><span class="label label-success">In stock</span></td>
-	<td class="cart_unit" data-title="Unit price">
- <span class="price" id="product_price_12_70_0">
- <span class="price">$300.00</span>
- </span>
-	</td>
-
-	<td class="cart_quantity text-center">
-
-		<input type="hidden" value="1" name="quantity_12_70_0_0_hidden">
-		<input size="2" type="text" autocomplete="off" class="cart_quantity_input form-control grey" value="1" name="quantity_12_70_0_0">
-		<div class="cart_quantity_button clearfix">
-			<a rel="nofollow" class="cart_quantity_down btn btn-default button-minus" id="cart_quantity_down_12_70_0_0" href="" title="Subtract">
-				<span><i class="icon-minus"></i></span>
-			</a>
-			<a rel="nofollow" class="cart_quantity_up btn btn-default button-plus" id="cart_quantity_up_12_70_0_0" href="" title="Add"><span><i class="icon-plus"></i></span></a>
-		</div>
-	</td>
-	<td class="cart_total" data-title="Total">
- <span class="price" id="total_product_price_12_70_0">
- $300.00 </span>
-	</td>
-	<td class="cart_delete text-center" data-title="Delete">
-		<div>
-			<a rel="nofollow" title="Delete" class="cart_quantity_delete" id="12_70_0_0" href=""><i class="icon-trash"></i></a>
-		</div>
-	</td>
-</tr>
-
-
-
-<tr id="product_18_106_0_0" class="cart_item address_0 even">
-	<td class="cart_product">
-		<a href=""><img src="images/156-small_default.jpg" alt="Integer sit am" width="81" height="117"></a>
-	</td>
-	<td class="cart_description">
-		<p class="product-name"><a href="">Integer sit am</a></p>
-		<small class="cart_ref">SKU : demo_18</small> <small><a href="">Color : Yellow, Size : S</a></small> </td>
-	<td class="cart_avail"><span class="label label-success">In stock</span></td>
-	<td class="cart_unit" data-title="Unit price">
- <span class="price" id="product_price_18_106_0">
- <span class="price">$20.50</span>
- </span>
-	</td>
-
-	<td class="cart_quantity text-center">
-
-		<input type="hidden" value="2" name="quantity_18_106_0_0_hidden">
-		<input size="2" type="text" autocomplete="off" class="cart_quantity_input form-control grey" value="2" name="quantity_18_106_0_0">
-		<div class="cart_quantity_button clearfix">
-			<a rel="nofollow" class="cart_quantity_down btn btn-default button-minus" id="cart_quantity_down_18_106_0_0" href="" title="Subtract">
-				<span><i class="icon-minus"></i></span>
-			</a>
-			<a rel="nofollow" class="cart_quantity_up btn btn-default button-plus" id="cart_quantity_up_18_106_0_0" href="" title="Add"><span><i class="icon-plus"></i></span></a>
-		</div>
-	</td>
-	<td class="cart_total" data-title="Total">
- <span class="price" id="total_product_price_18_106_0">
- $41.00 </span>
-	</td>
-	<td class="cart_delete text-center" data-title="Delete">
-		<div>
-			<a rel="nofollow" title="Delete" class="cart_quantity_delete" id="18_106_0_0" href=""><i class="icon-trash"></i></a>
-		</div>
-	</td>
-</tr>
-
-
-
-<tr id="product_19_112_0_0" class="cart_item last_item address_0 odd">
-	<td class="cart_product">
-		<a href=""><img src="images/156-small_default.jpg" alt="Morbi vitae cons" width="81" height="117"></a>
-	</td>
-	<td class="cart_description">
-		<p class="product-name"><a href="">Morbi vitae cons</a></p>
-		<small class="cart_ref">SKU : demo_19</small> <small><a href="">Color : Yellow, Size : S</a></small> </td>
-	<td class="cart_avail"><span class="label label-success">In stock</span></td>
-	<td class="cart_unit" data-title="Unit price">
- <span class="price" id="product_price_19_112_0">
- <span class="price">$550.00</span>
- </span>
-	</td>
-
-	<td class="cart_quantity text-center">
-
-		<input type="hidden" value="2" name="quantity_19_112_0_0_hidden">
-		<input size="2" type="text" autocomplete="off" class="cart_quantity_input form-control grey" value="2" name="quantity_19_112_0_0">
-		<div class="cart_quantity_button clearfix">
-			<a rel="nofollow" class="cart_quantity_down btn btn-default button-minus" id="cart_quantity_down_19_112_0_0" href="" title="Subtract">
-				<span><i class="icon-minus"></i></span>
-			</a>
-			<a rel="nofollow" class="cart_quantity_up btn btn-default button-plus" id="cart_quantity_up_19_112_0_0" href="" title="Add"><span><i class="icon-plus"></i></span></a>
-		</div>
-	</td>
-	<td class="cart_total" data-title="Total">
- <span class="price" id="total_product_price_19_112_0">
- $1,100.00 </span>
-	</td>
-	<td class="cart_delete text-center" data-title="Delete">
-		<div>
-			<a rel="nofollow" title="Delete" class="cart_quantity_delete" id="19_112_0_0" href=""><i class="icon-trash"></i></a>
-		</div>
-	</td>
-</tr>
 
 
 </tbody>
 </table>
+	<?php } ?>
 </div> <!-- end order-detail-content -->
 
 
@@ -327,7 +224,7 @@
 
 <div id="HOOK_SHOPPING_CART"></div>
 <p class="cart_navigation clearfix">
-	<a href="" class="button btn btn-default standard-checkout button-medium" title="Proceed to checkout">
+	<a href="" class="button btn btn-default standard-checkout button-medium" title="Proceed to checkout" id="procced_to_back">
 		<span>Proceed to checkout<i class="icon-chevron-right right"></i></span>
 	</a>
 	<a href="" class="button-exclusive btn btn-default" title="Continue shopping">

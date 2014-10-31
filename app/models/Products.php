@@ -235,4 +235,76 @@ class Products extends \Phalcon\Mvc\Model
 		}
 		return $result;
 	}
+
+	public function getProductCard($articul, $shop_price_id, $cache = false)
+	{
+//		$articul = 33389;
+
+		$result = null;
+		if($cache && $this->_cache) {
+			$backendCache = $this->getDI()->get('backendCache');
+			$result = $backendCache->get(self::TABLE.'-'.strtolower(__FUNCTION__).'-'.$shop_price_id.'.cache');
+		}
+		if($result === null) {
+			$sql = "SELECT 	".self::TABLE.".id AS product_id,  ".self::TABLE.".name AS product_name, ".self::TABLE.".articul,
+					".self::TABLE.".description AS description,	GROUP_CONCAT(CONCAT(".Tags::TABLE.".id)) AS all_tags,
+					GROUP_CONCAT(CONCAT(".Tags::TABLE.".name)) AS all_tags_name,
+					GROUP_CONCAT(CONCAT(".Categories::TABLE.".name)) AS category_name,
+					".Brands::TABLE.".name AS brand, ".Brands::TABLE.".alias AS brand_alias, ".Prices::TABLE.".price
+
+					FROM ".self::TABLE."
+					INNER JOIN ".Prices::TABLE." ON (".Prices::TABLE.".id = $shop_price_id && ".Prices::TABLE.".product_id = ".self::TABLE.".id)
+					INNER JOIN ".Common::TABLE_PRODUCTS_REL." ON (".self::TABLE.".id = ".Common::TABLE_PRODUCTS_REL.".product_id)
+					INNER JOIN ".Brands::TABLE." ON (".self::TABLE.".brand_id = ".Brands::TABLE.".id)
+					LEFT JOIN ".Tags::TABLE." ON (".Tags::TABLE.".id = ".Common::TABLE_PRODUCTS_REL.".tag_id)
+					LEFT JOIN ".Categories::TABLE." ON (".Categories::TABLE.".id = ".Common::TABLE_PRODUCTS_REL.".category_id)
+					WHERE ".self::TABLE.".articul = '".$articul."' LIMIT 1";
+
+			$result = $this->_db->query($sql)->fetch();
+
+			foreach($result as $property => $value) {
+
+				if($property == 'all_tags_name') {
+					$result->$property = explode(',', $value);
+				}
+				if($property == 'category_name') {
+					$result->$property = explode(',', $value);
+				}
+			}
+			// Сохраняем запрос в кэше
+			if($cache && $this->_cache) $backendCache->save(self::TABLE.'-'.strtolower(__FUNCTION__).'-'.$shop_price_id.'.cache', $result);
+		}
+		return $result;
+
+	}
+
+	public function getProductsForCart($ids, $shop_price_id, $cart)
+		
+	{
+		if($ids == '' || null === $ids) {
+			return;
+		}
+		$sql = "SELECT 	".self::TABLE.".id AS product_id,  ".self::TABLE.".name AS product_name, ".self::TABLE.".articul,
+					".Brands::TABLE.".name AS brand, ".Brands::TABLE.".alias AS brand_alias, ".Prices::TABLE.".price
+
+					FROM ".self::TABLE."
+					INNER JOIN ".Prices::TABLE." ON (".Prices::TABLE.".id = $shop_price_id && ".Prices::TABLE.".product_id = ".self::TABLE.".id)
+					INNER JOIN ".Brands::TABLE." ON (".self::TABLE.".brand_id = ".Brands::TABLE.".id)
+					WHERE product_id IN ($ids) ";
+
+		$result = $this->_db->query($sql)->fetchAll();
+
+		if(!empty($result)) {
+			foreach($result as $key => $item) {
+
+				if(isset($cart[$item->product_id])) {
+
+					$result[$key]->quantity_wanted = $cart[$item->product_id]['quantity_wanted'];
+					$result[$key]->sizes = $cart[$item->product_id]['sizes'];
+				
+				}
+			}
+		}
+		return $result;
+	}
 }

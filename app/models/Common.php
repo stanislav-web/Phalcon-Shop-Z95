@@ -176,4 +176,24 @@
 			}
 			return $result;
 		}
+
+		public function categoriesToTree($array, $parent_id = 0) {
+			$tree = array();
+
+			if( !empty($array)){
+				foreach( $array as $id=> $element ){
+
+					$element = (array) $element;
+					if( !isset($element['parent_id']) ) continue;
+					if( $element['parent_id'] == $parent_id ){
+						$tree[$id] = $element;
+						unset($array[$element['id']]);
+						$tree[$id]['childs'] = $this->categoriesToTree($array, $element['id']);
+					}
+				}
+				return $tree;
+			}
+
+		}
+
 	}

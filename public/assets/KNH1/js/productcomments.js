@@ -23,8 +23,8 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 $(document).ready(function(){
-	$('input.star').rating();
-	$('.auto-submit-star').rating();
+	//$('input.star').rating();
+	//$('.auto-submit-star').rating();
 
 	if (!!$.prototype.fancybox)
 		$('.open-comment-form').fancybox({

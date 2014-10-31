@@ -74,7 +74,7 @@
 			})(jQuery);
 			$(document).ready(function() {
 				$('.dropdown-toggle.has-category').after($('.dropdown-sub.dropdown-menu.categories'))
-				//jQuery("#cavas_menu").OffCavasmenu();
+//				jQuery("#cavas_menu").OffCavasmenu();
 				$('#cavas_menu .navbar-toggle').click(function() {
 					$('body,html').animate({
 						scrollTop: 0
@@ -162,7 +162,7 @@
 												</p>
 												<div itemprop="offers" itemscope="" itemtype="http://schema.org/Offer" class="content_price">
  <span itemprop="price" class="price product-price">
-<?php echo $product->price; ?>
+<?php echo $product->price; ?> <?php echo $shop->currency_symbol; ?>
 								</span>
 													<meta itemprop="priceCurrency" content="1">
 												</div>
@@ -224,7 +224,7 @@
 													<?php $product->description; ?>
 												</p>
 												<div itemprop="offers" itemscope="" itemtype="http://schema.org/Offer" class="content_price">
- <span itemprop="price" class="price product-price"><?php echo $product->price; ?>
+ <span itemprop="price" class="price product-price"><?php echo $product->price; ?> <?php echo $shop->currency_symbol; ?>
  </span>
 													<meta itemprop="priceCurrency" content="1">
 												</div>
@@ -253,7 +253,7 @@
 							</div>
 							<div class="widget-inner">
 								<div class="menu-content">
-									<p><img src="assets/<?php echo $shop->code ?>/images/adv.jpg" alt="" width="207" height="118">
+									<p><img src="/assets/<?php echo $shop->code ?>/images/adv.jpg" alt="" width="207" height="118">
 									</p>
 									<p><a href="">Mauris in erat justo nullam ac urna eu felis dapibus condimentum sit amet a sed ut imperdiet nisi.</a>
 									</p>

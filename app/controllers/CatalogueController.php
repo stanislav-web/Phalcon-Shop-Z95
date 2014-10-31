@@ -104,10 +104,34 @@ class CatalogueController extends ControllerBase
 
 	public function itemAction()
 	{
+		// Установка заголовка
+		$this->tag->appendTitle('- '.$this->_translate['TITLE']);
 
-		var_dump($this->request->getURI());
-		die;
+		// проверка страницы в кэше
 
+		$content = null;
+		if($this->_config->cache->frontend) {
+			$content = $this->view->getCache()->exists($this->cachePage(__FUNCTION__));
+		}
+
+		if($content === null) {
+
+			if($this->request->isGet()) {
+				// Содержимое контроллера для формирования выдачи
+				$this->_routeTree = $this->_helper->catalogueRouteTree($this->request->getURI(), [
+						'catalogue'
+					]);
+
+				$articul = current($this->_routeTree['catalogue']);
+				$item = $this->productsModel->getProductCard($articul, $this->_shop->price_id, false);
+
+				$this->view->setVar("item", $item);
+				$this->view->setVar("categories" , $this->commonModel->categoriesToTree($this->_shopCategories));
+			}
+
+		}
+			// Сохраняем вывод в кэш
+		if($this->_config->cache->frontend) $this->view->cache(array("key" => $this->cachePage(__FUNCTION__)));
 	}
 
 	/**

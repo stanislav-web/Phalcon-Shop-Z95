@@ -1,3 +1,4 @@
+
 <section id="slideshow" class="clearfix">
 	<div class="container">
 		<div class="row">
@@ -104,52 +105,7 @@
 				</div>
 			</div>
 
-			<script type="text/javascript">
 
-				var tpj = jQuery;
-
-				if (tpj.fn.cssOriginal != undefined)
-					tpj.fn.css = tpj.fn.cssOriginal;
-
-				tpj("#sliderlayer").revolution(
-					{
-						delay: 9000,
-						startheight: 585,
-						startwidth: 1170,
-
-
-						hideThumbs: 200,
-
-						thumbWidth: 100,
-						thumbHeight: 50,
-						thumbAmount: 3,
-						navigationType: "none",
-						navigationArrows: "verticalcentered",
-						navigationStyle: "round",
-
-						navOffsetHorizontal: 0,
-						navOffsetVertical: 20,
-
-						touchenabled: "on",
-						onHoverStop: "on",
-						shuffle: "on",
-						stopAtSlide: -1,
-						stopAfterLoops: -1,
-
-						hideCaptionAtLimit: 0,
-						hideAllCaptionAtLilmit: 0,
-						hideSliderAtLimit: 0,
-						fullWidth: "off",
-						shadow: 0
-					});
-				$(document).ready(function () {
-					$('.caption', $('#sliderlayer')).click(function () {
-						if ($(this).data('link') != undefined && $(this).data('link') != '') location.href = $(this).data('link');
-					});
-
-				});
-
-			</script>
 		</div>
 	</div>
 </section>
@@ -356,7 +312,7 @@
 									</div>
 									<div itemprop="offers" itemscope="" itemtype="http://schema.org/Offer"
 										 class="content_price">
-						 <span itemprop="price" class="price product-price"><?php echo $latestProduct->price; ?>
+						 <span itemprop="price" class="price product-price"><?php echo $latestProduct->price; ?> <?php echo $shop->currency_symbol; ?>
 						 </span>
 										<meta itemprop="priceCurrency" content="USD">
 									</div>
