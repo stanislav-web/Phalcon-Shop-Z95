@@ -1,4 +1,5 @@
 <?php use Phalcon\Tag as Tag; ?>
+<?php $cart = $session->get('cart'); ?>
 
 <header id="header">
 <section class="header-container">
@@ -93,24 +94,35 @@
 	<!-- MODULE Block cart -->
 	<div class="pull-right cart-top clearfix">
 		<div class="shopping_cart">
-			<a href="" title="View my shopping cart" rel="nofollow">
+			<?php if(null !== $cart && $cart != '') { ?>
+
+			<a href="<?php echo Helpers\LocationUrls::location('/cart'); ?>" title="View my shopping cart" rel="nofollow">
 				<span class="title_cart">Cart</span>
-				<span class="ajax_cart_quantity">1</span>
-				<span class="ajax_cart_product_txt">Item</span>
-				<span class="ajax_cart_product_txt_s unvisible">Items</span>
- <span class="ajax_cart_total">$450.00
- </span>
+				<span class="ajax_cart_quantity">
+					 <?php $count = 0; ?>
+					 <?php foreach ($cart as $product) { ?>
+						 <?php $count = $count + $product['quantity_wanted']; ?>
+					 <?php } ?>
+					 <?php echo $count; ?>
+				</span>
+				<span class="ajax_cart_product_txt">Items</span>
  <span class="ajax_cart_no_product unvisible">
  0 <span>Item</span> <span class="price"> - $0.00</span>
  </span>
 			</a>
+			<?php } else { ?>
+			<a href="<?php echo Helpers\LocationUrls::location('/cart'); ?>" title="View my shopping cart" rel="nofollow">
+				<span class="title_cart">Cart</span>
+				<span class="ajax_cart_quantity">0</span>
+				<span class="ajax_cart_product_txt">Items</span>
+			<?php } ?>
 			<div class="cart_block block exclusive" style="display: none;">
 				<div class="block_content">
 					<!-- block list of products -->
 					<div class="cart_block_list">
 						<dl class="products">
 							<dt data-id="cart_block_product_11_64_0" class="first_item">
-								<a class="cart-images" href="" title="Aenean"><img src="assets/<?php echo $shop->code ?>/images/176-cart_default.jpg" alt="Aenean"></a>
+								<a class="cart-images" href="" title="Aenean"><img src="/assets/<?php echo $shop->code ?>/images/176-cart_default.jpg" alt="Aenean"></a>
 							<div class="cart-info">
 								<div class="product-name">
 									<span class="quantity-formated"><span class="quantity">1</span>&nbsp;x&nbsp;</span><a class="cart_block_product_name" href="#/size-s/color-yellow" title="Aenean">Aenean</a>
@@ -262,7 +274,7 @@
 		<div class="row">
 			<div id="header_logo" class="pull-left">
 				<a href="" title="Leo Fashion Store">
-					<img class="logo img-responsive" src="assets/<?php echo $shop->code ?>/images/leo-mobile-1399525585.jpg" alt="Leo Fashion Store" width="155" height="95">
+					<img class="logo img-responsive" src="/assets/<?php echo $shop->code ?>/images/leo-mobile-1399525585.jpg" alt="Leo Fashion Store" width="155" height="95">
 				</a>
 
 			</div>

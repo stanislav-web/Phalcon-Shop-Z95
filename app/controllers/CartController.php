@@ -43,32 +43,50 @@ class CartController extends ControllerBase
 	 */
 	public function indexAction()
 	{
-		// проверка страницы в кэше
+		// есть ли в корзине вещи
 
-		$content = null;
-		if($this->_config->cache->frontend)
-		{
-			$content = $this->view->getCache()->exists($this->cachePage(__FUNCTION__));
-		}
-
-		if($content === null)
-		{
+		if($this->session->has('cart') && $this->session->get('cart') != '') {
 			// Содержимое контроллера для формирования выдачи
+			$cart = $this->session->get('cart');
+			$articuls = implode(',',array_keys($cart));
+			$products = $this->productsModel->getProductsForCart($articuls, $this->_shop->price_id, $cart);
 
-
-			//$modelProducts = new \Models\Products();
-			//$newProducts = $modelProducts->get(array(), array('id' => 'DESC'), 2);
-			//$this->view->setVar("newProducts", $newProducts);
-
-			//$topProducts = $modelProducts->get(array(), array('rating' => 'DESC'), 2);
-			//$this->view->setVar("topProducts", $topProducts);
-
-			//$featuredProducts = $modelProducts->get(array(), array('date_create' => 'DESC'), 2);
-			//$this->view->setVar('featuredProducts', $featuredProducts);
+			$this->view->setVar("products", $products);
 
 		}
-		// Сохраняем вывод в кэш
-		if($this->_config->cache->frontend) $this->view->cache(array("key" => $this->cachePage(__FUNCTION__)));
+	}
+
+	public function addToCartAction()
+	{
+
+		if($this->session->has('cart') ) {
+			$session = $this->session->get('cart');
+			if(!empty($session) || $session != '') {
+				$session[$this->request->getPost('articul')] = $this->request->getPost();
+			} else {
+				$this->session->set("cart", array($this->request->getPost('articul') => $this->request->getPost()));
+			}
+		} else {
+			$this->session->set("cart", array($this->request->getPost('articul') => $this->request->getPost()));
+		}
+		$this->session->set("cart", $session);
+		$this->view->disable();
+
+		//Set the content of the response
+		return $this->response->setContent(json_encode(array('result' => true)));
+
+	}
+
+	public function removeFromCartAction()
+	{
+		if($this->session->has('cart') && $this->session->get('cart') != '') {
+
+			$session = $this->session->get('cart');
+			$this->view->disable();
+			unset($session[$this->request->getPost('articul')]);
+			$this->session->set("cart", $session);
+			return $this->response->setContent(json_encode(array('result' => true)));
+		}
 	}
 
 }
