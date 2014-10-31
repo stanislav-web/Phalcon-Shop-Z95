@@ -18,7 +18,7 @@
 						<a class="tag_level1 last_item " href="<?=Helpers\LocationUrls::location($this->request->getURI().'/tags/'.$tag->alias);?>">
 					<?php endif; ?>
 				<?php endif; ?>
-				<?=$tag->name;?>
+				<?=$tag->name;?> (<?=$tag->count_products;?>)
 				</a>
 			<?php endforeach; ?>
 		</div>

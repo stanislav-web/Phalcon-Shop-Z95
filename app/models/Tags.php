@@ -115,15 +115,61 @@ class Tags extends \Phalcon\Mvc\Model
 
 		if($result === null) {    // Выполняем запрос из MySQL
 
-			$sql = "SELECT STRAIGHT_JOIN DISTINCT(tag.id) as id, tag.parent_id, tag.name, tag.alias
-					FROM ".self::TABLE." tag
-					INNER JOIN ".Common::TABLE_PRODUCTS_REL." rel ON tag.id = rel.tag_id
-					WHERE product_id IN(SELECT product_id FROM ".Common::TABLE_PRODUCTS_REL." WHERE category_id = ".$category_id.")";
+			//	-- Old school
+			//	SELECT STRAIGHT_JOIN DISTINCT(tag.id) as id, tag.parent_id, tag.name, tag.alias
+			//		FROM tags tag
+			//		INNER JOIN products_relationship rel ON tag.id = rel.tag_id
+			//		WHERE product_id IN(
+			//		SELECT product_id FROM products_relationship WHERE category_id = {$category_id}
+			//		)
+
+			//	-- New school
+
+			// 	SELECT tag.id as id, tag.parent_id, tag.name, tag.alias
+			//	FROM products_relationship rel_tags
+			//	INNER JOIN  products_relationship rel_cat ON rel_cat.category_id = {$category_id}
+			//	INNER JOIN 	tags tag ON (tag.id = rel_tags.tag_id)
+			//	&& rel_cat.product_id = rel_tags.product_id
+			//	GROUP BY tag.id;
+
+			$sql = "SELECT tag.id as id, tag.parent_id, tag.name, tag.alias, COUNT(rel_cat.product_id) AS count_products
+					FROM ".Common::TABLE_PRODUCTS_REL." rel_tags
+					INNER JOIN ".Common::TABLE_PRODUCTS_REL." rel_cat ON rel_cat.category_id = ".$category_id."
+					INNER JOIN 	".Tags::TABLE." tag ON (tag.id = rel_tags.tag_id)
+					&& rel_cat.product_id = rel_tags.product_id
+					GROUP BY tag.id";
 
 			$result = $this->_db->query($sql)->fetchAll();
 
 			// Сохраняем запрос в кэше
 			if ($cache && $this->_cache) $backendCache->save(self::TABLE.'-'.strtolower(__FUNCTION__).'-' .$category_id.'.cache', $result);
+		}
+		return $result;
+	}
+
+	/**
+	 * Получение всех размеров товара по Id
+	 * @param $product_id
+	 */
+	public function getSizes($product_id, $cache = false)
+	{
+		$result = null;
+
+		if ($cache && $this->_cache) {
+			$backendCache = $this->getDI()->get('backendCache');
+			$result = $backendCache->get(self::TABLE.'-'.strtolower(__FUNCTION__).'-' .$product_id.'.cache');
+		}
+
+		if($result === null) {    // Выполняем запрос из MySQL
+			$sql = "SELECT tag.name
+					FROM ".Common::TABLE_PRODUCTS_REL." rel
+					INNER JOIN 	".Tags::TABLE." tag ON (rel.tag_id = tag.id && tag.`parent_id` = 1000)
+					WHERE rel.`product_id` = ".$product_id;
+
+			$result = $this->_db->query($sql)->fetchAll();
+
+			// Сохраняем запрос в кэше
+			if ($cache && $this->_cache) $backendCache->save(self::TABLE.'-'.strtolower(__FUNCTION__).'-' .$product_id.'.cache', $result);
 		}
 		return $result;
 	}

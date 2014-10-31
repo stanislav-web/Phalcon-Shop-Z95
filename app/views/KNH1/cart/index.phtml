@@ -164,7 +164,7 @@
 <tbody>
 
 	<?php foreach ($products as $product) { ?>
-	<tr id="product_<?php echo $product->articul; ?>" data-pid="<?php echo $product->product_id; ?>" data-articul="<?php echo $product->articul; ?>" class="cart_item first_item address_0 odd">
+	<tr id="product_<?php echo $product->articul; ?>" date-pid="" data-articul="<?php echo $product->articul; ?>" class="cart_item first_item address_0 odd">
 	<td class="cart_product">
 		<a href="">
 			<?=$this->tag->image(array(
@@ -205,7 +205,7 @@
 	</td>
 	<td class="cart_delete text-center" data-title="Delete">
 		<div>
-			<a rel="nofollow" title="Delete" class="cart_quantity_delete" data-product_id="<?php echo $product->product_id; ?>" href="" data-articul="<?php echo $product->articul; ?>"><i class="icon-trash"></i></a>
+			<a rel="nofollow" title="Delete" class="cart_quantity_delete" id="<?php echo $product->product_id; ?>" href="" data-articul="<?php echo $product->articul; ?>"><i class="icon-trash"></i></a>
 		</div>
 	</td>
 </tr>
