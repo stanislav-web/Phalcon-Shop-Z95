@@ -74,7 +74,7 @@
 			})(jQuery);
 			$(document).ready(function() {
 				$('.dropdown-toggle.has-category').after($('.dropdown-sub.dropdown-menu.categories'))
-				jQuery("#cavas_menu").OffCavasmenu();
+				//jQuery("#cavas_menu").OffCavasmenu();
 				$('#cavas_menu .navbar-toggle').click(function() {
 					$('body,html').animate({
 						scrollTop: 0
@@ -114,7 +114,7 @@
 									<?php if(!empty($categories)) { ?>
 										<?php foreach($categories as $category) { ?>
 											<li class="clearfix">
-												<?php echo Phalcon\Tag::linkTo('categories/'. $category['alias'], $category['name']); ?>
+												<?php echo $this->tag->linkTo('catalogue/'. $category['alias'], $category['name']); ?>
 											</li>
 										<?php } ?>
 									<?php } ?>
@@ -139,7 +139,13 @@
 										<div class="product-container clearfix">
 											<div class="image ">
 												<a class="product_img_link" href="" title="Donec posuere metus" itemprop="url">
-													<img class="replace-2x img-responsive" src="assets/<?php echo $shop->code ?>/images/187-home_default.jpg" alt="Donec magna diam" title="Donec magna diam" itemprop="image">
+													<?=$this->tag->image(array(
+														'assets/'.$shop->code.'/images/187-home_default.jpg',
+														'alt' 			=> $product->name,
+														'title' 			=> $product->name,
+														'class' 		=> 'replace-2x img-responsive',
+														'itemprop' 		=> 'image'
+													));?>
 												</a>
  <span class="new-box">
  <span class="new-label">New</span>
@@ -196,7 +202,13 @@
 										<div class="product-container clearfix">
 											<div class="image ">
 												<a class="product_img_link" href="" title="Donec posuere metus" itemprop="url">
-													<img class="replace-2x img-responsive" src="assets/<?php echo $shop->code ?>/images/187-home_default.jpg" alt="Donec magna diam" title="Donec magna diam" itemprop="image">
+													<?=$this->tag->image(array(
+														'assets/'.$shop->code.'/images/187-home_default.jpg',
+														'alt' 			=> $product->name,
+														'title' 			=> $product->name,
+														'class' 		=> 'replace-2x img-responsive',
+														'itemprop' 		=> 'image'
+													));?>
 												</a>
  <span class="new-box">
  <span class="new-label">New</span>

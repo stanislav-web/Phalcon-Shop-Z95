@@ -273,19 +273,27 @@
 																<a href="" rel="other-views"
 																   class="thickbox-ajax-8 shown"
 																   title="Donec magna diam">
-																	<img
-																		src="assets/<?php echo $shop->code ?>/images/155-medium_default.jpg"
-																		alt="Donec magna diam" height="125" width="125"
-																		class="leo-hover-image">
+																	<?=$this->tag->image(array(
+																		'assets/'.$shop->code.'/images/155-medium_default.jpg',
+																		'alt' 	=> 	'Donec magna diam',
+																		'title'	=>	'Donec magna diam',
+																		'class'	=>	'leo-hover-image',
+																		'width'	=> 125,
+																		'height'=> 125,
+																	));?>
 																</a>
 															</li>
 															<li>
 																<a href="" rel="other-views" class="thickbox-ajax-8"
 																   title="Donec magna diam">
-																	<img
-																		src="assets/<?php echo $shop->code ?>/images/154-medium_default.jpg"
-																		alt="Donec magna diam" height="125" width="125"
-																		class="leo-hover-image">
+																	<?=$this->tag->image(array(
+																		'assets/'.$shop->code.'/images/154-medium_default.jpg',
+																		'alt' 	=> 	'Donec magna diam',
+																		'title'	=>	'Donec magna diam',
+																		'class'	=>	'leo-hover-image',
+																		'width'	=> 125,
+																		'height'=> 125,
+																	));?>
 																</a>
 															</li>
 														</ul>
@@ -296,10 +304,14 @@
 										<a class="product_img_link"
 										   href="<?php echo Helpers\LocationUrls::location('/catalogue/' . $latestProduct->articul); ?>"
 										   title="Vivamus condimentum" itemprop="url">
-											<img class="replace-2x img-responsive"
-												 src="assets/<?php echo $shop->code ?>/images/154-home_default.jpg"
-												 alt="Donec magna diam"
-												 title="Donec magna diam" itemprop="image">
+											<?=$this->tag->image(array(
+												'assets/'.$shop->code.'/images/154-home_default.jpg',
+												'alt' 	=> 	'Donec magna diam',
+												'title'	=>	'Donec magna diam',
+												'class'	=>	'replace-2x img-responsive',
+												'itemprop'	=> 'image',
+												'height'=> 125,
+											));?>
 											<span class="product-additional" data-idproduct="8"><img
 													class="img-responsive" title="" alt=""
 													src="assets/<?php echo $shop->code ?>/images/155-home_default.jpg"></span>
@@ -336,7 +348,7 @@
 								</div>
 								<div class="right-block">
 									<h5 itemprop="name">
-										<?php echo Phalcon\Tag::linkTo(array('catalogue/' . $latestProduct->articul, $latestProduct->brand . ', ' . ucfirst($latestProduct->name), 'class' => 'product-name', 'title' => $latestProduct->name)); ?>
+										<?php echo $this->tag->linkTo(array('catalogue/' . $latestProduct->articul, $latestProduct->brand . ', ' . ucfirst($latestProduct->name), 'class' => 'product-name', 'title' => $latestProduct->name)); ?>
 									</h5>
 
 									<div class="product-desc" itemprop="description">
@@ -433,19 +445,27 @@
 																<a href="" rel="other-views"
 																   class="thickbox-ajax-8 shown"
 																   title="Donec magna diam">
-																	<img
-																		src="assets/<?php echo $shop->code ?>/images/155-medium_default.jpg"
-																		alt="Donec magna diam" height="125" width="125"
-																		class="leo-hover-image">
+																	<?=$this->tag->image(array(
+																		'assets/'.$shop->code.'/images/155-medium-default.jpg',
+																		'alt' 	=> 	'Donec magna diam',
+																		'title'	=>	'Donec magna diam',
+																		'class'	=>	'replace-2x img-responsive',
+																		'height'=> 125,
+																		'width'	=> 125,
+																	));?>
 																</a>
 															</li>
 															<li>
 																<a href="" rel="other-views" class="thickbox-ajax-8"
 																   title="Donec magna diam">
-																	<img
-																		src="assets/<?php echo $shop->code ?>/images/154-medium_default.jpg"
-																		alt="Donec magna diam" height="125" width="125"
-																		class="leo-hover-image">
+																	<?=$this->tag->image(array(
+																		'assets/'.$shop->code.'/images/154-medium-default.jpg',
+																		'alt' 	=> 	'Donec magna diam',
+																		'title'	=>	'Donec magna diam',
+																		'class'	=>	'replace-2x img-responsive',
+																		'height'=> 125,
+																		'width'	=> 125,
+																	));?>
 																</a>
 															</li>
 														</ul>
@@ -456,10 +476,14 @@
 										<a class="product_img_link"
 										   href="<?php echo Helpers\LocationUrls::location('/catalogue/' . $latestProduct->articul); ?>"
 										   title="Vivamus condimentum" itemprop="url">
-											<img class="replace-2x img-responsive"
-												 src="assets/<?php echo $shop->code ?>/images/154-home_default.jpg"
-												 alt="Donec magna diam"
-												 title="Donec magna diam" itemprop="image">
+
+											<?=$this->tag->image(array(
+												'assets/'.$shop->code.'/images/155-medium-default.jpg',
+												'alt' 	=> 	'Donec magna diam',
+												'title'	=>	'Donec magna diam',
+												'class'	=>	'replace-2x img-responsive',
+												'itemprop'=> 'image',
+											));?>
 											<span class="product-additional" data-idproduct="8"><img
 													class="img-responsive" title="" alt=""
 													src="assets/<?php echo $shop->code ?>/images/155-home_default.jpg"></span>
@@ -496,7 +520,7 @@
 								</div>
 								<div class="right-block">
 									<h5 itemprop="name">
-										<?php echo Phalcon\Tag::linkTo(array('catalogue/' . $latestProduct->articul, $latestProduct->brand . ', ' . ucfirst($latestProduct->name), 'class' => 'product-name', 'title' => $latestProduct->name)); ?>
+										<?php echo $this->tag->linkTo(array('catalogue/' . $latestProduct->articul, $latestProduct->brand . ', ' . ucfirst($latestProduct->name), 'class' => 'product-name', 'title' => $latestProduct->name)); ?>
 									</h5>
 
 									<div class="product-desc" itemprop="description">
@@ -593,19 +617,27 @@
 																<a href="" rel="other-views"
 																   class="thickbox-ajax-8 shown"
 																   title="Donec magna diam">
-																	<img
-																		src="assets/<?php echo $shop->code ?>/images/155-medium_default.jpg"
-																		alt="Donec magna diam" height="125" width="125"
-																		class="leo-hover-image">
+																	<?=$this->tag->image(array(
+																		'assets/'.$shop->code.'/images/155-medium-default.jpg',
+																		'alt' 	=> 	'Donec magna diam',
+																		'title'	=>	'Donec magna diam',
+																		'class'	=>	'leo-hover-image',
+																		'height'=> 125,
+																		'width'=> 125,
+																	));?>
 																</a>
 															</li>
 															<li>
 																<a href="" rel="other-views" class="thickbox-ajax-8"
 																   title="Donec magna diam">
-																	<img
-																		src="assets/<?php echo $shop->code ?>/images/154-medium_default.jpg"
-																		alt="Donec magna diam" height="125" width="125"
-																		class="leo-hover-image">
+																	<?=$this->tag->image(array(
+																		'assets/'.$shop->code.'/images/154-medium-default.jpg',
+																		'alt' 	=> 	'Donec magna diam',
+																		'title'	=>	'Donec magna diam',
+																		'class'	=>	'leo-hover-image',
+																		'height'=> 125,
+																		'width'=> 125,
+																	));?>
 																</a>
 															</li>
 														</ul>
@@ -616,10 +648,14 @@
 										<a class="product_img_link"
 										   href="<?php echo Helpers\LocationUrls::location('/catalogue/' . $latestProduct->articul); ?>"
 										   title="Vivamus condimentum" itemprop="url">
-											<img class="replace-2x img-responsive"
-												 src="assets/<?php echo $shop->code ?>/images/154-home_default.jpg"
-												 alt="Donec magna diam"
-												 title="Donec magna diam" itemprop="image">
+
+											<?=$this->tag->image(array(
+												'assets/'.$shop->code.'/images/154-home_default.jpg',
+												'alt' 	=> 	'Donec magna diam',
+												'title'	=>	'Donec magna diam',
+												'class'	=>	'leo-hover-image',
+												'itemprop'=> 	'image',
+											));?>
 											<span class="product-additional" data-idproduct="8"><img
 													class="img-responsive" title="" alt=""
 													src="assets/<?php echo $shop->code ?>/images/155-home_default.jpg"></span>
@@ -656,7 +692,7 @@
 								</div>
 								<div class="right-block">
 									<h5 itemprop="name">
-										<?php echo Phalcon\Tag::linkTo(array('catalogue/' . $latestProduct->articul, $latestProduct->brand . ', ' . ucfirst($latestProduct->name), 'class' => 'product-name', 'title' => $latestProduct->name)); ?>
+										<?php echo $this->tag->linkTo(array('catalogue/' . $latestProduct->articul, $latestProduct->brand . ', ' . ucfirst($latestProduct->name), 'class' => 'product-name', 'title' => $latestProduct->name)); ?>
 									</h5>
 
 									<div class="product-desc" itemprop="description">
@@ -820,7 +856,12 @@
 	<div class="widget col-lg-12 col-md-12 col-sm-12 col-xs-12 col-sp-12">
 		<div class="widget-html block">
 			<div class="block_content">
-				<p><img src="assets/<?php echo $shop->code ?>/images/img-news.jpg" alt="" width="1147" height="165">
+				<p>
+					<?=$this->tag->image(array(
+						'assets/'.$shop->code.'/images/img-news.jpg',
+						'width'	=> 	1147,
+						'height'=> 	165,
+					));?>
 				</p>
 			</div>
 		</div>

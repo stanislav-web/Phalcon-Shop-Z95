@@ -72,7 +72,13 @@ class ControllerBase extends Phalcon\Mvc\Controller
 		 * Категории текущего магазина
 		 * @var null
 		 */
-		$_shopCategories = null;
+		$_shopCategories = null,
+
+		/**
+		 * Главные категории текущего магазина
+		 * @var null
+		 */
+		$_shopMainCategories	=	null;
 
 	public
 
@@ -84,7 +90,8 @@ class ControllerBase extends Phalcon\Mvc\Controller
 		$commonModel        =   false,
 		$categoriesModel    =   false,
 		$productsModel      =   false,
-		$pricesModel        =   false;
+		$pricesModel        =   false,
+		$tagsModel			=	false;
 
 	/**
 	 * _getTransPath() Получаю путь у языковом файлу
@@ -187,6 +194,7 @@ class ControllerBase extends Phalcon\Mvc\Controller
 		$this->productsModel    =   new Models\Products();
 		$this->categoriesModel  =   new Models\Categories();
 		$this->pricesModel      =   new Models\Prices();
+		$this->tagsModel      	=   new Models\Tags();
 
 		// Получение параметров текущего магазина
 
@@ -194,6 +202,9 @@ class ControllerBase extends Phalcon\Mvc\Controller
 
 		// Получение категорий и аодкатегорий для текущего магазина
 		$this->_shopCategories = $this->commonModel->getShopCategories($this->_shop->id, true);							// LIMIT
+
+		// Фильтр на главные категории
+		$this->_shopMainCategories = (object)$this->_helper->findInTree($this->_shopCategories, 'parent_id', '0');
 
 		// Инициализация навигации
 
@@ -206,6 +217,7 @@ class ControllerBase extends Phalcon\Mvc\Controller
 
 		// Установка директории с шаблонами
 		//$this->view->setViewsDir($this->_config->application->viewsDir.'/'.$this->_shop->code);
+		$this->_shop->code = 'KNH1';
 		$this->view->setViewsDir($this->_config->application->viewsDir.'/KNH1');
 
 		// В конце запись переменных для шаблонов
@@ -214,7 +226,7 @@ class ControllerBase extends Phalcon\Mvc\Controller
 			'languages'	    =>	$this->_languages,  // все доступные языки
 			'shop' 		    => 	$this->_shop,       // параметры магазина
 			'topnav' 	    => 	$nav,               // топ меню навигации
-			'categories'    =>  (object)$this->_helper->findInTree($this->_shopCategories, 'parent_id', '0'),        // главные категории
+			'categories'    =>  $this->_shopMainCategories,        // главные категории
 			'newProducts'   =>  $this->productsModel->getNewProducts($this->_shop->price_id, 6,  true)       // новые товары
 		]);
 	}
@@ -227,6 +239,6 @@ class ControllerBase extends Phalcon\Mvc\Controller
 	public function cachePage($method)
 	{
 		if($this->_shop)
-			return strtolower($this->_shop->code.'-'.$this->_lang.'-'.substr($method, 0, -6).'.cache');
+			return strtolower($this->_shop->code.'-'.$this->_lang.'-'.($this->request->getURI() == '/') ? '_' : $this->request->getURI().'-'.substr($method, 0, -6).'.cache');
 	}
 }

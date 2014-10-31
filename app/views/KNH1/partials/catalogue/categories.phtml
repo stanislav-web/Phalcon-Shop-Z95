@@ -1,0 +1,26 @@
+<div id="subcategories" class="block">
+	<h4 class="title_block subcategory-heading"><?=$viewTranslate['CATEGORIES']; ?></h4>
+	<div class="clearfix row">
+		<?php if(!empty($categoriesSide)): ?>
+			<?php foreach($categoriesSide as $category): ?>
+				<div class="col-md-3 col-xs-6 col-sp-12">
+					<div class="subcategories">
+						<div class="subcategory-image">
+							<a href="<? echo Helpers\LocationUrls::location($this->request->getURI().'/'.$category['alias']); ?>" title="<?= $category['name']; ?>" class="img">
+								<?= $this->tag->image(array('assets/' . $shop->code . '/images/12-category_default.jpg', "alt" => $category['name'])); ?>
+							</a>
+						</div>
+						<h5>
+							<a href="<? echo Helpers\LocationUrls::location($this->request->getURI().'/'.$category['alias']);?>" class = "subcategory-name""><?=$category['name'];?></a>
+						</h5>
+						<div class="cat_desc">
+							<p><?= $category['description']; ?></p>
+						</div>
+					</div>
+				</div>
+			<?php endforeach; ?>
+		<?php else: ?>
+			<?=$viewTranslate['CATEGORIES_NOT_FOUND']; ?>
+		<?php endif; ?>
+	</div>
+</div>

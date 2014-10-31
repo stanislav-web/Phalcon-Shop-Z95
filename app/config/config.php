@@ -66,8 +66,8 @@
 					],
 					[
 						'name'       	=> 'CATEGORIES',
-						'url'     		=> '/catalog',
-						'controller'	=>	'catalog',
+						'url'     		=> '/catalogue',
+						'controller'	=>	'catalogue',
 						'action'		=>	'index',
 						'target' 		=> '_self',
 						'classLink'		=> 'dropdown-toggle has-category',

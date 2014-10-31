@@ -1,0 +1,28 @@
+<div id="tags_block_left" class="block tags_block black nobackground">
+	<h4 class="title_block">
+		<?=$viewTranslate['TAGS']; ?>
+	</h4>
+	<?php if(isset($tags) && !empty($tags)): ?>
+		<div class="block_content" style="">
+			<?php foreach($tags as $tag): ?>
+				<?php if(strpos($this->request->getURI(),'tags') !== false): ?>
+					<? if(isset($tagactive)): ?>
+						<a class="tag_level1 last_item <?=(in_array($tag->alias, $tagactive)) ? 'active' : ''?>" href="<?=Helpers\LocationUrls::location($this->request->getURI().'/'.$tag->alias);?>">
+					<?php else: ?>
+							<a class="tag_level1 last_item " href="<?=Helpers\LocationUrls::location($this->request->getURI().'/'.$tag->alias);?>">
+					<?php endif; ?>
+				<? else: ?>
+					<? if(isset($tagactive)): ?>
+						<a class="tag_level1 last_item <?=(in_array($tag->alias, $tagactive)) ? 'active' : ''?>" href="<?=Helpers\LocationUrls::location($this->request->getURI().'/tags/'.$tag->alias);?>">
+					<?php else: ?>
+						<a class="tag_level1 last_item " href="<?=Helpers\LocationUrls::location($this->request->getURI().'/tags/'.$tag->alias);?>">
+					<?php endif; ?>
+				<?php endif; ?>
+				<?=$tag->name;?>
+				</a>
+			<?php endforeach; ?>
+		</div>
+	<?php else: ?>
+		<?=$viewTranslate['TAGS_NOT_FOUND']; ?>
+	<?php endif; ?>
+</div>

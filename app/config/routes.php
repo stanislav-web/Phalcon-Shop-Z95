@@ -11,7 +11,7 @@
 
 	// Роутер каталога
 
-	$router->addGet("/categories/:params", [
+	$router->addGet("/catalogue/:params", [
 		'controller'    => 'catalogue',
 		'action'        => 'index'
 	]);

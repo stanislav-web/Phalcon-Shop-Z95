@@ -25,6 +25,7 @@
  * @package Shop
  * @subpackage Controllers
  */
+
 class CatalogueController extends ControllerBase
 {
 	private
@@ -33,7 +34,13 @@ class CatalogueController extends ControllerBase
 		 * Все категории каталога
 		 * @var bool
 		 */
-		$_routeTree = false;
+		$_routeTree = false,
+
+		/**
+		 * Лимит вывода товаров на страницу
+		 * @var int
+		 */
+		$_onpage = 10;
 
 	/**
 	 * initialize() Инициализирую конструктор
@@ -74,23 +81,21 @@ class CatalogueController extends ControllerBase
 		{
 			// Содержимое контроллера для формирования выдачи
 
-			// Установка заголовка
-			$this->tag->appendTitle('- '.$this->_translate['TITLE']);
-
 			if($this->request->isGet())
 			{
-				$this->_routeTree = $this->_helper->catalogueRouteTree($this->request->getURI(), [
-					'categories', 'brands', 'tags'
+				// Определение роутинга
+				$this->_routeTree = $this->_helper->catalogueRouteTree($this->request->getQuery()['_url'], [
+					'catalogue', 'brands', 'tags'
 				]);
 
 				// Работа с категориями
-				if(isset($this->_routeTree['categories'])) 	$this->_categories();
+				if(isset($this->_routeTree['catalogue'])) 	$this->_categories();
 
 				// Работа с брендами
-				if(isset($this->_routeTree['brands']))		$this->_brands();
+				//if(isset($this->_routeTree['brands']))		$this->_brands();
 
 				// работа с тегами
-				if(isset($this->_routeTree['tags']))		$this->_tags();
+				//if(isset($this->_routeTree['tags']))		$this->_tags();
 			}
 		}
 		// Сохраняем вывод в кэш
@@ -105,15 +110,128 @@ class CatalogueController extends ControllerBase
 
 	}
 
+	/**
+	 * Обработка загрузки категорий, подкатегорий и товаров
+	 * @access private
+	 */
 	private function _categories()
 	{
-		if(sizeof($this->_routeTree['categories']) == 1)
+		// Обработка и показ категорий
+		if(empty($this->_routeTree['catalogue']))
+		{
+			$this->_shopCategories = $this->_helper->arrayToAssoc($this->_shopCategories, 'id');
+
+			// Установка заголовка
+			$this->tag->appendTitle('- '.$this->_translate['TITLE']);
+
+			// Вывод в шаблон
+			$this->view->setVars([
+				'template'		=>	'categories',
+				'categoriesSide'=>	$this->_helper->arrayToAssoc((array)$this->_shopMainCategories, 'id'),
+			]);
+		}
+
+		// Обработка и показ подкатегорий
+		elseif(sizeof($this->_routeTree['catalogue']) == 1)
 		{
 			// если главная категория, ищу ее в списке категорий
-			$category = $this->_helper->findInTree($this->_shopCategories, 'alias', $this->_routeTree['categories'][0]);
+			$category = $this->_helper->findInTree($this->_shopCategories, 'alias', $this->_routeTree['catalogue'][0]);
 
-			// Получаю список всех товаров в категории
+			// получаю скписок дочерних категорий от $category
+			$subCategories = $this->_helper->arrayToAssoc(
+				$this->_helper->findInTree($this->_shopCategories, 'parent_id', array_values($category)[0]['id']),
+				'id'
+			);
 
+			if(!empty($subCategories))
+			{
+				// подсчета товаров в подкатегориях
+				$productsCount = $this->_helper->arrayToAssoc($this->commonModel->getCountProducts(array_keys($subCategories), true), 'id');
+				$this->session->set('productsCount', $productsCount);
+			}
+
+			// Установка заголовка
+			$this->tag->appendTitle('- '.$category[0]['name']);
+
+			// Вывод в шаблон
+			$this->view->setVars([
+				'template'		=>	'subcategories',
+				'category'      => 	array_values($category)[0],
+				'categoriesSide'=> 	(isset($productsCount)) ? array_intersect_key($subCategories, $productsCount) : [],
+				'count'         => 	(isset($productsCount)) ? $this->_helper->arrayToAssoc($productsCount, 'id') : 0,
+				'allcount'      => 	array_sum(array_map(function ($item) {
+					return $item['product_count'];
+				}, $this->_helper->objectToArray($productsCount)))
+			]);
+		}
+		else
+		{
+			// вывод товаров в подкатегории. переадресовую на обработку другого action
+
+			$currentPage = abs($this->request->getQuery('page', 'int', 0));
+			if($currentPage == 0) {
+				$offSet = 0;
+				$currentPage = 1;
+			}
+			else $offSet = $currentPage*$this->_onpage;
+
+			// Получаю параметры категорий и подкатегорий
+			$category = $this->_helper->findInTree($this->_shopCategories, 'alias', end($this->_routeTree['catalogue']));
+
+			if(!empty($category))
+			{
+				$categoriesSide = $this->_helper->arrayToAssoc($this->_helper->categoriesToTree($this->_shopCategories, $category[0]['parent_id']), 'id');
+
+				// проверяю, есть ли теги в роутинге беру их ID
+				if(isset($this->_routeTree['tags']))
+				{
+					$tags = $this->tagsModel->get(['id', 'alias'], ['alias' => $this->_routeTree['tags']], array(), null, true);
+					$tagIds = array_keys($this->_helper->arrayToAssoc($tags, 'id'));
+
+					// для подсветки выбранных тегов
+					$this->view->setVar('tagactive', array_keys($this->_helper->arrayToAssoc($tags, 'alias')));
+				}
+
+				// Получаю параметры това	ров (фильтрующий запрос)
+
+				$products = $this->productsModel->getProducts(
+					$this->_shop->price_id, 						// параметр цены магазина
+					isset($this->_routeTree['tags']) ? array(
+						'rel.tag_id' => $tagIds						// параметры тегов
+					) : array(
+						'rel.category_id' => $category[0]['id']		// параметры товаров
+					),
+					$offSet,										// начальная позиция выборки
+					$this->_onpage,									// лимит выборки
+					true);
+				$pageProductsCount = (isset($products['count'])) ? $products['count'] : 0;
+				$products = $this->_helper->arrayToAssoc($products, 'id');
+
+				// получаю все теги в категории по всем товарам
+
+				$tags = $this->tagsModel->getByProductIds($category[0]['id'], true);
+
+				$this->view->setVar('tags', $tags);
+
+				// Получаю товары, бренды и их теги по категории
+				// Вывод в шаблон
+				$this->view->setVars([
+					'pager'			=>	array(
+						'onpage'	=>	$this->_onpage,
+						'current'	=>	$currentPage,
+						'allpages'	=>	ceil($pageProductsCount/$this->_onpage),
+						'items'		=>	$pageProductsCount,
+						'offset'	=>	$offSet,
+						'show'		=>	$offSet+($currentPage*$this->_onpage),
+					),
+					'allcount'			=>	$pageProductsCount,
+					'category'      	=> 	$category[0],
+					'categoriesSide'	=>	$categoriesSide,
+					'items'				=>  $products,
+					'count'				=>	$this->session->get('productsCount'),
+					'template'			=>	'products',
+				]);
+			}
 		}
 	}
 }

@@ -125,7 +125,8 @@
 			if($result === null)
 			{
 				$sql = "SELECT 	".Categories::TABLE.".id AS id, ".Categories::TABLE.".parent_id AS parent_id,
-							".Categories::TABLE.".name AS name, ".Categories::TABLE.".alias AS alias
+							".Categories::TABLE.".name AS name, ".Categories::TABLE.".alias AS alias,
+							".Categories::TABLE.".images AS images, ".Categories::TABLE.".description AS description
 							FROM  ".self::TABLE_CAT_SHOP_REL."
 							INNER JOIN ".Categories::TABLE."
 							ON (
@@ -138,6 +139,40 @@
 
 				// Сохраняем запрос в кэше
 				if($cache && $this->_cache) $backendCache->save(strtolower(__FUNCTION__).'-'.$shop_id.'.cache', $result);
+			}
+			return $result;
+		}
+
+
+		/**
+		 * Подсчет товаров в каждой из выбранных категорий
+		 *
+		 * @param mixed $categories_ids array(1,56,79,120) или int 56
+		 * @param bool 	$cache
+		 * @return null
+		 */
+		public function getCountProducts($categories_ids, $cache = false)
+		{
+			$result = null;
+			if ($cache && $this->_cache) {
+				$backendCache = $this->getDI()->get('backendCache');
+				$result = $backendCache->get(strtolower(__FUNCTION__) . '-'.implode('_', $categories_ids).'.cache');
+			}
+
+			if ($result === null) {
+
+				$sql = "SELECT rel.category_id AS id, COUNT(rel.product_id) AS product_count
+						FROM `".self::TABLE_PRODUCTS_REL."` rel ";
+
+						if(is_array($categories_ids))
+							$sql .= "WHERE rel.category_id IN(".implode(',', $categories_ids).")";
+						else $sql .= "WHERE rel.category_id = ".$categories_ids;
+						$sql .= " GROUP BY rel.category_id";
+
+				$result = $this->_db->query($sql)->fetchAll();
+
+				// Сохраняем запрос в кэше
+				if ($cache && $this->_cache) $backendCache->save(strtolower(__FUNCTION__) . '-' . implode('_', $categories_ids) . '.cache', $result);
 			}
 			return $result;
 		}

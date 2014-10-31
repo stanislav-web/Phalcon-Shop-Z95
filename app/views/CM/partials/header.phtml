@@ -262,9 +262,15 @@
 		<div class="row">
 			<div id="header_logo" class="pull-left">
 				<a href="" title="Leo Fashion Store">
-					<img class="logo img-responsive" src="assets/<?php echo $shop->code ?>/images/leo-mobile-1399525585.jpg" alt="Leo Fashion Store" width="155" height="95">
+					<?=Phalcon\Tag::image(array(
+						'assets/'.$shop->code.'/images/leo-mobile-1399525585.jpg',
+						'alt' 	=> 	$shop->name,
+						'title'	=>	$shop->name,
+						'class'	=>	'logo img-responsive',
+						'width'	=>	155,
+						'height'=>	95,
+					));?>
 				</a>
-
 			</div>
 
 		</div>

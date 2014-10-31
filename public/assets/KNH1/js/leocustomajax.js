@@ -16,8 +16,8 @@
 			else if($(".leo-more-cdown").length) $(".leo-more-cdown").remove();
 			if (leoOption.productCdown && $(".leo-more-color").length) myElement.getProductColorInfo();
 			else if($(".leo-more-color").length) $(".leo-more-color").remove();
-			
-			if(myElement.leoData != "leoajax=1"){
+
+			if(myElement.leoData == "leoajax=1"){
             $.ajax({
                 type: 'POST',
                 headers: {"cache-control": "no-cache"},

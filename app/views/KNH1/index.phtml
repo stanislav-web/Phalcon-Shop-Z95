@@ -1,4 +1,3 @@
-<?php use Phalcon\Tag as Tag; ?>
 <!DOCTYPE html>
 <!--[if lt IE 7]>
 <html class="no-js lt-ie9 lt-ie8 lt-ie7 " lang="en">
@@ -21,36 +20,36 @@
 	<meta name="viewport" content="width=device-width, minimum-scale=0.25, maximum-scale=1.6, initial-scale=1.0">
 	<meta name="apple-mobile-web-app-capable" content="yes">
 	<?php
-		echo Tag::getTitle();
-		echo Tag::stylesheetLink('http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css');
-		echo Tag::stylesheetLink('assets/' . $shop->code . '/css/bootstrap(1).css');
-		echo Tag::stylesheetLink('assets/' . $shop->code . '/css/global.css');
-		echo Tag::stylesheetLink('assets/' . $shop->code . '/css/highdpi.css');
-		echo Tag::stylesheetLink('assets/' . $shop->code . '/css/responsive-tables.css');
-		echo Tag::stylesheetLink('assets/' . $shop->code . '/css/uniform.default.css');
-		echo Tag::stylesheetLink('assets/' . $shop->code . '/css/jquery.fancybox.css');
-		echo Tag::stylesheetLink('assets/' . $shop->code . '/css/blockcart.css');
-		echo Tag::stylesheetLink('assets/' . $shop->code . '/css/blockcategories.css');
-		echo Tag::stylesheetLink('assets/' . $shop->code . '/css/blockcurrencies.css');
-		echo Tag::stylesheetLink('assets/' . $shop->code . '/css/blocklanguages.css');
-		echo Tag::stylesheetLink('assets/' . $shop->code . '/css/blocknewsletter.css');
-		echo Tag::stylesheetLink('assets/' . $shop->code . '/css/blockspecials.css');
-		echo Tag::stylesheetLink('assets/' . $shop->code . '/css/blocktags.css');
-		echo Tag::stylesheetLink('assets/' . $shop->code . '/css/blockuserinfo.css');
-		echo Tag::stylesheetLink('assets/' . $shop->code . '/css/blockviewed.css');
-		echo Tag::stylesheetLink('assets/' . $shop->code . '/css/paneltool.css');
-		echo Tag::stylesheetLink('assets/' . $shop->code . '/css/colorpicker.css');
-		echo Tag::stylesheetLink('assets/' . $shop->code . '/css/megamenu.css');
-		echo Tag::stylesheetLink('assets/' . $shop->code . '/css/typo.css');
-		echo Tag::stylesheetLink('assets/' . $shop->code . '/css/styles.css');
-		echo Tag::stylesheetLink('assets/' . $shop->code . '/css/hooks.css');
-		echo Tag::stylesheetLink('assets/' . $shop->code . '/css/blockwishlist.css');
-		echo Tag::stylesheetLink('assets/' . $shop->code . '/css/productcomments.css');
-		echo Tag::stylesheetLink('assets/' . $shop->code . '/css/jquery.autocomplete.css');
-		echo Tag::stylesheetLink('assets/' . $shop->code . '/css/product_list.css');
-		echo Tag::stylesheetLink('assets/' . $shop->code . '/css/blocksearch.css');
-		echo Tag::stylesheetLink('assets/' . $shop->code . '/css/leocustomajax.css');
-		echo Tag::stylesheetLink('assets/' . $shop->code . '/css/comparator.css');
+		echo $this->tag->getTitle();
+		echo $this->tag->stylesheetLink('http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css');
+		echo $this->tag->stylesheetLink('assets/' . $shop->code . '/css/bootstrap(1).css');
+		echo $this->tag->stylesheetLink('assets/' . $shop->code . '/css/global.css');
+		echo $this->tag->stylesheetLink('assets/' . $shop->code . '/css/highdpi.css');
+		echo $this->tag->stylesheetLink('assets/' . $shop->code . '/css/responsive-tables.css');
+		echo $this->tag->stylesheetLink('assets/' . $shop->code . '/css/uniform.default.css');
+		echo $this->tag->stylesheetLink('assets/' . $shop->code . '/css/jquery.fancybox.css');
+		echo $this->tag->stylesheetLink('assets/' . $shop->code . '/css/blockcart.css');
+		echo $this->tag->stylesheetLink('assets/' . $shop->code . '/css/blockcategories.css');
+		echo $this->tag->stylesheetLink('assets/' . $shop->code . '/css/blockcurrencies.css');
+		echo $this->tag->stylesheetLink('assets/' . $shop->code . '/css/blocklanguages.css');
+		echo $this->tag->stylesheetLink('assets/' . $shop->code . '/css/blocknewsletter.css');
+		echo $this->tag->stylesheetLink('assets/' . $shop->code . '/css/blockspecials.css');
+		echo $this->tag->stylesheetLink('assets/' . $shop->code . '/css/blocktags.css');
+		echo $this->tag->stylesheetLink('assets/' . $shop->code . '/css/blockuserinfo.css');
+		echo $this->tag->stylesheetLink('assets/' . $shop->code . '/css/blockviewed.css');
+		echo $this->tag->stylesheetLink('assets/' . $shop->code . '/css/paneltool.css');
+		echo $this->tag->stylesheetLink('assets/' . $shop->code . '/css/colorpicker.css');
+		echo $this->tag->stylesheetLink('assets/' . $shop->code . '/css/megamenu.css');
+		echo $this->tag->stylesheetLink('assets/' . $shop->code . '/css/typo.css');
+		echo $this->tag->stylesheetLink('assets/' . $shop->code . '/css/styles.css');
+		echo $this->tag->stylesheetLink('assets/' . $shop->code . '/css/hooks.css');
+		echo $this->tag->stylesheetLink('assets/' . $shop->code . '/css/blockwishlist.css');
+		echo $this->tag->stylesheetLink('assets/' . $shop->code . '/css/productcomments.css');
+		echo $this->tag->stylesheetLink('assets/' . $shop->code . '/css/jquery.autocomplete.css');
+		echo $this->tag->stylesheetLink('assets/' . $shop->code . '/css/product_list.css');
+		echo $this->tag->stylesheetLink('assets/' . $shop->code . '/css/blocksearch.css');
+		echo $this->tag->stylesheetLink('assets/' . $shop->code . '/css/leocustomajax.css');
+		echo $this->tag->stylesheetLink('assets/' . $shop->code . '/css/comparator.css');
 	?>
 	<script type="text/javascript">
 		var CUSTOMIZE_TEXTFIELD = 1;
@@ -112,31 +111,31 @@
 	</section>
 
 <?php
-	echo Tag::javascriptInclude('assets/' . $shop->code . '/js/jquery-1.11.0.min.js');
-	echo Tag::javascriptInclude('assets/' . $shop->code . '/js/jquery-migrate-1.2.1.min.js');
-	echo Tag::javascriptInclude('assets/' . $shop->code . '/js/jquery.easing.js');
-	echo Tag::javascriptInclude('assets/' . $shop->code . '/js/tools.js');
-	echo Tag::javascriptInclude('assets/' . $shop->code . '/js/global.js');
-	echo Tag::javascriptInclude('assets/' . $shop->code . '/js/10-bootstrap.min.js');
-	echo Tag::javascriptInclude('assets/' . $shop->code . '/js/15-jquery.total-storage.min.js');
-	echo Tag::javascriptInclude('assets/' . $shop->code . '/js/15-jquery.uniform-modified.js');
-	echo Tag::javascriptInclude('assets/' . $shop->code . '/js/jquery.fancybox.js');
-	echo Tag::javascriptInclude('assets/' . $shop->code . '/js/products-comparison.js');
-	echo Tag::javascriptInclude('assets/' . $shop->code . '/js/ajax-cart.js');
-	echo Tag::javascriptInclude('assets/' . $shop->code . '/js/jquery.scrollTo(1).js');
-	echo Tag::javascriptInclude('assets/' . $shop->code . '/js/jquery.serialScroll.js');
-	echo Tag::javascriptInclude('assets/' . $shop->code . '/js/treeManagement.js');
-	echo Tag::javascriptInclude('assets/' . $shop->code . '/js/blocknewsletter.js');
-	echo Tag::javascriptInclude('assets/' . $shop->code . '/js/colorpicker.js');
-	echo Tag::javascriptInclude('assets/' . $shop->code . '/js/paneltool.js');
-	echo Tag::javascriptInclude('assets/' . $shop->code . '/js/jquery.themepunch.plugins.min.js');
-	echo Tag::javascriptInclude('assets/' . $shop->code . '/js/jquery.themepunch.revolution.min.js');
-	echo Tag::javascriptInclude('assets/' . $shop->code . '/js/ajax-wishlist.js');
-	echo Tag::javascriptInclude('assets/' . $shop->code . '/js/jquery.autocomplete.js');
-	echo Tag::javascriptInclude('assets/' . $shop->code . '/js/blocksearch.js');
-	echo Tag::javascriptInclude('assets/' . $shop->code . '/js/leocustomajax.js');
-	echo Tag::javascriptInclude('assets/' . $shop->code . '/js/countdown.js');
-	echo Tag::javascriptInclude('assets/common.js');
+	echo $this->tag->javascriptInclude('assets/' . $shop->code . '/js/jquery-1.11.0.min.js');
+	echo $this->tag->javascriptInclude('assets/' . $shop->code . '/js/jquery-migrate-1.2.1.min.js');
+	echo $this->tag->javascriptInclude('assets/' . $shop->code . '/js/jquery.easing.js');
+	echo $this->tag->javascriptInclude('assets/' . $shop->code . '/js/tools.js');
+	echo $this->tag->javascriptInclude('assets/' . $shop->code . '/js/global.js');
+	echo $this->tag->javascriptInclude('assets/' . $shop->code . '/js/10-bootstrap.min.js');
+	echo $this->tag->javascriptInclude('assets/' . $shop->code . '/js/15-jquery.total-storage.min.js');
+	echo $this->tag->javascriptInclude('assets/' . $shop->code . '/js/15-jquery.uniform-modified.js');
+	echo $this->tag->javascriptInclude('assets/' . $shop->code . '/js/jquery.fancybox.js');
+	echo $this->tag->javascriptInclude('assets/' . $shop->code . '/js/products-comparison.js');
+	echo $this->tag->javascriptInclude('assets/' . $shop->code . '/js/ajax-cart.js');
+	echo $this->tag->javascriptInclude('assets/' . $shop->code . '/js/jquery.scrollTo(1).js');
+	echo $this->tag->javascriptInclude('assets/' . $shop->code . '/js/jquery.serialScroll.js');
+	echo $this->tag->javascriptInclude('assets/' . $shop->code . '/js/treeManagement.js');
+	echo $this->tag->javascriptInclude('assets/' . $shop->code . '/js/blocknewsletter.js');
+	echo $this->tag->javascriptInclude('assets/' . $shop->code . '/js/colorpicker.js');
+	echo $this->tag->javascriptInclude('assets/' . $shop->code . '/js/paneltool.js');
+	echo $this->tag->javascriptInclude('assets/' . $shop->code . '/js/jquery.themepunch.plugins.min.js');
+	echo $this->tag->javascriptInclude('assets/' . $shop->code . '/js/jquery.themepunch.revolution.min.js');
+	echo $this->tag->javascriptInclude('assets/' . $shop->code . '/js/ajax-wishlist.js');
+	echo $this->tag->javascriptInclude('assets/' . $shop->code . '/js/jquery.autocomplete.js');
+	echo $this->tag->javascriptInclude('assets/' . $shop->code . '/js/blocksearch.js');
+	echo $this->tag->javascriptInclude('assets/' . $shop->code . '/js/leocustomajax.js');
+	echo $this->tag->javascriptInclude('assets/' . $shop->code . '/js/countdown.js');
+	echo $this->tag->javascriptInclude('assets/common.js');
 ?>
 <!--[if IE 8]>
 <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>

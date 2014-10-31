@@ -22,8 +22,12 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
+var comparedProductsIds = 1;
+
 $(document).ready(function(){
-	$(document).on('click', '.add_to_compare', function(e){
+
+
+    $(document).on('click', '.add_to_compare', function(e){
 		e.preventDefault();
 		if (typeof addToCompare != 'undefined')
 			addToCompare(parseInt($(this).data('id-product')));
@@ -33,7 +37,7 @@ $(document).ready(function(){
 	compareButtonsStatusRefresh();
 	totalCompareButtons();
 });
-
+// Add @satnislav
 function addToCompare(productId)
 {
 	var totalValueNow = parseInt($('.bt_compare').next('.compare_product_count').val());
