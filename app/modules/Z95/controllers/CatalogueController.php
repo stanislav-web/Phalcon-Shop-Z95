@@ -14,8 +14,6 @@ namespace Modules\Z95\Controllers;
  * @var $this->_config      доступ ко всем настройкам
  * @var $this->_translate   доступ к переводчику
  * @var $this->_shop        параметры текущего магазина
- * @var $this->_mainCategories главные категории
-
  *
  * @var $this->di           вызов компонентов из app/config/di.php
  * @var $this->session      вызов сессии
@@ -56,7 +54,7 @@ class CatalogueController extends ControllerBase
 		parent::initialize();
 
 		// Заголовок страницы
-		$this->tag->setTitle($this->_shop->title);
+		$this->tag->setTitle($this->_shop['title']);
 	}
 
 	/**
@@ -122,10 +120,10 @@ class CatalogueController extends ControllerBase
 					]);
 
 				$articul = current($this->_routeTree['catalogue']);
-				$item = $this->productsModel->getProductCard($articul, $this->_shop->price_id, true);
+				$item = $this->productsModel->getProductCard($articul, $this->_shop['price_id'], true);
 
 				// передача подходящих размеров для этого товара
-				$sizes = $this->tagsModel->getSizes($item->product_id, true);
+				$sizes = $this->tagsModel->getSizes($item['product_id'], true);
 
 				$this->view->setVar("sizes", $sizes);
 				$this->view->setVar("item", $item);
@@ -154,7 +152,7 @@ class CatalogueController extends ControllerBase
 			// Вывод в шаблон
 			$this->view->setVars([
 				'template'		=>	'categories',
-				'categoriesSide'=>	$this->_helper->arrayToAssoc((array)$this->_shopMainCategories, 'id'),
+				'categoriesSide'=>	$this->_helper->arrayToAssoc($this->_shopMainCategories, 'id'),
 			]);
 		}
 
@@ -222,7 +220,7 @@ class CatalogueController extends ControllerBase
 				// Получаю параметры това	ров (фильтрующий запрос)
 
 				$products = $this->productsModel->getProducts(
-					$this->_shop->price_id, 						// параметр цены магазина
+					$this->_shop['price_id'], 						// параметр цены магазина
 					isset($this->_routeTree['tags']) ? array(
 						'rel.tag_id' => $tagIds						// параметры тегов
 					) : array(

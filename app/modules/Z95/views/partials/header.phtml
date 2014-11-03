@@ -8,7 +8,7 @@
 	<div class="micro-customer" onclick="global.go({url:'/customer/'})"></div>
 	<div class="search">
 		<input class="search_field" type="text" id="CATALOGUE_SEARCH" onchange="catalogue.search(event, this)" onkeyup="catalogue.search(event, this)" onblur="catalogue.search_blur()" onfocus="catalogue.search_focus()" value=""/>
-		<div id="hints_loading"><img src="/assets/<?php echo $shop->code; ?>/images/z95ru/hints_loading.gif"/></div>
+		<div id="hints_loading"><img src="/assets/<?php echo $shop['code']; ?>/images/z95ru/hints_loading.gif"/></div>
 		<button id="CATALOGUE_SEARCH_BUTTON" style="display:none;" onclick="catalogue.start_search=true;catalogue.search();">Искать</button>
 		<div style="height: 2px; font-size: 2px;">&nbsp;</div>
 		<div id="CATALOGUE_SEARCH_HINT" style="display:none;" class="CATALOGUE_SEARCH Shadow" onmouseout="catalogue.search_hint_out()" onmouseover="catalogue.search_hint_over()" onmousemove="catalogue.search_hint_move()"></div>
@@ -19,7 +19,7 @@
 	<tr class="header" style="height:60px;">
 		<td style="padding-top:40px;">
 			<div class="logo">
-				<a href="/"><img src="/assets/<?php echo $shop->code; ?>/images/d-t.gif" /></a>
+				<a href="/"><img src="/assets/<?php echo $shop['code']; ?>/images/d-t.gif" /></a>
 
 			</div>
 
@@ -38,7 +38,7 @@
 
 				<div class="item new"><a href="/catalogue/new">Новинки</a></div>					</div>
 			<div class="top-cart">
-				<div class="cart" onclick="basket.get_small_basket()"><img src="/assets/<?php echo $shop->code; ?>/images/z95ru/icon-cart.png" /></div>
+				<div class="cart" onclick="basket.get_small_basket()"><img src="/assets/<?php echo $shop['code']; ?>/images/z95ru/icon-cart.png" /></div>
 				<h3><a href="/customer/cart">Корзина</a></h3>
 				<span id="BASKET_INFO"></span>
 			</div>

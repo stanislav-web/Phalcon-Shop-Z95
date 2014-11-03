@@ -1,8 +1,16 @@
+<!-- Верхнее меню навигации -->
+<?php echo $navigation->toHtml('top'); ?>
+<!-- Верхнее меню навигации -->
+
 <div class="header-menu">
 
 	<div class="header-menu-item category ">
 		<a href="/catalogue/woman/"class="dropdown" onclick="event.stopPropagation(); if ($(this).hasClass('s')) { return true; } else { $('.header-menu-item .submenu').hide(); $('.header-menu-item a').removeClass('s'); $('.submenu', $(this).parent()).show(); $(this).addClass('s'); return false; }">Женщинам</a>
-		<div class="submenu"><table><tr><td><a class="top" href="/catalogue/woman/top">ТОП 200</a><a href="/catalogue/woman/sweaters-blouses/" >Кофты и блузки</a><a href="/catalogue/woman/jeans/" >Джинсы и брюки</a><a href="/catalogue/woman/coats/" >Пиджаки</a><a href="/catalogue/woman/jackets/" >Куртки и плащи</a><a href="/catalogue/woman/dresses/" >Платья</a><a href="/catalogue/woman/suits/" >Костюмы</a><a href="/catalogue/woman/tops-and-shirts/" >Футболки и топики</a><a href="/catalogue/woman/skirts-and-shorts/" >Шорты и юбки</a><a href="/catalogue/woman/underwear/" >Нижнее белье</a><a href="/catalogue/woman/swimwear/" >Купальники</a><a href="/catalogue/woman/scarves-hats-gloves/" >Шарфы, платки, перчатки</a></td><td width="200"><b>Аксессуары</b><a href="/catalogue/bags/women/">Сумки</a><a href="/catalogue/straps/women/">Женские ремни</a><a href="/catalogue/shoes/women/">Обувь</a><a href="/catalogue/accessories/baseball-hats/">Кепки</a></td><td width="200"><b>Очки</b><a href="/catalogue/glasses/glasses-women/">Женские очки</a><a href="/catalogue/glasses/medicine/">Медицинские очки</a></td></tr></table></div>
+		<div class="submenu">
+
+
+
+			<table><tr><td><a class="top" href="/catalogue/woman/top">ТОП 200</a><a href="/catalogue/woman/sweaters-blouses/" >Кофты и блузки</a><a href="/catalogue/woman/jeans/" >Джинсы и брюки</a><a href="/catalogue/woman/coats/" >Пиджаки</a><a href="/catalogue/woman/jackets/" >Куртки и плащи</a><a href="/catalogue/woman/dresses/" >Платья</a><a href="/catalogue/woman/suits/" >Костюмы</a><a href="/catalogue/woman/tops-and-shirts/" >Футболки и топики</a><a href="/catalogue/woman/skirts-and-shorts/" >Шорты и юбки</a><a href="/catalogue/woman/underwear/" >Нижнее белье</a><a href="/catalogue/woman/swimwear/" >Купальники</a><a href="/catalogue/woman/scarves-hats-gloves/" >Шарфы, платки, перчатки</a></td><td width="200"><b>Аксессуары</b><a href="/catalogue/bags/women/">Сумки</a><a href="/catalogue/straps/women/">Женские ремни</a><a href="/catalogue/shoes/women/">Обувь</a><a href="/catalogue/accessories/baseball-hats/">Кепки</a></td><td width="200"><b>Очки</b><a href="/catalogue/glasses/glasses-women/">Женские очки</a><a href="/catalogue/glasses/medicine/">Медицинские очки</a></td></tr></table></div>
 	</div>
 	<div class="header-menu-item category ">
 		<a href="/catalogue/man/"class="dropdown" onclick="event.stopPropagation(); if ($(this).hasClass('s')) { return true; } else { $('.header-menu-item .submenu').hide(); $('.header-menu-item a').removeClass('s'); $('.submenu', $(this).parent()).show(); $(this).addClass('s'); return false; }">Мужчинам</a>
@@ -45,6 +53,8 @@
 		<a href="/catalogue/visited/" class="visited">Вы смотрели <span class="favorites-count">2</span></a>
 	</div>
 	-->
+
+
 	<script type="text/javascript">
 		$('.header-menu-item').each(function (i, el) {
 			if ($('.submenu', el).length) {

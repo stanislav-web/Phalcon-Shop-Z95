@@ -1,4 +1,4 @@
-<?= $this->tag->stylesheetLink('assets/' . $shop->code . '/css/category.css'); ?>
+<?= $this->tag->stylesheetLink('assets/' . $shop['code'] . '/css/category.css'); ?>
 
 <!-- Bread Crumbs -->
 <section id="breadcrumb" class="clearfix">
@@ -60,7 +60,7 @@
 					<!-- Category image -->
 					<div class="content_scene_cat_bg">
 						<?=$this->tag->image(array(
-							'assets/' . $shop->code . '/images/12-category_default.jpg',
+							'assets/' . $shop['code'] . '/images/12-category_default.jpg',
 							'alt'   => $viewTranslate['CATEGORIES'],
 							'title' => $viewTranslate['CATEGORIES'],
 							'class' => 'img-responsive',

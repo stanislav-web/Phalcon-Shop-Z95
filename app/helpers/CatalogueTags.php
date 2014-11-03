@@ -65,7 +65,6 @@ class CatalogueTags extends \Phalcon\Tag
 	public static function arrayToAssoc($array, $field)
 	{
 		$result = array();
-		$array = self::objectToArray($array);
 
 		foreach($array as $v)
 		{
@@ -177,5 +176,57 @@ class CatalogueTags extends \Phalcon\Tag
 		}
 		// Build our temporary array (pieces of bread) into one big string :)
 		return implode($separator, $breadcrumbs);
+	}
+
+	public static function sortVertically($numCols = 3, $data = array())
+	{
+		/* PREPARE data for printing */
+		ksort( $data );     // Sort array by key.
+		$numCells   = is_array($data) ? count($data) : 1 ;
+		$numRows    = ceil($numCells / $numCols);
+		$extraCells = $numCells % $numCols;  // Store num of tbody's with extra cell
+		$i          = 0;    // iterator
+		$cCell      = 0;    // num of Cells printed
+		$output     = NULL; // initialize
+
+
+		/* START table printing */
+		$output     .= '<div>';
+		$output     .= '<table>';
+
+		foreach( $data as $key => $value )
+		{
+			if( $i % $numRows === 0 )   // Start a new tbody
+			{
+				if( $i !== 0 )          // Close prev tbody
+				{
+					$extraCells--;
+					if ($extraCells === 0 )
+					{
+						$numRows--;     // No more tbody's with an extra cell
+						$extraCells--;  // Avoid re-reducing numRows
+					}
+					$output .= '</tbody>';
+				}
+
+				$output .= '<tbody style="float: left;">';
+				$i = 0;                 // Reset iterator to 0
+			}
+			$output .= '<tr>';
+			$output .= '<th>'.$key.'</th>';
+			$output .= '<td>'.$value.'</td>';
+			$output .= '</tr>';
+
+			$cCell++;                   // increase cells printed count
+			if($cCell == $numCells){    // last cell, close tbody
+				$output .= '</tbody>';
+			}
+
+			$i++;
+		}
+
+		$output .= '</table>';
+		$output .= '</div>';
+		return $output;
 	}
 }

@@ -117,7 +117,7 @@ class Banners extends \Phalcon\Mvc\Model
 			$result = $this->_db->query($sql)->fetchAll();
 			$banners = array('main' => array(), 'inner' => array());
 			foreach ($result as $banner) {
-				if ($banner->type == 1) {
+				if ($banner['type'] == 1) {
 					$banners['main'][] = $banner;
 				} else {
 					$banners['inner'][] = $banner;

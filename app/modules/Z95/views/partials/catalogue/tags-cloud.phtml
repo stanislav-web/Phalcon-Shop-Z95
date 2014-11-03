@@ -7,18 +7,18 @@
 			<?php foreach($tags as $tag): ?>
 				<?php if(strpos($this->request->getURI(),'tags') !== false): ?>
 					<? if(isset($tagactive)): ?>
-						<a class="tag_level1 last_item <?=(in_array($tag->alias, $tagactive)) ? 'active' : ''?>" href="<?=Helpers\LocationUrls::location($this->request->getURI().'/'.$tag->alias);?>">
+						<a class="tag_level1 last_item <?=(in_array($tag['alias'], $tagactive)) ? 'active' : ''?>" href="<?=Helpers\LocationUrls::location($this->request->getURI().'/'.$tag['alias']);?>">
 					<?php else: ?>
-							<a class="tag_level1 last_item " href="<?=Helpers\LocationUrls::location($this->request->getURI().'/'.$tag->alias);?>">
+							<a class="tag_level1 last_item " href="<?=Helpers\LocationUrls::location($this->request->getURI().'/'.$tag['alias']);?>">
 					<?php endif; ?>
 				<? else: ?>
 					<? if(isset($tagactive)): ?>
-						<a class="tag_level1 last_item <?=(in_array($tag->alias, $tagactive)) ? 'active' : ''?>" href="<?=Helpers\LocationUrls::location($this->request->getURI().'/tags/'.$tag->alias);?>">
+						<a class="tag_level1 last_item <?=(in_array($tag['alias'], $tagactive)) ? 'active' : ''?>" href="<?=Helpers\LocationUrls::location($this->request->getURI().'/tags/'.$tag['alias']);?>">
 					<?php else: ?>
-						<a class="tag_level1 last_item " href="<?=Helpers\LocationUrls::location($this->request->getURI().'/tags/'.$tag->alias);?>">
+						<a class="tag_level1 last_item " href="<?=Helpers\LocationUrls::location($this->request->getURI().'/tags/'.$tag['alias']);?>">
 					<?php endif; ?>
 				<?php endif; ?>
-				<?=$tag->name;?> (<?=$tag->count_products;?>)
+				<?=$tag['name'];?> (<?=$tag['count_products'];?>)
 				</a>
 			<?php endforeach; ?>
 		</div>

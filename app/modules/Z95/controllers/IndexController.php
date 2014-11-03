@@ -36,7 +36,7 @@
 			parent::initialize();
 
 			// Заголовок страницы
-			$this->tag->setTitle($this->_shop->title);
+			$this->tag->setTitle($this->_shop['title']);
 		}
 
 		/**
@@ -47,7 +47,7 @@
 		{
 			// проверка страницы в кэше
 
-			$banners = $this->bannersModel->getBanners($this->_shop->id, true);
+			$banners = $this->bannersModel->getBanners($this->_shop['id'], true);
 
 			$content = null;
 			if($this->_config->cache->frontend)
@@ -63,10 +63,10 @@
 			if($content === null)
 			{
 				// Содержимое контроллера для формирования выдачи
-				$newProducts = $this->productsModel->getNewProducts($this->_shop->price_id, 10, true);
+				$newProducts = $this->productsModel->getNewProducts($this->_shop['price_id'], 10, true);
 				$this->view->setVar("latestProducts", $newProducts);
 
-				$topProducts = $this->productsModel->getTopProducts($this->_shop->price_id, 5, true);
+				$topProducts = $this->productsModel->getTopProducts($this->_shop['price_id'], 5, true);
 				$this->view->setVar("topProducts", $topProducts);
 
 				$featuredProducts = $this->productsModel->get(array(), array('date_create' => 'DESC'), 2, true);

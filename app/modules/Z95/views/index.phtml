@@ -8,11 +8,11 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 	<?php
 		echo $this->tag->getTitle();
-		echo $this->tag->stylesheetLink('assets/' . $shop->code . '/css/main.css');
+		echo $this->tag->stylesheetLink('assets/' . $shop['code'] . '/css/main.css');
 	?>
 	<?php
-		echo $this->tag->javascriptInclude('assets/' . $shop->code . '/js/jquery-1.11.0.min.js');
-		echo $this->tag->javascriptInclude('assets/' . $shop->code . '/js/main.js');
+		echo $this->tag->javascriptInclude('assets/' . $shop['code'] . '/js/jquery-1.11.0.min.js');
+		echo $this->tag->javascriptInclude('assets/' . $shop['code'] . '/js/main.js');
 	?>
 
 

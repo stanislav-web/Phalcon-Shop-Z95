@@ -204,11 +204,8 @@ class ControllerBase extends \Phalcon\Mvc\Controller
 
 		$this->_shop = $this->shopModel->get(['code'	=>	$this->router->getModuleName()],[], 1, true);
 
-		// Получение категорий и аодкатегорий для текущего магазина
-		$this->_shopCategories = $this->commonModel->getShopCategories($this->_shop->id, true);							// LIMIT
-
-		// Фильтр на главные категории
-		$this->_shopMainCategories = (object)$this->_helper->findInTree($this->_shopCategories, 'parent_id', '0');
+		// Получение категорий и подкатегорий для текущего магазина
+		$this->_shopCategories = $this->commonModel->getShopCategories($this->_shop['id'], true);
 
 		// Инициализация навигации
 
@@ -224,9 +221,8 @@ class ControllerBase extends \Phalcon\Mvc\Controller
 			'language'	    =>	$this->_lang,       // текущий язык
 			'languages'	    =>	$this->_languages,  // все доступные языки
 			'shop' 		    => 	$this->_shop,       // параметры магазина
-			'topnav' 	    => 	$nav,               // топ меню навигации
-			'categories'    =>  $this->_shopMainCategories,        // главные категории
-			'newProducts'   =>  $this->productsModel->getNewProducts($this->_shop->price_id, 6,  true)       // новые товары
+			'navigation' 	=> 	$nav,               // топ меню навигации
+			'newProducts'   =>  $this->productsModel->getNewProducts($this->_shop['price_id'], 6,  true)       // новые товары
 		]);
 	}
 

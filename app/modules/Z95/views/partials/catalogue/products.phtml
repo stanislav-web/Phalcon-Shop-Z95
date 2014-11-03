@@ -65,7 +65,7 @@
 														<a href="" rel="other-views" class="thickbox-ajax-<?=$item['id'];?> shown"
 														   title="<?=$item['name'].' '.$item['brand_name']?>">
 															<?=$this->tag->image(array(
-																'assets/'.$shop->code.'/images/155-medium_default.jpg',
+																'assets/'.$shop['code'].'/images/155-medium_default.jpg',
 																'alt' 	=> $item['name'].' '.$item['brand_name'],
 																'class'	=> 'leo-hover-image'
 															));?>
@@ -75,7 +75,7 @@
 														<a href="" rel="other-views" class="thickbox-ajax-<?=$item['id'];?>"
 														   title="Donec magna diam">
 															<?=$this->tag->image(array(
-																'assets/'.$shop->code.'/images/154-medium_default.jpg',
+																'assets/'.$shop['code'].'/images/154-medium_default.jpg',
 																'alt' 	=> $item['name'].' '.$item['brand_name'],
 																'class'	=> 'leo-hover-image'
 															));?>
@@ -88,7 +88,7 @@
 								</div><? //echo Helpers\LocationUrls::location($this->request->getURI().'/'.$item->articul); ?>
 								<a class="product_img_link" href="<? echo Helpers\LocationUrls::location('/catalogue/'.$item['articul']); ?>" title="Vivamus condimentum" itemprop="url">
 									<?=$this->tag->image(array(
-										'assets/'.$shop->code.'/images/154-home_default.jpg',
+										'assets/'.$shop['code'].'/images/154-home_default.jpg',
 										'alt' 		=> 	$item['name'].' '.$item['brand_name'],
 										'title' 	=> 	$item['name'].' '.$item['brand_name'],
 										'class'		=> 	'replace-2x img-responsive',
@@ -96,7 +96,7 @@
 									));?>
 									<span class="product-additional" data-idproduct="<?=$item['id'];?>">
 										<?=$this->tag->image(array(
-											'assets/'.$shop->code.'/images/155-home_default.jpg',
+											'assets/'.$shop['code'].'/images/155-home_default.jpg',
 											'alt' 		=> 	$item['name'].' '.$item['brand_name'],
 											'title' 	=> 	$item['name'].' '.$item['brand_name'],
 											'class'		=> 	'img-responsive',
@@ -160,9 +160,9 @@
 								<div class="right-block-content row">
 									<div class="content_price col-xs-5 col-md-12">
 										<span itemprop="price" class="price product-price">
-											<?=$item['price'];?> <?=$shop->currency_symbol;?>
+											<?=$item['price'];?> <?=$shop['currency_symbol'];?>
 										</span>
-										<meta itemprop="priceCurrency" content="<?=$shop->currency;?>">
+										<meta itemprop="priceCurrency" content="<?=$shop['currency'];?>">
 									</div>
 								</div>
 								<div class="product-flags">

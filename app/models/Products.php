@@ -264,10 +264,10 @@ class Products extends \Phalcon\Mvc\Model
 			foreach($result as $property => $value) {
 
 				if($property == 'all_tags_name') {
-					$result->$property = explode(',', $value);
+					$result[$property] = explode(',', $value);
 				}
 				if($property == 'category_name') {
-					$result->$property = explode(',', $value);
+					$result[$property] = explode(',', $value);
 				}
 			}
 			// Сохраняем запрос в кэше

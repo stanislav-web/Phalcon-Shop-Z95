@@ -1,19 +1,19 @@
 <?php
 	use Phalcon\Tag as Tag;
 
-		echo Tag::stylesheetLink('assets/' . $shop->code . '/css/product.css');
-		echo Tag::stylesheetLink('assets/' . $shop->code . '/css/print.css');
-		echo Tag::stylesheetLink('assets/' . $shop->code . '/css/jquery.jqzoom.css');
-		echo Tag::stylesheetLink('assets/' . $shop->code . '/css/productscategory.css');
-		echo Tag::stylesheetLink('assets/' . $shop->code . '/css/paneltool.css');
-		echo Tag::stylesheetLink('assets/' . $shop->code . '/css/blockwishlist.css');
-		echo Tag::stylesheetLink('assets/' . $shop->code . '/css/sendtoafriend.css');
-		echo Tag::stylesheetLink('assets/' . $shop->code . '/css/socialsharing.css');
-		echo Tag::javascriptInclude('assets/' . $shop->code . '/js/cart.js');
+		echo Tag::stylesheetLink('assets/' . $shop['code'] . '/css/product.css');
+		echo Tag::stylesheetLink('assets/' . $shop['code'] . '/css/print.css');
+		echo Tag::stylesheetLink('assets/' . $shop['code'] . '/css/jquery.jqzoom.css');
+		echo Tag::stylesheetLink('assets/' . $shop['code'] . '/css/productscategory.css');
+		echo Tag::stylesheetLink('assets/' . $shop['code'] . '/css/paneltool.css');
+		echo Tag::stylesheetLink('assets/' . $shop['code'] . '/css/blockwishlist.css');
+		echo Tag::stylesheetLink('assets/' . $shop['code'] . '/css/sendtoafriend.css');
+		echo Tag::stylesheetLink('assets/' . $shop['code'] . '/css/socialsharing.css');
+		echo Tag::javascriptInclude('assets/' . $shop['code'] . '/js/cart.js');
 ?>
 <script type="text/javascript">
-	cart.articul = <?php echo $item->articul; ?>;
-	cart.product_id = <?php echo $item->product_id; ?>;
+	cart.articul = <?php echo $item['articul']; ?>;
+	cart.product_id = <?php echo $item['product_id']; ?>;
 </script>
 	<section id="breadcrumb" class="clearfix">
 	<div class="container">
@@ -188,7 +188,7 @@
 		<ul>
 			<li class="clearfix first_item">
 				<a class="products-block-image" href="" title="More about Morbi vitae cons">
-					<img src="/assets/<?php echo $shop->code ?>/images/154-small_default.jpg" alt="Donec magna diam">
+					<img src="/assets/<?php echo $shop['code'] ?>/images/154-small_default.jpg" alt="Donec magna diam">
 				</a>
 
 				<div class="product-content">
@@ -203,7 +203,7 @@
 			</li>
 			<li class="clearfix last_item">
 				<a class="products-block-image" href="" title="More about Vivamus condimentum">
-					<img src="/assets/<?php echo $shop->code ?>/images/154-small_default.jpg" alt="Donec magna diam">
+					<img src="/assets/<?php echo $shop['code'] ?>/images/154-small_default.jpg" alt="Donec magna diam">
 				</a>
 
 				<div class="product-content">
@@ -240,8 +240,8 @@
 																	-->
 				<span id="view_full_size">
 													<a class="jqzoom img-responsive" title="Donec magna diam" rel="gal1"
-													   href="/assets/<?php echo $shop->code ?>/images/182-thickbox_default.jpg" itemprop="url">
-														<img itemprop="image" src="/assets/<?php echo $shop->code ?>/images/182-large_default.jpg"
+													   href="/assets/<?php echo $shop['code'] ?>/images/182-thickbox_default.jpg" itemprop="url">
+														<img itemprop="image" src="/assets/<?php echo $shop['code'] ?>/images/182-large_default.jpg"
 															 title="Donec magna diam" alt="Donec magna diam"/>
 													</a>
 											</span>
@@ -253,17 +253,17 @@
 			<ul id="thumbs_list_frame">
 				<li>
 					<a href="javascript:void(0);"
-					   rel="{gallery: 'gal1', smallimage: '/assets/<?php echo $shop->code ?>/images/154-large_default.jpg',largeimage: '/assets/<?php echo $shop->code ?>/images/154-thickbox_default.jpg'}"
+					   rel="{gallery: 'gal1', smallimage: '/assets/<?php echo $shop['code'] ?>/images/154-large_default.jpg',largeimage: '/assets/<?php echo $shop['code'] ?>/images/154-thickbox_default.jpg'}"
 					   title="Donec magna diam">
-						<img class="img-responsive" src="/assets/<?php echo $shop->code ?>/images/154-cart_default.jpg" alt="Donec magna diam"
+						<img class="img-responsive" src="/assets/<?php echo $shop['code'] ?>/images/154-cart_default.jpg" alt="Donec magna diam"
 							 title="Donec magna diam" height="117" width="81" itemprop="image"/>
 					</a>
 				</li>
 				<li class="last">
 					<a href="javascript:void(0);"
-					   rel="{gallery: 'gal1', smallimage: '/assets/<?php echo $shop->code ?>/images/182-large_default.jpg',largeimage: '/assets/<?php echo $shop->code ?>/images/182-thickbox_default.jpg'}"
+					   rel="{gallery: 'gal1', smallimage: '/assets/<?php echo $shop['code'] ?>/images/182-large_default.jpg',largeimage: '/assets/<?php echo $shop['code'] ?>/images/182-thickbox_default.jpg'}"
 					   title="Donec magna diam">
-						<img class="img-responsive" src="/assets/<?php echo $shop->code ?>/images/182-cart_default.jpg" alt="Donec magna diam"
+						<img class="img-responsive" src="/assets/<?php echo $shop['code'] ?>/images/182-cart_default.jpg" alt="Donec magna diam"
 							 title="Donec magna diam" height="117" width="81" itemprop="image"/>
 					</a>
 				</li>
@@ -288,7 +288,7 @@
 
 <div class="pb-center-column col-xs-12 col-sm-12 col-md-5">
 
-	<h1 itemprop="name"><?php echo ucfirst($item->product_name); ?> <?php echo $item->brand; ?></h1>
+	<h1 itemprop="name"><?php echo ucfirst($item['product_name']); ?> <?php echo $item['brand']; ?></h1>
 
 	<p id="product_reference">
 		<label>Model </label>
@@ -369,7 +369,7 @@
 
 					<div class="row">
 						<div class="product clearfix col-xs-12 col-sm-6 col-md-6">
-							<img src="/assets/<?php echo $shop->code ?>/images/170-home_default.jpg" height="387" width="270" alt="Morbi vitae cons"/>
+							<img src="/assets/<?php echo $shop['code'] ?>/images/170-home_default.jpg" height="387" width="270" alt="Morbi vitae cons"/>
 
 							<div class="product_desc">
 								<p class="product_name">
@@ -452,7 +452,7 @@
 				<div class="price">
 					<p class="our_price_display" itemprop="offers" itemscope>
 						<link itemprop="availability" href=""/>
-						<span id="our_price_display" ><?php echo $shop->currency_symbol;?> <?php echo $item->price; ?></span>
+						<span id="our_price_display" ><?php echo $shop['currency_symbol'];?> <?php echo $item['price']; ?></span>
 						<!---->
 						<meta itemprop="priceCurrency" content="USD"/>
 
@@ -553,7 +553,7 @@
 				<div id="product_payment_logos">
 					<div class="box-security">
 						<h5 class="product-heading-h5"></h5>
-						<img src="/assets/<?php echo $shop->code ?>/images/payment-logo.png" alt=""/>
+						<img src="/assets/<?php echo $shop['code'] ?>/images/payment-logo.png" alt=""/>
 					</div>
 				</div>
 
@@ -630,7 +630,7 @@
 
 				<div class="row">
 					<div class="product clearfix  col-xs-12 col-sm-6">
-						<img src="/assets/<?php echo $shop->code ?>/images/170-home_default.jpg" height="125" width="125" alt="Donec posuere metus"/>
+						<img src="/assets/<?php echo $shop['code'] ?>/images/170-home_default.jpg" height="125" width="125" alt="Donec posuere metus"/>
 
 						<div class="product_desc">
 							<p class="product_name">
@@ -728,13 +728,13 @@
 								<ul class="thumbs_list_frame">
 									<li>
 										<a href="" class="thickbox-ajax-8 shown" title="Donec magna diam">
-											<img src="/assets/<?php echo $shop->code ?>/images/157-medium_default.jpg" alt="Donec magna diam" height="125"
+											<img src="/assets/<?php echo $shop['code'] ?>/images/157-medium_default.jpg" alt="Donec magna diam" height="125"
 												 width="125" rel="" class="leo-hover-image">
 										</a>
 									</li>
 									<li>
 										<a href="" class="thickbox-ajax-8" title="Donec magna diam">
-											<img src="/assets/<?php echo $shop->code ?>/images/157-medium_default.jpg" alt="Donec magna diam" height="125"
+											<img src="/assets/<?php echo $shop['code'] ?>/images/157-medium_default.jpg" alt="Donec magna diam" height="125"
 												 width="125" rel="" class="leo-hover-image">
 										</a>
 									</li>
@@ -744,10 +744,10 @@
 					</div>
 				</div>
 				<a class="product_img_link" href="" title="Vivamus condimentum" itemprop="url">
-					<img class="replace-2x img-responsive" src="/assets/<?php echo $shop->code ?>/images/157-home_default.jpg" alt="Donec magna diam"
+					<img class="replace-2x img-responsive" src="/assets/<?php echo $shop['code'] ?>/images/157-home_default.jpg" alt="Donec magna diam"
 						 title="Donec magna diam" itemprop="image">
 					<span class="product-additional" data-idproduct="8"><img class="img-responsive" title="" alt=""
-																			 src="/assets/<?php echo $shop->code ?>/images/170-home_default.jpg"></span>
+																			 src="/assets/<?php echo $shop['code'] ?>/images/170-home_default.jpg"></span>
 				</a>
 
 							<span class="new-box">
@@ -849,13 +849,13 @@
 								<ul class="thumbs_list_frame">
 									<li>
 										<a href="" class="thickbox-ajax-9 shown" title="Donec magna diam">
-											<img src="/assets/<?php echo $shop->code ?>/images/157-medium_default.jpg" alt="Donec magna diam" height="125"
+											<img src="/assets/<?php echo $shop['code'] ?>/images/157-medium_default.jpg" alt="Donec magna diam" height="125"
 												 width="125" rel="" class="leo-hover-image">
 										</a>
 									</li>
 									<li>
 										<a href="" class="thickbox-ajax-9" title="Donec magna diam">
-											<img src="/assets/<?php echo $shop->code ?>/images/157-medium_default.jpg" alt="Donec magna diam" height="125"
+											<img src="/assets/<?php echo $shop['code'] ?>/images/157-medium_default.jpg" alt="Donec magna diam" height="125"
 												 width="125" rel="" class="leo-hover-image">
 										</a>
 									</li>
@@ -865,10 +865,10 @@
 					</div>
 				</div>
 				<a class="product_img_link" href="" title="Vivamus condimentum" itemprop="url">
-					<img class="replace-2x img-responsive" src="/assets/<?php echo $shop->code ?>/images/157-home_default.jpg" alt="Donec magna diam"
+					<img class="replace-2x img-responsive" src="/assets/<?php echo $shop['code'] ?>/images/157-home_default.jpg" alt="Donec magna diam"
 						 title="Donec magna diam" itemprop="image">
 					<span class="product-additional" data-idproduct="8"><img class="img-responsive" title="" alt=""
-																			 src="/assets/<?php echo $shop->code ?>/images/170-home_default.jpg"></span>
+																			 src="/assets/<?php echo $shop['code'] ?>/images/170-home_default.jpg"></span>
 				</a>
 
 							<span class="new-box">
@@ -970,13 +970,13 @@
 								<ul class="thumbs_list_frame">
 									<li>
 										<a href="" class="thickbox-ajax-10 shown" title="Donec magna diam">
-											<img src="/assets/<?php echo $shop->code ?>/images/157-medium_default.jpg" alt="Donec magna diam" height="125"
+											<img src="/assets/<?php echo $shop['code'] ?>/images/157-medium_default.jpg" alt="Donec magna diam" height="125"
 												 width="125" rel="" class="leo-hover-image">
 										</a>
 									</li>
 									<li>
 										<a href="" class="thickbox-ajax-10" title="Donec magna diam">
-											<img src="/assets/<?php echo $shop->code ?>/images/157-medium_default.jpg" alt="Donec magna diam" height="125"
+											<img src="/assets/<?php echo $shop['code'] ?>/images/157-medium_default.jpg" alt="Donec magna diam" height="125"
 												 width="125" rel="" class="leo-hover-image">
 										</a>
 									</li>
@@ -986,10 +986,10 @@
 					</div>
 				</div>
 				<a class="product_img_link" href="" title="Donec magna diam" itemprop="url">
-					<img class="replace-2x img-responsive" src="/assets/<?php echo $shop->code ?>/images/157-home_default.jpg" alt="Donec magna diam"
+					<img class="replace-2x img-responsive" src="/assets/<?php echo $shop['code'] ?>/images/157-home_default.jpg" alt="Donec magna diam"
 						 title="Donec magna diam" itemprop="image">
 					<span class="product-additional" data-idproduct="10"><img class="img-responsive" title="" alt=""
-																			  src="/assets/<?php echo $shop->code ?>/images/170-home_default.jpg"></span>
+																			  src="/assets/<?php echo $shop['code'] ?>/images/170-home_default.jpg"></span>
 				</a>
 
 							<span class="new-box">
@@ -1091,13 +1091,13 @@
 								<ul class="thumbs_list_frame">
 									<li>
 										<a href="" class="thickbox-ajax-14 shown" title="Donec magna diam">
-											<img src="/assets/<?php echo $shop->code ?>/images/157-medium_default.jpg" alt="Donec magna diam" height="125"
+											<img src="/assets/<?php echo $shop['code'] ?>/images/157-medium_default.jpg" alt="Donec magna diam" height="125"
 												 width="125" rel="" class="leo-hover-image">
 										</a>
 									</li>
 									<li>
 										<a href="" class="thickbox-ajax-14" title="Donec magna diam">
-											<img src="/assets/<?php echo $shop->code ?>/images/157-medium_default.jpg" alt="Donec magna diam" height="125"
+											<img src="/assets/<?php echo $shop['code'] ?>/images/157-medium_default.jpg" alt="Donec magna diam" height="125"
 												 width="125" rel="" class="leo-hover-image">
 										</a>
 									</li>
@@ -1107,10 +1107,10 @@
 					</div>
 				</div>
 				<a class="product_img_link" href="" title="Morbi vitae cons" itemprop="url">
-					<img class="replace-2x img-responsive" src="/assets/<?php echo $shop->code ?>/images/157-home_default.jpg" alt="Donec magna diam"
+					<img class="replace-2x img-responsive" src="/assets/<?php echo $shop['code'] ?>/images/157-home_default.jpg" alt="Donec magna diam"
 						 title="Donec magna diam" itemprop="image">
 					<span class="product-additional" data-idproduct="14"><img class="img-responsive" title="" alt=""
-																			  src="/assets/<?php echo $shop->code ?>/images/156-home_default.jpg"></span>
+																			  src="/assets/<?php echo $shop['code'] ?>/images/156-home_default.jpg"></span>
 				</a>
 
 							<span class="new-box">
@@ -1216,13 +1216,13 @@
 								<ul class="thumbs_list_frame">
 									<li>
 										<a href="" class="thickbox-ajax-15 shown" title="Printed Chiffon Dress">
-											<img src="/assets/<?php echo $shop->code ?>/images/157-medium_default.jpg" alt="Printed Chiffon Dress"
+											<img src="/assets/<?php echo $shop['code'] ?>/images/157-medium_default.jpg" alt="Printed Chiffon Dress"
 												 height="125" width="125" rel="" class="leo-hover-image">
 										</a>
 									</li>
 									<li>
 										<a href="" class="thickbox-ajax-15" title="Printed Chiffon Dress">
-											<img src="/assets/<?php echo $shop->code ?>/images/157-medium_default.jpg" alt="Printed Chiffon Dress"
+											<img src="/assets/<?php echo $shop['code'] ?>/images/157-medium_default.jpg" alt="Printed Chiffon Dress"
 												 height="125" width="125" rel="" class="leo-hover-image">
 										</a>
 									</li>
@@ -1232,10 +1232,10 @@
 					</div>
 				</div>
 				<a class="product_img_link" href="" title="Printed Chiffon Dress" itemprop="url">
-					<img class="replace-2x img-responsive" src="/assets/<?php echo $shop->code ?>/images/157-home_default.jpg" alt="Printed Chiffon Dress"
+					<img class="replace-2x img-responsive" src="/assets/<?php echo $shop['code'] ?>/images/157-home_default.jpg" alt="Printed Chiffon Dress"
 						 title="Printed Chiffon Dress" itemprop="image">
 					<span class="product-additional" data-idproduct="15"><img class="img-responsive" title="" alt=""
-																			  src="/assets/<?php echo $shop->code ?>/images/156-home_default.jpg"></span>
+																			  src="/assets/<?php echo $shop['code'] ?>/images/156-home_default.jpg"></span>
 				</a>
 
 							<span class="new-box">
@@ -1337,13 +1337,13 @@
 								<ul class="thumbs_list_frame">
 									<li>
 										<a href="" class="thickbox-ajax-16 shown" title="Donec magna diam">
-											<img src="/assets/<?php echo $shop->code ?>/images/157-medium_default.jpg" alt="Donec magna diam" height="125"
+											<img src="/assets/<?php echo $shop['code'] ?>/images/157-medium_default.jpg" alt="Donec magna diam" height="125"
 												 width="125" rel="" class="leo-hover-image">
 										</a>
 									</li>
 									<li>
 										<a href="" class="thickbox-ajax-16" title="Donec magna diam">
-											<img src="/assets/<?php echo $shop->code ?>/images/157-medium_default.jpg" alt="Donec magna diam" height="125"
+											<img src="/assets/<?php echo $shop['code'] ?>/images/157-medium_default.jpg" alt="Donec magna diam" height="125"
 												 width="125" rel="" class="leo-hover-image">
 										</a>
 									</li>
@@ -1353,10 +1353,10 @@
 					</div>
 				</div>
 				<a class="product_img_link" href="" title="Aenean" itemprop="url">
-					<img class="replace-2x img-responsive" src="/assets/<?php echo $shop->code ?>/images/157-home_default.jpg" alt="Donec magna diam"
+					<img class="replace-2x img-responsive" src="/assets/<?php echo $shop['code'] ?>/images/157-home_default.jpg" alt="Donec magna diam"
 						 title="Donec magna diam" itemprop="image">
 					<span class="product-additional" data-idproduct="16"><img class="img-responsive" title="" alt=""
-																			  src="/assets/<?php echo $shop->code ?>/images/156-home_default.jpg"></span>
+																			  src="/assets/<?php echo $shop['code'] ?>/images/156-home_default.jpg"></span>
 				</a>
 
 							<span class="new-box">
@@ -1458,13 +1458,13 @@
 								<ul class="thumbs_list_frame">
 									<li>
 										<a href="" class="thickbox-ajax-17 shown" title="Donec magna diam">
-											<img src="/assets/<?php echo $shop->code ?>/images/157-medium_default.jpg" alt="Donec magna diam" height="125"
+											<img src="/assets/<?php echo $shop['code'] ?>/images/157-medium_default.jpg" alt="Donec magna diam" height="125"
 												 width="125" rel="" class="leo-hover-image">
 										</a>
 									</li>
 									<li>
 										<a href="" class="thickbox-ajax-17" title="Donec magna diam">
-											<img src="/assets/<?php echo $shop->code ?>/images/157-medium_default.jpg" alt="Donec magna diam" height="125"
+											<img src="/assets/<?php echo $shop['code'] ?>/images/157-medium_default.jpg" alt="Donec magna diam" height="125"
 												 width="125" rel="" class="leo-hover-image">
 										</a>
 									</li>
@@ -1474,10 +1474,10 @@
 					</div>
 				</div>
 				<a class="product_img_link" href="" title="Donec posuere metus" itemprop="url">
-					<img class="replace-2x img-responsive" src="/assets/<?php echo $shop->code ?>/images/157-home_default.jpg" alt="Donec magna diam"
+					<img class="replace-2x img-responsive" src="/assets/<?php echo $shop['code'] ?>/images/157-home_default.jpg" alt="Donec magna diam"
 						 title="Donec magna diam" itemprop="image">
 					<span class="product-additional" data-idproduct="17"><img class="img-responsive" title="" alt=""
-																			  src="/assets/<?php echo $shop->code ?>/images/156-home_default.jpg"></span>
+																			  src="/assets/<?php echo $shop['code'] ?>/images/156-home_default.jpg"></span>
 				</a>
 
 							<span class="new-box">
@@ -1579,13 +1579,13 @@
 								<ul class="thumbs_list_frame">
 									<li>
 										<a href="" class="thickbox-ajax-18 shown" title="Donec magna diam">
-											<img src="/assets/<?php echo $shop->code ?>/images/157-medium_default.jpg" alt="Donec magna diam" height="125"
+											<img src="/assets/<?php echo $shop['code'] ?>/images/157-medium_default.jpg" alt="Donec magna diam" height="125"
 												 width="125" rel="" class="leo-hover-image">
 										</a>
 									</li>
 									<li>
 										<a href="" class="thickbox-ajax-18" title="Donec magna diam">
-											<img src="/assets/<?php echo $shop->code ?>/images/157-medium_default.jpg" alt="Donec magna diam" height="125"
+											<img src="/assets/<?php echo $shop['code'] ?>/images/157-medium_default.jpg" alt="Donec magna diam" height="125"
 												 width="125" rel="" class="leo-hover-image">
 										</a>
 									</li>
@@ -1595,10 +1595,10 @@
 					</div>
 				</div>
 				<a class="product_img_link" href="" title="Integer sit am" itemprop="url">
-					<img class="replace-2x img-responsive" src="/assets/<?php echo $shop->code ?>/images/157-home_default.jpg" alt="Donec magna diam"
+					<img class="replace-2x img-responsive" src="/assets/<?php echo $shop['code'] ?>/images/157-home_default.jpg" alt="Donec magna diam"
 						 title="Donec magna diam" itemprop="image">
 					<span class="product-additional" data-idproduct="18"><img class="img-responsive" title="" alt=""
-																			  src="/assets/<?php echo $shop->code ?>/images/156-home_default.jpg"></span>
+																			  src="/assets/<?php echo $shop['code'] ?>/images/156-home_default.jpg"></span>
 				</a>
 
 							<span class="new-box">
@@ -1704,13 +1704,13 @@
 								<ul class="thumbs_list_frame">
 									<li>
 										<a href="" class="thickbox-ajax-19 shown" title="Donec magna diam">
-											<img src="/assets/<?php echo $shop->code ?>/images/157-medium_default.jpg" alt="Donec magna diam" height="125"
+											<img src="/assets/<?php echo $shop['code'] ?>/images/157-medium_default.jpg" alt="Donec magna diam" height="125"
 												 width="125" rel="" class="leo-hover-image">
 										</a>
 									</li>
 									<li>
 										<a href="" class="thickbox-ajax-19" title="Donec magna diam">
-											<img src="/assets/<?php echo $shop->code ?>/images/157-medium_default.jpg" alt="Donec magna diam" height="125"
+											<img src="/assets/<?php echo $shop['code'] ?>/images/157-medium_default.jpg" alt="Donec magna diam" height="125"
 												 width="125" rel="" class="leo-hover-image">
 										</a>
 									</li>
@@ -1720,10 +1720,10 @@
 					</div>
 				</div>
 				<a class="product_img_link" href="" title="Morbi vitae cons" itemprop="url">
-					<img class="replace-2x img-responsive" src="/assets/<?php echo $shop->code ?>/images/157-home_default.jpg" alt="Donec magna diam"
+					<img class="replace-2x img-responsive" src="/assets/<?php echo $shop['code'] ?>/images/157-home_default.jpg" alt="Donec magna diam"
 						 title="Donec magna diam" itemprop="image">
 					<span class="product-additional" data-idproduct="19"><img class="img-responsive" title="" alt=""
-																			  src="/assets/<?php echo $shop->code ?>/images/156-home_default.jpg"></span>
+																			  src="/assets/<?php echo $shop['code'] ?>/images/156-home_default.jpg"></span>
 				</a>
 
 							<span class="new-box">
@@ -1825,13 +1825,13 @@
 								<ul class="thumbs_list_frame">
 									<li>
 										<a href="" class="thickbox-ajax-24 shown" title="Donec magna diam">
-											<img src="/assets/<?php echo $shop->code ?>/images/157-medium_default.jpg" alt="Donec magna diam" height="125"
+											<img src="/assets/<?php echo $shop['code'] ?>/images/157-medium_default.jpg" alt="Donec magna diam" height="125"
 												 width="125" rel="" class="leo-hover-image">
 										</a>
 									</li>
 									<li>
 										<a href="" class="thickbox-ajax-24" title="Donec magna diam">
-											<img src="/assets/<?php echo $shop->code ?>/images/157-medium_default.jpg" alt="Donec magna diam" height="125"
+											<img src="/assets/<?php echo $shop['code'] ?>/images/157-medium_default.jpg" alt="Donec magna diam" height="125"
 												 width="125" rel="" class="leo-hover-image">
 										</a>
 									</li>
@@ -1841,10 +1841,10 @@
 					</div>
 				</div>
 				<a class="product_img_link" href="" title="Donec posuere metus" itemprop="url">
-					<img class="replace-2x img-responsive" src="/assets/<?php echo $shop->code ?>/images/157-home_default.jpg" alt="Donec magna diam"
+					<img class="replace-2x img-responsive" src="/assets/<?php echo $shop['code'] ?>/images/157-home_default.jpg" alt="Donec magna diam"
 						 title="Donec magna diam" itemprop="image">
 					<span class="product-additional" data-idproduct="24"><img class="img-responsive" title="" alt=""
-																			  src="/assets/<?php echo $shop->code ?>/images/156-home_default.jpg"></span>
+																			  src="/assets/<?php echo $shop['code'] ?>/images/156-home_default.jpg"></span>
 				</a>
 
 							<span class="new-box">
@@ -1951,14 +1951,14 @@
 </section>
 
 <?php
-	echo Tag::javascriptInclude('assets/' . $shop->code . '/js/jquery.idTabs.js');
-//	echo Tag::javascriptInclude('assets/' . $shop->code . '/js/product.js');
-//	echo Tag::javascriptInclude('assets/' . $shop->code . '/js/jquery.jqzoom.js');
-	echo Tag::javascriptInclude('assets/' . $shop->code . '/js/jquery.rating.pack.js');
-	echo Tag::javascriptInclude('assets/' . $shop->code . '/js/jquery.textareaCounter.plugin.js');
-	echo Tag::javascriptInclude('assets/' . $shop->code . '/js/productscategory.js');
-	echo Tag::javascriptInclude('assets/' . $shop->code . '/js/productcomments.js');
-	echo Tag::javascriptInclude('assets/' . $shop->code . '/js/socialsharing.js');
-	echo Tag::javascriptInclude('assets/' . $shop->code . '/js/sendtoafriend.js');
+	echo Tag::javascriptInclude('assets/' . $shop['code'] . '/js/jquery.idTabs.js');
+//	echo Tag::javascriptInclude('assets/' . $shop['code'] . '/js/product.js');
+//	echo Tag::javascriptInclude('assets/' . $shop['code'] . '/js/jquery.jqzoom.js');
+	echo Tag::javascriptInclude('assets/' . $shop['code'] . '/js/jquery.rating.pack.js');
+	echo Tag::javascriptInclude('assets/' . $shop['code'] . '/js/jquery.textareaCounter.plugin.js');
+	echo Tag::javascriptInclude('assets/' . $shop['code'] . '/js/productscategory.js');
+	echo Tag::javascriptInclude('assets/' . $shop['code'] . '/js/productcomments.js');
+	echo Tag::javascriptInclude('assets/' . $shop['code'] . '/js/socialsharing.js');
+	echo Tag::javascriptInclude('assets/' . $shop['code'] . '/js/sendtoafriend.js');
 
 ?>
