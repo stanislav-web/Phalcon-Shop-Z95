@@ -1,0 +1,168 @@
+<?php use Phalcon\Tag as Tag; ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<title>Интернет магазин модной брендовой одежды и обуви Z95.ru</title>
+	<link rel="shortcut icon" href="/i/z95.ru/favicon.png"/>
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+	<?php
+		echo $this->tag->getTitle();
+		echo $this->tag->stylesheetLink('assets/' . $shop->code . '/css/main.css');
+	?>
+	<?php
+		echo $this->tag->javascriptInclude('assets/' . $shop->code . '/js/jquery-1.11.0.min.js');
+		echo $this->tag->javascriptInclude('assets/' . $shop->code . '/js/main.js');
+	?>
+
+
+	<script type="text/javascript" language="javascript" >
+		var beforeload = (new Date()).getTime();
+		function getPageLoadTime(){
+			var afterload = (new Date()).getTime();
+			return afterload-beforeload;
+		}
+		$(window).load(function () {
+//			$.post('/tools/statdog/load/18526070/'+getPageLoadTime(),function(data){});
+		});
+	</script>
+
+	<!--[if IE]>
+	<style type="text/css">
+		BODY { behavior:url("/assets/Z95/css/csshover3.htc"); }
+	</style>
+	<![endif]-->
+</head>
+<body onload="global.init();">
+
+<div style="position: absolute; z-index: 10000; width: 400px; height: 400px; background-color: #dadada; display: none;">
+
+	<div class="messages_area"></div>
+	<hr>
+	<input id="sendText" type="text" value="" style="display: none">
+	<hr>
+	<input id="send" type="submit" value="Send" style="display: none">
+
+</div>
+
+<!-- Блоки окон и сообщений -->
+<div class="basket-container">
+	<div id="SMALL_BASKET" class="Shadow">
+		<div class="close" onclick="$('#SMALL_BASKET').hide(); $('#_SMALL_BASKET').html('');"></div>
+		<div id="_SMALL_BASKET"></div>
+	</div>
+</div>
+<div class="status common loading"><div class="message">Секундочку...</div></div>
+<div class="status timeout" onclick="global.hideStatus('timeout');">
+	<div class="message">
+		<div class="title">Мы не дождались ответа от сервера</div>
+		Попробуйте еще раз			</div>
+</div>
+<div class="status server error" onclick="global.hideStatus('server.error');">
+	<div class="message">
+		<div class="title">На сервере случилась ошибка</div>
+		Благодаря вам мы уже узнали о проблеме и сразу ею займемся.			</div>
+</div>
+<div class="status order success" onclick="global.hideStatus('order.success');">
+	<div class="message">
+		<div class="title">Заказ создан</div>
+		<span class="body"></span>
+	</div>
+</div>
+<div class="status order error" onclick="global.hideStatus('order.error');">
+	<div class="message">
+		<div class="title">Заказ не создан</div>
+		<span class="body"></span>
+	</div>
+</div>
+<div class="dialog dialog_black status coupon success" onclick="global.hideStatus('coupon.success');">
+	<div class="message">
+		<div class="title">Купон отправлен по почте</div>
+		<span class="body"></span>
+	</div>
+</div>
+<div class="dialog dialog_black status coupon error" onclick="global.hideStatus('coupon.error');">
+	<div class="message">
+		<div class="title">Не получилось выдать купон</div>
+		<span class="body"></span>
+	</div>
+</div>
+<div class="status password success" onclick="global.hideStatus('password.success');">
+	<div class="message">
+		<div class="title">Пароль отправлен</div>
+		<span class="body"></span>
+	</div>
+</div>
+<div class="status password error" onclick="global.hideStatus('password.error');">
+	<div class="message">
+		<div class="title">Пароль не отправлен</div>
+		<span class="body"></span>
+	</div>
+</div>
+<div class="status customer error" onclick="global.hideStatus('customer.error');">
+	<div class="message">
+		<div class="title">Неправильная пара логин/пароль</div>
+		<span class="body"></span>
+	</div>
+</div>
+
+<div class="go-top-container">
+	<div class="go-top-field">
+		<div class="button-down"></div>
+		<div class="button-top">Наверх</div>
+	</div>
+</div>
+<div class="go-container prev">
+	<div class="button"></div>
+</div>
+<div class="go-container next">
+	<div class="button"></div>
+</div>
+<!-- Header -->
+	<?php $this->partial('partials/header'); ?>
+<!-- Header -->
+	<!-- Top Navigation -->
+		<?php $this->partial('partials/topnavigation'); ?>
+	<!-- /Top Navigation -->
+	<div class="content">
+		<?php echo $this->getContent(); ?>
+	</div>
+
+</td>
+</tr>
+	<!-- Footer -->
+		<?php $this->partial('partials/footer'); ?>
+	<!-- Footer -->
+
+</table>
+</body>
+
+<script type="text/javascript" language="javascript">
+//	global.draw_go_top();
+	global.drawTopLine();
+//	customer.init();
+</script>
+<script type="text/javascript">
+	var _gaq = _gaq || [];
+	_gaq.push(['_setAccount', 'UA-1844837-1']);
+	_gaq.push(['_setDomainName', 'none']);
+	_gaq.push(['_setAllowLinker', true]);
+	_gaq.push(['_trackPageview']);
+
+	(function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'stats.g.doubleclick.net/dc.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	})();
+</script>
+
+<!-- Remarketing tags may not be associated with personally identifiable information or placed on pages related to sensitive categories. For instructions on adding this tag and more information on the above requirements, read the setup guide: google.com/ads/remarketingsetup -->
+
+
+<!-- //Rating@Mail.ru counter -->
+
+<script type="text/javascript">
+	var margin = Math.max(0,parseInt((($(window).width() - $('.page_container').width())*0.5 - $('.go-container').width())*0.5));
+
+</script>
+</html>

@@ -1,0 +1,49 @@
+body.index {
+	background:black;
+	padding:0;
+	margin:0;
+	color:white;
+	font-family: 'Open Sans', sans-serif;
+	font-weight: 300;
+	font-size:1em;
+}
+
+body {
+	background:white;
+	padding:0;
+	margin:0;
+	color:black;
+	font-family: 'Open Sans', sans-serif;
+	font-weight: 300;
+	font-size:1em;
+}
+table tr td {
+ vertical-align:top;
+}
+table {
+	border-collapse:collapse;
+}
+td {
+	margin: 0em;
+	padding: 0em;
+	vertical-align: top;
+}
+.button {
+	background:white;
+	border-radius:30px;
+	color:black;
+	padding:8px 25px;
+	margin: 10px 10px 0 0;
+	cursor:pointer;
+}
+
+.button:hover {
+	background:black;
+	color:white;
+}
+
+.header td {
+	border-bottom: 2px solid black;
+}
+
+h1 { font-size: 3em; font-weight: 300; }
