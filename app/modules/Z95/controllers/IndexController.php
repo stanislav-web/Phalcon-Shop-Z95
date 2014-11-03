@@ -63,14 +63,10 @@
 			if($content === null)
 			{
 				// Содержимое контроллера для формирования выдачи
-				$newProducts = $this->productsModel->getNewProducts($this->_shop->price_id, 10, true);
-				$this->view->setVar("latestProducts", $newProducts);
 
-				$topProducts = $this->productsModel->getTopProducts($this->_shop->price_id, 5, true);
-				$this->view->setVar("topProducts", $topProducts);
+				$mainCategories = $this->categoriesModel->getMainCategories($this->_shopCategories, 10, true);
+				$this->view->setVar("mainCategories", $mainCategories);
 
-				$featuredProducts = $this->productsModel->get(array(), array('date_create' => 'DESC'), 2, true);
-				$this->view->setVar('featuredProducts', $featuredProducts);
 			}
 			else
 			{

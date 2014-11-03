@@ -96,4 +96,39 @@ class Categories extends \Phalcon\Mvc\Model
 		}
 		return $result;
 	}
+
+	public function getMainCategories($categories)
+	{
+		$categories_ids = '';
+		if(is_array($categories)) {
+			foreach($categories as $category) {
+				if(next($categories)) {
+					$categories_ids .= $category->id .  ', ';
+				} else {
+					$categories_ids .= $category->id;
+				}
+			}
+		}
+
+		$sql = "SELECT products_relationship.category_id, COUNT(product_id), categories.name FROM products_relationship ".
+				"INNER JOIN categories ON categories.id = products_relationship.category_id
+				WHERE category_id IN($categories_ids)
+				GROUP BY products_relationship.category_id";
+
+
+		$categories = $this->_db->query($sql)->fetchAll();
+		if(!empty($categories)) {
+			foreach($categories as $category) {
+				$category->preview = $this->getCategoryImage($category->id);
+			}
+
+		}
+		return $result;
+
+	}
+
+	public function getCategoryImage($category_id)
+	{
+
+	}
 }
