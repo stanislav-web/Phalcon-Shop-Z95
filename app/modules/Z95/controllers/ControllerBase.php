@@ -92,7 +92,8 @@ class ControllerBase extends \Phalcon\Mvc\Controller
 		$categoriesModel    =   false,
 		$productsModel      =   false,
 		$pricesModel        =   false,
-		$tagsModel			=	false;
+		$tagsModel			=	false,
+		$bannersModel		=	false;
 
 	/**
 	 * _getTransPath() Получаю путь у языковом файлу
@@ -197,6 +198,7 @@ class ControllerBase extends \Phalcon\Mvc\Controller
 		$this->categoriesModel  =   new \Models\Categories();
 		$this->pricesModel      =   new \Models\Prices();
 		$this->tagsModel      	=   new \Models\Tags();
+		$this->bannersModel     =   new \Models\Banners();
 
 		// Получение параметров текущего магазина
 

@@ -1,214 +1,168 @@
 <?php use Phalcon\Tag as Tag; ?>
-<!DOCTYPE html>
-<!--[if lt IE 7]>
-<html class="no-js lt-ie9 lt-ie8 lt-ie7 " lang="en">
-<![endif]-->
-<!--[if IE 7]>
-<html class="no-js lt-ie9 lt-ie8 ie7" lang="en">
-<![endif]-->
-<!--[if IE 8]>
-<html class="no-js lt-ie9 ie8" lang="en">
-<![endif]-->
-<!--[if gt IE 8]>
-<html class="no-js ie9" lang="en">
-<![endif]-->
-<html lang="en" class="">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
 <head>
-	<meta charset='utf-8'>
-	<meta name="description" content="">
-	<meta name="generator" content="">
-	<meta name="robots" content="index,follow">
-	<meta name="viewport" content="width=device-width, minimum-scale=0.25, maximum-scale=1.6, initial-scale=1.0">
-	<meta name="apple-mobile-web-app-capable" content="yes">
+	<title>Интернет магазин модной брендовой одежды и обуви Z95.ru</title>
+	<link rel="shortcut icon" href="/i/z95.ru/favicon.png"/>
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 	<?php
 		echo $this->tag->getTitle();
-		echo $this->tag->stylesheetLink('assets/' . $shop->code . '/css/bootstrap(1).css');
-		echo $this->tag->stylesheetLink('assets/' . $shop->code . '/css/global.css');
-		echo $this->tag->stylesheetLink('assets/' . $shop->code . '/css/highdpi.css');
-		echo $this->tag->stylesheetLink('assets/' . $shop->code . '/css/responsive-tables.css');
-		echo $this->tag->stylesheetLink('assets/' . $shop->code . '/css/uniform.default.css');
-		echo $this->tag->stylesheetLink('assets/' . $shop->code . '/css/blockcart.css');
-		echo $this->tag->stylesheetLink('assets/' . $shop->code . '/css/blockcategories.css');
-		echo $this->tag->stylesheetLink('assets/' . $shop->code . '/css/blockcurrencies.css');
-		echo $this->tag->stylesheetLink('assets/' . $shop->code . '/css/blocklanguages.css');
-		echo $this->tag->stylesheetLink('assets/' . $shop->code . '/css/blocknewsletter.css');
-		echo $this->tag->stylesheetLink('assets/' . $shop->code . '/css/blockspecials.css');
-		echo $this->tag->stylesheetLink('assets/' . $shop->code . '/css/blocktags.css');
-		echo $this->tag->stylesheetLink('assets/' . $shop->code . '/css/blockuserinfo.css');
-		echo $this->tag->stylesheetLink('assets/' . $shop->code . '/css/blockviewed.css');
-		echo $this->tag->stylesheetLink('assets/' . $shop->code . '/css/paneltool.css');
-		echo $this->tag->stylesheetLink('assets/' . $shop->code . '/css/colorpicker.css');
-		echo $this->tag->stylesheetLink('assets/' . $shop->code . '/css/megamenu.css');
-		echo $this->tag->stylesheetLink('assets/' . $shop->code . '/css/typo.css');
-		echo $this->tag->stylesheetLink('assets/' . $shop->code . '/css/styles.css');
-		echo $this->tag->stylesheetLink('assets/' . $shop->code . '/css/hooks.css');
-		echo $this->tag->stylesheetLink('assets/' . $shop->code . '/css/blockwishlist.css');
-		echo $this->tag->stylesheetLink('assets/' . $shop->code . '/css/productcomments.css');
-		echo $this->tag->stylesheetLink('assets/' . $shop->code . '/css/jquery.autocomplete.css');
-		echo $this->tag->stylesheetLink('assets/' . $shop->code . '/css/product_list.css');
-		echo $this->tag->stylesheetLink('assets/' . $shop->code . '/css/blocksearch.css');
-		echo $this->tag->stylesheetLink('assets/' . $shop->code . '/css/leocustomajax.css');
-		echo $this->tag->stylesheetLink('assets/' . $shop->code . '/css/comparator.css');
+		echo $this->tag->stylesheetLink('assets/' . $shop->code . '/css/main.css');
 	?>
-	<script type="text/javascript">
-		var CUSTOMIZE_TEXTFIELD = 1;
-		var FancyboxI18nClose = 'Close';
-		var FancyboxI18nNext = 'Next';
-		var FancyboxI18nPrev = 'Previous';
-		var PS_CATALOG_MODE = false;
-		var added_to_wishlist = 'Added to your wishlist.';
-		var ajax_allowed = true;
-		var ajaxsearch = true;
-		var allowBuyWhenOutOfStock = false;
-		var attribute_anchor_separator = '-';
-		var attributesCombinations = [{"id_attribute":"1","id_attribute_group":"1","attribute":"s","group":"size"},{"id_attribute":"16","id_attribute_group":"3","attribute":"yellow","group":"color"},{"id_attribute":"2","id_attribute_group":"1","attribute":"m","group":"size"},{"id_attribute":"3","id_attribute_group":"1","attribute":"l","group":"size"},{"id_attribute":"15","id_attribute_group":"3","attribute":"green","group":"color"}];
-		var availableLaterValue = '';
-		var availableNowValue = 'In stock';
-		var baseDir = '/';
-		var baseUri = '/index.php';
-		var blocksearch_type = 'top';
-		var combinations = {"70":{"attributes_values":{"1":"S","3":"Yellow"},"attributes":[1,16],"price":0,"specific_price":false,"ecotax":0,"weight":0,"quantity":98,"reference":null,"unit_impact":"0.00","minimal_quantity":"1","available_date":"","id_image":-1,"list":"'1','16'"},"73":{"attributes_values":{"1":"S","3":"Green"},"attributes":[1,15],"price":0,"specific_price":false,"ecotax":0,"weight":0,"quantity":70,"reference":null,"unit_impact":"0.00","minimal_quantity":"1","available_date":"","id_image":-1,"list":"'1','15'"},"71":{"attributes_values":{"1":"M","3":"Yellow"},"attributes":[2,16],"price":0,"specific_price":false,"ecotax":0,"weight":0,"quantity":10,"reference":null,"unit_impact":"0.00","minimal_quantity":"1","available_date":"","id_image":-1,"list":"'2','16'"},"74":{"attributes_values":{"1":"M","3":"Green"},"attributes":[2,15],"price":0,"specific_price":false,"ecotax":0,"weight":0,"quantity":60,"reference":null,"unit_impact":"0.00","minimal_quantity":"1","available_date":"","id_image":-1,"list":"'2','15'"},"75":{"attributes_values":{"1":"L","3":"Green"},"attributes":[3,15],"price":0,"specific_price":false,"ecotax":0,"weight":0,"quantity":70,"reference":null,"unit_impact":"0.00","minimal_quantity":"1","available_date":"","id_image":-1,"list":"'3','15'"},"72":{"attributes_values":{"1":"L","3":"Yellow"},"attributes":[3,16],"price":0,"specific_price":false,"ecotax":0,"weight":0,"quantity":80,"reference":null,"unit_impact":"0.00","minimal_quantity":"1","available_date":"","id_image":-1,"list":"'3','16'"}};
-		var combinationsFromController = {"70":{"attributes_values":{"1":"S","3":"Yellow"},"attributes":[1,16],"price":0,"specific_price":false,"ecotax":0,"weight":0,"quantity":98,"reference":null,"unit_impact":"0.00","minimal_quantity":"1","available_date":"","id_image":-1,"list":"'1','16'"},"73":{"attributes_values":{"1":"S","3":"Green"},"attributes":[1,15],"price":0,"specific_price":false,"ecotax":0,"weight":0,"quantity":70,"reference":null,"unit_impact":"0.00","minimal_quantity":"1","available_date":"","id_image":-1,"list":"'1','15'"},"71":{"attributes_values":{"1":"M","3":"Yellow"},"attributes":[2,16],"price":0,"specific_price":false,"ecotax":0,"weight":0,"quantity":10,"reference":null,"unit_impact":"0.00","minimal_quantity":"1","available_date":"","id_image":-1,"list":"'2','16'"},"74":{"attributes_values":{"1":"M","3":"Green"},"attributes":[2,15],"price":0,"specific_price":false,"ecotax":0,"weight":0,"quantity":60,"reference":null,"unit_impact":"0.00","minimal_quantity":"1","available_date":"","id_image":-1,"list":"'2','15'"},"75":{"attributes_values":{"1":"L","3":"Green"},"attributes":[3,15],"price":0,"specific_price":false,"ecotax":0,"weight":0,"quantity":70,"reference":null,"unit_impact":"0.00","minimal_quantity":"1","available_date":"","id_image":-1,"list":"'3','15'"},"72":{"attributes_values":{"1":"L","3":"Yellow"},"attributes":[3,16],"price":0,"specific_price":false,"ecotax":0,"weight":0,"quantity":80,"reference":null,"unit_impact":"0.00","minimal_quantity":"1","available_date":"","id_image":-1,"list":"'3','16'"}};
-		var confirm_report_message = 'Are you sure that you want to report this comment?';
-		var contentOnly = false;
-		var currencyBlank = 0;
-		var currencyFormat = 1;
-		var currencyRate = 1;
-		var currencySign = '$';
-		var currentDate = '2014-10-16 04:40:43';
-		var customerGroupWithoutTax = true;
-		var customizationFields = false;
-		var customizationIdMessage = 'Customization #';
-		var default_eco_tax = 0;
-		var delete_txt = 'Delete';
-		var displayDiscountPrice = '0';
-		var displayList = false;
-		var displayPrice = 1;
-		var doesntExist = 'This combination does not exist for this product. Please select another combination.';
-		var doesntExistNoMore = 'This product is no longer in stock';
-		var doesntExistNoMoreBut = 'with those attributes but is available with others.';
-		var ecotaxTax_rate = 0;
-		var fieldRequired = 'Please fill in all the required fields before saving your customization.';
-		var freeProductTranslation = 'Free!';
-		var freeShippingTranslation = 'Free shipping!';
-		var generated_date = 1413448843;
-		var group_reduction = 0;
-		var idDefaultImage = 182;
-		var id_lang = 1;
-		var id_product = 12;
-		var img_dir = 'assets/<?php echo $shop->code; ?>/images/';
-		var img_prod_dir = '';
-		var img_ps_dir = '';
-		var instantsearch = false;
-		var isGuest = 0;
-		var isLogged = 0;
-		var jqZoomEnabled = true;
-		var loggin_required = 'You must be logged in to manage your wishlist.';
-		var maxQuantityToAllowDisplayOfLastQuantityMessage = 3;
-		var minimalQuantity = 1;
-		var moderation_active = true;
-		var mywishlist_url = '';
-		var noTaxForThisProduct = true;
-		var oosHookJsCodeFunctions = [];
-		var page_name = 'product';
-//		var priceDisplayMethod = 1;
-//		var priceDisplayPrecision = 2;
-//		var productAvailableForOrder = true;
-//		var productBasePriceTaxExcl = 300;
-//		var productBasePriceTaxExcluded = 300;
-//		var productHasAttributes = true;
-//		var productPrice = 300;
-//		var productPriceTaxExcluded = 300;
-//		var productPriceWithoutReduction = 300;
-//		var productReference = '';
-//		var productShowPrice = true;
-//		var productUnitPriceRatio = 0;
-//		var product_fileButtonHtml = 'Choose File';
-//		var product_fileDefaultHtml = 'No file selected';
-//		var product_specific_price = [];
-		var productcomment_added = 'Your comment has been added!';
-		var productcomment_added_moderation = 'Your comment has been added and will be available once approved by a moderator';
-		var productcomment_ok = 'OK';
-		var productcomment_title = 'New comment';
-		var productcomments_controller_url = '';
-		var productcomments_url_rewrite = false;
-		var quantitiesDisplayAllowed = true;
-		var quantityAvailable = 388;
-		var quickView = true;
-		var reduction_percent = 0;
-		var reduction_price = 0;
-		var removingLinkText = 'remove this product from my cart';
-		var roundMode = 2;
-		var search_url = '';
-		var secure_key = '';
-		var specific_currency = false;
-		var specific_price = 0;
-		var static_token = '';
-		var stf_msg_error = 'Your e-mail could not be sent. Please check the e-mail address and try again.';
-		var stf_msg_required = 'You did not fill required fields';
-		var stf_msg_success = 'Your e-mail has been sent successfully';
-		var stf_msg_title = 'Send to a friend';
-		var stf_secure_key = '';
-		var stock_management = 1;
-		var taxRate = 0;
-		var token = '';
-		var upToTxt = 'Up to';
-		var uploading_in_progress = 'Uploading in progress, please be patient.';
-		var usingSecureMode = false;
-		var wishlistProductsIds = false;
+	<?php
+		echo $this->tag->javascriptInclude('assets/' . $shop->code . '/js/jquery-1.11.0.min.js');
+		echo $this->tag->javascriptInclude('assets/' . $shop->code . '/js/main.js');
+	?>
+
+
+	<script type="text/javascript" language="javascript" >
+		var beforeload = (new Date()).getTime();
+		function getPageLoadTime(){
+			var afterload = (new Date()).getTime();
+			return afterload-beforeload;
+		}
+		$(window).load(function () {
+//			$.post('/tools/statdog/load/18526070/'+getPageLoadTime(),function(data){});
+		});
 	</script>
+
+	<!--[if IE]>
+	<style type="text/css">
+		BODY { behavior:url("/assets/Z95/css/csshover3.htc"); }
+	</style>
+	<![endif]-->
 </head>
+<body onload="global.init();">
 
-<body id="index" class="index hide-left-column hide-right-column lang_en fullwidth">
-	<section id="page" data-column="col-xs-12 col-sm-12 col-md-3" data-type="grid">
+<div style="position: absolute; z-index: 10000; width: 400px; height: 400px; background-color: #dadada; display: none;">
 
-		<!-- Header -->
-		<?php $this->partial('partials/header', array('session' => $this->di->get('session'))); ?>
-		<!-- /Header -->
+	<div class="messages_area"></div>
+	<hr>
+	<input id="sendText" type="text" value="" style="display: none">
+	<hr>
+	<input id="send" type="submit" value="Send" style="display: none">
 
-		<!-- Top Navigation -->
+</div>
+
+<!-- Блоки окон и сообщений -->
+<div class="basket-container">
+	<div id="SMALL_BASKET" class="Shadow">
+		<div class="close" onclick="$('#SMALL_BASKET').hide(); $('#_SMALL_BASKET').html('');"></div>
+		<div id="_SMALL_BASKET"></div>
+	</div>
+</div>
+<div class="status common loading"><div class="message">Секундочку...</div></div>
+<div class="status timeout" onclick="global.hideStatus('timeout');">
+	<div class="message">
+		<div class="title">Мы не дождались ответа от сервера</div>
+		Попробуйте еще раз			</div>
+</div>
+<div class="status server error" onclick="global.hideStatus('server.error');">
+	<div class="message">
+		<div class="title">На сервере случилась ошибка</div>
+		Благодаря вам мы уже узнали о проблеме и сразу ею займемся.			</div>
+</div>
+<div class="status order success" onclick="global.hideStatus('order.success');">
+	<div class="message">
+		<div class="title">Заказ создан</div>
+		<span class="body"></span>
+	</div>
+</div>
+<div class="status order error" onclick="global.hideStatus('order.error');">
+	<div class="message">
+		<div class="title">Заказ не создан</div>
+		<span class="body"></span>
+	</div>
+</div>
+<div class="dialog dialog_black status coupon success" onclick="global.hideStatus('coupon.success');">
+	<div class="message">
+		<div class="title">Купон отправлен по почте</div>
+		<span class="body"></span>
+	</div>
+</div>
+<div class="dialog dialog_black status coupon error" onclick="global.hideStatus('coupon.error');">
+	<div class="message">
+		<div class="title">Не получилось выдать купон</div>
+		<span class="body"></span>
+	</div>
+</div>
+<div class="status password success" onclick="global.hideStatus('password.success');">
+	<div class="message">
+		<div class="title">Пароль отправлен</div>
+		<span class="body"></span>
+	</div>
+</div>
+<div class="status password error" onclick="global.hideStatus('password.error');">
+	<div class="message">
+		<div class="title">Пароль не отправлен</div>
+		<span class="body"></span>
+	</div>
+</div>
+<div class="status customer error" onclick="global.hideStatus('customer.error');">
+	<div class="message">
+		<div class="title">Неправильная пара логин/пароль</div>
+		<span class="body"></span>
+	</div>
+</div>
+
+<div class="go-top-container">
+	<div class="go-top-field">
+		<div class="button-down"></div>
+		<div class="button-top">Наверх</div>
+	</div>
+</div>
+<div class="go-container prev">
+	<div class="button"></div>
+</div>
+<div class="go-container next">
+	<div class="button"></div>
+</div>
+<!-- Header -->
+	<?php $this->partial('partials/header'); ?>
+<!-- Header -->
+	<!-- Top Navigation -->
 		<?php $this->partial('partials/topnavigation'); ?>
-		<!-- /Top Navigation -->
-
-		<!-- Content -->
+	<!-- /Top Navigation -->
+	<div class="content">
 		<?php echo $this->getContent(); ?>
-		<!-- /Content -->
+	</div>
 
-		<!-- Footer -->
+</td>
+</tr>
+	<!-- Footer -->
 		<?php $this->partial('partials/footer'); ?>
-		<!-- Footer -->
-	</section>
+	<!-- Footer -->
 
-<?php
-	echo $this->tag->javascriptInclude('assets/' . $shop->code . '/js/jquery-1.11.0.min.js');
-	echo $this->tag->javascriptInclude('assets/' . $shop->code . '/js/jquery-migrate-1.2.1.min.js');
-	echo $this->tag->javascriptInclude('assets/' . $shop->code . '/js/jquery.easing.js');
-	echo $this->tag->javascriptInclude('assets/' . $shop->code . '/js/tools.js');
-	echo $this->tag->javascriptInclude('assets/' . $shop->code . '/js/global.js');
-	echo $this->tag->javascriptInclude('assets/' . $shop->code . '/js/10-bootstrap.min.js');
-	echo $this->tag->javascriptInclude('assets/' . $shop->code . '/js/15-jquery.total-storage.min.js');
-	echo $this->tag->javascriptInclude('assets/' . $shop->code . '/js/15-jquery.uniform-modified.js');
-	//echo $this->tag->javascriptInclude('assets/' . $shop->code . '/js/jquery.fancybox.js');
-	//echo $this->tag->javascriptInclude('assets/' . $shop->code . '/js/products-comparison.js');
-	//echo $this->tag->javascriptInclude('assets/' . $shop->code . '/js/ajax-cart.js');
-	echo $this->tag->javascriptInclude('assets/' . $shop->code . '/js/jquery.scrollTo(1).js');
-	echo $this->tag->javascriptInclude('assets/' . $shop->code . '/js/jquery.serialScroll.js');
-	echo $this->tag->javascriptInclude('assets/' . $shop->code . '/js/treeManagement.js');
-	echo $this->tag->javascriptInclude('assets/' . $shop->code . '/js/blocknewsletter.js');
-	echo $this->tag->javascriptInclude('assets/' . $shop->code . '/js/colorpicker.js');
-	echo $this->tag->javascriptInclude('assets/' . $shop->code . '/js/paneltool.js');
-	echo $this->tag->javascriptInclude('assets/' . $shop->code . '/js/jquery.themepunch.plugins.min.js');
-	echo $this->tag->javascriptInclude('assets/' . $shop->code . '/js/jquery.themepunch.revolution.min.js');
-	//echo $this->tag->javascriptInclude('assets/' . $shop->code . '/js/ajax-wishlist.js');
-	echo $this->tag->javascriptInclude('assets/' . $shop->code . '/js/jquery.autocomplete.js');
-	echo $this->tag->javascriptInclude('assets/' . $shop->code . '/js/blocksearch.js');
-	//echo $this->tag->javascriptInclude('assets/' . $shop->code . '/js/leocustomajax.js');
-	echo $this->tag->javascriptInclude('assets/' . $shop->code . '/js/countdown.js');
-	echo $this->tag->javascriptInclude('assets/common.js');
-?>
-<!--[if IE 8]>
-<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-<script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
-<![endif]-->
+</table>
 </body>
+
+<script type="text/javascript" language="javascript">
+//	global.draw_go_top();
+	global.drawTopLine();
+//	customer.init();
+</script>
+<script type="text/javascript">
+	var _gaq = _gaq || [];
+	_gaq.push(['_setAccount', 'UA-1844837-1']);
+	_gaq.push(['_setDomainName', 'none']);
+	_gaq.push(['_setAllowLinker', true]);
+	_gaq.push(['_trackPageview']);
+
+	(function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'stats.g.doubleclick.net/dc.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	})();
+</script>
+
+<!-- Remarketing tags may not be associated with personally identifiable information or placed on pages related to sensitive categories. For instructions on adding this tag and more information on the above requirements, read the setup guide: google.com/ads/remarketingsetup -->
+
+
+<!-- //Rating@Mail.ru counter -->
+
+<script type="text/javascript">
+	var margin = Math.max(0,parseInt((($(window).width() - $('.page_container').width())*0.5 - $('.go-container').width())*0.5));
+
+</script>
 </html>

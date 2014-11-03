@@ -1,269 +1,68 @@
-<div id="topnavigation" class="clearfix">
-	<div class="container">
-		<nav id="cavas_menu" class="navbar navbar-default" role="navigation">
-			<!-- Brand and toggle get grouped for better mobile display -->
-			<div class="navbar-header">
-				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
-					<span class="sr-only">Toggle navigation</span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-				</button>
-			</div>
+<div class="header-menu">
 
-			<!-- Верхнее меню навигации -->
-			<div id="leo-top-menu" class="collapse navbar-collapse navbar-ex1-collapse">
-				<?php echo $topnav->toHtml('top'); ?>
-			</div>
-			<!-- Верхнее меню навигации -->
-
-		</nav>
-		<script type="text/javascript">
-			// <![CDATA[
-			var current_link = "";
-			//alert(request);
-			var currentURL = window.location;
-			currentURL = String(currentURL);
-			currentURL = currentURL.replace("https://", "").replace("http://", "").replace("www.", "").replace(/#\w*/, "");
-			current_link = current_link.replace("https://", "").replace("http://", "").replace("www.", "");
-			isHomeMenu = 0;
-			if ($("body").attr("id") == "index") isHomeMenu = 1;
-			$(".megamenu > li > a").each(function() {
-				menuURL = $(this).attr("href").replace("https://", "").replace("http://", "").replace("www.", "").replace(/#\w*/, "");
-				if ((currentURL == menuURL) || (currentURL.replace(current_link, "") == menuURL) || isHomeMenu) {
-					$(this).parent().addClass("active");
-					return false;
-				}
-			});
-			// ]]>
-		</script>
-		<script type="text/javascript">
-			(function($) {
-				$.fn.OffCavasmenu = function(opts) {
-					// default configuration
-					var config = $.extend({}, {
-						opt1: null,
-						text_warning_select: "Please select One to remove?",
-						text_confirm_remove: "Are you sure to remove footer row?",
-						JSON: null
-					}, opts);
-					// main function
-					// initialize every element
-					this.each(function() {
-						var $btn = $('#cavas_menu .navbar-toggle');
-						var $nav = null;
-						if (!$btn.length)
-							return;
-						var $nav = $('<section id="off-canvas-nav"><nav class="offcanvas-mainnav" ><div id="off-canvas-button"><span class="off-canvas-nav"></span>Close</div></nav></sections>');
-						var $menucontent = $($btn.data('target')).find('.megamenu').clone();
-						$("body").append($nav);
-						$("#off-canvas-nav .offcanvas-mainnav").append($menucontent);
-						$("html")
-							.addClass("off-canvas");
-						$("#off-canvas-button").click(function() {
-							$btn.click();
-						});
-						$btn.toggle(function() {
-							$("body").removeClass("off-canvas-inactive").addClass("off-canvas-active");
-						}, function() {
-							$("body").removeClass("off-canvas-active").addClass("off-canvas-inactive");
-						});
-					});
-					return this;
-				}
-			})(jQuery);
-			$(document).ready(function() {
-				$('.dropdown-toggle.has-category').after($('.dropdown-sub.dropdown-menu.categories'))
-//				jQuery("#cavas_menu").OffCavasmenu();
-				$('#cavas_menu .navbar-toggle').click(function() {
-					$('body,html').animate({
-						scrollTop: 0
-					}, 0);
-					return false;
-				});
-
-				$(window).resize(function() {
-					if ($(window).width() > 767) {
-						$("body").removeClass("off-canvas-active").addClass("off-canvas-inactive");
-					}
-				});
-			});
-			$(document.body).on('click', '[data-toggle="dropdown"]', function() {
-				if (!$(this).parent().hasClass('open') && this.href && this.href != '#') {
-					window.location.href = this.href;
-				}
-			});
-		</script>
+	<div class="header-menu-item category ">
+		<a href="/catalogue/woman/"class="dropdown" onclick="event.stopPropagation(); if ($(this).hasClass('s')) { return true; } else { $('.header-menu-item .submenu').hide(); $('.header-menu-item a').removeClass('s'); $('.submenu', $(this).parent()).show(); $(this).addClass('s'); return false; }">Женщинам</a>
+		<div class="submenu"><table><tr><td><a class="top" href="/catalogue/woman/top">ТОП 200</a><a href="/catalogue/woman/sweaters-blouses/" >Кофты и блузки</a><a href="/catalogue/woman/jeans/" >Джинсы и брюки</a><a href="/catalogue/woman/coats/" >Пиджаки</a><a href="/catalogue/woman/jackets/" >Куртки и плащи</a><a href="/catalogue/woman/dresses/" >Платья</a><a href="/catalogue/woman/suits/" >Костюмы</a><a href="/catalogue/woman/tops-and-shirts/" >Футболки и топики</a><a href="/catalogue/woman/skirts-and-shorts/" >Шорты и юбки</a><a href="/catalogue/woman/underwear/" >Нижнее белье</a><a href="/catalogue/woman/swimwear/" >Купальники</a><a href="/catalogue/woman/scarves-hats-gloves/" >Шарфы, платки, перчатки</a></td><td width="200"><b>Аксессуары</b><a href="/catalogue/bags/women/">Сумки</a><a href="/catalogue/straps/women/">Женские ремни</a><a href="/catalogue/shoes/women/">Обувь</a><a href="/catalogue/accessories/baseball-hats/">Кепки</a></td><td width="200"><b>Очки</b><a href="/catalogue/glasses/glasses-women/">Женские очки</a><a href="/catalogue/glasses/medicine/">Медицинские очки</a></td></tr></table></div>
+	</div>
+	<div class="header-menu-item category ">
+		<a href="/catalogue/man/"class="dropdown" onclick="event.stopPropagation(); if ($(this).hasClass('s')) { return true; } else { $('.header-menu-item .submenu').hide(); $('.header-menu-item a').removeClass('s'); $('.submenu', $(this).parent()).show(); $(this).addClass('s'); return false; }">Мужчинам</a>
+		<div class="submenu"><table><tr><td><a class="top" href="/catalogue/man/top">ТОП 200</a><a href="/catalogue/man/winter-fall/" >Куртки и пуховики</a><a href="/catalogue/man/jeans/" >Джинсы и штаны</a><a href="/catalogue/man/sweaters/" >Свитера и кофты</a><a href="/catalogue/man/sportsuits/" >Спортивные костюмы</a><a href="/catalogue/man/shirts/" >Рубашки</a><a href="/catalogue/man/shorts/" >Шорты</a><a href="/catalogue/man/swimming trunks/" >Плавки</a><a href="/catalogue/man/scarves-hats-gloves/" >Шарфы, шапки, перчатки</a><a href="/catalogue/man/underwear/" >Нижнее белье</a><a href="/catalogue/man/pollos/" >Футболки и поло</a><a href="/catalogue/man/ties/" >Галстуки</a><a href="/catalogue/man/suits/" >Костюмы</a></td><td width="200"><b>Аксессуары</b><a href="/catalogue/bags/men/">Сумки</a><a href="/catalogue/straps/men/">Мужские ремни</a><a href="/catalogue/shoes/men/">Обувь</a><a href="/catalogue/accessories/baseball-hats/">Кепки</a><a href="/catalogue/accessories/cufflinks/">Запонки</a></td><td width="200"><b>Очки</b><a href="/catalogue/glasses/glasses-men/">Мужские очки</a></td></tr></table></div>
+	</div>
+	<div class="header-menu-item category ">
+		<a href="/catalogue/shoes/"class="dropdown" onclick="event.stopPropagation(); if ($(this).hasClass('s')) { return true; } else { $('.header-menu-item .submenu').hide(); $('.header-menu-item a').removeClass('s'); $('.submenu', $(this).parent()).show(); $(this).addClass('s'); return false; }">Обувь</a>
+		<div class="submenu"><table><tr><td><a href="/catalogue/shoes/women/" >Женская обувь</a><a href="/catalogue/shoes/men/" >Мужская обувь</a></td></tr></table></div>
+	</div>
+	<div class="header-menu-item category ">
+		<a href="/catalogue/kids/"class="dropdown" onclick="event.stopPropagation(); if ($(this).hasClass('s')) { return true; } else { $('.header-menu-item .submenu').hide(); $('.header-menu-item a').removeClass('s'); $('.submenu', $(this).parent()).show(); $(this).addClass('s'); return false; }">Детям</a>
+		<div class="submenu"><table><tr><td><a href="/catalogue/kids/kids-clothes/" >Детская одежда</a><a href="/catalogue/kids/kids-shoes/" >Детская обувь</a></td></tr></table></div>
+	</div>
+	<div class="header-menu-item category ">
+		<a href="/catalogue/accessories/"class="dropdown" onclick="event.stopPropagation(); if ($(this).hasClass('s')) { return true; } else { $('.header-menu-item .submenu').hide(); $('.header-menu-item a').removeClass('s'); $('.submenu', $(this).parent()).show(); $(this).addClass('s'); return false; }">Аксессуары</a>
+		<div class="submenu"><table><tr><td><a href="/catalogue/accessories/bracelet/" >Браслеты</a><a href="/catalogue/accessories/pen/" >Ручки для письма</a><a href="/catalogue/accessories/bed/" >Постельное белье</a><a href="/catalogue/accessories/cufflinks/" >Запонки</a><a href="/catalogue/accessories/trinket/" >Брелки и подвески</a><a href="/catalogue/accessories/purses/" >Кошельки</a><a href="/catalogue/accessories/baseball-hats/" >Кепки</a><a href="/catalogue/accessories/beach/" >Пляжные</a><a href="/catalogue/accessories/gifts/" >Подарки</a><a href="/catalogue/accessories/umbrellas/" >Зонты</a></td><td width="200"><a href="/catalogue/bags/men/">Мужские сумки</a><a href="/catalogue/bags/women/">Женские сумки</a><a href="/catalogue/bags/luggage/">Чемоданы</a></td><td width="200"><a href="/catalogue/straps/men/">Мужские ремни</a><a href="/catalogue/straps/women/">Женские ремни</a></td></tr></table></div>
+	</div>
+	<div class="header-menu-item category ">
+		<a href="/catalogue/glasses/"class="dropdown" onclick="event.stopPropagation(); if ($(this).hasClass('s')) { return true; } else { $('.header-menu-item .submenu').hide(); $('.header-menu-item a').removeClass('s'); $('.submenu', $(this).parent()).show(); $(this).addClass('s'); return false; }">Очки</a>
+		<div class="submenu"><table><tr><td><a href="/catalogue/glasses/glasses-women/" >Женские очки</a><a href="/catalogue/glasses/medicine/" >Медицинские очки</a><a href="/catalogue/glasses/glasses-men/" >Мужские очки</a></td></tr></table></div>
+	</div>
+	<div class="header-menu-item category ">
+		<a href="/catalogue/apple/">iPhone/iPad</a>
 
 	</div>
-</div>
-
-
-
-
-<div class="dropdown-sub dropdown-menu categories" style="width:680px">
-	<div class="dropdown-menu-inner">
-		<div class="row">
-			<div class="mega-col col-sm-3">
-				<div class="mega-col-inner ">
-					<div class="leo-widget">
-						<div class="widget-subcategories">
-							<div class="widget-inner">
-								<div class="menu-title">Categories</div>
-								<ul>
-									<?php if(!empty($categories)) { ?>
-										<?php foreach($categories as $category) { ?>
-											<li class="clearfix">
-												<?php echo $this->tag->linkTo('catalogue/'. $category['alias'], $category['name']); ?>
-											</li>
-										<?php } ?>
-									<?php } ?>
-								</ul>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="mega-col col-sm-3">
-				<div class="mega-col-inner ">
-					<div class="leo-widget"> </div>
-					<div class="leo-widget">
-						<div class="widget-products">
-							<div class="menu-title">
-								New product
-							</div>
-							<div class="widget-inner">
-
-								<div class="product-block">
-									<?php foreach($newProducts as $key => $product) { ?>
-										<div class="product-container clearfix">
-											<div class="image ">
-												<a class="product_img_link" href="" title="Donec posuere metus" itemprop="url">
-													<?=$this->tag->image(array(
-														'assets/'.$shop->code.'/images/187-home_default.jpg',
-														'alt' 			=> $product->name,
-														'title' 			=> $product->name,
-														'class' 		=> 'replace-2x img-responsive',
-														'itemprop' 		=> 'image'
-													));?>
-												</a>
- <span class="new-box">
- <span class="new-label">New</span>
- </span>
-											</div>
-											<div class="product-meta">
-												<h5 itemprop="name">
-													<a class="product-name" href="" title="Donec posuere metus" itemprop="url">
-														<?php echo $product->name; ?>
-													</a>
-												</h5>
-												<p class="product-desc" itemprop="description">
-													<?php echo $product->description; ?>
-												</p>
-												<div itemprop="offers" itemscope="" itemtype="http://schema.org/Offer" class="content_price">
- <span itemprop="price" class="price product-price">
-<?php echo $product->price; ?> <?php echo $shop->currency_symbol; ?>
-								</span>
-													<meta itemprop="priceCurrency" content="1">
-												</div>
-											</div>
-										</div>
-
-										<?php unset($newProducts[$key]); ?>
-										<?php if($key == 2)break; ?>
-									<?php } ?>
-
-
-								</div>
-
-
-
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-
-			<div class="mega-col col-sm-3">
-				<div class="mega-col-inner ">
-					<div class="leo-widget">
-						<div class="widget-products">
-							<div class="menu-title">
-								New product
-							</div>
-							<div class="widget-inner">
-
-								<div class="product-block">
-
-
-
-
-									<?php foreach($newProducts as $key => $product) { ?>
-										<div class="product-container clearfix">
-											<div class="image ">
-												<a class="product_img_link" href="" title="Donec posuere metus" itemprop="url">
-													<?=$this->tag->image(array(
-														'assets/'.$shop->code.'/images/187-home_default.jpg',
-														'alt' 			=> $product->name,
-														'title' 			=> $product->name,
-														'class' 		=> 'replace-2x img-responsive',
-														'itemprop' 		=> 'image'
-													));?>
-												</a>
- <span class="new-box">
- <span class="new-label">New</span>
- </span>
-											</div>
-											<div class="product-meta">
-												<h5 itemprop="name">
-													<a class="product-name" href="" title="Donec posuere metus" itemprop="url">
-														<?php echo $product->name; ?>
-													</a>
-												</h5>
-												<p class="product-desc" itemprop="description">
-													<?php $product->description; ?>
-												</p>
-												<div itemprop="offers" itemscope="" itemtype="http://schema.org/Offer" class="content_price">
- <span itemprop="price" class="price product-price"><?php echo $product->price; ?> <?php echo $shop->currency_symbol; ?>
- </span>
-													<meta itemprop="priceCurrency" content="1">
-												</div>
-											</div>
-										</div>
-
-									<?php } ?>
-
-
-
-								</div>
-
-
-
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="mega-col col-sm-3">
-				<div class="mega-col-inner ">
-					<div class="leo-widget">
-						<div class="widget-html">
-							<div class="menu-title">
-								Morbi ipsum
-							</div>
-							<div class="widget-inner">
-								<div class="menu-content">
-									<p><img src="/assets/<?php echo $shop->code ?>/images/adv.jpg" alt="" width="207" height="118">
-									</p>
-									<p><a href="">Mauris in erat justo nullam ac urna eu felis dapibus condimentum sit amet a sed ut imperdiet nisi.</a>
-									</p>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
+	<div class="header-menu-item category m-hide">
+		<a href="/catalogue/top/"><b>ТОП 200</b></a>
+		<div class="submenu">
+			<table>
+				<tr><td><a href="/catalogue/woman/top/">Женская одежда</a></td></tr>
+				<tr><td><a href="/catalogue/man/top/">Мужская одежда</a></td></tr>
+			</table>
 		</div>
-		<div class="row"></div>
 	</div>
+	<div class="header-menu-item category">
+		<a href="/catalogue/favorites/" class="favorites">Понравилось <span class="favorites-count"><span id='FavoritesCount'>0</span></span></a>
+	</div>
+	<!--
+	<div class="header-menu-item category">
+		<a href="/catalogue/visited/" class="visited">Вы смотрели <span class="favorites-count">2</span></a>
+	</div>
+	-->
+	<script type="text/javascript">
+		$('.header-menu-item').each(function (i, el) {
+			if ($('.submenu', el).length) {
+				$(el).hover(function() {
+					$('.header-menu-item .submenu').hide();
+					$('.header-menu-item > a').removeClass('s');
+					$('.submenu', el).show();
+					$('a', el).eq(0).addClass('s');
+				});
+				$(el).mouseleave(function() {
+					$('.header-menu-item .submenu').hide();
+					$('.header-menu-item a').removeClass('s');
+				});
+			}
+		});
+		$('body').click(function() {
+			$('.header-menu-item .submenu').hide();
+			$('.header-menu-item a').removeClass('s');
+		});
+	</script>
 </div>

@@ -47,6 +47,8 @@
 		{
 			// проверка страницы в кэше
 
+			$banners = $this->bannersModel->getBanners($this->_shop->id, true);
+
 			$content = null;
 			if($this->_config->cache->frontend)
 			{
