@@ -1,54 +1,66 @@
 <?php
+/**
+ * Мультимодульная структура загрузчика
+ */
+defined('PUBLIC_PATH') || define('PUBLIC_PATH', dirname(__FILE__));
+defined('APP_PATH') || define('APP_PATH', realpath(dirname(__FILE__) . '/../app'));
 
-	try {
+use Phalcon\Mvc\Application,
+	Phalcon\Http\Request,
+	Phalcon\Mvc\Router,
+	Phalcon\DI\FactoryDefault;
 
-		defined('PUBLIC_PATH') || define('PUBLIC_PATH', dirname(__FILE__));
-		defined('APP_PATH') || define('APP_PATH', realpath(dirname(__FILE__) . '/../app'));
+// Подключение конфигурации модулей
 
-		
-		// Читаю файл конфигураций
+require APP_PATH.'/config/modules.php';
 
-		require __DIR__.'/../app/config/config.php';
+// Чтение HTTP заголовков
 
-		// Регистрирую автозагрузчик модулей
+$request = new Request();
 
-		$loader = new \Phalcon\Loader();
+// Определение модуля для автозагрузки
 
-		// Создаю контейнер зафисимости классов
+	if(isset($modules[$request->getHttpHost()]))
+		$module = $modules[$request->getHttpHost()];
+		else $module = $modules['dafault'];
 
-		$di = new Phalcon\DI\FactoryDefault();
+try {
 
-		require __DIR__.'/../app/config/di.php';
+	// Инициализация Dependency Injections
+	$di = new FactoryDefault();
 
-		// Регистрирую  ДИРЕКТОРИИ
+	// Регистрация роутинга модуля
 
-		$loader->registerDirs([
-				$config['application']['controllersDir'],
-				$config['application']['libraryDir'],
-				$config['application']['helpersDir'],
-				$config['application']['modelsDir'],
-		])
+	$di->set('router', function() use ($module) {
 
-		// Регистрация пространств имен
-		->registerNamespaces([
-			"Models"         	=> $config['application']['modelsDir'],
-			"Helpers"			=> $config['application']['helpersDir'],
-		])
-		->register();
+		$router = (new Router)->setDefaultModule($module);
+		require APP_PATH.'/modules/'.$module.'/config/routes.php';
+		return $router;
+	});
 
-		if($config['profiler'])
-		{
-			$debugWidget = new PDW\DebugWidget($di);
-		}
+	// Компонент представлений для вывода шаблонов
 
-		// Рендеринг контента приложения
+	$di->set('view', function() use ($module) {
+		return (new Phalcon\Mvc\View())->setViewsDir(APP_PATH.'/modules/'.$module.'/views/');
+	});
 
-		$application = new \Phalcon\Mvc\Application();
-		$application->setDI($di);
+	// Создание приложения
 
-		echo $application->handle()->getContent();
-	}
-	catch(\Phalcon\Exception $e)
-	{
-		echo "PhalconException: ", $e->getMessage();
-	}
+	$application = new Application($di);
+
+	$application->registerModules([
+		$module	=>	[
+			'className' => 'Modules\Module\\'.$module,
+			'path'      => APP_PATH.'/modules/'.$module.'/Module.php',
+		],
+	]);
+
+	// Обработка запроса
+	echo $application->handle()->getContent();
+}
+catch(\Exception $e)
+{
+	echo $e->getMessage();
+	var_dump($e->getTrace());
+}
+

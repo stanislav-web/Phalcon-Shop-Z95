@@ -238,7 +238,6 @@ class Products extends \Phalcon\Mvc\Model
 
 	public function getProductCard($articul, $shop_price_id, $cache = false)
 	{
-//		$articul = 33389;
 
 		$result = null;
 		if($cache && $this->_cache) {
@@ -275,7 +274,6 @@ class Products extends \Phalcon\Mvc\Model
 			if($cache && $this->_cache) $backendCache->save(self::TABLE.'-'.strtolower(__FUNCTION__).'-'.$shop_price_id.'.cache', $result);
 		}
 		return $result;
-
 	}
 
 	public function getProductsForCart($ids, $shop_price_id, $cart)

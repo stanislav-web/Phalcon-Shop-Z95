@@ -30,7 +30,6 @@ class DebugWidget implements \Phalcon\DI\InjectionAwareInterface
 		$this->_di = $di;
 		$this->startTime = microtime(true);
 		$this->_profiler = new Profiler();
-
 		$eventsManager = $di->get('eventsManager');
 
 		foreach ($di->getServices() as $service) {
