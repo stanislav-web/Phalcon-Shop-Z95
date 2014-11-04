@@ -63,9 +63,9 @@ class BasketController extends ControllerBase
 		}
 	}
 
-	public function addToCartAction()
+	public function updateAction()
 	{
-		var_dump('add-to-basket');
+		var_dump('update-basket');
 		die;
 		if($this->session->has('cart')) {
 			$session = $this->session->get('cart');

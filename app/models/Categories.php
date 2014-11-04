@@ -110,25 +110,50 @@ class Categories extends \Phalcon\Mvc\Model
 			}
 		}
 
-		$sql = "SELECT products_relationship.category_id, COUNT(product_id), categories.name FROM products_relationship ".
-				"INNER JOIN categories ON categories.id = products_relationship.category_id
-				WHERE category_id IN($categories_ids)
+		$sql = "SELECT products_relationship.category_id, COUNT(product_id) as count, categories.alias, categories.name, categories.parent_id, c2.alias as parent_alias  FROM products_relationship
+				INNER JOIN categories ON categories.id = products_relationship.category_id
+				LEFT JOIN categories as c2 ON categories.parent_id = c2.id
+				WHERE products_relationship.category_id IN($categories_ids)
 				GROUP BY products_relationship.category_id";
 
-
 		$categories = $this->_db->query($sql)->fetchAll();
+
 		if(!empty($categories)) {
 			foreach($categories as $category) {
-				$category->preview = $this->getCategoryImage($category->id);
+				$category->preview = $this->getLeaderCategoryImage($category->category_id, true);
 			}
-
 		}
-		return $result;
+
+		return $categories;
 
 	}
 
-	public function getCategoryImage($category_id)
+	public function getLeaderCategoryImage($category_id, $cache)
 	{
+		$result = null;
+		if ($cache && $this->_cache) {
+			$backendCache = $this->getDI()->get('backendCache');
+			$result = $backendCache->get(self::TABLE . '-' . implode('-', __FUNCTION__) . '.cache');
+		}
 
+		if ($result === null) {
+			$sql = "SELECT products.id as product_id, products.images
+					FROM products
+					INNER JOIN products_relationship ON products_relationship.product_id = products.id
+					WHERE category_id = $category_id
+					ORDER BY rating DESC
+					LIMIT 1";
+			$result = $this->_db->query($sql)->fetch();
+
+			if($result) {
+
+				$image = json_decode($result->images, true);
+				return array('product_id' => $result->product_id,'image' => $image[0]);
+			}
+			return false;
+		}
+
+		// Сохраняем запрос в кэше
+		if ($cache && $this->_cache) $backendCache->save(self::TABLE . '-' . implode('-', __FUNCTION__) . '.cache', $result);
 	}
 }

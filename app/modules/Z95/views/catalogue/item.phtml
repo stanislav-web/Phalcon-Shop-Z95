@@ -1,1964 +1,382 @@
-<?php
-	use Phalcon\Tag as Tag;
-
-		echo Tag::stylesheetLink('assets/' . $shop->code . '/css/product.css');
-		echo Tag::stylesheetLink('assets/' . $shop->code . '/css/print.css');
-		echo Tag::stylesheetLink('assets/' . $shop->code . '/css/jquery.jqzoom.css');
-		echo Tag::stylesheetLink('assets/' . $shop->code . '/css/productscategory.css');
-		echo Tag::stylesheetLink('assets/' . $shop->code . '/css/paneltool.css');
-		echo Tag::stylesheetLink('assets/' . $shop->code . '/css/blockwishlist.css');
-		echo Tag::stylesheetLink('assets/' . $shop->code . '/css/sendtoafriend.css');
-		echo Tag::stylesheetLink('assets/' . $shop->code . '/css/socialsharing.css');
-		echo Tag::javascriptInclude('assets/' . $shop->code . '/js/cart.js');
-?>
-<script type="text/javascript">
-	cart.articul = <?php echo $item->articul; ?>;
-	cart.product_id = <?php echo $item->product_id; ?>;
-</script>
-	<section id="breadcrumb" class="clearfix">
-	<div class="container">
-		<div class="row">
-
-			<!-- Breadcrumb -->
-			<div class="breadcrumb clearfix">
-				<a class="home" href="" title="Return to Home">Home</a>
-				<span class="navigation-pipe" >&gt;</span>
-				<span class="navigation_page">Your shopping cart</span>
-			</div>
-			<!-- /Breadcrumb -->
-		</div>
-	</div>
-</section>
-
-<!-- Content -->
-<section id="columns" class="columns-container">
-<div class="container">
-<div id="slider_row" class="row">
-	<div id="top_column" class="center_column col-xs-12 col-sm-12 col-md-12">
-
+<div class="go-container prev" style="margin-left: 175px; display: block;" title="Предыдущая фотография">
+	<div class="button"></div>
+</div>
+<div class="go-container next" style="margin-right: 175px; display: block;" title="Следующая фотография">
+	<div class="button"></div>
+</div>
+<div class="column main-column">
+<div class="ITEMS_LIST">
+	<div id="CATALOGUE_SEARCH_RESULT">
 	</div>
 </div>
-<div class="row">
+<div class="inner_teaser"><a title="" target="_blank" href="/catalogue/sale"><img alt="" src="/f/t/5ad05dbba33a7c986ffad79ff33dbd98.jpg"></a></div>
+<div id="CONTENT">
+
+<h1><span class="title"><?php echo $item->product_name; ?></span> <?php echo $item->brand; ?> <span class="articul">(артикул: <span><?php echo $item->articul; ?></span>)</span></h1>		<ul class="Thermo"><li><a href="/">Главная</a></li><li>/&nbsp;<a href="/catalogue/">Каталог</a></li><li>/&nbsp;<a href="/catalogue/woman/">Женщинам</a></li><li>/&nbsp;<a href="/catalogue/woman/dresses/">Платья</a></li></ul><div class="clear"></div><div class="element-catalogue_items"><!-- SM -->
+
+<script type="text/javascript">
+
+	var sonar_product = {
+		identifier: '88658'  // уникальный id товара
+	};
+
+</script>
+<script type="text/javascript">
+	(function() {
+		var s   = document.createElement('script');
+		var x   = document.getElementsByTagName('script')[0];
+		s.type  = 'text/javascript';
+		s.async = true;
+		s.src   = ('https:'==document.location.protocol?'https://':'http://')
+			+ 'eu-sonar.sociomantic.com/js/2010-07-01/adpan/z95-ru';
+		x.parentNode.insertBefore( s, x );
+	})();
+</script>
+<!-- GRM -->
+<script type="text/javascript">
+	var google_tag_params = {
+		prodid: '88658',
+		price: 10200,
+		pvalue: 10200,
+		pname: 'платье Alexander Wang',
+		pcat: 'Платья',
+		pagetype : 'product'
+	};
+</script>
+<script type="text/javascript">
+	(function(d,w){
+		var n=d.getElementsByTagName("script")[0],
+			s=d.createElement("script"),
+			f=function(){n.parentNode.insertBefore(s,n);};
+		s.type="text/javascript";
+		s.async=true;
+		s.src="http://track.recreativ.ru/trck.php?shop=99&amp;ttl=DD&amp;offer=88658&amp;rnd="+Math.floor(Math.random()*999);
+		if(window.opera=="[object Opera]"){d.addEventListener("DOMContentLoaded", f, false);}
+		else{f();}
+	})(document,window);
+</script>
 
 
-<!-- Left -->
-<section id="left_column" class="column sidebar col-md-3" role="navigation">
-<!-- Block categories module -->
-<div id="categories_block_left" class="block highlighted nopadding noborder">
-<h4 class="title_block">
-	Categories
-</h4>
 
-<div class="block_content list-block" style="">
+<script src="http://t.trafmag.com/tracking.js" type="text/javascript"></script>
+<script language="javascript">
+	var odinkod = {
+		"type": "product",
+		"product_id":"88658"
+	};
+	var gcb = Math.round(Math.random() * 100000);
 
-<ul class="tree dynamized" style="display: block;">
+</script>
 
-<?php foreach($categories as $category) { ?>
-	<?php echo $category['name']; ?>
+<!-- Mail.ru -->
+<img alt="" style="width:0;height:0;position:absolute;" src="http://ad.mail.ru/w522.gif?shop=83&amp;offer=88658&amp;rnd=87275071"><table class="catalogue-item-details">
+	<tbody><tr>
+		<td>
 
-	<li>
-	<span class="grower OPEN"> </span><a href="" class="selected" title="You will find here all woman fashion collections.
- This category includes all the basics of your wardrobe and much more:
- shoes, accessories, printed t-shirts, feminine dresses, women&#39;s jeans!">
-		<?php if(isset($category['childs'])) { ?>
-			<span style="" class="leo-qty badge pull-right">
-				<?php echo count($category['childs']); ?>
-			</span>
-		<?php } ?>
-	</a>
-	<?php if(isset($category['childs'])) { ?>
-		<ul style="display: block;">
-			<?php foreach($category['childs'] as $child) { ?>
-				<li>
-			<span class="grower CLOSE"> </span><a href="" title="Choose from t-shirts, tops, blouses, short sleeves, long sleeves, tank tops, 3/4 sleeves and more.
- Find the cut that suits you the best!">
-				<?php echo $child['name']; ?>
-<!--				<span style="" class="leo-qty badge pull-right">1</span>-->
-			</a>
-<!--			<ul style="display: none;">-->
-<!---->
-<!--				<li>-->
-<!--					<a href="" title="The must have of your wardrobe, take a look at our different colors,-->
-<!-- shapes and style of our collection!">-->
-<!--						T-shirts-->
-<!--						<span style="" class="leo-qty badge pull-right">1</span>-->
-<!--					</a>-->
-<!--				</li>-->
-<!---->
-<!---->
-<!--				<li class="last">-->
-<!--					<a href="" title="Match your favorites blouses with the right accessories for the perfect look.">-->
-<!--						Blouses-->
-<!--						<span style="" class="leo-qty badge pull-right">1</span>-->
-<!--					</a>-->
-<!--				</li>-->
-<!---->
-<!--			</ul>-->
-		</li>
+			<div style="position:relative;">
+				<div title="Показать предыдущую/следующую картинку" id="gallery" style="height: 700px;">
+					<div id="slides" style="width: 2500px;">
+						<?php if($item->images !== null) { ?>
+							<?php foreach($item->images as $key => $image) { ?>
+								<div class="slide" style="width: 500px;">
+									<img src="http://img<?php echo rand(0,9); ?>.z95.ru/f/p/600x700/catalogue/<?php echo $item->product_id; ?>/<?php echo $image; ?>" id="<?php echo($key == 0) ?'img_main' :'' ?>" style="width: 500px;">
+								</div>
+							<?php } ?>
+						<?php } ?>
+					</div>
+					<img onclick="catalogue.showBigPhoto(60247);" title="ZOOM-ZOOM!" alt="ZOOM-ZOOM!" class="zoom" id="zz_button" src="/assets/Z95/images/megacon/zoom.png">
+				</div>
+
+			</div>
+			<!--***************************************************************************************************************************-->
+
+
+			<?php if (isset($item->tags )&& 2==1): ?>
+				<?php if (isset($item->tags['dimensions']) && count($item->tags['dimensions']) > 0): ?>
+					<?php $measures = \Helpers\CatalogueSizes::itemMeasures($item->tags['dimensions']); ?>
+					<?php if (!empty($measures['values'])): ?>
+						<!-- Fitting room -->
+						<div class="measured_sizes">
+							<h4><?php echo 'Размеры в сантиметрах'; ?></h4>
+							<div class="overflowx"><!-- Sizes price -->
+								<table class="measure">
+									<tr>
+										<th>
+										</th>
+										<?php foreach($measures['sizes'] as $t): ?>
+											<th><?php echo $t; ?></th>
+										<?php endforeach; ?>
+									</tr>
+									<?php foreach($measures['values'] as $k => $v): ?>
+										<tr>
+											<td class="dimension_title">
+												<?php echo lang($dimensions[$k]['title']); ?>
+											</td>
+											<?php foreach($measures['values'][$k] as $size): ?>
+												<td><?php echo (isset($size)) ? $size : ''; ?></td>
+											<?php endforeach; ?>
+										</tr>
+									<?php endforeach; ?>
+								</table>
+							</div><!-- end Sizes price -->
+							<script type="text/javascript">
+								$(function()
+								{
+									// recolor table
+									$('table.measure tr th:eq(1)').addClass('tag_sizes');
+									$('table.measure tr').each(function() {
+										$(this).find('td:eq(1)').addClass('tag_dimensions');
+									});
+								});
+							</script>
+
+							<?php if(isset($item['category']) && !empty($category_dimensions_images[$item['category']])): ?>
+								<h4 class="measure_size">
+									<?php echo lang('Как мы меряем?') ?> <span onclick="$('#sh').toggle(); $(this).html(($(this).html() == '<?php echo lang('показать') ?>' ? '<?php echo lang('спрятать') ?>' : '<?php echo lang('показать') ?>'));"><?php echo lang('показать') ?></span>
+								</h4>
+								<table id="sh" style="display: none;">
+									<?php foreach ($category_dimensions_images[$item['category']] as $img): ?>
+										<?php if(!empty($dimensions_images[$img])): ?>
+											<tr>
+												<td><img src="/i/s/<?php echo $img ?>" class="tag_maxwidth480"></td>
+												<td><?php echo $dimensions_images[$img]['description'] ?></td>
+											</tr>
+										<?php endif; ?>
+									<?php endforeach; ?>
+								</table>
+							<?php endif; ?>
+						</div>
+						<!-- Fitting room -->
+					<?php endif; ?>
+				<?php endif; ?>
+			<?php endif; ?>
+
+
+
+
+
+			<!--***************************************************************************************************************************-->
+		</td><td style="padding:0 10px;">
+			<div onclick="catalogue.hideBigPhoto();" id="bphoto_overlay"></div>
+			<div id="bphoto_div">
+				<img style="z-index: 1100;" onclick="catalogue.hideBigPhoto()" class="close_png" src="/i/d-t.gif">
+				<div style="position:absolute; background: #fff;padding:20px;z-index: 1002;">
+					<h1><?php echo $item->product_name; ?> <?php echo $item->brand; ?></h1>
+				</div>
+				<div style="position:absolute; right:0px; background: #fff;padding:20px;z-index: 1002;">
+					<div id="BIG_PREVIEW">
+						<?php if($item->images !== null) { ?>
+							<?php foreach($item->images as $key => $image) { ?>
+								<div id="/f/catalogue/<?php echo $item->product_id; ?>/<?php echo $image; ?>" class="<?php echo ($key == 0) ? 'selected' : ''; ?>"><img src="http://img1.z95.ru/f/p/60x60/catalogue/<?php echo $item->product_id; ?>/<?php echo $image; ?>"></div>
+							<?php } ?>
+						<?php } ?>
+					</div>
+				</div>
+				<div id="gallery_big">
+					<div id="big_slides" style="width: 0px;">
+						<div id="slides">
+							<?php if($item->images !== null) { ?>
+								<?php foreach($item->images as $key => $image) { ?>
+									<div class="slide" style="">
+										<img src="http://img<?php echo rand(0,9); ?>.z95.ru/f/p/1000x1400/catalogue/<?php echo $item->product_id; ?>/<?php echo $image; ?>" id="img_big_main">
+									</div>
+								<?php } ?>
+							<?php } ?>
+						</div>
+					</div>
+				</div>
+			</div>
+			<?php if($item->images !== null) { ?>
+
+				<div id="PREVIEW">
+					<?php foreach($item->images as $key => $image) { ?>
+						<span id="/f/catalogue/<?php echo $item->product_id; ?>/<?php echo $image; ?>" class="<?php echo ($key == 0) ? 'selected' : ''; ?>"><img src="http://img<?php echo rand(0,9); ?>.z95.ru/f/p/g/60x60/catalogue/<?php echo $item->product_id; ?>/<?php echo $image; ?>"></span>
+					<?php } ?>
+				</div>
+				<span onclick="catalogue.showBigPhoto(60247);" class="zoom-button">Увеличить фотографию</span>
 
 			<?php } ?>
+			<div class="item_info">
+			</div>
 
-	</ul>
-	<?php } ?>
-</li>
-
-<?php } ?>
-
-
-</ul>
-</div>
-</div>
-<!-- /Block categories module -->
-
-<!-- Block manufacturers module -->
-<!--<div id="manufacturers_block_left" class="block blockmanufacturer nopadding noborder">-->
-<!--	<h4 class="title_block">-->
-<!--		<a href="" title="Manufacturers">-->
-<!--			Manufacturers-->
-<!--		</a>-->
-<!--	</h4>-->
-<!---->
-<!--	<div class="block_content list-block" style="">-->
-<!--		<ul>-->
-<!--			<li class="first_item">-->
-<!--				<a href="" title="More about Manufacturers logo 10">-->
-<!--					Manufacturers logo 10-->
-<!--				</a>-->
-<!--			</li>-->
-<!--			<li class="item">-->
-<!--				<a href="" title="More about Manufacturers logo 11">-->
-<!--					Manufacturers logo 11-->
-<!--				</a>-->
-<!--			</li>-->
-<!--			<li class="item">-->
-<!--				<a href="" title="More about Manufacturers logo 4">-->
-<!--					Manufacturers logo 4-->
-<!--				</a>-->
-<!--			</li>-->
-<!--			<li class="item">-->
-<!--				<a href="" title="More about Manufacturers logo 6">-->
-<!--					Manufacturers logo 6-->
-<!--				</a>-->
-<!--			</li>-->
-<!--			<li class="item">-->
-<!--				<a href="" title="More about Manufacturers logo 7">-->
-<!--					Manufacturers logo 7-->
-<!--				</a>-->
-<!--			</li>-->
-<!--		</ul>-->
-<!--		<form action="" method="get">-->
-<!--			<div class="form-group selector1">-->
-<!--				<select class="form-control" name="manufacturer_list">-->
-<!--					<option value="">All manufacturers</option>-->
-<!--					<option value="">Manufacturers logo 10</option>-->
-<!--					<option value="">Manufacturers logo 11</option>-->
-<!--					<option value="">Manufacturers logo 4</option>-->
-<!--					<option value="">Manufacturers logo 6</option>-->
-<!--					<option value="">Manufacturers logo 7</option>-->
-<!--					<option value="">Manufacturers logo 7</option>-->
-<!--					<option value="">Manufacturers logo 9</option>-->
-<!--				</select>-->
-<!--			</div>-->
-<!--		</form>-->
-<!--	</div>-->
-<!--</div>-->
-<!-- /Block manufacturers module -->
-
-<!-- Block tags module -->
-<div id="tags_block_left" class="block tags_block black nobackground">
-	<h4 class="title_block">
-		Tags
-	</h4>
-
-	<div class="block_content" style="">
-		<?php foreach($item->all_tags_name as $tag) { ?>
-			<a class="tag_level1" href="" title="<?php echo $tag; ?>">
-				<?php echo $tag; ?>
-			</a>
-		<?php } ?>
-	</div>
-</div>
-<!-- /Block tags module -->
-
-<!-- Block Viewed products -->
-<div id="viewed-products_block_left" class="block nobackground nopadding">
-	<h4 class="title_block">Viewed products</h4>
-
-	<div class="block_content products-block" style="">
-		<ul>
-			<li class="clearfix first_item">
-				<a class="products-block-image" href="" title="More about Morbi vitae cons">
-					<img src="/assets/<?php echo $shop->code ?>/images/154-small_default.jpg" alt="Donec magna diam">
-				</a>
-
-				<div class="product-content">
-					<h5>
-						<a class="product-name" href="" title="More about Morbi vitae cons">
-							Morbi vitae cons
-						</a>
-					</h5>
-
-					<p class="product-description">Lorem psum dolor aet cosctetur...</p>
-				</div>
-			</li>
-			<li class="clearfix last_item">
-				<a class="products-block-image" href="" title="More about Vivamus condimentum">
-					<img src="/assets/<?php echo $shop->code ?>/images/154-small_default.jpg" alt="Donec magna diam">
-				</a>
-
-				<div class="product-content">
-					<h5>
-						<a class="product-name" href="" title="More about Vivamus condimentum">
-							Vivamus condimentum
-						</a>
-					</h5>
-
-					<p class="product-description">Lorem psum dolor aet cosctetur...</p>
-				</div>
-			</li>
-		</ul>
-	</div>
-</div>
-</section>
-<!-- Center -->
-<section id="center_column" class="col-md-9">
+			<div class="prices">
+				<div class="price">Цена:<br> <span class="price"><?php echo (int)$item->price; ?></span> <?php echo $shop->currency_symbol; ?>.</div>
 
 
-<div itemscope>
-<div class="primary_block row">
-<div class="container">
-	<div class="top-hr"></div>
-</div>
-<!-- left infos-->
-<div class="pb-left-column col-xs-12 col-sm-12 col-md-7">
-	<!-- product img-->
-	<div id="image-block" class="clearfix">
-		<!--
-									<span class="new-box">
-					<span class="new-label">New</span>
-				</span>
-																	-->
-				<span id="view_full_size">
-													<a class="jqzoom img-responsive" title="Donec magna diam" rel="gal1"
-													   href="/assets/<?php echo $shop->code ?>/images/182-thickbox_default.jpg" itemprop="url">
-														<img itemprop="image" src="/assets/<?php echo $shop->code ?>/images/182-large_default.jpg"
-															 title="Donec magna diam" alt="Donec magna diam"/>
-													</a>
-											</span>
-	</div>
-	<!-- end image-block -->
-	<!-- thumbnails -->
-	<div id="views_block" class="clearfix ">
-		<div id="thumbs_list">
-			<ul id="thumbs_list_frame">
-				<li>
-					<a href="javascript:void(0);"
-					   rel="{gallery: 'gal1', smallimage: '/assets/<?php echo $shop->code ?>/images/154-large_default.jpg',largeimage: '/assets/<?php echo $shop->code ?>/images/154-thickbox_default.jpg'}"
-					   title="Donec magna diam">
-						<img class="img-responsive" src="/assets/<?php echo $shop->code ?>/images/154-cart_default.jpg" alt="Donec magna diam"
-							 title="Donec magna diam" height="117" width="81" itemprop="image"/>
-					</a>
-				</li>
-				<li class="last">
-					<a href="javascript:void(0);"
-					   rel="{gallery: 'gal1', smallimage: '/assets/<?php echo $shop->code ?>/images/182-large_default.jpg',largeimage: '/assets/<?php echo $shop->code ?>/images/182-thickbox_default.jpg'}"
-					   title="Donec magna diam">
-						<img class="img-responsive" src="/assets/<?php echo $shop->code ?>/images/182-cart_default.jpg" alt="Donec magna diam"
-							 title="Donec magna diam" height="117" width="81" itemprop="image"/>
-					</a>
-				</li>
-			</ul>
-		</div>
-		<!-- end thumbs_list -->
-	</div>
-	<!-- end views-block -->
-	<!-- end thumbnails -->
-	<p class="resetimg clear no-print">
-					<span id="wrapResetImages" style="display: none;">
-						<a href="" name="resetImages">
-							<i class="icon-repeat"></i>
-							Display all pictures
-						</a>
-					</span>
-	</p>
-</div>
-<!-- end pb-left-column -->
-<!-- end left infos-->
-<!-- center infos -->
+			</div>
 
-<div class="pb-center-column col-xs-12 col-sm-12 col-md-5">
 
-	<h1 itemprop="name"><?php echo ucfirst($item->product_name); ?> <?php echo $item->brand; ?></h1>
-
-	<p id="product_reference">
-		<label>Model </label>
-		<span class="editable" itemprop="sku"></span>
-	</p>
-
-	<p id="product_condition">
-		<label>Condition </label>
-		<link itemprop="itemCondition" href=""/>
-		<span class="editable">New</span>
-	</p>
-	<div id="short_description_block">
-		<div id="short_description_content" class="rte align_justify" itemprop="description"><p>
-				<?php echo $item->description; ?>
-		</p></div>
-
-		<p class="buttons_bottom_block">
-			<a href="javascript:{}" class="button">
-				More details
-			</a>
-		</p>
-		<!---->
-	</div>
-	<!-- end short_description_block -->
-	<!-- number of item in stock -->
-	<p id="pQuantityAvailable">
-		<span id="quantityAvailable">388</span>
-		<span style="display: none;" id="quantityAvailableTxt">Item</span>
-		<span id="quantityAvailableTxtMultiple">Items</span>
-	</p>
-	<!-- availability -->
-	<p id="availability_statut">
-
-		<span id="availability_value">In stock</span>
-	</p>
-
-	<p class="warning_inline" id="last_quantities" style="display: none">Warning: Last items in stock!</p>
-
-	<p id="availability_date" style="display: none;">
-		<span id="availability_date_label">Availability date:</span>
-		<span id="availability_date_value">0000-00-00</span>
-	</p>
-	<!-- Out of stock hook -->
-	<div id="oosHook" style="display: none;">
-
-	</div>
-	<p class="socialsharing_product list-inline no-print">
-		<button type="button" class="btn btn-default btn-twitter">
-			<i class="icon-twitter"></i> Tweet
-			<!-- <img src="" alt="Tweet" /> -->
-		</button>
-		<button type="button" class="btn btn-default btn-facebook">
-			<i class="icon-facebook"></i> Share
-			<!-- <img src="" alt="Facebook Like" /> -->
-		</button>
-		<button type="button" class="btn btn-default btn-google-plus">
-			<i class="icon-google-plus"></i> Google+
-			<!-- <img src="" alt="Google Plus" /> -->
-		</button>
-		<button type="button" class="btn btn-default btn-pinterest">
-			<i class="icon-pinterest"></i> Pinterest
-			<!-- <img src="" alt="Pinterest" /> -->
-		</button>
-	</p>
-
-	<!--  /Module ProductComments -->                            <!-- usefull links-->
-	<ul id="usefull_link_block" class="clearfix no-print">
-		<li class="sendtofriend">
-			<a id="send_friend_button" href="#send_friend_form">
-				Send to a friend
-			</a>
-
-			<div style="display: none;">
-				<div id="send_friend_form">
-					<h2 class="page-subheading">
-						Send to a friend
-					</h2>
-
-					<div class="row">
-						<div class="product clearfix col-xs-12 col-sm-6 col-md-6">
-							<img src="/assets/<?php echo $shop->code ?>/images/170-home_default.jpg" height="387" width="270" alt="Morbi vitae cons"/>
-
-							<div class="product_desc">
-								<p class="product_name">
-									<strong>Morbi vitae cons</strong>
-								</p>
-
-								<p>Lorem psum dolor aet cosctetur aipiscing elit nunc aiquet varius curabitur lorem masa
-									ultricies nec convallis sem mauris facilisis, eros ut iaculis suscipit sollicitudin
-									dignissim nunc</p>
-							</div>
-						</div>
-						<!-- .product -->
-						<div class="send_friend_form_content col-xs-12 col-sm-6 col-md-6" id="send_friend_form_content">
-							<div id="send_friend_form_error"></div>
-							<div id="send_friend_form_success"></div>
-							<div class="form_container">
-								<p class="intro_form">
-									Recipient :
-								</p>
-
-								<p class="text">
-									<label for="friend_name">
-										Name of your friend <sup class="required">*</sup> :
-									</label>
-									<input id="friend_name" name="friend_name" type="text" value=""/>
-								</p>
-
-								<p class="text">
-									<label for="friend_email">
-										E-mail address of your friend <sup class="required">*</sup> :
-									</label>
-									<input id="friend_email" name="friend_email" type="text" value=""/>
-								</p>
-
-								<p class="txt_required">
-									<sup class="required">*</sup> Required fields
-								</p>
-							</div>
-							<p class="submit">
-								<button id="sendEmail" class="btn button button-small" name="sendEmail" type="submit">
-									<span>Send</span>
-								</button>
-								&nbsp;
-								or&nbsp;
-								<a class="closefb" href="#">
-									Cancel
-								</a>
-							</p>
-						</div>
-						<!-- .send_friend_form_content -->
+			<?php if (isset($item->tags)): ?>
+				<?php if (isset($item->tags['made_in']) && $item->tags['made_in'] != 'Китай'): ?>
+					<div class="tags">
+						<label><?php echo 'Производство'; ?>: </label> <?php echo $item->tags['made_in'] ?>
 					</div>
-				</div>
-			</div>
-		</li>
-
-
-		<li class="print">
-			<a href="javascript:print();">
-				Print
-			</a>
-		</li>
-	</ul>
-</div>
-<!-- end center infos-->
-<!-- pb-right-column-->
-<div class="pb-right-column col-xs-12 col-sm-4 col-md-5">
-	<!-- add to cart form-->
-	<form id="buy_block" method="post">
-		<!-- hidden datas -->
-		<p class="hidden">
-			<input type="hidden" name="token"/>
-			<input type="hidden" name="id_product" id="product_page_product_id"/>
-			<input type="hidden" name="add"/>
-			<input type="hidden" name="id_product_attribute" id="idCombination" value=""/>
-		</p>
-
-		<div class="box-info-product">
-			<div class="content_prices clearfix">
-				<!-- prices -->
-				<div class="price">
-					<p class="our_price_display" itemprop="offers" itemscope>
-						<link itemprop="availability" href=""/>
-						<span id="our_price_display" ><?php echo $shop->currency_symbol;?> <?php echo $item->price; ?></span>
-						<!---->
-						<meta itemprop="priceCurrency" content="USD"/>
-
-					</p>
-					<p id="reduction_percent" style="display:none;">
-									<span id="reduction_percent_display">
-																			</span>
-					</p>
-
-					<p id="reduction_amount" style="display:none">
-									<span id="reduction_amount_display">
-																		</span>
-					</p>
-
-					<p id="old_price" class="hidden">
-
-						<span id="old_price_display"></span>
-						<!--  -->
-					</p>
-				</div>
-				<!-- end prices -->
-
-
-				<div class="clear"></div>
-			</div>
-			<!-- end content_prices -->
-			<div class="product_attributes clearfix">
-				<!-- quantity wanted -->
-				<p id="quantity_wanted_p">
-					<label>Quantity:</label>
-					<input type="text" name="qty" id="quantity_wanted" class="text" value="1"/>
-					<a href="#" data-field-qty="qty" class="btn btn-default button-minus product_quantity_down">
-						<span><i class="icon-minus"></i></span>
-					</a>
-					<a href="#" data-field-qty="qty" class="btn btn-default button-plus product_quantity_up">
-						<span><i class="icon-plus"></i></span>
-					</a>
-					<span class="clearfix"></span>
-				</p>
-				<!-- minimal quantity wanted -->
-				<p id="minimal_quantity_wanted_p" style="display: none;">
-					This product is not sold individually. You must select at least <b id="minimal_quantity_label">1</b>
-					quantity for this product.
-				</p>
-
-
-				<?php if(isset($sizes) && !empty($sizes)): ?>
-				<!-- attributes -->
-					<div id="attributes">
-					<div class="clearfix"></div>
-					<fieldset class="attribute_fieldset">
-						<label class="attribute_label" for="group_1">Size :&nbsp;</label>
-							<div class="attribute_list">
-								<select name="group_1" id="group_1" class="form-control attribute_select no-print">
-									<?php foreach($sizes as $size): ?>
-										<option value="<?=$size->name;?>" selected="selected" title="<?=$size->name;?>"><?=$size->name;?></option>
-									<?php endforeach; ?>
-								</select>
-							</div>
-							<!-- end attribute_list -->
-				<?php else: ?>
-					Sizes not available
+				<?php endif; ?>
+				<?php if (isset($item->tags['material'])): ?>
+					<div class="tags">
+						<label><?php echo 'Материал'; ?>: </label>
+						<?php
+						$material = array_shift($item->tags['material']);
+						if (count($material) > 0) {
+							foreach ($material as $materia => $materia_percent) {
+								$m[] = $materia_percent . '% — <i>' . $materia . '</i>';
+							}
+							echo implode(', ', $m);
+						}
+						?>
+					</div>
 				<?php endif; ?>
 
-
-					</fieldset>
-					<fieldset class="attribute_fieldset">
-						<label class="attribute_label">Color :&nbsp;</label>
-
-						<div class="attribute_list">
-							<ul id="color_to_pick_list" class="clearfix">
-								<li>
-									<a href="" class="color_pick" style="background:#A0D468;" title="Green">
-									</a>
-								</li>
-								<li class="selected">
-									<a href="" class="color_pick selected" style="background:#F1C40F;" title="Yellow">
-									</a>
-								</li>
-							</ul>
-							<input type="hidden" class="color_pick_hidden" name="group_3" value="16"/>
-						</div>
-						<!-- end attribute_list -->
-					</fieldset>
-				</div>
-				<!-- end attributes -->
-			</div>
-			<!-- end product_attributes -->
-			<div class="box-cart-bottom">
-				<div>
-					<p id="add_to_cart" class="buttons_bottom_block no-print">
-						<button onclick="cart.add_to_cart();" type="button" class="exclusive" >
-							<span>Add to cart</span>
-						</button>
-					</p>
-				</div>
-				<!-- Productpaymentlogos module -->
-				<div id="product_payment_logos">
-					<div class="box-security">
-						<h5 class="product-heading-h5"></h5>
-						<img src="/assets/<?php echo $shop->code ?>/images/payment-logo.png" alt=""/>
+				<?php if (isset($item->tags['color'])): ?>
+					<div class="tags">
+						<label><?php echo 'Цвет'; ?>: </label>
+						<?php
+						$color = array_shift($item->tags['color']);
+						echo $color;
+						?>
 					</div>
-				</div>
+				<?php endif; ?>
+			<?php endif; ?>
 
-				<!-- /Productpaymentlogos module -->
+			<br clear="all">
 
-				<p class="buttons_bottom_block no-print">
-					<a id="wishlist_button" href="#" rel="nofollow" title="Add to my wishlist">
-						Add to my wishlist
-					</a>
-				</p>
-				<strong></strong>
-			</div>
-			<!-- end box-cart-bottom -->
-		</div>
-		<!-- end box-info-product -->
-	</form>
-</div>
-<!-- end pb-right-column-->
-</div>
-<!-- end primary_block -->
-<!-- Data sheet -->
-<section class="page-product-box">
-	<h3 class="page-subheading">Data sheet</h3>
-	<table class="table-data-sheet">
-		<tr class="odd">
+			<!--**************************************************************************************************************************-->
 
-			<td>Compositions</td>
-			<td>Polyester</td>
-		</tr>
-		<tr class="even">
 
-			<td>Styles</td>
-			<td>Girly</td>
-		</tr>
-		<tr class="odd">
 
-			<td>Properties</td>
-			<td>Midi Dress</td>
-		</tr>
-	</table>
-</section>
-<!--end Data sheet -->
-<!-- More info -->
-<section class="page-product-box">
-	<h3 class="page-subheading">More info</h3>
-	<!-- full description -->
-	<div class="rte"><p>Fashion has been creating well-designed collections since 2010. The brand offers feminine
-			designs delivering stylish separates and statement dresses which has since evolved into a full ready-to-wear
-			collection in which every item is a vital part of a woman's wardrobe. The result? Cool, easy, chic looks
-			with youthful elegance and unmistakable signature style. All the beautiful pieces are made in Italy and
-			manufactured with the greatest attention. Now Fashion extends to a range of accessories including shoes,
-			hats, belts and more!</p></div>
-</section>
-<!--end  More info -->
-<!--HOOK_PRODUCT_TAB -->
-<section class="page-product-box">
-	<h3 class="idTabHrefShort page-subheading">Reviews</h3>
-
-	<session class="tab-pane page-product-box">
-		<div id="product_comments_block_tab">
-			<p class="align_center">No customer comments for the moment.</p>
-
-		</div>
-		<!-- #product_comments_block_tab -->
-	</session>
-
-	<!-- Fancybox -->
-	<div style="display: none;">
-		<div id="new_comment_form">
-			<form id="id_new_comment_form" action="#">
-				<h2 class="page-subheading">
-					Write a review
-				</h2>
-
-				<div class="row">
-					<div class="product clearfix  col-xs-12 col-sm-6">
-						<img src="/assets/<?php echo $shop->code ?>/images/170-home_default.jpg" height="125" width="125" alt="Donec posuere metus"/>
-
-						<div class="product_desc">
-							<p class="product_name">
-								<strong>Donec posuere metus</strong>
-							</p>
-
-							<p>Lorem psum dolor aet cosctetur aipiscing elit nunc aiquet varius curabitur lorem masa
-								ultricies nec convallis sem mauris facilisis, eros ut iaculis suscipit sollicitudin
-								dignissim nunc</p>
-						</div>
-					</div>
-					<div class="new_comment_form_content col-xs-12 col-sm-6 col-md-6">
-						<h2>Write a review</h2>
-
-						<div id="new_comment_form_error" class="error" style="display: none; padding: 15px 25px">
-							<ul></ul>
-						</div>
-						<ul id="criterions_list">
-							<li>
-								<label>Quality:</label>
-
-								<div class="star_content">
-									<input class="star" type="radio" name="criterion[1]" value="1"/>
-									<input class="star" type="radio" name="criterion[1]" value="2"/>
-									<input class="star" type="radio" name="criterion[1]" value="3" checked="checked"/>
-									<input class="star" type="radio" name="criterion[1]" value="4"/>
-									<input class="star" type="radio" name="criterion[1]" value="5"/>
-								</div>
-								<div class="clearfix"></div>
-							</li>
-						</ul>
-						<label for="comment_title">
-							Title: <sup class="required">*</sup>
+			<div quantity="single" price="<?php echo $item->price; ?>" cat_id="<?php echo $item->product_id; ?>" class="sizes_win" id="sizes_<?php echo $item->product_id; ?>">
+				<form autocomplete="off">
+					<div onclick="$(this).fadeOut();" id="warning" class="warning hidden"></div>
+					<div class="sizes">
+						<div class="message">Вы забыли выбрать размер</div>
+						<?php if(null !== $item->filter_size) { ?>
+							<?php foreach($item->filter_size as $size) { ?>
+								<label>
+									<span>
+										<div class="size-chooser"> <?php echo $size; ?> </div>
+										<input type="checkbox" basket_count="0" max_count="4" value="<?php echo $size; ?>" onclick="basket.getItems('sizes_<?php echo $item->product_id; ?>')">
+									</span>
+								</label>
+							<?php } ?>
+						<?php } ?>
+						<div style="clear:both"></div>
+						<label class="size-undefined">
+							<div class="size-chooser">
+								<input type="checkbox" value="?" onclick="basket.getItems('sizes_<?php echo $item->product_id; ?>')" basket_count="0">
+								Не уверен в размере &mdash; хочу обсудить с менеджером							</div>
 						</label>
-						<input id="comment_title" name="title" type="text" value=""/>
-						<label for="content">
-							Comment: <sup class="required">*</sup>
-						</label>
-						<textarea id="content" name="content"></textarea>
-
-						<div id="new_comment_form_footer">
-							<input id="id_product_comment_send" name="id_product" type="hidden" value='12'/>
-
-							<p class="fl required"><sup>*</sup> Required fields</p>
-
-							<p class="fr">
-								<button id="submitNewMessage" name="submitMessage" type="submit"
-										class="btn button button-small">
-									<span>Send</span>
-								</button>
-								&nbsp;
-								or&nbsp;
-								<a class="closefb" href="#">
-									Cancel
-								</a>
-							</p>
-							<div class="clearfix"></div>
-						</div>
-						<!-- #new_comment_form_footer -->
 					</div>
-				</div>
-			</form>
-			<!-- /end new_comment_form_content -->
-		</div>
-	</div>
-	<!-- End fancybox -->
-</section>
-<!--end HOOK_PRODUCT_TAB -->
-
-<section class="page-product-box blockproductscategory block products_block">
-<h3 class="productscategory_h3">
-	<div class="block_content box-line">
-		<div>Related Products</div>
-	</div>
-</h3>
-<div id="productscategory_list" class="clearfix product_list grid">
-<div class=" carousel slide" id="blockproductscategory">
-
-<a class="carousel-control left" href="#blockproductscategory" data-slide="prev">prev</a>
-<a class="carousel-control right" href="#blockproductscategory" data-slide="next">next</a>
-
-<div class="carousel-inner">
-<div class="item active">
-<div class="row clearfix ">
-<div class="col-md-3 col-xs-12 product_block ajax_block_product">
-
-	<div class="product-container" itemscope="">
-		<div class="left-block">
-			<div class="product-image-container">
-				<div class="leo-more-info" data-idproduct="8">
-					<div class="col-1">
-						<!-- thumbnails -->
-						<div class="views_block">
-							<div class="thumbs_list thumbs_list_8">
-								<ul class="thumbs_list_frame">
-									<li>
-										<a href="" class="thickbox-ajax-8 shown" title="Donec magna diam">
-											<img src="/assets/<?php echo $shop->code ?>/images/157-medium_default.jpg" alt="Donec magna diam" height="125"
-												 width="125" rel="" class="leo-hover-image">
-										</a>
-									</li>
-									<li>
-										<a href="" class="thickbox-ajax-8" title="Donec magna diam">
-											<img src="/assets/<?php echo $shop->code ?>/images/157-medium_default.jpg" alt="Donec magna diam" height="125"
-												 width="125" rel="" class="leo-hover-image">
-										</a>
-									</li>
-								</ul>
-							</div>
-						</div>
-					</div>
-				</div>
-				<a class="product_img_link" href="" title="Vivamus condimentum" itemprop="url">
-					<img class="replace-2x img-responsive" src="/assets/<?php echo $shop->code ?>/images/157-home_default.jpg" alt="Donec magna diam"
-						 title="Donec magna diam" itemprop="image">
-					<span class="product-additional" data-idproduct="8"><img class="img-responsive" title="" alt=""
-																			 src="/assets/<?php echo $shop->code ?>/images/170-home_default.jpg"></span>
-				</a>
-
-							<span class="new-box">
-					<span class="new-label product-label">New</span>
-				</span>
+					<div style="clear:both"></div>
+					<div onclick="basket.addToBasket('sizes_<?php echo $item->product_id; ?>');" class="add-button">
+						Добавить в корзину					</div>
+				</form>
 			</div>
 
 
-			<div class="functional-buttons  clearfix">
-				<div class="button-container">
-					<a class="button ajax_add_to_cart_button btn btn-default" href="" rel="nofollow" title="Add to cart"
-					   data-id-product="8">
-						<i class="fa fa-shopping-cart"></i>
-						Add to cart
-					</a>
-				</div>
 
 
-				<div class="wishlist">
-					<a class="addToWishlist btn wishlistProd_8" title="Wishlist" href="#" rel="8">
 
-					</a>
-				</div>
 
-				<div class="view_detail">
-					<a itemprop="url" class="lnk_view btn" href="" title="View">
+			<!--**************************************************************************************************************************-->
 
-					</a>
-				</div>
-
+			<div class="delivery_info">
+				<h3>Доставка</h3><ul class="service_info">
+					<li>Оплата при получении в любом городе РФ.</li>
+					<li>Доставка заказа за 5 дней!</li>
+					<li>Возможность обмена/возврата после получения!</li></ul>			</div>
+			<!-- <div class="popup"><a href="/about/useful/" target="_blank">Таблица соответствия размеров одежды</a></div> -->
+			<div style="padding-top:20px;" class="social">
+				<div id="vk_like"></div>
+				<script type="text/javascript">
+					//VK.Widgets.Like("vk_like", {type: "mini"});
+				</script>
 			</div>
+			<button onclick="global.go({url:'/catalogue/brands/<?php echo $item->brand_alias; ?>'});" type="button" class="add-button button" id="add">Все товары <?php echo $item->brand; ?></button>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2">
+		</td>
+	</tr>
+	</tbody></table>
+<script type="text/javascript" language="javascript" src="/assets/Z95/js/slider.js"></script>
+<script type="text/javascript">
+	ss_ready = false;
+	$('#img_main').load(function() {
+		var w = $(this).width();
+		if( w > 600 ){
+			if (w/$(document).width()*100 > 45) {
+				w = parseInt(w*0.67);
+				//alert(w);
+				//$(this).width(w);
+			}
+		}
 
-		</div>
-		<div class="right-block">
-			<h5 itemprop="name">
-				<a class="product-name" href="" title="Vivamus condimentum" itemprop="url">
-					Vivamus condimentum
-				</a>
-			</h5>
+		if ($(this).width() > $(this).height()) {
+			$('#gallery').addClass('horizontal');
+		}
+		//console.log( $('#gallery').width() );
+		//$('#gallery').width($(this).width());
+		$(this).width($('#gallery').width());
+		$('#gallery > #slides').width($(this).width());
+		$('#gallery').height($(this).height());
+		$('#gallery > #slides .slide').each(function(i){
+			$(this).width($('#img_main').width());
+			$(this).find('img').width($('#img_main').width())
+		});
 
-			<div class="product-desc" itemprop="description">
-				Lorem psum dolor aet cosctetur aipiscing elit nunc aiquet varius curabitur lorem masa ultricies nec
-				convallis sem mauris facilisis, eros ut iaculis suscipit sollicitudin dignissim nunc
-			</div>
-			<div itemprop="offers" itemscope="" class="content_price">
-									<span itemprop="price" class="price product-price">
-						$250.00					</span>
-				<meta itemprop="priceCurrency" content="USD">
+		window.ss_ready = ss_init();
+	});
+
+	$(window).resize(function() {
+		if ($('#img_main')[0].complete) {
+			$('#img_main').trigger('load');
+			$('#PREVIEW span.selected').trigger('click',[true]);
+		}
+	});
+
+	$(document).ready(function(){
+		if (!ss_ready && $('#img_main')[0].complete) {
+			$('#img_main').trigger('load');
+		}
+		$('#zz_button').show();
+
+		/*
+		 $.ajax({
+		 url:'http://img2.z95.ru/f/p/1000x1400/catalogue/59831/bIMG_3167.jpg',
+		 type:'HEAD',
+		 success:
+		 function(){
+		 $('#zz_button').show();
+		 }
+		 });
+		 */
+	});
+</script>
+
+<script type="text/javascript">
+	var margin = Math.max(0,parseInt((($(window).width() - $('.page_container').width())*0.5 - $('.go-container').width())*0.5));
+	$('.go-container.prev').css({'margin-left':margin}).show().attr({title: 'Предыдущая фотография'}).click(function() {
+		$("#gallery").trigger($.Event("click", { pageX: 0 }));});
+
+	$(window).resize(function() {
+		var margin = Math.max(0,parseInt((($(window).width() - $('.page_container').width())*0.5 - $('.go-container').width())*0.5));
+		$('.go-container.prev').css({'margin-left':margin});
+	});
+
+	$('.go-container.next').css({'margin-right':margin}).show().attr({title: 'Следующая фотография'}).click(function() {
+		$("#gallery").click();});
+
+	$(window).resize(function() {
+		var margin = Math.max(0,parseInt((($(window).width() - $('.page_container').width())*0.5 - $('.go-container').width())*0.5));
+		$('.go-container.next').css({'margin-right':margin});
+	});
+</script>
 
 
-			</div>
 
-
-			<div class="comments_note clearfix" itemprop="aggregateRating" itemscope="">
-				<div class="star_content clearfix">
-					<div class="star"></div>
-					<div class="star"></div>
-					<div class="star"></div>
-					<div class="star"></div>
-					<div class="star"></div>
-					<meta itemprop="worstRating" content="0">
-					<meta itemprop="ratingValue" content="0">
-					<meta itemprop="bestRating" content="5">
-				</div>
-				<span class="nb-comments"><span itemprop="reviewCount">0</span> Review(s)</span>
-			</div>
-
-
-									<span itemprop="offers" itemscope="" class="availability">
-											<span class="available-now">
-							<link itemprop="availability" href="">In stock						</span>
-									</span>
-
-			<div class="product-flags">
-			</div>
-
-		</div>
-		<div class="product_bottom hidden-xs">
-			<a class="quick-view" href="" rel="">
-				<i class="fa fa-plus"></i>
-				Quick View
-			</a>
-		</div>
-	</div>
-	<!-- .product-container> -->
-
-
+<span style="color:white">Рейтинг: 510000</span>
+<style>
+	.inner_teaser { display: none; }
+</style></div>	</div>
 </div>
-<div class="col-md-3 col-xs-12 product_block ajax_block_product">
-
-	<div class="product-container" itemscope="">
-		<div class="left-block">
-			<div class="product-image-container">
-				<div class="leo-more-info" data-idproduct="9">
-					<div class="col-1">
-						<!-- thumbnails -->
-						<div class="views_block">
-							<div class="thumbs_list thumbs_list_9">
-								<ul class="thumbs_list_frame">
-									<li>
-										<a href="" class="thickbox-ajax-9 shown" title="Donec magna diam">
-											<img src="/assets/<?php echo $shop->code ?>/images/157-medium_default.jpg" alt="Donec magna diam" height="125"
-												 width="125" rel="" class="leo-hover-image">
-										</a>
-									</li>
-									<li>
-										<a href="" class="thickbox-ajax-9" title="Donec magna diam">
-											<img src="/assets/<?php echo $shop->code ?>/images/157-medium_default.jpg" alt="Donec magna diam" height="125"
-												 width="125" rel="" class="leo-hover-image">
-										</a>
-									</li>
-								</ul>
-							</div>
-						</div>
-					</div>
-				</div>
-				<a class="product_img_link" href="" title="Vivamus condimentum" itemprop="url">
-					<img class="replace-2x img-responsive" src="/assets/<?php echo $shop->code ?>/images/157-home_default.jpg" alt="Donec magna diam"
-						 title="Donec magna diam" itemprop="image">
-					<span class="product-additional" data-idproduct="8"><img class="img-responsive" title="" alt=""
-																			 src="/assets/<?php echo $shop->code ?>/images/170-home_default.jpg"></span>
-				</a>
-
-							<span class="new-box">
-					<span class="new-label product-label">New</span>
-				</span>
-			</div>
-
-
-			<div class="functional-buttons  clearfix">
-				<div class="button-container">
-					<a class="button ajax_add_to_cart_button btn btn-default" href="" rel="nofollow" title="Add to cart"
-					   data-id-product="9">
-						<i class="fa fa-shopping-cart"></i>
-						Add to cart
-					</a>
-				</div>
-
-
-				<div class="wishlist">
-					<a class="addToWishlist btn wishlistProd_9" title="Wishlist" href="#" rel="9">
-
-					</a>
-				</div>
-
-				<div class="view_detail">
-					<a itemprop="url" class="lnk_view btn" href="" title="View">
-
-					</a>
-				</div>
-
-			</div>
-
-		</div>
-		<div class="right-block">
-			<h5 itemprop="name">
-				<a class="product-name" href="" title="Donec posuere metus" itemprop="url">
-					Donec posuere metus
-				</a>
-			</h5>
-
-			<div class="product-desc" itemprop="description">
-				Lorem psum dolor aet cosctetur aipiscing elit nunc aiquet varius curabitur lorem masa ultricies nec
-				convallis sem mauris facilisis, eros ut iaculis suscipit sollicitudin dignissim nunc
-			</div>
-			<div itemprop="offers" itemscope="" class="content_price">
-									<span itemprop="price" class="price product-price">
-						$350.00					</span>
-				<meta itemprop="priceCurrency" content="USD">
-
-
-			</div>
-
-
-			<div class="comments_note clearfix" itemprop="aggregateRating" itemscope="">
-				<div class="star_content clearfix">
-					<div class="star"></div>
-					<div class="star"></div>
-					<div class="star"></div>
-					<div class="star"></div>
-					<div class="star"></div>
-					<meta itemprop="worstRating" content="0">
-					<meta itemprop="ratingValue" content="0">
-					<meta itemprop="bestRating" content="5">
-				</div>
-				<span class="nb-comments"><span itemprop="reviewCount">0</span> Review(s)</span>
-			</div>
-
-
-									<span itemprop="offers" itemscope="" class="availability">
-											<span class="available-now">
-							<link itemprop="availability" href="">In stock						</span>
-									</span>
-
-			<div class="product-flags">
-			</div>
-
-		</div>
-		<div class="product_bottom hidden-xs">
-			<a class="quick-view" href="" rel="">
-				<i class="fa fa-plus"></i>
-				Quick View
-			</a>
-		</div>
-	</div>
-	<!-- .product-container> -->
-
-
-</div>
-<div class="col-md-3 col-xs-12 product_block ajax_block_product">
-
-	<div class="product-container" itemscope="">
-		<div class="left-block">
-			<div class="product-image-container">
-				<div class="leo-more-info" data-idproduct="10">
-					<div class="col-1">
-						<!-- thumbnails -->
-						<div class="views_block">
-							<div class="thumbs_list thumbs_list_10">
-								<ul class="thumbs_list_frame">
-									<li>
-										<a href="" class="thickbox-ajax-10 shown" title="Donec magna diam">
-											<img src="/assets/<?php echo $shop->code ?>/images/157-medium_default.jpg" alt="Donec magna diam" height="125"
-												 width="125" rel="" class="leo-hover-image">
-										</a>
-									</li>
-									<li>
-										<a href="" class="thickbox-ajax-10" title="Donec magna diam">
-											<img src="/assets/<?php echo $shop->code ?>/images/157-medium_default.jpg" alt="Donec magna diam" height="125"
-												 width="125" rel="" class="leo-hover-image">
-										</a>
-									</li>
-								</ul>
-							</div>
-						</div>
-					</div>
-				</div>
-				<a class="product_img_link" href="" title="Donec magna diam" itemprop="url">
-					<img class="replace-2x img-responsive" src="/assets/<?php echo $shop->code ?>/images/157-home_default.jpg" alt="Donec magna diam"
-						 title="Donec magna diam" itemprop="image">
-					<span class="product-additional" data-idproduct="10"><img class="img-responsive" title="" alt=""
-																			  src="/assets/<?php echo $shop->code ?>/images/170-home_default.jpg"></span>
-				</a>
-
-							<span class="new-box">
-					<span class="new-label product-label">New</span>
-				</span>
-			</div>
-
-
-			<div class="functional-buttons  clearfix">
-				<div class="button-container">
-					<a class="button ajax_add_to_cart_button btn btn-default" href="" rel="nofollow" title="Add to cart"
-					   data-id-product="10">
-						<i class="fa fa-shopping-cart"></i>
-						Add to cart
-					</a>
-				</div>
-
-
-				<div class="wishlist">
-					<a class="addToWishlist btn wishlistProd_10" title="Wishlist" href="#" rel="10">
-
-					</a>
-				</div>
-
-				<div class="view_detail">
-					<a itemprop="url" class="lnk_view btn" href="" title="View">
-
-					</a>
-				</div>
-
-			</div>
-
-		</div>
-		<div class="right-block">
-			<h5 itemprop="name">
-				<a class="product-name" href="" title="Donec magna diam" itemprop="url">
-					Donec magna diam
-				</a>
-			</h5>
-
-			<div class="product-desc" itemprop="description">
-				Lorem psum dolor aet cosctetur aipiscing elit nunc aiquet varius curabitur lorem masa ultricies nec
-				convallis sem mauris facilisis, eros ut iaculis suscipit sollicitudin dignissim nunc
-			</div>
-			<div itemprop="offers" itemscope="" class="content_price">
-									<span itemprop="price" class="price product-price">
-						$350.00					</span>
-				<meta itemprop="priceCurrency" content="USD">
-
-
-			</div>
-
-
-			<div class="comments_note clearfix" itemprop="aggregateRating" itemscope="">
-				<div class="star_content clearfix">
-					<div class="star"></div>
-					<div class="star"></div>
-					<div class="star"></div>
-					<div class="star"></div>
-					<div class="star"></div>
-					<meta itemprop="worstRating" content="0">
-					<meta itemprop="ratingValue" content="0">
-					<meta itemprop="bestRating" content="5">
-				</div>
-				<span class="nb-comments"><span itemprop="reviewCount">0</span> Review(s)</span>
-			</div>
-
-
-									<span itemprop="offers" itemscope="" class="availability">
-											<span class="available-now">
-							<link itemprop="availability" href="">In stock						</span>
-									</span>
-
-			<div class="product-flags">
-			</div>
-
-		</div>
-		<div class="product_bottom hidden-xs">
-			<a class="quick-view" href="" rel="">
-				<i class="fa fa-plus"></i>
-				Quick View
-			</a>
-		</div>
-	</div>
-	<!-- .product-container> -->
-
-
-</div>
-<div class="col-md-3 col-xs-12 product_block ajax_block_product">
-
-	<div class="product-container" itemscope="">
-		<div class="left-block">
-			<div class="product-image-container">
-				<div class="leo-more-info" data-idproduct="14">
-					<div class="col-1">
-						<!-- thumbnails -->
-						<div class="views_block">
-							<div class="thumbs_list thumbs_list_14">
-								<ul class="thumbs_list_frame">
-									<li>
-										<a href="" class="thickbox-ajax-14 shown" title="Donec magna diam">
-											<img src="/assets/<?php echo $shop->code ?>/images/157-medium_default.jpg" alt="Donec magna diam" height="125"
-												 width="125" rel="" class="leo-hover-image">
-										</a>
-									</li>
-									<li>
-										<a href="" class="thickbox-ajax-14" title="Donec magna diam">
-											<img src="/assets/<?php echo $shop->code ?>/images/157-medium_default.jpg" alt="Donec magna diam" height="125"
-												 width="125" rel="" class="leo-hover-image">
-										</a>
-									</li>
-								</ul>
-							</div>
-						</div>
-					</div>
-				</div>
-				<a class="product_img_link" href="" title="Morbi vitae cons" itemprop="url">
-					<img class="replace-2x img-responsive" src="/assets/<?php echo $shop->code ?>/images/157-home_default.jpg" alt="Donec magna diam"
-						 title="Donec magna diam" itemprop="image">
-					<span class="product-additional" data-idproduct="14"><img class="img-responsive" title="" alt=""
-																			  src="/assets/<?php echo $shop->code ?>/images/156-home_default.jpg"></span>
-				</a>
-
-							<span class="new-box">
-					<span class="new-label product-label">New</span>
-				</span>
-			</div>
-
-
-			<div class="functional-buttons  clearfix">
-				<div class="button-container">
-					<a class="button ajax_add_to_cart_button btn btn-default" href="" rel="nofollow" title="Add to cart"
-					   data-id-product="14">
-						<i class="fa fa-shopping-cart"></i>
-						Add to cart
-					</a>
-				</div>
-
-
-				<div class="wishlist">
-					<a class="addToWishlist btn wishlistProd_14" title="Wishlist" href="#" rel="14">
-
-					</a>
-				</div>
-
-				<div class="view_detail">
-					<a itemprop="url" class="lnk_view btn" href="" title="View">
-
-					</a>
-				</div>
-
-			</div>
-
-		</div>
-		<div class="right-block">
-			<h5 itemprop="name">
-				<a class="product-name" href="" title="Morbi vitae cons" itemprop="url">
-					Morbi vitae cons
-				</a>
-			</h5>
-
-			<div class="product-desc" itemprop="description">
-				Lorem psum dolor aet cosctetur aipiscing elit nunc aiquet varius curabitur lorem masa ultricies nec
-				convallis sem mauris facilisis, eros ut iaculis suscipit sollicitudin dignissim nunc
-			</div>
-			<div itemprop="offers" itemscope="" class="content_price">
-									<span itemprop="price" class="price product-price">
-						$250.00					</span>
-				<meta itemprop="priceCurrency" content="USD">
-
-
-			</div>
-
-
-			<div class="comments_note clearfix" itemprop="aggregateRating" itemscope="">
-				<div class="star_content clearfix">
-					<div class="star"></div>
-					<div class="star"></div>
-					<div class="star"></div>
-					<div class="star"></div>
-					<div class="star"></div>
-					<meta itemprop="worstRating" content="0">
-					<meta itemprop="ratingValue" content="0">
-					<meta itemprop="bestRating" content="5">
-				</div>
-				<span class="nb-comments"><span itemprop="reviewCount">0</span> Review(s)</span>
-			</div>
-
-
-									<span itemprop="offers" itemscope="" class="availability">
-											<span class="available-now">
-							<link itemprop="availability">In stock						</span>
-									</span>
-
-			<div class="product-flags">
-			</div>
-
-		</div>
-		<div class="product_bottom hidden-xs">
-			<a class="quick-view" href="" rel="">
-				<i class="fa fa-plus"></i>
-				Quick View
-			</a>
-		</div>
-	</div>
-	<!-- .product-container> -->
-
-
-</div>
-</div>
-</div>
-<div class="item ">
-<div class="row clearfix ">
-<div class="col-md-3 col-xs-12 product_block ajax_block_product">
-
-	<div class="product-container" itemscope="">
-		<div class="left-block">
-			<div class="product-image-container">
-				<div class="leo-more-info" data-idproduct="15">
-					<div class="col-1">
-						<!-- thumbnails -->
-						<div class="views_block">
-							<div class="thumbs_list thumbs_list_15">
-								<ul class="thumbs_list_frame">
-									<li>
-										<a href="" class="thickbox-ajax-15 shown" title="Printed Chiffon Dress">
-											<img src="/assets/<?php echo $shop->code ?>/images/157-medium_default.jpg" alt="Printed Chiffon Dress"
-												 height="125" width="125" rel="" class="leo-hover-image">
-										</a>
-									</li>
-									<li>
-										<a href="" class="thickbox-ajax-15" title="Printed Chiffon Dress">
-											<img src="/assets/<?php echo $shop->code ?>/images/157-medium_default.jpg" alt="Printed Chiffon Dress"
-												 height="125" width="125" rel="" class="leo-hover-image">
-										</a>
-									</li>
-								</ul>
-							</div>
-						</div>
-					</div>
-				</div>
-				<a class="product_img_link" href="" title="Printed Chiffon Dress" itemprop="url">
-					<img class="replace-2x img-responsive" src="/assets/<?php echo $shop->code ?>/images/157-home_default.jpg" alt="Printed Chiffon Dress"
-						 title="Printed Chiffon Dress" itemprop="image">
-					<span class="product-additional" data-idproduct="15"><img class="img-responsive" title="" alt=""
-																			  src="/assets/<?php echo $shop->code ?>/images/156-home_default.jpg"></span>
-				</a>
-
-							<span class="new-box">
-					<span class="new-label product-label">New</span>
-				</span>
-			</div>
-
-
-			<div class="functional-buttons  clearfix">
-				<div class="button-container">
-					<a class="button ajax_add_to_cart_button btn btn-default" href="" rel="nofollow" title="Add to cart"
-					   data-id-product="15">
-						<i class="fa fa-shopping-cart"></i>
-						Add to cart
-					</a>
-				</div>
-
-
-				<div class="wishlist">
-					<a class="addToWishlist btn wishlistProd_15" title="Wishlist" href="#" rel="15">
-
-					</a>
-				</div>
-
-				<div class="view_detail">
-					<a itemprop="url" class="lnk_view btn" href="" title="View">
-
-					</a>
-				</div>
-
-			</div>
-
-		</div>
-		<div class="right-block">
-			<h5 itemprop="name">
-				<a class="product-name" href="" title="Printed Chiffon Dress" itemprop="url">
-					Printed Chiffon Dress
-				</a>
-			</h5>
-
-			<div class="product-desc" itemprop="description">
-				Lorem psum dolor aet cosctetur aipiscing elit nunc aiquet varius curabitur lorem masa ultricies nec
-				convallis sem mauris facilisis, eros ut iaculis suscipit sollicitudin dignissim nunc
-			</div>
-			<div itemprop="offers" itemscope="" class="content_price">
-									<span itemprop="price" class="price product-price">
-						$500.00					</span>
-				<meta itemprop="priceCurrency" content="USD">
-
-
-			</div>
-
-
-			<div class="comments_note clearfix" itemprop="aggregateRating" itemscope="">
-				<div class="star_content clearfix">
-					<div class="star"></div>
-					<div class="star"></div>
-					<div class="star"></div>
-					<div class="star"></div>
-					<div class="star"></div>
-					<meta itemprop="worstRating" content="0">
-					<meta itemprop="ratingValue" content="0">
-					<meta itemprop="bestRating" content="5">
-				</div>
-				<span class="nb-comments"><span itemprop="reviewCount">0</span> Review(s)</span>
-			</div>
-
-
-									<span itemprop="offers" itemscope="" class="availability">
-											<span class="available-now">
-							<link itemprop="availability" href="">In stock						</span>
-									</span>
-
-			<div class="product-flags">
-			</div>
-
-		</div>
-		<div class="product_bottom hidden-xs">
-			<a class="quick-view" href="" rel="">
-				<i class="fa fa-plus"></i>
-				Quick View
-			</a>
-		</div>
-	</div>
-	<!-- .product-container> -->
-
-
-</div>
-<div class="col-md-3 col-xs-12 product_block ajax_block_product">
-
-	<div class="product-container" itemscope="">
-		<div class="left-block">
-			<div class="product-image-container">
-				<div class="leo-more-info" data-idproduct="16">
-					<div class="col-1">
-						<!-- thumbnails -->
-						<div class="views_block">
-							<div class="thumbs_list thumbs_list_16">
-								<ul class="thumbs_list_frame">
-									<li>
-										<a href="" class="thickbox-ajax-16 shown" title="Donec magna diam">
-											<img src="/assets/<?php echo $shop->code ?>/images/157-medium_default.jpg" alt="Donec magna diam" height="125"
-												 width="125" rel="" class="leo-hover-image">
-										</a>
-									</li>
-									<li>
-										<a href="" class="thickbox-ajax-16" title="Donec magna diam">
-											<img src="/assets/<?php echo $shop->code ?>/images/157-medium_default.jpg" alt="Donec magna diam" height="125"
-												 width="125" rel="" class="leo-hover-image">
-										</a>
-									</li>
-								</ul>
-							</div>
-						</div>
-					</div>
-				</div>
-				<a class="product_img_link" href="" title="Aenean" itemprop="url">
-					<img class="replace-2x img-responsive" src="/assets/<?php echo $shop->code ?>/images/157-home_default.jpg" alt="Donec magna diam"
-						 title="Donec magna diam" itemprop="image">
-					<span class="product-additional" data-idproduct="16"><img class="img-responsive" title="" alt=""
-																			  src="/assets/<?php echo $shop->code ?>/images/156-home_default.jpg"></span>
-				</a>
-
-							<span class="new-box">
-					<span class="new-label product-label">New</span>
-				</span>
-			</div>
-
-
-			<div class="functional-buttons  clearfix">
-				<div class="button-container">
-					<a class="button ajax_add_to_cart_button btn btn-default" href="" rel="nofollow" title="Add to cart"
-					   data-id-product="16">
-						<i class="fa fa-shopping-cart"></i>
-						Add to cart
-					</a>
-				</div>
-
-
-				<div class="wishlist">
-					<a class="addToWishlist btn wishlistProd_16" title="Wishlist" href="#" rel="16">
-
-					</a>
-				</div>
-
-				<div class="view_detail">
-					<a itemprop="url" class="lnk_view btn" href="" title="View">
-
-					</a>
-				</div>
-
-			</div>
-
-		</div>
-		<div class="right-block">
-			<h5 itemprop="name">
-				<a class="product-name" href="" title="Aenean" itemprop="url">
-					Aenean
-				</a>
-			</h5>
-
-			<div class="product-desc" itemprop="description">
-				Lorem psum dolor aet cosctetur aipiscing elit nunc aiquet varius curabitur lorem masa ultricies nec
-				convallis sem mauris facilisis, eros ut iaculis suscipit sollicitudin dignissim nunc
-			</div>
-			<div itemprop="offers" itemscope="" class="content_price">
-									<span itemprop="price" class="price product-price">
-						$350.00					</span>
-				<meta itemprop="priceCurrency" content="USD">
-
-
-			</div>
-
-
-			<div class="comments_note clearfix" itemprop="aggregateRating" itemscope="">
-				<div class="star_content clearfix">
-					<div class="star"></div>
-					<div class="star"></div>
-					<div class="star"></div>
-					<div class="star"></div>
-					<div class="star"></div>
-					<meta itemprop="worstRating" content="0">
-					<meta itemprop="ratingValue" content="0">
-					<meta itemprop="bestRating" content="5">
-				</div>
-				<span class="nb-comments"><span itemprop="reviewCount">0</span> Review(s)</span>
-			</div>
-
-
-									<span itemprop="offers" itemscope="" class="availability">
-											<span class="available-now">
-							<link itemprop="availability" href="">In stock						</span>
-									</span>
-
-			<div class="product-flags">
-			</div>
-
-		</div>
-		<div class="product_bottom hidden-xs">
-			<a class="quick-view" href="" rel="">
-				<i class="fa fa-plus"></i>
-				Quick View
-			</a>
-		</div>
-	</div>
-	<!-- .product-container> -->
-
-
-</div>
-<div class="col-md-3 col-xs-12 product_block ajax_block_product">
-
-	<div class="product-container" itemscope="">
-		<div class="left-block">
-			<div class="product-image-container">
-				<div class="leo-more-info" data-idproduct="17">
-					<div class="col-1">
-						<!-- thumbnails -->
-						<div class="views_block">
-							<div class="thumbs_list thumbs_list_17">
-								<ul class="thumbs_list_frame">
-									<li>
-										<a href="" class="thickbox-ajax-17 shown" title="Donec magna diam">
-											<img src="/assets/<?php echo $shop->code ?>/images/157-medium_default.jpg" alt="Donec magna diam" height="125"
-												 width="125" rel="" class="leo-hover-image">
-										</a>
-									</li>
-									<li>
-										<a href="" class="thickbox-ajax-17" title="Donec magna diam">
-											<img src="/assets/<?php echo $shop->code ?>/images/157-medium_default.jpg" alt="Donec magna diam" height="125"
-												 width="125" rel="" class="leo-hover-image">
-										</a>
-									</li>
-								</ul>
-							</div>
-						</div>
-					</div>
-				</div>
-				<a class="product_img_link" href="" title="Donec posuere metus" itemprop="url">
-					<img class="replace-2x img-responsive" src="/assets/<?php echo $shop->code ?>/images/157-home_default.jpg" alt="Donec magna diam"
-						 title="Donec magna diam" itemprop="image">
-					<span class="product-additional" data-idproduct="17"><img class="img-responsive" title="" alt=""
-																			  src="/assets/<?php echo $shop->code ?>/images/156-home_default.jpg"></span>
-				</a>
-
-							<span class="new-box">
-					<span class="new-label product-label">New</span>
-				</span>
-			</div>
-
-
-			<div class="functional-buttons  clearfix">
-				<div class="button-container">
-					<a class="button ajax_add_to_cart_button btn btn-default" href="" rel="nofollow" title="Add to cart"
-					   data-id-product="17">
-						<i class="fa fa-shopping-cart"></i>
-						Add to cart
-					</a>
-				</div>
-
-
-				<div class="wishlist">
-					<a class="addToWishlist btn wishlistProd_17" title="Wishlist" href="#" rel="17">
-
-					</a>
-				</div>
-
-				<div class="view_detail">
-					<a itemprop="url" class="lnk_view btn" href="" title="View">
-
-					</a>
-				</div>
-
-			</div>
-
-		</div>
-		<div class="right-block">
-			<h5 itemprop="name">
-				<a class="product-name" href="" title="Donec posuere metus" itemprop="url">
-					Donec posuere metus
-				</a>
-			</h5>
-
-			<div class="product-desc" itemprop="description">
-				Lorem psum dolor aet cosctetur aipiscing elit nunc aiquet varius curabitur lorem masa ultricies nec
-				convallis sem mauris facilisis, eros ut iaculis suscipit sollicitudin dignissim nunc
-			</div>
-			<div itemprop="offers" itemscope="" class="content_price">
-									<span itemprop="price" class="price product-price">
-						$600.00					</span>
-				<meta itemprop="priceCurrency" content="USD">
-
-
-			</div>
-
-
-			<div class="comments_note clearfix" itemprop="aggregateRating" itemscope="">
-				<div class="star_content clearfix">
-					<div class="star"></div>
-					<div class="star"></div>
-					<div class="star"></div>
-					<div class="star"></div>
-					<div class="star"></div>
-					<meta itemprop="worstRating" content="0">
-					<meta itemprop="ratingValue" content="0">
-					<meta itemprop="bestRating" content="5">
-				</div>
-				<span class="nb-comments"><span itemprop="reviewCount">0</span> Review(s)</span>
-			</div>
-
-
-									<span itemprop="offers" itemscope="" class="availability">
-											<span class="available-now">
-							<link itemprop="availability" href="">In stock						</span>
-									</span>
-
-			<div class="product-flags">
-			</div>
-
-		</div>
-		<div class="product_bottom hidden-xs">
-			<a class="quick-view" href="" rel="">
-				<i class="fa fa-plus"></i>
-				Quick View
-			</a>
-		</div>
-	</div>
-	<!-- .product-container> -->
-
-
-</div>
-<div class="col-md-3 col-xs-12 product_block ajax_block_product">
-
-	<div class="product-container" itemscope="">
-		<div class="left-block">
-			<div class="product-image-container">
-				<div class="leo-more-info" data-idproduct="18">
-					<div class="col-1">
-						<!-- thumbnails -->
-						<div class="views_block">
-							<div class="thumbs_list thumbs_list_18">
-								<ul class="thumbs_list_frame">
-									<li>
-										<a href="" class="thickbox-ajax-18 shown" title="Donec magna diam">
-											<img src="/assets/<?php echo $shop->code ?>/images/157-medium_default.jpg" alt="Donec magna diam" height="125"
-												 width="125" rel="" class="leo-hover-image">
-										</a>
-									</li>
-									<li>
-										<a href="" class="thickbox-ajax-18" title="Donec magna diam">
-											<img src="/assets/<?php echo $shop->code ?>/images/157-medium_default.jpg" alt="Donec magna diam" height="125"
-												 width="125" rel="" class="leo-hover-image">
-										</a>
-									</li>
-								</ul>
-							</div>
-						</div>
-					</div>
-				</div>
-				<a class="product_img_link" href="" title="Integer sit am" itemprop="url">
-					<img class="replace-2x img-responsive" src="/assets/<?php echo $shop->code ?>/images/157-home_default.jpg" alt="Donec magna diam"
-						 title="Donec magna diam" itemprop="image">
-					<span class="product-additional" data-idproduct="18"><img class="img-responsive" title="" alt=""
-																			  src="/assets/<?php echo $shop->code ?>/images/156-home_default.jpg"></span>
-				</a>
-
-							<span class="new-box">
-					<span class="new-label product-label">New</span>
-				</span>
-			</div>
-
-
-			<div class="functional-buttons  clearfix">
-				<div class="button-container">
-					<a class="button ajax_add_to_cart_button btn btn-default" href="" rel="nofollow" title="Add to cart"
-					   data-id-product="18">
-						<i class="fa fa-shopping-cart"></i>
-						Add to cart
-					</a>
-				</div>
-
-
-				<div class="wishlist">
-					<a class="addToWishlist btn wishlistProd_18" title="Wishlist" href="#" rel="18">
-
-					</a>
-				</div>
-
-				<div class="view_detail">
-					<a itemprop="url" class="lnk_view btn" href="" title="View">
-
-					</a>
-				</div>
-
-			</div>
-
-		</div>
-		<div class="right-block">
-			<h5 itemprop="name">
-				<a class="product-name" href="" title="Integer sit am" itemprop="url">
-					Integer sit am
-				</a>
-			</h5>
-
-			<div class="product-desc" itemprop="description">
-				Lorem psum dolor aet cosctetur aipiscing elit nunc aiquet varius curabitur lorem masa ultricies nec
-				convallis sem mauris facilisis, eros ut iaculis suscipit sollicitudin dignissim nunc
-			</div>
-			<div itemprop="offers" itemscope="" class="content_price">
-									<span itemprop="price" class="price product-price">
-						$20.50					</span>
-				<meta itemprop="priceCurrency" content="USD">
-
-
-			</div>
-
-
-			<div class="comments_note clearfix" itemprop="aggregateRating" itemscope="">
-				<div class="star_content clearfix">
-					<div class="star"></div>
-					<div class="star"></div>
-					<div class="star"></div>
-					<div class="star"></div>
-					<div class="star"></div>
-					<meta itemprop="worstRating" content="0">
-					<meta itemprop="ratingValue" content="0">
-					<meta itemprop="bestRating" content="5">
-				</div>
-				<span class="nb-comments"><span itemprop="reviewCount">0</span> Review(s)</span>
-			</div>
-
-
-									<span itemprop="offers" itemscope="" class="availability">
-											<span class="available-now">
-							<link itemprop="availability">In stock						</span>
-									</span>
-
-			<div class="product-flags">
-			</div>
-
-		</div>
-		<div class="product_bottom hidden-xs">
-			<a class="quick-view" href="" rel="">
-				<i class="fa fa-plus"></i>
-				Quick View
-			</a>
-		</div>
-	</div>
-	<!-- .product-container> -->
-
-
-</div>
-</div>
-</div>
-<div class="item ">
-<div class="row clearfix ">
-<div class="col-md-3 col-xs-12 product_block ajax_block_product">
-
-	<div class="product-container" itemscope="">
-		<div class="left-block">
-			<div class="product-image-container">
-				<div class="leo-more-info" data-idproduct="19">
-					<div class="col-1">
-						<!-- thumbnails -->
-						<div class="views_block">
-							<div class="thumbs_list thumbs_list_19">
-								<ul class="thumbs_list_frame">
-									<li>
-										<a href="" class="thickbox-ajax-19 shown" title="Donec magna diam">
-											<img src="/assets/<?php echo $shop->code ?>/images/157-medium_default.jpg" alt="Donec magna diam" height="125"
-												 width="125" rel="" class="leo-hover-image">
-										</a>
-									</li>
-									<li>
-										<a href="" class="thickbox-ajax-19" title="Donec magna diam">
-											<img src="/assets/<?php echo $shop->code ?>/images/157-medium_default.jpg" alt="Donec magna diam" height="125"
-												 width="125" rel="" class="leo-hover-image">
-										</a>
-									</li>
-								</ul>
-							</div>
-						</div>
-					</div>
-				</div>
-				<a class="product_img_link" href="" title="Morbi vitae cons" itemprop="url">
-					<img class="replace-2x img-responsive" src="/assets/<?php echo $shop->code ?>/images/157-home_default.jpg" alt="Donec magna diam"
-						 title="Donec magna diam" itemprop="image">
-					<span class="product-additional" data-idproduct="19"><img class="img-responsive" title="" alt=""
-																			  src="/assets/<?php echo $shop->code ?>/images/156-home_default.jpg"></span>
-				</a>
-
-							<span class="new-box">
-					<span class="new-label product-label">New</span>
-				</span>
-			</div>
-
-
-			<div class="functional-buttons  clearfix">
-				<div class="button-container">
-					<a class="button ajax_add_to_cart_button btn btn-default" href="" rel="nofollow" title="Add to cart"
-					   data-id-product="19">
-						<i class="fa fa-shopping-cart"></i>
-						Add to cart
-					</a>
-				</div>
-
-
-				<div class="wishlist">
-					<a class="addToWishlist btn wishlistProd_19" title="Wishlist" href="#" rel="19">
-
-					</a>
-				</div>
-
-				<div class="view_detail">
-					<a itemprop="url" class="lnk_view btn" href="" title="View">
-
-					</a>
-				</div>
-
-			</div>
-
-		</div>
-		<div class="right-block">
-			<h5 itemprop="name">
-				<a class="product-name" href="" title="Morbi vitae cons" itemprop="url">
-					Morbi vitae cons
-				</a>
-			</h5>
-
-			<div class="product-desc" itemprop="description">
-				Lorem psum dolor aet cosctetur aipiscing elit nunc aiquet varius curabitur lorem masa ultricies nec
-				convallis sem mauris facilisis, eros ut iaculis suscipit sollicitudin dignissim nunc
-			</div>
-			<div itemprop="offers" itemscope="" class="content_price">
-									<span itemprop="price" class="price product-price">
-						$550.00					</span>
-				<meta itemprop="priceCurrency" content="USD">
-
-
-			</div>
-
-
-			<div class="comments_note clearfix" itemprop="aggregateRating" itemscope="">
-				<div class="star_content clearfix">
-					<div class="star"></div>
-					<div class="star"></div>
-					<div class="star"></div>
-					<div class="star"></div>
-					<div class="star"></div>
-					<meta itemprop="worstRating" content="0">
-					<meta itemprop="ratingValue" content="0">
-					<meta itemprop="bestRating" content="5">
-				</div>
-				<span class="nb-comments"><span itemprop="reviewCount">0</span> Review(s)</span>
-			</div>
-
-
-									<span itemprop="offers" itemscope="" class="availability">
-											<span class="available-now">
-							<link itemprop="availability" href="">In stock						</span>
-									</span>
-
-			<div class="product-flags">
-			</div>
-
-		</div>
-		<div class="product_bottom hidden-xs">
-			<a class="quick-view" href="" rel="">
-				<i class="fa fa-plus"></i>
-				Quick View
-			</a>
-		</div>
-	</div>
-	<!-- .product-container> -->
-
-
-</div>
-<div class="col-md-3 col-xs-12 product_block ajax_block_product">
-
-	<div class="product-container" itemscope="">
-		<div class="left-block">
-			<div class="product-image-container">
-				<div class="leo-more-info" data-idproduct="24">
-					<div class="col-1">
-						<!-- thumbnails -->
-						<div class="views_block">
-							<div class="thumbs_list thumbs_list_24">
-								<ul class="thumbs_list_frame">
-									<li>
-										<a href="" class="thickbox-ajax-24 shown" title="Donec magna diam">
-											<img src="/assets/<?php echo $shop->code ?>/images/157-medium_default.jpg" alt="Donec magna diam" height="125"
-												 width="125" rel="" class="leo-hover-image">
-										</a>
-									</li>
-									<li>
-										<a href="" class="thickbox-ajax-24" title="Donec magna diam">
-											<img src="/assets/<?php echo $shop->code ?>/images/157-medium_default.jpg" alt="Donec magna diam" height="125"
-												 width="125" rel="" class="leo-hover-image">
-										</a>
-									</li>
-								</ul>
-							</div>
-						</div>
-					</div>
-				</div>
-				<a class="product_img_link" href="" title="Donec posuere metus" itemprop="url">
-					<img class="replace-2x img-responsive" src="/assets/<?php echo $shop->code ?>/images/157-home_default.jpg" alt="Donec magna diam"
-						 title="Donec magna diam" itemprop="image">
-					<span class="product-additional" data-idproduct="24"><img class="img-responsive" title="" alt=""
-																			  src="/assets/<?php echo $shop->code ?>/images/156-home_default.jpg"></span>
-				</a>
-
-							<span class="new-box">
-					<span class="new-label product-label">New</span>
-				</span>
-			</div>
-
-
-			<div class="functional-buttons  clearfix">
-				<div class="button-container">
-					<a class="button ajax_add_to_cart_button btn btn-default" href="" rel="nofollow" title="Add to cart"
-					   data-id-product="24">
-						<i class="fa fa-shopping-cart"></i>
-						Add to cart
-					</a>
-				</div>
-
-
-				<div class="wishlist">
-					<a class="addToWishlist btn wishlistProd_24" title="Wishlist" href="#" rel="24">
-
-					</a>
-				</div>
-
-				<div class="view_detail">
-					<a itemprop="url" class="lnk_view btn" href="" title="View">
-
-					</a>
-				</div>
-
-			</div>
-
-		</div>
-		<div class="right-block">
-			<h5 itemprop="name">
-				<a class="product-name" href="" title="Donec posuere metus" itemprop="url">
-					Donec posuere metus
-				</a>
-			</h5>
-
-			<div class="product-desc" itemprop="description">
-				Lorem psum dolor aet cosctetur aipiscing elit nunc aiquet varius curabitur lorem masa ultricies nec
-				convallis sem mauris facilisis, eros ut iaculis suscipit sollicitudin dignissim nunc
-			</div>
-			<div itemprop="offers" itemscope="" class="content_price">
-									<span itemprop="price" class="price product-price">
-						$600.00					</span>
-				<meta itemprop="priceCurrency" content="USD">
-
-
-			</div>
-
-
-			<div class="comments_note clearfix" itemprop="aggregateRating" itemscope="">
-				<div class="star_content clearfix">
-					<div class="star"></div>
-					<div class="star"></div>
-					<div class="star"></div>
-					<div class="star"></div>
-					<div class="star"></div>
-					<meta itemprop="worstRating" content="0">
-					<meta itemprop="ratingValue" content="0">
-					<meta itemprop="bestRating" content="5">
-				</div>
-				<span class="nb-comments"><span itemprop="reviewCount">0</span> Review(s)</span>
-			</div>
-
-
-									<span itemprop="offers" itemscope="" class="availability">
-											<span class="available-now">
-							<link itemprop="availability" href="">In stock						</span>
-									</span>
-
-			<div class="product-flags">
-			</div>
-
-		</div>
-		<div class="product_bottom hidden-xs">
-			<a class="quick-view" href="" rel="">
-				<i class="fa fa-plus"></i>
-				Quick View
-			</a>
-		</div>
-	</div>
-	<!-- .product-container> -->
-
-
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</section>
-<!-- description & features -->
-
-</div>
-
-</section>
-
-
-</div>
-</div>
-</section>
-
-<?php
-	echo Tag::javascriptInclude('assets/' . $shop->code . '/js/jquery.idTabs.js');
-//	echo Tag::javascriptInclude('assets/' . $shop->code . '/js/product.js');
-//	echo Tag::javascriptInclude('assets/' . $shop->code . '/js/jquery.jqzoom.js');
-	echo Tag::javascriptInclude('assets/' . $shop->code . '/js/jquery.rating.pack.js');
-	echo Tag::javascriptInclude('assets/' . $shop->code . '/js/jquery.textareaCounter.plugin.js');
-	echo Tag::javascriptInclude('assets/' . $shop->code . '/js/productscategory.js');
-	echo Tag::javascriptInclude('assets/' . $shop->code . '/js/productcomments.js');
-	echo Tag::javascriptInclude('assets/' . $shop->code . '/js/socialsharing.js');
-	echo Tag::javascriptInclude('assets/' . $shop->code . '/js/sendtoafriend.js');
-
-?>

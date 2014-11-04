@@ -106,6 +106,7 @@ class CatalogueController extends ControllerBase
 		// Установка заголовка
 		$this->tag->appendTitle('- '.$this->_translate['TITLE']);
 
+
 		// проверка страницы в кэше
 
 		$content = null;
@@ -122,6 +123,7 @@ class CatalogueController extends ControllerBase
 					]);
 
 				$articul = current($this->_routeTree['catalogue']);
+
 				$item = $this->productsModel->getProductCard($articul, $this->_shop->price_id, true);
 
 				// передача подходящих размеров для этого товара

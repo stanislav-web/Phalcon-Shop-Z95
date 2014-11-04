@@ -1359,9 +1359,13 @@ window.matchMedia=window.matchMedia||(function(e,f){var c,a=e.documentElement,b=
         this.hash = Math.random();
         $.ajax({
             type: 'GET',
-            url: '/ajax/customer/basket/update/?',
+            url: '/basket/update/?',
             data: {'mode': 'small', 'hash': this.hash},
-            success: function(data) { return basket.update(data); },
+            success: function(data) {
+                console.log(data);
+                return false;
+                return basket.update(data);
+            },
             dataType: 'json',
             timeout: 20000,
             error: function (data, textStatus, jqXHR) {
@@ -1389,7 +1393,7 @@ window.matchMedia=window.matchMedia||(function(e,f){var c,a=e.documentElement,b=
                 this.hash = Math.random();
                 $.ajax({
                     type: 'GET',
-                    url: '/ajax/customer/basket/update/?mode='+mode+'&item['+item_id+'][]='+item_size+'_'+count,
+                    url: '/basket/update/?mode='+mode+'&item['+item_id+'][]='+item_size+'_'+count,
                     data: { 'hash': this.hash },
                     success: function(data) { return basket.update(data); },
                     dataType: 'json',
@@ -1727,7 +1731,7 @@ window.matchMedia=window.matchMedia||(function(e,f){var c,a=e.documentElement,b=
                 this.hash = Math.random();
                 $.ajax({
                     type: 'GET',
-                    url: '/ajax/customer/basket/update/?'+itemsQueryString.join('&'),
+                    url: '/basket/update/?'+itemsQueryString.join('&'),
                     data: {'mode': 'small', 'hash': this.hash},
                     success: function(data) { return basket.update(data); },
                     dataType: 'json',
@@ -1744,7 +1748,6 @@ window.matchMedia=window.matchMedia||(function(e,f){var c,a=e.documentElement,b=
                 this.hideSizesForm(containerId);
             }
 
-            // РЈР±СЂР°С‚СЊ РїСЂРµРґСѓРїСЂРµР¶РґРµРЅРёРµ Рѕ РЅРµРІС‹Р±СЂР°РЅРЅС‹С… СЂР°Р·РјРµСЂР°С…
             $('#'+containerId+' .sizes').removeClass('empty');
         } else {
             $('#'+containerId+' .sizes').addClass('empty');

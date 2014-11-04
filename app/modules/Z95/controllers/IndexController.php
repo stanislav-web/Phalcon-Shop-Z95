@@ -65,7 +65,8 @@
 				// Содержимое контроллера для формирования выдачи
 
 				$mainCategories = $this->categoriesModel->getMainCategories($this->_shopCategories, 10, true);
-				$this->view->setVar("mainCategories", $mainCategories);
+			
+				$this->view->setVars(array('mainCategories' => $mainCategories, 'banners' => $banners));
 
 			}
 			else
@@ -144,8 +145,6 @@
 			if($content === null)
 			{
 				// Содержимое контроллера для формирования выдачи
-
-
 
 				// Сохраняем вывод в кэш
 				if($this->_config->cache->frontend) $this->_cache->save();
