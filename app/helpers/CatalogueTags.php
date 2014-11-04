@@ -141,92 +141,16 @@ class CatalogueTags extends \Phalcon\Tag
 	}
 
 	/**
-	 * catalogueBreadcrumbs($separator, $classLink, $home) Хлебные крошки каталога
-	 * @param string $separator разделитель
-	 * @param string $classLink класс сылок
-	 * @param string $home Домашняя директория по умолчанию
-	 * @access static
+	 * Функция перегрупировки массива по значению
+	 *
+	 * @param array $array
+	 * @param       $field
 	 * @return array
 	 */
-	public static function catalogueBreadcrumbs($separator, $classLink, $home = 'Home')
+	public static function groupArray(array $array, $field)
 	{
-		// This gets the REQUEST_URI (/path/to/file.php), splits the string (using '/') into an array, and then filters out any empty values
-		$path = array_filter(explode('/', (new Request)->getURI()));
-
-		// This will build our "base URL" ... Also accounts for HTTPS :)
-		$base = (isset($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . '/catalogue/';
-
-		// Initialize a temporary array with our breadcrumbs. (starting with our home page, which I'm assuming will be the base URL)
-		$breadcrumbs = Array("<a class=\"$classLink\" href=\"$base\">$home</a>");
-
-		// Find out the index for the last value in our path array
-		$last = end(array_keys($path));
-
-		// Build the rest of the breadcrumbs
-		foreach ($path AS $x => $crumb) {
-			// Our "title" is the text that will be displayed (strip out .php and turn '_' into a space)
-			$title = ucwords(str_replace(Array('.php', '_'), Array('', ' '), $crumb));
-
-			// If we are not on the last index, then display an <a> tag
-			if($x != $last)
-				$breadcrumbs[] = "<a href=\"$base$crumb\">$title</a>";
-			// Otherwise, just display the title (minus)
-			else
-				$breadcrumbs[] = $title;
-		}
-		// Build our temporary array (pieces of bread) into one big string :)
-		return implode($separator, $breadcrumbs);
-	}
-
-	public static function sortVertically($numCols = 3, $data = array())
-	{
-		/* PREPARE data for printing */
-		ksort( $data );     // Sort array by key.
-		$numCells   = is_array($data) ? count($data) : 1 ;
-		$numRows    = ceil($numCells / $numCols);
-		$extraCells = $numCells % $numCols;  // Store num of tbody's with extra cell
-		$i          = 0;    // iterator
-		$cCell      = 0;    // num of Cells printed
-		$output     = NULL; // initialize
-
-
-		/* START table printing */
-		$output     .= '<div>';
-		$output     .= '<table>';
-
-		foreach( $data as $key => $value )
-		{
-			if( $i % $numRows === 0 )   // Start a new tbody
-			{
-				if( $i !== 0 )          // Close prev tbody
-				{
-					$extraCells--;
-					if ($extraCells === 0 )
-					{
-						$numRows--;     // No more tbody's with an extra cell
-						$extraCells--;  // Avoid re-reducing numRows
-					}
-					$output .= '</tbody>';
-				}
-
-				$output .= '<tbody style="float: left;">';
-				$i = 0;                 // Reset iterator to 0
-			}
-			$output .= '<tr>';
-			$output .= '<th>'.$key.'</th>';
-			$output .= '<td>'.$value.'</td>';
-			$output .= '</tr>';
-
-			$cCell++;                   // increase cells printed count
-			if($cCell == $numCells){    // last cell, close tbody
-				$output .= '</tbody>';
-			}
-
-			$i++;
-		}
-
-		$output .= '</table>';
-		$output .= '</div>';
+		$output = array();
+		foreach ($array as $key=>$val) $output[$val[$field]][] = $val;
 		return $output;
 	}
 }

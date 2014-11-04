@@ -43,6 +43,17 @@
 
 	});
 
+	// Компонент Breadcrumbs. Управление навигацией на сайте
+
+	$di->set('breadcrumbs', function() use ($di) {
+
+		$crumbs = require_once APP_PATH.'/modules/'.self::MODULE.'/config/crumbs.php';
+
+		if(isset($crumbs))
+			return new Breadcrumbs\Breadcrumbs($crumbs);
+	}, true);
+
+
 	// Компонент Navigation. Управление навигацией на сайте
 
 	$di->set('navigation', function() use ($di) {
@@ -127,7 +138,7 @@
 
 	// Компонент DB. Регистрирую коннект к MySQL
 
-	$di->set('db', function() {
+	$di->setShared('db', function() {
 
 		return new \Phalcon\Db\Adapter\Pdo\Mysql([
 			"host"      => 	$this->_config['database']['host'],

@@ -93,4 +93,31 @@ class Prices extends \Phalcon\Mvc\Model
 
 		return $result;
 	}
+
+	/**
+	 * Получение подсчета товаров по скидкам
+	 * @param $product_id
+	 */
+	public function countProductsBySales($price_id, array $sex = [], $cache = false)
+	{
+		$result = null;
+
+		if ($cache && $this->_cache) {
+			$backendCache = $this->getDI()->get('backendCache');
+			$result = $backendCache->get(self::TABLE.'-'.strtolower(__FUNCTION__).'-'.$price_id.'-'.join('_', $sex).'.cache');
+		}
+
+		if($result === null) {    // Выполняем запрос из MySQL
+			$sql = "SELECT STRAIGHT_JOIN percent, sex, COUNT(prices.`product_id`) AS `count`
+					FROM ".self::TABLE." prices
+					INNER JOIN ".Products::TABLE." products ON (products.id = prices.product_id && prices.id = $price_id)
+					WHERE products.sex IN (".join(',', $sex).") && prices.percent > 0
+					GROUP BY percent, sex;";
+			$result = $this->_db->query($sql)->fetchAll();
+
+			// Сохраняем запрос в кэше
+			if ($cache && $this->_cache) $backendCache->save(self::TABLE.'-'.strtolower(__FUNCTION__).'-'.$price_id.'-'.join('_', $sex).'.cache', $result);
+		}
+		return $result;
+	}
 }

@@ -16,4 +16,6 @@
 		"SHOW_ITEMS"				=>	"Showing %d - %d of %d items",
 		"TAGS"						=>	"Tags",
 		"TAGS_NOT_FOUND"			=>	"Tags not found",
+		"SALE"						=>	"Sale",
+		"ALL_SALES"					=>	"All sales",
 	];

@@ -102,7 +102,7 @@ class CatalogueController extends ControllerBase
 	public function itemAction()
 	{
 		// Установка заголовка
-		$this->tag->appendTitle('- '.$this->_translate['TITLE']);
+		$this->tag->prependTitle($this->_translate['TITLE'].' - ');
 
 		// проверка страницы в кэше
 
@@ -129,10 +129,71 @@ class CatalogueController extends ControllerBase
 				$this->view->setVar("item", $item);
 				$this->view->setVar("categories" , $this->commonModel->categoriesToTree($this->_shopCategories));
 			}
-
 		}
 			// Сохраняем вывод в кэш
 		if($this->_config->cache->frontend) $this->view->cache(array("key" => $this->cachePage(__FUNCTION__)));
+	}
+
+	/**
+	 * Распродажа
+	 */
+	public function saleAction()
+	{
+		$queryString = $this->request->getQuery();
+
+		if(isset($queryString['percent']) && isset($queryString['sex']))
+		{
+			// Формирую заголовок
+
+			if($queryString['percent'][0] > 0)
+				$title = $this->_translate['SALE'].' '.$queryString['percent'][0].'%';
+			else $title = $this->_translate['SALE'].' - '.$this->_translate['ALL_SALES'];
+
+			$this->tag->prependTitle($title.' - ');
+
+			// вывожу по умолчанию страницу каталога c вложением sales
+			$this->view->setVars([
+				'template'		=>	'sale',
+				'title'			=>	$title,
+				'category'      => 	[
+					'alias'			=>	'/catalogue/sale',
+					'name'			=>	$title,
+					'description'	=>	'',
+				],
+			]);
+			echo $this->view->render('catalogue', 'index');
+		}
+		else
+		{
+			$this->tag->prependTitle($this->_translate['SALE'].' - ');
+
+			// получаю колическво товаров по скидкам sex = 1,2
+			$salesGroup = $this->pricesModel->countProductsBySales($this->_shop['price_id'], [0,1,2], true);
+
+
+			$salesGroup = $this->_helper->groupArray($salesGroup, 'sex');
+
+			// суммирую унисекс со всеми скидками
+			if(isset($salesGroup))
+			{
+				$result = []; $count = [];
+				foreach($salesGroup as $group => $sales)
+				{
+					foreach($sales as $sale) {
+						if($group == 0)
+							$count[$sale['percent']] = $sale['count'];
+
+					if($group != 0) $result[$group][]	=	[
+						'percent' 	=> $sale['percent'],
+						'count' 	=> ($count[$sale['percent']]+$sale['count']),
+						'sex'		=>	$sale['sex']
+					];
+				}
+				}
+			}
+
+			$this->view->setVar("salesGroup", $result);
+		}
 	}
 
 	/**
@@ -147,12 +208,12 @@ class CatalogueController extends ControllerBase
 			$this->_shopCategories = $this->_helper->arrayToAssoc($this->_shopCategories, 'id');
 
 			// Установка заголовка
-			$this->tag->appendTitle('- '.$this->_translate['TITLE']);
+			$this->tag->prependTitle($this->_translate['TITLE'].' - ');
 
 			// Вывод в шаблон
 			$this->view->setVars([
 				'template'		=>	'categories',
-				'categoriesSide'=>	$this->_helper->arrayToAssoc($this->_shopMainCategories, 'id'),
+				'categoriesSide'=>	$this->_helper->arrayToAssoc($this->_helper->findInTree($this->_shopCategories, 'parent_id', '0'), 'id'),
 			]);
 		}
 
@@ -176,7 +237,7 @@ class CatalogueController extends ControllerBase
 			}
 
 			// Установка заголовка
-			$this->tag->appendTitle('- '.$category[0]['name']);
+			$this->tag->prependTitle($category[0]['name'].' - ');
 
 			// Вывод в шаблон
 			$this->view->setVars([
@@ -237,6 +298,8 @@ class CatalogueController extends ControllerBase
 				$tags = $this->tagsModel->getByProductIds($category[0]['id'], true);
 
 				$this->view->setVar('tags', $tags);
+
+				$this->tag->prependTitle($category[0]['name'].' - ');
 
 				// Получаю товары, бренды и их теги по категории
 				// Вывод в шаблон

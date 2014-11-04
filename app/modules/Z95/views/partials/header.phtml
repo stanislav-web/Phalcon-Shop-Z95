@@ -24,19 +24,32 @@
 			</div>
 
 			<div class="phone" style="white-space:nowrap;"><span>+7 495</span>664-23-85<br><span style="font-size: 0.6em; white-space: nowrap;">круглосуточно, без выходных</span></div>					<div class="helper">
-				<div class="item"><a href="/about">О магазине</a></div>
-				<div class="item"><a href="/catalogue/brands">Бренды</a></div>
+				<div class="item">
+					<?=$this->tag->linkTo('about', 'О магазине'); ?>
+				</div>
+				<div class="item">
+					<?=$this->tag->linkTo('brands', 'Бренды'); ?>
+				</div>
 
 				<div class="sale">
-					<div class="item"><a href="/catalogue/sale">Распродажа</a></div><br>
+					<div class="item">
+						<?=$this->tag->linkTo('catalogue/sale', 'Распродажа'); ?>
+					</div><br>
 					<div class="percent">
-						<div class="item"><a href="/catalogue/sale">20<span>%</span></a></div>
-						<div class="item"><a href="/catalogue/sale">50<span>%</span></a></div>
-						<div class="item"><a href="/catalogue/sale">70<span>%</span></a></div>
+						<div class="item">
+							<?=$this->tag->linkTo('catalogue/sale', '20<span>%</span>'); ?>
+						</div>
+						<div class="item">
+							<?=$this->tag->linkTo('catalogue/sale', '50<span>%</span>'); ?>
+						</div>
+						<div class="item">
+							<?=$this->tag->linkTo('catalogue/sale', '70<span>%</span>'); ?>
+						</div>
 					</div>
 				</div>
 
-				<div class="item new"><a href="/catalogue/new">Новинки</a></div>					</div>
+				<div class="item new"><a href="/catalogue/new">Новинки</a></div>
+			</div>
 			<div class="top-cart">
 				<div class="cart" onclick="basket.get_small_basket()"><img src="/assets/<?php echo $shop['code']; ?>/images/z95ru/icon-cart.png" /></div>
 				<h3><a href="/customer/cart">Корзина</a></h3>

@@ -1,89 +1,30 @@
-<?= $this->tag->stylesheetLink('assets/' . $shop['code'] . '/css/category.css'); ?>
-
-<!-- Bread Crumbs -->
-<section id="breadcrumb" class="clearfix">
-	<div class="container">
-		<div class="row">
-
-			<!-- Breadcrumb -->
-			<div class="breadcrumb clearfix">
-				<?= \Helpers\CatalogueTags::catalogueBreadcrumbs(
-					'<span class="navigation-pipe">&gt;</span>',
-					'home'
-				); ?>
-			</div>
-			<!-- /Breadcrumb -->
-
-		</div>
+<!-- / Catalogue layout -->
+<div class="column main-column">
+	<div class="inner_teaser">
+		<a href="<?=\Helpers\LocationUrls::location('/catalogue/sale'); ?>" >
+			<?= $this->tag->image(array('f/t/5ad05dbba33a7c986ffad79ff33dbd98.jpg')); ?>
+		</a>
 	</div>
-</section>
-<!-- /Bread Crumbs -->
+	<div id="CONTENT">
+		<h1><?=$title;?></h1>
 
-<!-- Content -->
-<section id="columns" class="columns-container">
-	<div class="container">
-		<div class="row">
-			<!-- Left -->
-			<section id="left_column" class="column sidebar col-md-3" role="navigation">
+		<!-- Bread Crumbs -->
+		<ul class="Thermo">
+			<?= $breadcrumbs->get("/&nbsp;"); ?>
+		</ul>
+		<!-- /Bread Crumbs -->
 
-				<!-- Left-Side-Menu (Categories) -->
-				<?php $this->partial('partials/catalogue/menu-categories'); ?>
-				<!-- Left-Side-Menu (Categories) -->
+		<div class="clear"></div>
+		<div class="element-catalogue_items">
 
-				<!-- /Block categories module -->
-
-				<!-- Block stores module -->
-				<!-- inc(partials/catalogue/stores) -->
-				<!-- /Block stores module -->
-
-				<!-- Block manufacturers module -->
-				<!-- inc(partials/catalogue/manufacturers) -->
-				<!-- /Block manufacturers module -->
-
-				<!-- Block tags module -->
-				<?php ($template == 'products') ? $this->partial('partials/catalogue/tags-cloud') : ''; ?>
-				<!-- /Block tags module -->
-
-				<!-- Block Viewed products -->
-				<!-- inc(partials/catalogue/viewed-products) -->
-				<!-- /Block viewed products -->
-			</section>
-
-			<!-- Center -->
-			<section id="center_column" class="col-md-9">
-				<h1 class="page-heading product-listing">
-					<span class="cat-name"><?=($template != 'products') ? $viewTranslate['CATEGORIES'] : $viewTranslate['PRODUCTS']; ?>&nbsp;</span>
-					<span class="heading-counter"><? (isset($allcount)) ? printf($viewTranslate['COUNT_PRODUCTS'], $allcount) : ''; ?></span>
-				</h1>
-
-				<div class="content_scene_cat">
-					<!-- Category image -->
-					<div class="content_scene_cat_bg">
-						<?=$this->tag->image(array(
-							'assets/' . $shop['code'] . '/images/12-category_default.jpg',
-							'alt'   => $viewTranslate['CATEGORIES'],
-							'title' => $viewTranslate['CATEGORIES'],
-							'class' => 'img-responsive',
-							'id'    => 'categoryImage'
-						)); ?>
-						<div class="cat_desc">
-							<div class="rte">
-								<p><?=$category['description']; ?></p>
-							</div>
-						</div>
-					</div>
-				</div>
+			<!-- Block tags module -->
+			<?php $this->partial('partials/catalogue/tags-cloud'); ?>
+			<!-- /Block tags module -->
 
 			<!-- Render content -->
-				<?php $this->partial('partials/catalogue/'.$template); ?>
+			<?php $this->partial('partials/catalogue/'.$template); ?>
 			<!-- /Render content -->
-
-			<!-- Block sales products -->
-			<!-- inc(partials/catalogue/sales-products) -->
-			<!-- /Block sales products -->
-		</section>
+		</div>
 	</div>
-</section>
-<!-- /Content -->
-
-
+</div>
+<!-- / Catalogue layout -->

@@ -4,12 +4,13 @@
 
 <script type="text/javascript">
 		$('.header-menu-item').each(function (i, el) {
+
 			if ($('.submenu', el).length) {
 				$(el).hover(function() {
 					//$('.header-menu-item .submenu').hide();
 					$('.header-menu-item > a').removeClass('s');
 					$('.submenu', el).show();
-					$('a', el).eq(0).addClass('s');
+
 				});
 				$(el).mouseleave(function() {
 					$('.header-menu-item .submenu').hide();

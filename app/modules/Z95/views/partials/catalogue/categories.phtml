@@ -7,7 +7,7 @@
 					<div class="subcategories">
 						<div class="subcategory-image">
 							<a href="<? echo Helpers\LocationUrls::location($this->request->getURI().'/'.$category['alias']); ?>" title="<?= $category['name']; ?>" class="img">
-								<?= $this->tag->image(array('assets/' . $shop->code . '/images/12-category_default.jpg', "alt" => $category['name'])); ?>
+								<?= $this->tag->image(array('assets/' . $shop['code'] . '/images/12-category_default.jpg', "alt" => $category['name'])); ?>
 							</a>
 						</div>
 						<h5>

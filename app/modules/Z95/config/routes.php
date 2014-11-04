@@ -48,6 +48,13 @@
 		'action'        => 'item'
 	]);
 
+	$router->addGet("/catalogue/sale", [
+		'module'    	=>  $module,
+		'namespace' 	=> 'Modules\\'.$module.'\Controllers\\',
+		'controller'    => 'catalogue',
+		'action'        => 'sale'
+	]);
+
 	$router->add("/about", [
 		'module'    	=>  $module,
 		'namespace' 	=> 'Modules\\'.$module.'\Controllers\\',

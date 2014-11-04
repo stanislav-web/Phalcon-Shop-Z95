@@ -14,7 +14,7 @@
 						'url'        => '/catalogue/woman',
 						'class'      => 'header-menu-item category',
 						'classLink'  => 'dropdown double',
-						'onclick'    => "event.stopPropagation(); if ($(this).hasClass('s')) { return true; } else { $('.header-menu-item .submenu').hide(); $('.header-menu-item a').removeClass('s'); $('.submenu', $(this).parent()).show(); $(this).addClass('s'); return false; }",
+						'click'    => "event.stopPropagation(); if ($(this).hasClass('s')) { return true; } else { $('.header-menu-item .submenu').hide(); $('.header-menu-item a').removeClass('s'); $('.submenu', $(this).parent()).show(); $(this).addClass('s'); return false; }",
 						'controller' => 'catalogue',
 						'action'     => 'index',
 						'childs'     => [
@@ -100,7 +100,7 @@
 								'url'        => '#',
 								'controller' => 'catalogue',
 								'action'     => 'index',
-								'onclick'    => 'return false;',
+								'click'    => 'return false;',
 								'classLink'  => 'top',
 							],
 							[
@@ -134,7 +134,7 @@
 								'url'        => '#',
 								'controller' => 'catalogue',
 								'action'     => 'index',
-								'onclick'    => 'return false;',
+								'click'    => 'return false;',
 								'classLink'  => 'top',
 							],
 							[
@@ -157,7 +157,7 @@
 						'url'        => '/catalogue/man',
 						'class'      => 'header-menu-item category',
 						'classLink'  => 'dropdown double',
-						'onclick'    => "event.stopPropagation(); if ($(this).hasClass('s')) { return true; } else { $('.header-menu-item .submenu').hide(); $('.header-menu-item a').removeClass('s'); $('.submenu', $(this).parent()).show(); $(this).addClass('s'); return false; }",
+						'click'    => "event.stopPropagation(); if ($(this).hasClass('s')) { return true; } else { $('.header-menu-item .submenu').hide(); $('.header-menu-item a').removeClass('s'); $('.submenu', $(this).parent()).show(); $(this).addClass('s'); return false; }",
 						'controller' => 'catalogue',
 						'action'     => 'index',
 						'childs'     => [
@@ -248,7 +248,7 @@
 								'url'        => '#',
 								'controller' => 'catalogue',
 								'action'     => 'index',
-								'onclick'    => 'return false;',
+								'click'    => 'return false;',
 								'classLink'  => 'top',
 							],
 							[
@@ -288,7 +288,7 @@
 								'url'        => '#',
 								'controller' => 'catalogue',
 								'action'     => 'index',
-								'onclick'    => 'return false;',
+								'click'    => 'return false;',
 								'classLink'  => 'top',
 							],
 							[
@@ -305,7 +305,7 @@
 						'url'        => '/catalogue/glasses/glasses-men',
 						'class'      => 'header-menu-item category',
 						'classLink'  => 'dropdown double',
-						'onclick'    => "event.stopPropagation(); if ($(this).hasClass('s')) { return true; } else { $('.header-menu-item .submenu').hide(); $('.header-menu-item a').removeClass('s'); $('.submenu', $(this).parent()).show(); $(this).addClass('s'); return false; }",
+						'click'    => "event.stopPropagation(); if ($(this).hasClass('s')) { return true; } else { $('.header-menu-item .submenu').hide(); $('.header-menu-item a').removeClass('s'); $('.submenu', $(this).parent()).show(); $(this).addClass('s'); return false; }",
 						'controller' => 'catalogue',
 						'action'     => 'index',
 						'childs'     => [
@@ -330,7 +330,7 @@
 						'url'        => '/catalogue/kids',
 						'class'      => 'header-menu-item category',
 						'classLink'  => 'dropdown double',
-						'onclick'    => "event.stopPropagation(); if ($(this).hasClass('s')) { return true; } else { $('.header-menu-item .submenu').hide(); $('.header-menu-item a').removeClass('s'); $('.submenu', $(this).parent()).show(); $(this).addClass('s'); return false; }",
+						'click'    => "event.stopPropagation(); if ($(this).hasClass('s')) { return true; } else { $('.header-menu-item .submenu').hide(); $('.header-menu-item a').removeClass('s'); $('.submenu', $(this).parent()).show(); $(this).addClass('s'); return false; }",
 						'controller' => 'catalogue',
 						'action'     => 'index',
 						'childs'     => [
@@ -355,7 +355,7 @@
 						'url'        => '/catalogue/accessories',
 						'class'      => 'header-menu-item category',
 						'classLink'  => 'dropdown double',
-						'onclick'    => "event.stopPropagation(); if ($(this).hasClass('s')) { return true; } else { $('.header-menu-item .submenu').hide(); $('.header-menu-item a').removeClass('s'); $('.submenu', $(this).parent()).show(); $(this).addClass('s'); return false; }",
+						'click'    => "event.stopPropagation(); if ($(this).hasClass('s')) { return true; } else { $('.header-menu-item .submenu').hide(); $('.header-menu-item a').removeClass('s'); $('.submenu', $(this).parent()).show(); $(this).addClass('s'); return false; }",
 						'controller' => 'catalogue',
 						'action'     => 'index',
 						'childs'     => [
@@ -465,7 +465,7 @@
 						'url'        => '/catalogue/glasses',
 						'class'      => 'header-menu-item category',
 						'classLink'  => 'dropdown double',
-						'onclick'    => "event.stopPropagation(); if ($(this).hasClass('s')) { return true; } else { $('.header-menu-item .submenu').hide(); $('.header-menu-item a').removeClass('s'); $('.submenu', $(this).parent()).show(); $(this).addClass('s'); return false; }",
+						'click'    => "event.stopPropagation(); if ($(this).hasClass('s')) { return true; } else { $('.header-menu-item .submenu').hide(); $('.header-menu-item a').removeClass('s'); $('.submenu', $(this).parent()).show(); $(this).addClass('s'); return false; }",
 						'controller' => 'catalogue',
 						'action'     => 'index',
 						'childs'     => [
@@ -490,12 +490,11 @@
 							],
 						]
 					],
-
 					[
 						'name'       => 'iPhone/iPad',
 						'url'        => '/catalogue/apple',
 						'class'      => 'header-menu-item category',
-						'onclick'    => "event.stopPropagation(); if ($(this).hasClass('s')) { return true; } else { $('.header-menu-item .submenu').hide(); $('.header-menu-item a').removeClass('s'); $('.submenu', $(this).parent()).show(); $(this).addClass('s'); return false; }",
+						'click'    => "event.stopPropagation(); if ($(this).hasClass('s')) { return true; } else { $('.header-menu-item .submenu').hide(); $('.header-menu-item a').removeClass('s'); $('.submenu', $(this).parent()).show(); $(this).addClass('s'); return false; }",
 						'controller' => 'catalogue',
 						'action'     => 'index',
 					],
@@ -885,7 +884,6 @@
 							],
 						]
 					],
-
 					[
 						'name'       => 'iPhone/iPad',
 						'url'        => '/catalogue/apple',
@@ -893,7 +891,6 @@
 						'action'     => 'index',
 					],
 				]
-			]
-
+			],
 		]
 	];

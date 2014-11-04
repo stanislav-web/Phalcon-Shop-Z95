@@ -73,13 +73,7 @@ class ControllerBase extends \Phalcon\Mvc\Controller
 		 * Категории текущего магазина
 		 * @var null
 		 */
-		$_shopCategories = null,
-
-		/**
-		 * Главные категории текущего магазина
-		 * @var null
-		 */
-		$_shopMainCategories	=	null;
+		$_shopCategories = null;
 
 	public
 
@@ -211,13 +205,9 @@ class ControllerBase extends \Phalcon\Mvc\Controller
 
 		$nav = $this->di->get('navigation');
 
-		$nav->setActiveNode(
-			$this->router->getActionName(),
-			$this->router->getControllerName()
-		);
-
 		// В конце запись переменных для шаблонов
 		$this->view->setVars([
+			'breadcrumbs' 	=> 	$this->di->get('breadcrumbs'),// крошки
 			'language'	    =>	$this->_lang,       // текущий язык
 			'languages'	    =>	$this->_languages,  // все доступные языки
 			'shop' 		    => 	$this->_shop,       // параметры магазина
