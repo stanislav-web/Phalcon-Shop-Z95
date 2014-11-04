@@ -47,8 +47,9 @@
 
 	$di->set('navigation', function() use ($di) {
 
-		return new \Navigation\Navigation($di->get('config'));
-
+		require_once APP_PATH.'/modules/'.self::MODULE.'/config/navigation.php';
+		if(isset($navigation))
+			return new \Navigation\Navigation(new \Phalcon\Config($navigation));
 	}, true);
 
 	// Компонент URL используется для генерации всех видов адресов в приложении

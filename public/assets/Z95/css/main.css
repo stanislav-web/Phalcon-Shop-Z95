@@ -3727,3 +3727,8 @@ h1 .small {
     color: #48f900;
     font-size: 1.2em;
 }
+
+/** Stanislav WEB Add submenu row style **/
+.block.left{ float: left; width: 33%; }
+.block.right{ float: right; width: 33%; }
+.block.center{ display: inline-block; width: 33%; }
