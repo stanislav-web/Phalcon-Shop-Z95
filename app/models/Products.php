@@ -276,13 +276,13 @@ class Products extends \Phalcon\Mvc\Model
 					$result[$property] = explode(',', $value);
 				}
 				if($property == 'tags') {
-					$result->$property = json_decode($value, true);
+					$result[$property] = json_decode($value, true);
 				}
 				if($property == 'images') {
-					$result->$property = json_decode($value, true);
+					$result[$property] = json_decode($value, true);
 				}
 				if($property == 'filter_size') {
-					$result->$property = explode(',', $value);
+					$result[$property] = explode(',', $value);
 				}
 
 			}

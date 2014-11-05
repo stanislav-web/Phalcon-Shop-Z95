@@ -38,7 +38,7 @@ class BasketController extends ControllerBase
 		$this->loadCustomTrans('index');
 		parent::initialize();
 
-		$this->tag->setTitle($this->_shop->title);
+		$this->tag->setTitle($this->_shop['title']);
 	}
 
 	/**
