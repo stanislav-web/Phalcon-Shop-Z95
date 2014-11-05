@@ -76,15 +76,17 @@ class CatalogueController extends ControllerBase
 		if($action->catalogue)
 		{
 			// если подобран роутинг каталога, считаем количество запрошенных категорий, [0] в конце - каталог всегда первый в URL
-			if(sizeof($action->catalogue) == 1
-				&& $this->currentCategory = $this->_helper->findInTree($this->_shopCategories, 'alias', $action->catalogue[0])[0])
+			$this->currentCategory = $this->_helper->findInTree($this->_shopCategories, 'alias', $action->catalogue[0]);
+			if(sizeof($action->catalogue) == 1 && isset($this->currentCategory[0]))
 			{
+				$this->currentCategory = current($this->currentCategory);
 				// Обработка по адресу /catalogue/{man} существующей категории магазина
-				 $this->subcategoriesAction();
+				$this->subcategoriesAction();
 			}
 			else
 			{
 				// на выборку товаров итд итп. Лучше ииспользовать экшн который редиректит на этот index
+				exit('On a sample of the goods, etc. etc.. Better iispolzovat action that redirect to the index');
 			}
 		}
 	}
@@ -109,7 +111,8 @@ class CatalogueController extends ControllerBase
 						'catalogue'
 					]);
 
-				$articul = current($this->_routeTree['catalogue']);
+
+				$articul = current($this->_routeTree->catalogue);
 
 				$item = $this->productsModel->getProductCard($articul, $this->_shop['price_id'], true);
 

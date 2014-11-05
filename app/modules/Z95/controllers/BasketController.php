@@ -38,7 +38,7 @@ class BasketController extends ControllerBase
 		$this->loadCustomTrans('index');
 		parent::initialize();
 
-		$this->tag->setTitle($this->_shop->title);
+		$this->tag->setTitle($this->_shop['title']);
 	}
 
 	/**
@@ -65,41 +65,35 @@ class BasketController extends ControllerBase
 
 	public function updateAction()
 	{
-		$item = $this->request->getQuery('mode');
-//		var_dump($this->request->getQuery('mode'));
-//		die;
-//		if($this->session->has('cart')) {
-//			$session = $this->session->get('cart');
-//
-//			if(!empty($session) || $session != '' || null !== $session) {
-//				$session[$this->request->getPost('product_id')] = $this->request->getPost();
-//				$this->session->set("cart", $session);
-//			} else {
-//				$this->session->set("cart", array($this->request->getPost('product_id') => $this->request->getPost()));
-//			}
-//		} else {
-//			$this->session->set("cart", array($this->request->getPost('product_id') => $this->request->getPost()));
-//		}
-
-//		$this->view->disable();
+		$item = $this->request->getQuery('item');
 
 		$selected = '';
 		if ($item !== false && count($item)) {
 
+			/** Вызываем основной метод изменения состава корзины */
+//			$this->stash['basket'] = $this->set($item);
+
+			/** Формируем идентификатор обработанного размера позиции для передачи js-бибиотеку */
+			$id = key($item);
+			if (count($item[$id]) == 1) {
+				list($size, $count) = explode('_', $item[$id][0]);
+				if ($count > 0) {
+					$selected = $id.'_'.str_replace('?', '', str_replace('/', '_', $size));
+				}
+			}
+
+
 		} else {
 			$this->basket['no_new_items'] = true;
 //			$this->load_catalogue_items();
-			$this->stash['basket'] = $this->basket;
+//			 = $this->basket;
 		}
+
+
 //		$this->view->disable();
 		ob_start($this->view->partial('partials/basket/get'));
 		ob_end_flush();
 
-//		$view = new \Phalcon\Mvc\View();
-//		$view->setRenderLevel(\Phalcon\Mvc\View::LEVEL_NO_RENDER);
-//		echo $this->view->getRender('basket', 'get');
-//		print_r($this->view->getRender('basket', 'get'));
-//		die;
 		//Set the content of the response
 		return $this->response->setContent(json_encode(
 					array('success' 	=>	true,
@@ -107,6 +101,7 @@ class BasketController extends ControllerBase
 						  'hash' 		=>	$this->request->getQuery('hash'),
 						  'items' 		=>	$this->basket,
 						  'selected'	=>	$selected,
+						  'id' 			=> 	isset($id) ? $id : 0,
 						  'basket' 		=> 	ob_get_contents(),
 				)));
 
@@ -185,6 +180,93 @@ class BasketController extends ControllerBase
 		$result['basket_info'] = $basket_info;
 
 		$this->stash['json'] = $result;
+	}
+
+	/**
+	 * Метод загрузки информации о позициях в корзине из каталога
+	 *
+	 * @access private
+	 */
+	private function load_catalogue_items() {
+		/** Берем id всех позиций в корзине */
+		$ids = array_keys($this->basket['items']);
+
+		/** Для выбранных позиций загружаем информацию о них из каталога */
+		//$this->basket['catalogue_items'] = !empty($ids) ? $this->catalogue_model->get_items_by_array($ids) : array();
+		$this->basket['catalogue_items'] = !empty($ids) ? $this->getItemsByArray($ids) : array();
+	}
+
+	/**
+	 * Основной метод изменения состава корзины
+	 *
+	 * @param array		$item	Массив обрабатываемых позиций
+	 *
+	 * @access private
+	 */
+	private function set($item) {
+		/** Выделяем идентификаторы обрабатываемых позиций. Сейчас используется только одна позиция за один вызов этой функции */
+		$ids = array_keys($item);
+
+		/** Запомним только что обработанную позицию */
+		$this->basket['last_item'] = count($ids) ? $ids[0] : 0;
+
+		/** Поучаем информацию из каталога по обрабатываемым позициям */
+		$items = $this->ElasticCatalogueModel->getItemsByArray($ids);
+		//$items = $this->catalogue_model->get_items_by_array($ids);
+
+		/** Копируем начальное содержимое корзины */
+		$basket_items = $this->basket['items'];
+
+		foreach ($item as $id => $sizes) {
+			if (!isset($basket_items[$id])) {
+				/** Если обрабатываемой позиции не было в корзине, то добавляем запись для нее */
+				$basket_items[$id] = array('sizes' => array());
+			}
+
+			/** Устанавливаем ее цену из каталога */
+			$basket_items[$id]['price'] = $items[$id]['discount_price'];
+
+			/** Приступаем к обработке размеров для этой позиции */
+			foreach($sizes as $size => $size_count) {
+				/** Выделяем из полученной информации отдельно размер и количество */
+				list($size, $count) = explode('_', $size_count);
+
+				/** Устанавливем в корзине новое количество для данного размера */
+				if (strpos($count, '+') !== false && isset($basket_items[$id]['sizes'][$size])) {
+					/** Если количество начинается с "+", то увеличивем начальное количество на данное число */
+					$basket_items[$id]['sizes'][$size] += intval($count);
+				} else {
+					$basket_items[$id]['sizes'][$size] = intval($count);
+				}
+
+				// Если количество вещей данного размера <= 0, то удалить этот размер из позиции
+				if ($basket_items[$id]['sizes'][$size] <= 0) {
+					unset($basket_items[$id]['sizes'][$size]);
+				}
+
+				// Если у позиции не осталось размеров, то удалить из корзины
+				if (empty($basket_items[$id]['sizes'])) {
+					unset($basket_items[$id]);
+				}
+			}
+
+			/** Если позиция все еще в корзине, то проверим доступность запрошенного количества каждого размера */
+			if (isset($basket_items[$id])) {
+				if ($items[$id]['cat_type'] != 0) {
+					$basket_items[$id]['no_discount'] = 1;
+				}
+
+				/** Получаем массив доступных количеств всех размеров данной позиции */
+				$available_sizes = $this->catalogue_model->parse_sizes($items[$id]['cat_sizes_count']);
+
+				/** Прикрепим к корзине информацию о недобавленных размерах */
+				$this->check_declined_sizes($basket_items, $id, $sizes, $available_sizes);
+			}
+		}
+
+		$this->save($basket_items);
+
+		return $this->basket;
 	}
 
 	public function removeFromCartAction()
