@@ -11,26 +11,27 @@
 	<div id="CONTENT">
 		<h1>Распродажа</h1>
 		<ul class="Thermo"><li><a href="/">Главная</a></li><li>/&nbsp;<a href="/catalogue/">Каталог</a></li><li>/&nbsp;Распродажа</li></ul><div class="clear"></div><div class="element-catalogue_items"><div class="index-top-categories">
-
 				<?php if(!empty($salesGroup)): ?>
-					<?php foreach($salesGroup as $gender => $values): $sum[$gender] = 0; $opacity = 1;?>
-						<?php if($gender !=0): ?>
+					<?php foreach($salesGroup as $gender => $values): $opacity = 1;?>
 							<div class="category id_<?=$gender;?>">
 								<h2><?=($gender == 1) ? 'Мужчинам' : 'Женщинам'?><span class="count"></span></h2>
 								<div class="discount-tiles">
 									<?php foreach($values as $sales): ?>
-										<a href="<?=\Helpers\LocationUrls::location('/catalogue/sale?percent[]='.$sales['percent'].'&sex='.$gender); ?>" class="tile" style="opacity: <?=$opacity;?>">
-											<div class="value"><?=$sales['percent'];?>%</div>
-											<div class="count">наименований — <span><?=$sales['count'];?></span></div>
-										</a>
-									<? $sum[$gender] += $sales['count']; $opacity = sprintf("%f", ($opacity - 0.2)); endforeach; ?>
-									<a href="<?=\Helpers\LocationUrls::location('/catalogue/sale?percent[]=0&percent[]=100&sex='.$gender); ?>" class="tile" style="opacity: <?=$opacity;?>">
-										<div class="value">Все</div>
-										<div class="count">наименований — <span><?=$sum[$gender];?></span></div>
-									</a>
+										<?php if($sales['percent'] == 100): ?>
+											<a href="<?=\Helpers\LocationUrls::location('/catalogue/sale?percent[]='.$sales['percent'].'&sex[]=0&sex[]=1&sex[]=2&sex[]=3'); ?>" class="tile" style="opacity: <?=$opacity;?>">
+												<div class="value">Все</div>
+												<div class="count">наименований — <span><?=$sales['count'];?></span></div>
+											</a>
+										<?php else: ?>
+											<a href="<?=\Helpers\LocationUrls::location('/catalogue/sale?percent[]='.$sales['percent'].'&sex='.$gender); ?>" class="tile" style="opacity: <?=$opacity;?>">
+												<div class="value"><?=$sales['percent'];?>%</div>
+												<div class="count">наименований — <span><?=$sales['count'];?></span></div>
+											</a>
+										<?php endif; ?>
+
+									<? $opacity = sprintf("%f", ($opacity - 0.2)); endforeach; ?>
 								</div>
 							</div>
-						<?php endif; ?>
 					<?php endforeach; ?>
 				<?php else: ?>
 					Распродаж нет

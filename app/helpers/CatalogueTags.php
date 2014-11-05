@@ -97,7 +97,7 @@ class CatalogueTags extends \Phalcon\Tag
 	}
 
 	/**
-	 * findInTree($array, $key, $value) Поиск массива в дереве по ключ=>значение
+	 * findInTree($array, $key, $value) Поиск массивов в дереве по ключ=>значение
 	 * @param array object $array исходный массив
 	 * @param string $key ключ
 	 * @param string $value значение
@@ -107,7 +107,6 @@ class CatalogueTags extends \Phalcon\Tag
 	public static function findInTree($array, $key, $value)
 	{
 		$results = array();
-		$array = self::objectToArray($array);
 
 		$arrIt = new \RecursiveIteratorIterator(new \RecursiveArrayIterator($array));
 
@@ -119,6 +118,30 @@ class CatalogueTags extends \Phalcon\Tag
 		}
 		return $results;
 	}
+
+	/**
+	 * findInTree($array, $key, $value) Исключение из массивов по ключ=>значение
+	 * @param array object $array исходный массив
+	 * @param string $key ключ
+	 * @param string $value значение
+	 * @access static
+	 * @return array
+	 */
+	public static function excludeFromTree($array, $key, $value)
+	{
+		$results = array();
+
+		$arrIt = new \RecursiveIteratorIterator(new \RecursiveArrayIterator($array));
+
+		foreach($arrIt as $sub) {
+			$subArray = $arrIt->getSubIterator();
+			if($subArray[$key] === $value)
+				unset($subArray);
+			else $results[] = iterator_to_array($subArray);
+		}
+		return $results;
+	}
+
 
 	public static function categoriesToTree($array, $parent_id = 0) {
 		$tree = array();

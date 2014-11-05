@@ -13,11 +13,21 @@
 
 	// Роутер каталога
 
+
+
+
 	$router->addGet("/catalogue/:params", [
 		'module'    	=>  $module,
 		'namespace' 	=> 'Modules\\'.$module.'\Controllers\\',
 		'controller'    => 'catalogue',
 		'action'        => 'index'
+	]);
+
+	$router->addGet("/catalogue", [
+		'module'    	=>  $module,
+		'namespace' 	=> 'Modules\\'.$module.'\Controllers\\',
+		'controller'    => 'catalogue',
+		'action'        => 'subcategories'
 	]);
 
 	$router->addGet("/tags/:params", [

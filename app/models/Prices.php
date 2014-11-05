@@ -108,11 +108,16 @@ class Prices extends \Phalcon\Mvc\Model
 		}
 
 		if($result === null) {    // Выполняем запрос из MySQL
-			$sql = "SELECT STRAIGHT_JOIN percent, sex, COUNT(prices.`product_id`) AS `count`
+
+
+			$sql =	"
+				SELECT STRAIGHT_JOIN products.sex AS sex, COALESCE(percent, '100') AS percent, COUNT(prices.`product_id`) AS `count`
 					FROM ".self::TABLE." prices
 					INNER JOIN ".Products::TABLE." products ON (products.id = prices.product_id && prices.id = $price_id)
 					WHERE products.sex IN (".join(',', $sex).") && prices.percent > 0
-					GROUP BY percent, sex;";
+					GROUP BY sex, percent ASC WITH ROLLUP;
+			";
+
 			$result = $this->_db->query($sql)->fetchAll();
 
 			// Сохраняем запрос в кэше

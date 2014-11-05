@@ -96,4 +96,54 @@ class Categories extends \Phalcon\Mvc\Model
 		}
 		return $result;
 	}
+
+	/**
+	 * getSubcategories($shop_id, $sort, $cache) Получение подкатегорий выбранного магазина
+	 * с изображением самого рейтингового товара в каждой категории
+	 *
+	 * @param int $shop_id
+	 * @param string $sort ASC DESC
+	 * @param $cache
+	 * @return array
+	 */
+	public function getSubcategories($shop_id, $sort, $cache)
+	{
+		$result = null;
+
+		if ($cache && $this->_cache) {
+			$backendCache = $this->getDI()->get('backendCache');
+			$result = $backendCache->get(self::TABLE.'-'.strtolower(__FUNCTION__).'-'.$shop_id.'.cache');
+		}
+
+		if($result === null) {    // Выполняем запрос из MySQL
+
+			$sql =	"SELECT shop_rel.category_id AS id, cat.name AS name,
+						(
+							SELECT CONCAT('{\"', p.id, '\":', p.images, '}') FROM ".Products::TABLE." p
+							INNER JOIN ".Common::TABLE_PRODUCTS_REL." pr ON (pr.product_id = p.id)
+							WHERE pr.category_id = shop_rel.`category_id` ORDER BY rating DESC LIMIT 1
+						) AS img,
+
+						(
+							SELECT alias FROM ".Categories::TABLE." c
+							WHERE c.id = cat.parent_id
+						) AS parent_alias, cat.alias AS alias,
+
+						COUNT(prod_rel.product_id) AS count_prod
+						FROM ".Common::TABLE_CAT_SHOP_REL." shop_rel
+						INNER JOIN ".self::TABLE." cat ON (shop_rel.category_id = cat.id)
+						INNER JOIN ".Common::TABLE_PRODUCTS_REL." prod_rel ON (prod_rel.category_id = cat.id)
+						INNER JOIN ".Products::TABLE." prod ON (prod.id = prod_rel.product_id)
+
+						WHERE shop_rel.shop_id = ".$shop_id." && shop_rel.category_parent_id > 0
+						GROUP BY id
+						ORDER BY shop_rel.sort ".$sort;
+
+			$result = $this->_db->query($sql)->fetchAll();
+
+			// Сохраняем запрос в кэше
+			if ($cache && $this->_cache) $backendCache->save(self::TABLE.'-'.strtolower(__FUNCTION__).'-'.$shop_id.'.cache', $result);
+		}
+		return $result;
+	}
 }

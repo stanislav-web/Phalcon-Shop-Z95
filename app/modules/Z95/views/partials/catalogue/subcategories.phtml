@@ -1,21 +1,20 @@
-<div id="subcategories" class="block">
-	<h4 class="title_block subcategory-heading"><?=$viewTranslate['CATEGORIES']; ?></h4>
-	<div class="clearfix row">
-		<?php if(!empty($categoriesSide)): ?>
-			<?php foreach($categoriesSide as $category): ?>
-				<div class="col-md-3 col-xs-6 col-sp-12">
-					<div class="subcategories">
-						<div class="subcategory-image">
-							<a href="<? echo Helpers\LocationUrls::location($this->request->getURI().'/'.$category['alias']); ?>" title="<?= $category['name']; ?>" class="img">
-								<?= $this->tag->image(array('assets/' . $shop['code'] . '/images/12-category_default.jpg', "alt" => $category['name'])); ?>
-							</a>
-						</div>
-						<h5>
-							<a href="<? echo Helpers\LocationUrls::location($this->request->getURI().'/'.$category['alias']);?>" class = "subcategory-name""><?=$category['name'];?></a>
-						</h5>
-						<div class="cat_desc">
-							<p><?= $category['description']; ?></p>
-						</div>
+<!-- Catalogue all subcategories template -->
+<div class="element-catalogue_items">
+	<div>
+		<?php if(!empty($subcategories)): ?>
+			<?php foreach($subcategories as $category): ?>
+				<?php
+					// decode image
+					$images 	= json_decode($category['img'], true);
+					$product_id	=	min(array_keys($images));
+				?>
+				<div class="catalogue-category" onclick="window.location.href= '<?=\Helpers\LocationUrls::location('/catalogue/'.$category['parent_alias'].'/'.$category['alias']);?>">
+					<div class="leader">
+						<img class="image" src="http://img3.z95.ru/f/p/c_0_100_300_400/sep-tilt_shift/600x600/catalogue/<?=$product_id;?>/<?=$images[$product_id][1];?>">
+					</div>
+					<div class="title">
+						<a href="<?=\Helpers\LocationUrls::location('/catalogue/'.$category['parent_alias'].'/'.$category['alias']);?>"><?=$category['name'];?></a>
+						<span class="count"><?=$category['count_prod'];?></span>
 					</div>
 				</div>
 			<?php endforeach; ?>
@@ -23,4 +22,6 @@
 			<?=$viewTranslate['CATEGORIES_NOT_FOUND']; ?>
 		<?php endif; ?>
 	</div>
+	<div class="clear"></div>
 </div>
+<!-- Catalogue all subcategories template -->
