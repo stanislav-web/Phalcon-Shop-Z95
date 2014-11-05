@@ -1363,7 +1363,7 @@ window.matchMedia=window.matchMedia||(function(e,f){var c,a=e.documentElement,b=
             data: {'mode': 'small', 'hash': this.hash},
             success: function(data) {
                 console.log(data);
-                return false;
+
                 return basket.update(data);
             },
             dataType: 'json',
@@ -1409,6 +1409,7 @@ window.matchMedia=window.matchMedia||(function(e,f){var c,a=e.documentElement,b=
     };
 
     this.update = function(d) {
+        console.log(d);
         if (d.success && this.hash == d.hash) {
             switch (d.mode) {
                 case 'small'	: { $target = $('#SMALL_BASKET');  break; }
