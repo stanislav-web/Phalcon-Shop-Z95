@@ -101,12 +101,14 @@ class Categories extends \Phalcon\Mvc\Model
 	 * getSubcategories($shop_id, $sort, $cache) Получение подкатегорий выбранного магазина
 	 * с изображением самого рейтингового товара в каждой категории
 	 *
-	 * @param int $shop_id
+	 * @param int $shop_id ID магазина
+	 * @param int $parent_id ID категории родителя
+	 * @param string $conditional мат. выражение !=, >, <, == ...
 	 * @param string $sort ASC DESC
 	 * @param $cache
 	 * @return array
 	 */
-	public function getSubcategories($shop_id, $sort, $cache)
+	public function getSubcategories($shop_id, $parent_id , $conditional, $sort, $cache)
 	{
 		$result = null;
 
@@ -135,7 +137,7 @@ class Categories extends \Phalcon\Mvc\Model
 						INNER JOIN ".Common::TABLE_PRODUCTS_REL." prod_rel ON (prod_rel.category_id = cat.id)
 						INNER JOIN ".Products::TABLE." prod ON (prod.id = prod_rel.product_id)
 
-						WHERE shop_rel.shop_id = ".$shop_id." && shop_rel.category_parent_id > 0
+						WHERE shop_rel.shop_id = ".$shop_id." && shop_rel.category_parent_id ".$conditional." ".$parent_id."
 						GROUP BY id
 						ORDER BY shop_rel.sort ".$sort;
 

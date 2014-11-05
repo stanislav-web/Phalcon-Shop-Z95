@@ -3,18 +3,7 @@
 	 * Конфигурация роутера Phalcon
 	 */
 
-	// Смена языка
-	$router->add("/language/{language:[a-z]+}", [
-		'module'    	=>  $module,
-		'namespace' 	=> 'Modules\\'.$module.'\Controllers\\',
-		'controller'    => 'index',
-		'action'        => 'language'
-	]);
-
 	// Роутер каталога
-
-
-
 
 	$router->addGet("/catalogue/:params", [
 		'module'    	=>  $module,
@@ -27,7 +16,14 @@
 		'module'    	=>  $module,
 		'namespace' 	=> 'Modules\\'.$module.'\Controllers\\',
 		'controller'    => 'catalogue',
-		'action'        => 'subcategories'
+		'action'        => 'categories'
+	]);
+
+	$router->addGet("/catalogue/sale", [
+		'module'    	=>  $module,
+		'namespace' 	=> 'Modules\\'.$module.'\Controllers\\',
+		'controller'    => 'catalogue',
+		'action'        => 'sale'
 	]);
 
 	$router->addGet("/tags/:params", [

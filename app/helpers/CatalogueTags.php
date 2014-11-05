@@ -51,7 +51,7 @@ class CatalogueTags extends \Phalcon\Tag
 				$treeData[$cursor][] = $value;
 			}
 		}
-		return $treeData;
+		return (object)$treeData;
 	}
 
 	/**

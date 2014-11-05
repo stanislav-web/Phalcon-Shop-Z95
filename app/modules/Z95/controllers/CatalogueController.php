@@ -39,10 +39,13 @@ class CatalogueController extends ControllerBase
 		$_routeTree = false,
 
 		/**
-		 * Лимит вывода товаров на страницу
-		 * @var int
+		 * Текущая категория
+		 * @var bool
 		 */
-		$_onpage = 10;
+		$currentCategory	=	false,
+
+		$banners			=	false;
+
 
 	/**
 	 * initialize() Инициализирую конструктор
@@ -57,6 +60,9 @@ class CatalogueController extends ControllerBase
 
 		// Заголовок страницы
 		$this->tag->setTitle($this->_shop['title']);
+
+		// Получаю баннер для страницы
+		$this->banners = $this->bannersModel->getBanners($this->_shop['id'], true);
 	}
 
 	/**
@@ -66,14 +72,27 @@ class CatalogueController extends ControllerBase
 	 */
 	public function indexAction()
 	{
-
+		$action = $this->_helper->catalogueRouteTree($this->request->getURI(), ['catalogue']);
+		if($action->catalogue)
+		{
+			// если подобран роутинг каталога, считаем количество запрошенных категорий, [0] в конце - каталог всегда первый в URL
+			if(sizeof($action->catalogue) == 1
+				&& $this->currentCategory = $this->_helper->findInTree($this->_shopCategories, 'alias', $action->catalogue[0])[0])
+			{
+				// Обработка по адресу /catalogue/{man} существующей категории магазина
+				 $this->subcategoriesAction();
+			}
+			else
+			{
+				// на выборку товаров итд итп. Лучше ииспользовать экшн который редиректит на этот index
+			}
+		}
 	}
 
 	public function itemAction()
 	{
 		// Установка заголовка
 		$this->tag->prependTitle($this->_translate['TITLE'].' - ');
-
 
 		// проверка страницы в кэше
 
@@ -182,9 +201,9 @@ class CatalogueController extends ControllerBase
 	}
 
 	/**
-	 * Категории каталога
+	 * Категории каталога с выводом изображений по рейтингу товаров
 	 */
-	public function subcategoriesAction()
+	public function categoriesAction()
 	{
 		// проверка страницы в кэше
 
@@ -206,21 +225,64 @@ class CatalogueController extends ControllerBase
 			// получаю все дочерние категории каталога
 			// Получение подкатегорий выбранного магазина с изображением самого рейтингового товара в каждой категории
 
-			$subCategories = $this->categoriesModel->getSubcategories($this->_shop['id'], 'DESC', true);
+			$subCategories = $this->categoriesModel->getSubcategories($this->_shop['id'], 0, '>', 'DESC', true);
 
 			// Установка заголовка
 			$this->tag->prependTitle($this->_translate['TITLE'].' - ');
 
 			// вывожу по умолчанию страницу каталога c вложением subcategories
 			$this->view->setVars([
-				'template'			=>	'subcategories',
-				'banner'			=>	'',
+				'template'			=>	'categories',
+				'banners'			=>	$this->banners,
 				'subcategories'		=>	$subCategories,
 				'title'				=>	$title,
 			]);
 
 			// ссылаюсь на вывод в action index с видом catalogue/index
 			$this->view->render('catalogue', 'index')->pick("catalogue/index");
+		}
+		// Сохраняем вывод в кэш
+		if($this->_config->cache->frontend) $this->view->cache(array("key" => $this->cachePage(__FUNCTION__)));
+	}
+
+	/**
+	 * Подкатегории каталога с выводом изображений по рейтингу товаров
+	 */
+	public function subcategoriesAction()
+	{
+
+		// проверка страницы в кэше
+		$content = null;
+		if($this->_config->cache->frontend)
+		{
+			$content = $this->view->getCache()->exists($this->cachePage(__FUNCTION__));
+		}
+
+		if($content === null)
+		{
+			// Содержимое контроллера для формирования выдачи
+			// Формирую заголовок
+			if(!empty($this->currentCategory))
+			{
+				$title = $this->currentCategory['name'];
+				$this->tag->prependTitle($title.' - ');
+
+				// получаю все дочерние категории раздела
+				// Получение подкатегорий выбранного магазина с изображением самого рейтингового товара в каждой категории
+
+				$subCategories = $this->categoriesModel->getSubcategories($this->_shop['id'], $this->currentCategory['id'], '=', 'DESC', true);
+
+				// вывожу по умолчанию страницу каталога c вложением subcategories
+				$this->view->setVars([
+					'template'			=>	'categories',
+					'banners'			=>	$this->banners,
+					'subcategories'		=>	$subCategories,
+					'title'				=>	$title,
+				]);
+			}
+
+			// ссылаюсь на вывод в action index с видом catalogue/index
+			$this->view->pick("catalogue/index");
 		}
 		// Сохраняем вывод в кэш
 		if($this->_config->cache->frontend) $this->view->cache(array("key" => $this->cachePage(__FUNCTION__)));

@@ -1,16 +1,21 @@
 <!-- / Catalogue layout -->
 <div class="column main-column">
-	<div class="inner_teaser">
-		<a href="<?=\Helpers\LocationUrls::location('/catalogue/sale'); ?>" >
-			<?= $this->tag->image(array('f/t/5ad05dbba33a7c986ffad79ff33dbd98.jpg')); ?>
-		</a>
+	<?php if(isset($banners['inner']) && !empty($banners['inner'])): ?>
+		<div class="inner_teaser">
+			<a href="<?=\Helpers\LocationUrls::location('/catalogue/sale'); ?>" >
+				<?= $this->tag->image(array('f/t/'.$banners['inner'][0]['image'])); ?>
+			</a>
+		</div>
 	</div>
+	<?endif;?>
+
+	<!-- Catalogue content layout -->
 	<div id="CONTENT">
 		<h1><?=$title;?></h1>
 
 		<!-- Bread Crumbs -->
 		<ul class="Thermo">
-			<?= $breadcrumbs->get("/&nbsp;"); ?>
+			<?//= $breadcrumbs->setCurrent()->separate('/&nbsp;'); ?>
 		</ul>
 		<!-- /Bread Crumbs -->
 
@@ -26,5 +31,6 @@
 			<!-- /Render content -->
 		</div>
 	</div>
+	<!-- /Catalogue content layout -->
 </div>
 <!-- / Catalogue layout -->
