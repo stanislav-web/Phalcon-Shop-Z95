@@ -14,6 +14,8 @@ namespace Modules\Z95\Controllers;
  * @var $this->_config      доступ ко всем настройкам
  * @var $this->_translate   доступ к переводчику
  * @var $this->_shop        параметры текущего магазина
+ * @var $this->_mainCategories главные категории
+
  *
  * @var $this->di           вызов компонентов из app/config/di.php
  * @var $this->session      вызов сессии
@@ -72,6 +74,7 @@ class CatalogueController extends ControllerBase
 		// Установка заголовка
 		$this->tag->prependTitle($this->_translate['TITLE'].' - ');
 
+
 		// проверка страницы в кэше
 
 		$content = null;
@@ -88,6 +91,7 @@ class CatalogueController extends ControllerBase
 					]);
 
 				$articul = current($this->_routeTree['catalogue']);
+
 				$item = $this->productsModel->getProductCard($articul, $this->_shop['price_id'], true);
 
 				// передача подходящих размеров для этого товара

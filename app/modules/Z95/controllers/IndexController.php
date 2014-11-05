@@ -47,8 +47,6 @@
 		{
 			// проверка страницы в кэше
 
-			$banners = $this->bannersModel->getBanners($this->_shop['id'], true);
-
 			$content = null;
 			if($this->_config->cache->frontend)
 			{
@@ -63,20 +61,28 @@
 			if($content === null)
 			{
 				// Содержимое контроллера для формирования выдачи
-				$newProducts = $this->productsModel->getNewProducts($this->_shop['price_id'], 10, true);
-				$this->view->setVar("latestProducts", $newProducts);
 
-				$topProducts = $this->productsModel->getTopProducts($this->_shop['price_id'], 5, true);
-				$this->view->setVar("topProducts", $topProducts);
+				// Формирую заголовок
 
-				$featuredProducts = $this->productsModel->get(array(), array('date_create' => 'DESC'), 2, true);
-				$this->view->setVar('featuredProducts', $featuredProducts);
+				$title = $this->_shop['title'];
+
+				// получение баннеров
+				$banners = $this->bannersModel->getBanners($this->_shop['id'], true);
+
+				// получаю все дочерние категории каталога
+				// Получение подкатегорий выбранного магазина с изображением самого рейтингового товара в каждой категории
+
+				$subCategories = $this->categoriesModel->getSubcategories($this->_shop['id'], 'DESC', true);
+
+				// вывожу по умолчанию страницу каталога c вложением subcategories
+				$this->view->setVars([
+					'banners'			=>	$banners,
+					'subcategories'		=>	$subCategories,
+					'title'				=>	$title,
+				]);
 			}
-			else
-			{
-				// Выводим в кэш
-				if($this->_config->cache->frontend) $this->view->cache(true);
-			}
+			// Сохраняем вывод в кэш
+			if($this->_config->cache->frontend) $this->view->cache(array("key" => $this->cachePage(__FUNCTION__)));
 		}
 
 		/**
@@ -148,8 +154,6 @@
 			if($content === null)
 			{
 				// Содержимое контроллера для формирования выдачи
-
-
 
 				// Сохраняем вывод в кэш
 				if($this->_config->cache->frontend) $this->_cache->save();

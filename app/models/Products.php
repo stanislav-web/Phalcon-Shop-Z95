@@ -246,18 +246,24 @@ class Products extends \Phalcon\Mvc\Model
 		}
 		if($result === null) {
 			$sql = "SELECT 	".self::TABLE.".id AS product_id,  ".self::TABLE.".name AS product_name, ".self::TABLE.".articul,
-					".self::TABLE.".description AS description,	GROUP_CONCAT(CONCAT(".Tags::TABLE.".id)) AS all_tags,
-					GROUP_CONCAT(CONCAT(".Tags::TABLE.".name)) AS all_tags_name,
-					GROUP_CONCAT(CONCAT(".Categories::TABLE.".name)) AS category_name,
-					".Brands::TABLE.".name AS brand, ".Brands::TABLE.".alias AS brand_alias, ".Prices::TABLE.".price
+					".self::TABLE.".tags,
+					".self::TABLE.".images,
+					".self::TABLE.".filter_size,
+					".self::TABLE.".description AS description, "
+//					GROUP_CONCAT(CONCAT(".Tags::TABLE.".id)) AS all_tags,
+//					GROUP_CONCAT(CONCAT(".Tags::TABLE.".name)) AS all_tags_name,
+//					GROUP_CONCAT(CONCAT(".Categories::TABLE.".name)) AS category_name,
+					.Brands::TABLE.".name AS brand, ".Brands::TABLE.".alias AS brand_alias, ".Prices::TABLE.".price
 
 					FROM ".self::TABLE."
-					INNER JOIN ".Prices::TABLE." ON (".Prices::TABLE.".id = $shop_price_id && ".Prices::TABLE.".product_id = ".self::TABLE.".id)
-					INNER JOIN ".Common::TABLE_PRODUCTS_REL." ON (".self::TABLE.".id = ".Common::TABLE_PRODUCTS_REL.".product_id)
-					INNER JOIN ".Brands::TABLE." ON (".self::TABLE.".brand_id = ".Brands::TABLE.".id)
-					LEFT JOIN ".Tags::TABLE." ON (".Tags::TABLE.".id = ".Common::TABLE_PRODUCTS_REL.".tag_id)
-					LEFT JOIN ".Categories::TABLE." ON (".Categories::TABLE.".id = ".Common::TABLE_PRODUCTS_REL.".category_id)
+					LEFT JOIN ".Prices::TABLE." ON (".Prices::TABLE.".id = $shop_price_id && ".Prices::TABLE.".product_id = ".self::TABLE.".id)" .
+//					INNER JOIN ".Common::TABLE_PRODUCTS_REL." ON (".self::TABLE.".id = ".Common::TABLE_PRODUCTS_REL.".product_id)
+
+//					LEFT JOIN ".Tags::TABLE." ON (".Tags::TABLE.".id = ".Common::TABLE_PRODUCTS_REL.".tag_id)
+//					LEFT JOIN ".Categories::TABLE." ON (".Categories::TABLE.".id = ".Common::TABLE_PRODUCTS_REL.".category_id)
+					"INNER JOIN ".Brands::TABLE." ON (".self::TABLE.".brand_id = ".Brands::TABLE.".id)
 					WHERE ".self::TABLE.".articul = '".$articul."' LIMIT 1";
+
 
 			$result = $this->_db->query($sql)->fetch();
 
@@ -269,6 +275,16 @@ class Products extends \Phalcon\Mvc\Model
 				if($property == 'category_name') {
 					$result[$property] = explode(',', $value);
 				}
+				if($property == 'tags') {
+					$result->$property = json_decode($value, true);
+				}
+				if($property == 'images') {
+					$result->$property = json_decode($value, true);
+				}
+				if($property == 'filter_size') {
+					$result->$property = explode(',', $value);
+				}
+
 			}
 			// Сохраняем запрос в кэше
 			if($cache && $this->_cache) $backendCache->save(self::TABLE.'-'.strtolower(__FUNCTION__).'-'.$shop_price_id.'.cache', $result);

@@ -135,6 +135,7 @@
 								)
 							WHERE ".self::TABLE_CAT_SHOP_REL.".shop_id = ".$shop_id;
 
+
 				$result = $this->_db->query($sql)->fetchAll();
 
 				// Сохраняем запрос в кэше

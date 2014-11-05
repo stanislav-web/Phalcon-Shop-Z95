@@ -71,3 +71,10 @@
 		'controller'    => 'index',
 		'action'        => 'about',
 	]);
+
+	$router->add("/basket/get", [
+		'module'    	=>  $module,
+		'namespace' 	=> 'Modules\\'.$module.'\Controllers\\',
+		'controller'    => 'basket',
+		'action'        => 'get',
+	]);

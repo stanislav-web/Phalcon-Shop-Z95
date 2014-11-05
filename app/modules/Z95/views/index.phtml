@@ -46,8 +46,8 @@
 
 <!-- Блоки окон и сообщений -->
 <div class="basket-container">
-	<div id="SMALL_BASKET" class="Shadow">
-		<div class="close" onclick="$('#SMALL_BASKET').hide(); $('#_SMALL_BASKET').html('');"></div>
+	<div class="Shadow" id="SMALL_BASKET">
+		<div onclick="$('#SMALL_BASKET').hide(); $('#_SMALL_BASKET').html('');" class="close"></div>
 		<div id="_SMALL_BASKET"></div>
 	</div>
 </div>
@@ -126,6 +126,7 @@
 	<div class="content">
 		<?php echo $this->getContent(); ?>
 	</div>
+
 </td>
 </tr>
 	<!-- Footer -->
