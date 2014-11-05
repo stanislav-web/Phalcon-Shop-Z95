@@ -73,7 +73,13 @@ class ControllerBase extends \Phalcon\Mvc\Controller
 		 * Категории текущего магазина
 		 * @var null
 		 */
-		$_shopCategories = null;
+		$_shopCategories = null,
+
+		/**
+		 * По умолчанию, хлебные крошки
+		 * @var null
+		 */
+		$_breadcrumbs = null;
 
 	public
 
@@ -180,7 +186,9 @@ class ControllerBase extends \Phalcon\Mvc\Controller
 		$this->_config	=	$this->di->get('config');
 		$this->_helper	=	new \Helpers\CatalogueTags();
 
-		// Загрузка локалей
+		// Загрузка локалей и навигации
+
+		$this->_breadcrumbs = $this->di->get('breadcrumbs');
 
 		$this->loadMainTrans();
 
@@ -207,13 +215,21 @@ class ControllerBase extends \Phalcon\Mvc\Controller
 
 		// В конце запись переменных для шаблонов
 		$this->view->setVars([
-			'breadcrumbs' 	=> 	$this->di->get('breadcrumbs'),// крошки
 			'language'	    =>	$this->_lang,       // текущий язык
 			'languages'	    =>	$this->_languages,  // все доступные языки
 			'shop' 		    => 	$this->_shop,       // параметры магазина
 			'navigation' 	=> 	$nav,               // топ меню навигации
 			'newProducts'   =>  $this->productsModel->getNewProducts($this->_shop['price_id'], 6,  true)       // новые товары
 		]);
+	}
+
+	/**
+	 * Событие после выполнения всего роута
+	 */
+	public function afterExecuteRoute()
+	{
+		// Ставлю подхват хлебных крошек, когда уже произошел роутинг в контроллерах и добавлен путь в ->add()
+		$this->view->setVar('breadcrumbs', $this->_breadcrumbs->generate()); // крошки
 	}
 
 	/**

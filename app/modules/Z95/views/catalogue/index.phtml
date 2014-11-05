@@ -12,12 +12,17 @@
 	<!-- Catalogue content layout -->
 	<div id="CONTENT">
 		<h1><?=$title;?></h1>
-
-		<!-- Bread Crumbs -->
-		<ul class="Thermo">
-			<?//= $breadcrumbs->setCurrent()->separate('/&nbsp;'); ?>
-		</ul>
-		<!-- /Bread Crumbs -->
+			<?php if(!empty($breadcrumbs)): ?>
+				<!-- Bread Crumbs -->
+				<ul class="Thermo">
+					<?php foreach($breadcrumbs as $crumb): ?>
+						<li>
+							<?=($crumb['active']) ? $crumb['text'] : $this->tag->linkTo($crumb['link'], $crumb['text']).' / '; ?>
+						</li>
+					<?php endforeach; ?>
+				</ul>
+				<!-- Bread Crumbs -->
+			<?endif;?>
 
 		<div class="clear"></div>
 		<div class="element-catalogue_items">

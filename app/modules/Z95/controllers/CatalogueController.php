@@ -44,8 +44,11 @@ class CatalogueController extends ControllerBase
 		 */
 		$currentCategory	=	false,
 
+		/**
+		 * Баннера для каталога
+		 * @var bool
+		 */
 		$banners			=	false;
-
 
 	/**
 	 * initialize() Инициализирую конструктор
@@ -85,8 +88,8 @@ class CatalogueController extends ControllerBase
 			}
 			else
 			{
-				// на выборку товаров итд итп. Лучше ииспользовать экшн который редиректит на этот index
-				exit('On a sample of the goods, etc. etc.. Better iispolzovat action that redirect to the index');
+				// На выборку товаров итд итп. Лучше использовать экшн который редиректит на этот index
+				exit('On a sample of the goods, etc. etc.. Better use action that redirect to the index');
 			}
 		}
 	}
@@ -145,6 +148,9 @@ class CatalogueController extends ControllerBase
 
 			$this->tag->prependTitle($title.' - ');
 
+			// Добавляю путь в цепочку навигации
+			$this->_breadcrumbs->add($title, $this->request->getURI());
+
 			// вывожу по умолчанию страницу каталога c вложением sales
 			$this->view->setVars([
 				'template'		=>	'sale',
@@ -160,7 +166,11 @@ class CatalogueController extends ControllerBase
 		}
 		else
 		{
+			$title = $this->_translate['SALE'];
 			$this->tag->prependTitle($this->_translate['SALE'].' - ');
+
+			// Добавляю путь в цепочку навигации
+			$this->_breadcrumbs->add($title, $this->request->getURI());
 
 			// получаю колическво товаров по скидкам sex = 1,2....
 			$salesGroup = $this->_helper->groupArray(
@@ -225,6 +235,9 @@ class CatalogueController extends ControllerBase
 
 			$this->tag->prependTitle($title.' - ');
 
+			// Добавляю путь в цепочку навигации
+			$this->_breadcrumbs->add($title, $this->request->getURI());
+
 			// получаю все дочерние категории каталога
 			// Получение подкатегорий выбранного магазина с изображением самого рейтингового товара в каждой категории
 
@@ -269,6 +282,9 @@ class CatalogueController extends ControllerBase
 			{
 				$title = $this->currentCategory['name'];
 				$this->tag->prependTitle($title.' - ');
+
+				// Добавляю путь в цепочку навигации
+				$this->_breadcrumbs->add($title, $this->request->getURI());
 
 				// получаю все дочерние категории раздела
 				// Получение подкатегорий выбранного магазина с изображением самого рейтингового товара в каждой категории

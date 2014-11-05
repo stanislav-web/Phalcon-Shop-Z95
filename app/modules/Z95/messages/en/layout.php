@@ -3,11 +3,13 @@
 	 * English localization file for Layout
 	 */
 	$messages = [
-		"HOME"                     	=>  "HOME",
+		"HOME"                     	=>  "Главная",
 		"CATEGORIES"             	=>  "CATEGORIES",
 		"COMMUNITY"                	=>  "COMMUNITY",
 		"SHOP"         				=>  "SHOP",
 		"DELIVERY"         			=>  "DELIVERY",
 		"ABOUT US"         			=>  "ABOUT US",
-	    "NOT_FOUND"                 =>  "404 Page Not Found"
+	    "NOT_FOUND"                 =>  "404 Page Not Found",
+		"ABOUT"                 	=>  "About"
+
 	];

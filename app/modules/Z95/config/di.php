@@ -45,12 +45,8 @@
 
 	// Компонент Breadcrumbs. Управление навигацией на сайте
 
-	$di->set('breadcrumbs', function() use ($di) {
-
-		$crumbs = require_once APP_PATH.'/modules/'.self::MODULE.'/config/crumbs.php';
-
-		if(isset($crumbs))
-			return new Breadcrumbs\Breadcrumbs($crumbs);
+	$di->set('breadcrumbs', function() {
+			return new Breadcrumbs\Breadcrumbs();
 	}, true);
 
 

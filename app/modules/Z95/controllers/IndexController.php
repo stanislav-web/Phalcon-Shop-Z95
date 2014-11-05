@@ -105,7 +105,8 @@
 			{
 				// Содержимое контроллера для формирования выдачи
 
-
+				// Добавляю путь в цепочку навигации
+				$this->_breadcrumbs->add($this->_translate['ABOUT'], $this->request->getURI());
 
 				// Сохраняем вывод в кэш
 				if($this->_config->cache->frontend) $this->_cache->save();
