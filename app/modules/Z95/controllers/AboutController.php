@@ -46,28 +46,9 @@ class AboutController extends ControllerBase
 	 */
 	public function indexAction()
 	{
-
+		exit('sdsdsd');
 	}
 
-	public function discountsAction()
-	{
-
-	}
-
-	public function deliveryAction()
-	{
-
-	}
-
-	public function returnAction()
-	{
-
-	}
-
-	public function optAction()
-	{
-
-	}
 
 
 

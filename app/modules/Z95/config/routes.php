@@ -26,20 +26,6 @@
 		'action'        => 'sale'
 	]);
 
-	$router->addGet("/tags/:params", [
-		'module'    	=>  $module,
-		'namespace' 	=> 'Modules\\'.$module.'\Controllers\\',
-		'controller'    => 'catalogue',
-		'action'        => 'index'
-	]);
-
-	$router->addGet("/brands/:params", [
-		'module'    	=>  $module,
-		'namespace' 	=> 'Modules\\'.$module.'\Controllers\\',
-		'controller'    => 'catalogue',
-		'action'        => 'index'
-	]);
-
 	$router->add("/cart/", [
 		'module'    	=>  $module,
 		'namespace' 	=> 'Modules\\'.$module.'\Controllers\\',
@@ -54,13 +40,6 @@
 		'action'        => 'item'
 	]);
 
-	$router->addGet("/catalogue/sale", [
-		'module'    	=>  $module,
-		'namespace' 	=> 'Modules\\'.$module.'\Controllers\\',
-		'controller'    => 'catalogue',
-		'action'        => 'sale'
-	]);
-
 	$router->add("/about", [
 		'module'    	=>  $module,
 		'namespace' 	=> 'Modules\\'.$module.'\Controllers\\',
@@ -68,9 +47,30 @@
 		'action'        => 'about',
 	]);
 
-	$router->add("/basket/get", [
+	$router->add("/discounts", [
 		'module'    	=>  $module,
 		'namespace' 	=> 'Modules\\'.$module.'\Controllers\\',
-		'controller'    => 'basket',
-		'action'        => 'get',
+		'controller'    => 'index',
+		'action'        => 'discounts',
+	]);
+
+	$router->add("/delivery", [
+		'module'    	=>  $module,
+		'namespace' 	=> 'Modules\\'.$module.'\Controllers\\',
+		'controller'    => 'index',
+		'action'        => 'delivery',
+	]);
+
+	$router->add("/return", [
+		'module'    	=>  $module,
+		'namespace' 	=> 'Modules\\'.$module.'\Controllers\\',
+		'controller'    => 'index',
+		'action'        => 'return',
+	]);
+
+	$router->add("/opt", [
+		'module'    	=>  $module,
+		'namespace' 	=> 'Modules\\'.$module.'\Controllers\\',
+		'controller'    => 'index',
+		'action'        => 'opt',
 	]);

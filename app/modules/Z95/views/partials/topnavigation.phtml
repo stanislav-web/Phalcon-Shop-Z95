@@ -36,7 +36,7 @@ $(function() {
 
 				// пробегаю по ссылкам
 				$(sectionObj).find('a').each(function(linkNum, linkObj) {
-					if($(linkObj).attr('href') == path) linkObj.addClass('selected');
+					if($(linkObj).attr('href') == path ||  $(linkObj).attr('href') == path.slice(0,-1)) linkObj.addClass('selected');
 					rows += linkObj.outerHTML;
 				});
 				rows	+='</td>';

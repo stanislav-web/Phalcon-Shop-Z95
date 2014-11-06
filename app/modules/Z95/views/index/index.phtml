@@ -4,39 +4,37 @@
 </div>
 
 <div id="CONTENT" >
-<div class="clear"></div>
-<table class="work-info">
-	<tr>
-		<td style="background:url(/assets/Z95/images/z95ru/icons/delivery.png) no-repeat 20px 10px; padding-left: 75px; " onclick="global.go({ url: '/about/delivery' })">
-			<h3>Бесплатная доставка</h3>
-			По всей России			</td>
-		<td style="background:url(/assets/Z95/images/z95ru/icons/fitting.png) no-repeat 0px 10px;" onclick="global.go({ url: '/about/delivery' })">
-			<h3>Не уверены в размере?</h3>
-			Менеджер придет на помощь
-		</td>
-		<td style="background:url(/assets/Z95/images/z95ru/icons/247.png) no-repeat 0px 10px;" onclick="global.go({ url: '/about/' })">
-			<h3>Отвечаем на звонки 24/7</h3>
-			И по праздникам тоже			</td>
-		<td style="background:url(/assets/Z95/images/z95ru/icons/return.png) no-repeat 0px 10px;" onclick="global.go({ url: '/about/return/' })">
-			<h3>Легкий обмен</h3>
-			В течение 14 суток			</td>
-	</tr>
-</table>
-<div class="coupon-container"></div>
-<div class="teaser"></div>
-<script type="text/javascript">
-
-	var teaserSettings = [
-		<?php if(isset($banners['main'])) { ?>
+	<div class="clear"></div>
+	<table class="work-info">
+		<tr>
+			<td style="background:url(/assets/Z95/images/z95ru/icons/delivery.png) no-repeat 20px 10px; padding-left: 75px; " onclick="global.go({ url: '/delivery' })">
+				<h3>Бесплатная доставка</h3>
+				По всей России			</td>
+			<td style="background:url(/assets/Z95/images/z95ru/icons/fitting.png) no-repeat 0px 10px;" onclick="global.go({ url: '/delivery' })">
+				<h3>Не уверены в размере?</h3>
+				Менеджер придет на помощь
+			</td>
+			<td style="background:url(/assets/Z95/images/z95ru/icons/247.png) no-repeat 0px 10px;" onclick="global.go({ url: '/about' })">
+				<h3>Отвечаем на звонки 24/7</h3>
+				И по праздникам тоже			</td>
+			<td style="background:url(/assets/Z95/images/z95ru/icons/return.png) no-repeat 0px 10px;" onclick="global.go({ url: '/return' })">
+				<h3>Легкий обмен</h3>
+				В течение 14 суток			</td>
+		</tr>
+	</table>
+	<div class="coupon-container"></div>
+	<div class="teaser"></div>
+	<script type="text/javascript">
+		var teaserSettings = [
+			<?php if(isset($banners['main'])) { ?>
 			<?php foreach($banners['main'] as $banners) { ?>
-				{src: '/f/t/<?php echo $banners['image']; ?>', url: '/catalogue/sale', text: ''},
-				{src: '/f/t/77009b1c703e1d3a2b073aceab4931aa.jpg', url: '/catalogue/sale', text: ''}
+			{src: '/f/t/<?php echo $banners['image']; ?>', url: '/catalogue/sale', text: ''},
+			{src: '/f/t/77009b1c703e1d3a2b073aceab4931aa.jpg', url: '/catalogue/sale', text: ''}
 			<?php } ?>
-		<?php } ?>
-	];
-	var teaser = new teaser(teaserSettings);
-</script>
-
+			<?php } ?>
+		];
+		var teaser = new teaser(teaserSettings);
+	</script>
 
 	<!-- Catalogue all subcategories template -->
 	<div class="element-catalogue_items">

@@ -48,7 +48,11 @@ class CatalogueController extends ControllerBase
 		 * Баннера для каталога
 		 * @var bool
 		 */
-		$banners			=	false;
+		$banners			=	false,
+
+		$requestUri			=	false,
+
+		$virtuals			=	['/catalogue/sale', '/catalogue/top', '/catalogue/favorites', '/catalogue/apple'];
 
 	/**
 	 * initialize() Инициализирую конструктор
@@ -61,11 +65,22 @@ class CatalogueController extends ControllerBase
 		$this->loadCustomTrans('catalogue');
 		parent::initialize();
 
+		$this->requestUri	=	$this->request->getURI();
+
 		// Заголовок страницы
 		$this->tag->setTitle($this->_shop['title']);
 
 		// Получаю баннер для страницы
 		$this->banners = $this->bannersModel->getBanners($this->_shop['id'], true);
+
+		$path = parse_url($this->request->getURI(), PHP_URL_PATH);
+		$query = parse_url($this->request->getURI(), PHP_URL_PATH);
+
+		if(in_array($path, $this->virtuals) && !empty($query))
+		{
+			$this->requestUri = false;
+		}
+
 	}
 
 	/**
@@ -75,8 +90,8 @@ class CatalogueController extends ControllerBase
 	 */
 	public function indexAction()
 	{
-		$action = $this->_helper->catalogueRouteTree($this->request->getURI(), ['catalogue']);
-		if($action->catalogue)
+		if(isset($this->requestUri)) $action = $this->_helper->catalogueRouteTree($this->requestUri, ['catalogue']);
+		if(isset($action->catalogue))
 		{
 			// если подобран роутинг каталога, считаем количество запрошенных категорий, [0] в конце - каталог всегда первый в URL
 			$this->currentCategory = $this->_helper->findInTree($this->_shopCategories, 'alias', $action->catalogue[0]);
@@ -89,8 +104,15 @@ class CatalogueController extends ControllerBase
 			else
 			{
 				// На выборку товаров итд итп. Лучше использовать экшн который редиректит на этот index
+				// Выполнить метод и заглушить
 				exit('On a sample of the goods, etc. etc.. Better use action that redirect to the index');
 			}
+		}
+		else
+		{
+			// На выборку товаров итд итп. Лучше использовать экшн который редиректит на этот index
+			// Выполнить метод и заглушить
+			exit('On a sample of the goods, etc. etc.. Better use action that redirect to the index');
 		}
 	}
 
@@ -162,7 +184,7 @@ class CatalogueController extends ControllerBase
 				],
 			]);
 			// ссылаюсь на вывод в action index с видом catalogue/index
-			$this->view->render('catalogue', 'index')->pick("catalogue/index");
+			return $this->view->render('catalogue', 'index')->pick("catalogue/index");
 		}
 		else
 		{
@@ -209,7 +231,13 @@ class CatalogueController extends ControllerBase
 					}
 				}
 			}
-			$this->view->setVar("salesGroup", $result);
+			$this->view->setVars([
+				'template'		=>	'sale',
+				"title" 		=> $title,
+				"salesGroup" 	=> $result,
+			]);
+
+			$this->view->pick("catalogue/index");
 		}
 	}
 
@@ -232,6 +260,8 @@ class CatalogueController extends ControllerBase
 			// Формирую заголовок
 
 			$title = $this->_translate['CATALOGUE'];
+
+			$this->tag->prependTitle($title.' - ');
 
 			// Добавляю путь в цепочку навигации
 			$this->_breadcrumbs->add($title, $this->request->getURI());
@@ -299,7 +329,7 @@ class CatalogueController extends ControllerBase
 			}
 
 			// ссылаюсь на вывод в action index с видом catalogue/index
-			$this->view->pick("catalogue/index");
+			$this->view->render('catalogue', 'index')->pick("catalogue/index");
 		}
 		// Сохраняем вывод в кэш
 		if($this->_config->cache->frontend) $this->view->cache(array("key" => $this->cachePage(__FUNCTION__)));

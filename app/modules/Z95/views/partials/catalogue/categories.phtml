@@ -8,7 +8,7 @@
 				$images 	= json_decode($category['img'], true);
 				$product_id	=	min(array_keys($images));
 				?>
-				<div class="catalogue-category" onclick="window.location.href= '<?=\Helpers\LocationUrls::location('/catalogue/'.$category['parent_alias'].'/'.$category['alias']);?>">
+				<div class="catalogue-category" onclick="window.location.href= '<?=\Helpers\LocationUrls::location('/catalogue/'.$category['parent_alias'].'/'.$category['alias']);?>'">
 					<div class="leader">
 						<img class="image" src="http://img<?php echo rand(0,9); ?>.z95.ru/f/p/c_0_100_300_400/sep-tilt_shift/600x600/catalogue/<?=$product_id;?>/<?=$images[$product_id][1];?>">
 					</div>
