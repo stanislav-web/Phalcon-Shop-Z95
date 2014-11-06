@@ -233,8 +233,6 @@ class CatalogueController extends ControllerBase
 
 			$title = $this->_translate['CATALOGUE'];
 
-			$this->tag->prependTitle($title.' - ');
-
 			// Добавляю путь в цепочку навигации
 			$this->_breadcrumbs->add($title, $this->request->getURI());
 

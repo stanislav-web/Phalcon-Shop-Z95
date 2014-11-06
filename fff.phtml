@@ -1,0 +1,104 @@
+<?php ?>
+<div class="header-menu">
+	<?
+
+		foreach($categories['tree'] as $id => $d )
+		{
+				if(!in_array($id, $HIDE) and $d['status'] == 1){
+					$submenu = '';
+					if( isset($d['children'])){
+						$submenu .= '<div class="submenu">';
+						$submenu .= '<table><tr>';
+						$submenu .= '<td>';
+						if ($id == 1 or $id == 2) {
+							$submenu .= '<a class="top" href="/catalogue'.$d['url'].'/top">'.lang('ТОП').' 200</a>';
+						}
+						foreach($d['children'] as $v) {
+							if ($v['count'] > 0) {
+								$submenu .= '<a href="/catalogue'.$v['url'].'/" '.(isset($categories['selected'][$v['id']]) ? 'class="selected"' : '').'>'.lang($v['title']).'</a>';
+							}
+						}
+						$submenu .= '</td>';
+						if (isset($GROUP[$id])){
+							foreach($GROUP[$id] as $title => $group) {
+								$submenu .= '<td width="200">';
+								if (trim($title) != '') {
+									$submenu .= '<b>'.lang($title).'</b>';
+								}
+								foreach($group as $add_category_id => $cat_title_id){
+									if( isset($categories['array'][$add_category_id]) ){
+										$add_category = $categories['array'][$add_category_id];
+										$cat_title = (isset($categories['array'][$cat_title_id]) ?
+											$categories['array'][$cat_title_id]['title']
+											:
+											$categories['array'][$add_category_id]['title']
+										);
+										$submenu .= '<a href="/catalogue'.$add_category['url'].'/">'.lang($cat_title).'</a>';
+									}
+								}
+								$submenu .= '</td>';
+							}
+						}
+
+						$submenu .= '</tr></table>';
+						$submenu .= '</div>';
+					}
+
+					if (isset($categories['selected'][$id])) {
+						$selected_submenu = $submenu;
+					}
+					echo '
+		<div class="header-menu-item category '.(isset($categories['selected'][$id]) ? 'selected' : '').'">
+			<a href="/catalogue'.$d['url'].'/"'.($submenu != '' ? 'class="dropdown" onclick="event.stopPropagation(); if ($(this).hasClass(\'s\')) { return true; } else { $(\'.header-menu-item .submenu\').hide(); $(\'.header-menu-item a\').removeClass(\'s\'); $(\'.submenu\', $(this).parent()).show(); $(this).addClass(\'s\'); return false; }"' : '').'>'.lang($d['title']).'</a>
+			'.$submenu.'
+		</div>';
+				}
+			}
+		}
+	?>
+
+	<div class="header-menu-item category m-hide">
+		<a href="/catalogue/top/"><b>ТОП 200</b></a>
+		<div class="submenu">
+			<table>
+				<tr><td><a href="/catalogue/woman/top/"><?=lang('Женская одежда');?></a></td></tr>
+				<tr><td><a href="/catalogue/man/top/"><?=lang('Мужская одежда');?></a></td></tr>
+			</table>
+		</div>
+	</div>
+	<div class="header-menu-item category">
+		<a href="/catalogue/favorites/" class="favorites"><?=lang('Понравилось')?> <span class="favorites-count"><span id='FavoritesCount'><?=intval(count($favorites))?></span></span></a>
+	</div>
+	<!--
+		<div class="header-menu-item category">
+			<a href="/catalogue/visited/" class="visited"><?=lang('Вы смотрели')?> <span class="favorites-count"><?=$visited['count']?></span></a>
+		</div>
+		-->
+	<script type="text/javascript">
+		$('.header-menu-item').each(function (i, el) {
+			if ($('.submenu', el).length) {
+				$(el).hover(function() {
+					$('.header-menu-item .submenu').hide();
+					$('.header-menu-item > a').removeClass('s');
+					<? if (!$mobile_client) { ?>
+					$('.submenu', el).show();
+					$('a', el).eq(0).addClass('s');
+					<? } ?>
+				});
+				$(el).mouseleave(function() {
+					$('.header-menu-item .submenu').hide();
+					$('.header-menu-item a').removeClass('s');
+				});
+			}
+		});
+		$('body').click(function() {
+			$('.header-menu-item .submenu').hide();
+			$('.header-menu-item a').removeClass('s');
+		});
+	</script>
+	<? if (!empty($selected_submenu)) { ?>
+		<div class="header-submenu">
+			<?=$selected_submenu?>
+		</div>
+	<? } ?>
+</div>

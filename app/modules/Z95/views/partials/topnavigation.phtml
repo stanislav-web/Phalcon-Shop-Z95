@@ -1,16 +1,62 @@
 <!-- Верхнее меню навигации -->
 <?php echo $navigation->toHtml('top'); ?>
 <!-- Верхнее меню навигации -->
-
 <script type="text/javascript">
-		$('.header-menu-item').each(function (i, el) {
+$(function() {
 
+	// получение REQUEST_URI, текущей активной ссылки и категории в которой эта ссылка
+	var path 			= 	window.location.pathname,
+		menu			=	$('div.header-menu'),
+		sections		=	$('.header-menu-item.category'),
+		links			=	$('div.header-menu a'),
+		activeLink 		= 	$('div.header-menu a[href="'+path+'"]'),
+		parentSection 	= 	activeLink.closest('.header-menu-item.category');
+
+		// обнуляю все selected и присваиваю только активной
+		sections.removeClass('selected');
+		links.removeClass('selected')
+		parentSection.addClass('selected');
+
+		// Генерирую таблицу
+
+		var table = $('div.submenu table tr');
+
+		if(sections.hasClass('selected'))
+		{
+				// карта ссылок
+			var linkMap 	= 	$('.header-menu-item.category.selected'),
+				// количество блоков
+				linkBloks	=	linkMap.children().eq(1).children(),
+				rows		=	'';
+
+			// пробегаю по блокам
+
+			linkBloks.each(function(sectionNum, sectionObj) {
+				(sectionNum != 1) ? rows	+=	'<td>' : rows	+=	'<td width="200">';
+
+				// пробегаю по ссылкам
+				$(sectionObj).find('a').each(function(linkNum, linkObj) {
+					if($(linkObj).attr('href') == path) linkObj.addClass('selected');
+					rows += linkObj.outerHTML;
+				});
+				rows	+='</td>';
+			});
+			table.html(rows);
+			// вставляю таблицу
+			$('.header-submenu .submenu table tr').appendTo(table).css('display', 'block');
+			$('#header-menu').append($('#header-submenu').css('display', 'block'));
+		}
+	});
+
+		$('.header-menu-item').each(function (i, el) {
 			if ($('.submenu', el).length) {
 				$(el).hover(function() {
-					//$('.header-menu-item .submenu').hide();
+					$('.header-menu-item .submenu').hide();
 					$('.header-menu-item > a').removeClass('s');
+					<? if (!isset($mobile_client)) { ?>
 					$('.submenu', el).show();
-
+					$('a', el).eq(0).addClass('s');
+					<? } ?>
 				});
 				$(el).mouseleave(function() {
 					$('.header-menu-item .submenu').hide();
@@ -23,3 +69,13 @@
 			$('.header-menu-item a').removeClass('s');
 		});
 </script>
+<div class="header-submenu" id="header-submenu" style="display: none">
+	<div class="submenu">
+		<table>
+			<tr>
+				<!-- Append menu links -->
+				<!-- /Append menu links -->
+			</tr>
+		</table>
+	</div>
+</div>

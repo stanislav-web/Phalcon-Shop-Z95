@@ -7,7 +7,8 @@
 
 			'top' 		=> [
 				'wrapper' => 'div',    // ul, div
-				'class'   => 'header-menu',
+				'class'   	=> 'header-menu',
+				'id'   		=> 'header-menu',
 				'childs'  => [
 					[
 						'name'       => 'Женщинам',
@@ -302,7 +303,7 @@
 					],
 					[
 						'name'       => 'Обувь',
-						'url'        => '/catalogue/glasses/glasses-men',
+						'url'        => '/catalogue/shoes',
 						'class'      => 'header-menu-item category',
 						'classLink'  => 'dropdown double',
 						'click'    => "event.stopPropagation(); if ($(this).hasClass('s')) { return true; } else { $('.header-menu-item .submenu').hide(); $('.header-menu-item a').removeClass('s'); $('.submenu', $(this).parent()).show(); $(this).addClass('s'); return false; }",
@@ -694,7 +695,7 @@
 					],
 					[
 						'name'       => 'Обувь',
-						'url'        => '/catalogue/glasses/glasses-men',
+						'url'        => '/catalogue/shoes',
 						'controller' => 'catalogue',
 						'action'     => 'index',
 						'childs'     => [

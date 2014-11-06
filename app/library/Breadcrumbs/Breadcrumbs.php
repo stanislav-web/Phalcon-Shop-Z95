@@ -1,6 +1,7 @@
 <?php
 namespace Breadcrumbs;
 
+use Phalcon\Http\Request;
 
 class Breadcrumbs {
 
@@ -22,6 +23,12 @@ class Breadcrumbs {
 			'link'   => '/',
 			'text'   => 'Главная',
 		];
+		if((new Request())->getURI() != '/catalogue')
+			$this->_elements[] = [
+				'active' => false,
+				'link'   => 'catalogue',
+				'text'   => 'Каталог',
+			];
 	}
 
 	/**
