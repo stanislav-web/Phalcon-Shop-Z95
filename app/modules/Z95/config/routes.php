@@ -78,3 +78,10 @@
 		'controller'    => 'basket',
 		'action'        => 'get',
 	]);
+
+	$router->add("/order", [
+		'module'    	=>  $module,
+		'namespace' 	=> 'Modules\\'.$module.'\Controllers\\',
+		'controller'    => 'index',
+		'action'        => 'index',
+	]);

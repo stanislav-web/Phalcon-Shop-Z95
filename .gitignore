@@ -11,3 +11,4 @@ app/library/Navigation
 app/library/PDWLeo Fashion
 app/config/config.php
 public/webgrind
+app/modules/Z95/config/config.php

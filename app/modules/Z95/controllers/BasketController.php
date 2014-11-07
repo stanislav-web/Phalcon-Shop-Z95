@@ -49,6 +49,7 @@ class BasketController extends ControllerBase
 	{
 
 
+		$this->view->setVar('basket', $this->session->get('basket'));
 //		$this->tag->appendTitle('- '.$this->_translate['TITLE']);
 //		// есть ли в корзине вещи
 //
@@ -63,18 +64,98 @@ class BasketController extends ControllerBase
 //		}
 	}
 
+
 	public function updateAction()
 	{
+
 		$item = $this->request->getQuery('item');
+		$mode = $this->request->getQuery('mode');
 
 		$selected = '';
-		if ($item !== false && count($item)) {
 
+//		$this->session->destroy();die;
+		if ($item !== false && count($item)) {
+			$id = key($item);
 			/** Вызываем основной метод изменения состава корзины */
-//			$this->stash['basket'] = $this->set($item);
+//			$this->basket['items'] = $this->save($item);
+			if($this->session->has('basket')) {
+				
+				$this->basket = $this->session->get('basket');
+
+				if(!empty($this->basket['items'])) {
+					$basketItemIds = $this->getBasketItemsIds($this->basket['items']);
+					foreach($this->basket['items'] as $key => $product) {
+						if($product['product_id'] == $id) {
+							list($size, $count) = explode('_', $item[$id][0]);
+							if ($count > 0) {
+								$this->basket['items'][$key]['sizes'] = $product['sizes'];
+							} else {
+								unset($this->basket['items'][$key]['sizes'][$size]);
+							}
+							foreach($item[$id] as $siz => $param){
+								list($size, $count) = explode('_', $item[$id][$siz]);
+
+								if($count > 0) {
+									$this->basket['items'][$key]['sizes'][$size] = $count;
+								}
+							}
+
+							if(!isset($this->basket['items'][$key]['sizes'])) {
+								unset($this->basket['items'][$key]);
+							} else if(empty($this->basket['items'][$key]['sizes'])) {
+								unset($this->basket['items'][$key]);
+							}
+
+						} else if(in_array($id, $basketItemIds)){
+							foreach($this->basket['items'] as $cat_id => $cat) {
+								if($cat['product_id'] == $id) {
+							list($size, $count) = explode('_', $item[$id][0]);
+							if ($count > 0) {
+								$this->basket['items'][$cat_id]['sizes'] = $cat['sizes'];
+							} else {
+								unset($this->basket['items'][$cat_id]['sizes'][$size]);
+							}
+							foreach($item[$id] as $siz => $param){
+								list($size, $count) = explode('_', $item[$id][$siz]);
+
+								if($count > 0) {
+									$this->basket['items'][$cat_id]['sizes'][$size] = $count;
+								}
+							}
+
+							if(!isset($this->basket['items'][$cat_id]['sizes'])) {
+								unset($this->basket['items'][$cat_id]);
+							} else if(empty($this->basket['items'][$cat_id]['sizes'])) {
+								unset($this->basket['items'][$cat_id]);
+							}
+							}
+							}
+
+						} else {
+							
+							$newItems = $this->save($item);
+							$this->basket['items'][] = current($this->productsModel->getBasketItems($newItems, $this->_shop['price_id']));
+						}
+
+					}
+				} else {
+
+					$newItems = $this->save($item);
+					$this->basket['items'][] = current($this->productsModel->getBasketItems($newItems, $this->_shop['price_id']));
+				}
+
+			} else {
+
+				$newItems = $this->save($item);
+				$this->basket['items'][] = current($this->productsModel->getBasketItems($newItems, $this->_shop['price_id']));
+			}
+
+
+
+
 
 			/** Формируем идентификатор обработанного размера позиции для передачи js-бибиотеку */
-			$id = key($item);
+//			$id = key($item);
 			if (count($item[$id]) == 1) {
 				list($size, $count) = explode('_', $item[$id][0]);
 				if ($count > 0) {
@@ -82,27 +163,40 @@ class BasketController extends ControllerBase
 				}
 			}
 
+//			$basketItems = $this->productsModel->getBasketItems($this->basket['items'], $this->_shop['price_id']);
+
+			//заполняем корзину
+			$this->session->set('basket', array('items' => $this->basket['items']));
 
 		} else {
+
+			$this->basket['items'] = $this->session->get('basket');
+
 			$this->basket['no_new_items'] = true;
-//			$this->load_catalogue_items();
-//			 = $this->basket;
+
+		}
+
+//		$this->view->disable();
+		if($mode != 'small') {
+			ob_start($this->view->partial('partials/basket/getBasket', array('basket' => $this->session->get('basket'))));
+			ob_end_flush();
+		} else {
+			ob_start($this->view->partial('partials/basket/get', array('basket' => $this->session->get('basket'))));
+			ob_end_flush();
 		}
 
 
-//		$this->view->disable();
-		ob_start($this->view->partial('partials/basket/get'));
-		ob_end_flush();
 
 		//Set the content of the response
 		return $this->response->setContent(json_encode(
-					array('success' 	=>	true,
-						  'mode' 		=>	$this->request->getQuery('mode'),
-						  'hash' 		=>	$this->request->getQuery('hash'),
-						  'items' 		=>	$this->basket,
-						  'selected'	=>	$selected,
-						  'id' 			=> 	isset($id) ? $id : 0,
-						  'basket' 		=> 	ob_get_contents(),
+				array('success' 	=>	true,
+					  'mode' 		=>	$this->request->getQuery('mode'),
+					  'hash' 		=>	$this->request->getQuery('hash'),
+					  'items' 		=>	$this->basket['items'],
+					  'selected'	=>	$selected,
+					  'id' 			=> 	isset($id) ? $id : 0,
+					  'total'		=> 	0,
+					  'basket' 		=> 	ob_get_contents(),
 				)));
 
 	}
@@ -281,6 +375,152 @@ class BasketController extends ControllerBase
 			$this->session->set("cart", $session);
 			return $this->response->setContent(json_encode(array('result' => true)));
 		}
+	}
+
+	/**
+	 * Метод сохранения корзины в сессию при отсутсвии переполнения
+	 *
+	 * @param array &$basket_items - новое содержимое корзины
+	 *
+	 * @access private
+	 */
+	private function save($basket_items = null) {
+		/**
+		 * запишим в сессию и переменную корзины ($this->basket) новый состав корзины
+		 */
+
+		if(null === $basket_items) {
+
+			return $this->session->get('basket');
+		}
+
+		if ($this->session->has('basket') && $this->session->get('basket') != '' && null !== $this->session->get('basket')) {
+			$product_id = key($basket_items);
+//			if (count($basket_items[$product_id]) == 1) {
+//				list($size, $count) = explode('_', $basket_items[$product_id][0]);
+//			}
+
+			$basket = $this->session->get('basket');
+
+			//есть ли уже такой item в корзине
+			if(null !== $basket['items'] && !(empty($basket['items']))) {
+				$items = array();
+				foreach($basket['items'] as $key => $product) {
+					if($product_id == $key) {
+						$items[$product_id]['sizes'] = $product['sizes'];
+					}
+				//добавляем к вещи только размер и кол-во
+
+				foreach($basket_items[$product_id] as $key => $param){
+					list($size, $count) = explode('_', $basket_items[$product_id][$key]);
+					if($count > 0) {
+						$items[$product_id]['sizes'][$size] = $count;
+					}
+				}
+
+				}
+
+			} else {
+				//добавляем новую вещь
+
+				$items = $this->productsModel->recountBasketItems($basket_items);
+			}
+
+//			$this->session->set('basket', array('items' => $basket['items']));
+			return $items;
+
+		} else {
+
+			$items = $this->productsModel->recountBasketItems($basket_items);
+
+			$this->session->set('basket', array('items' => $items));
+			return $items;
+		}
+	}
+
+	/**
+	 * Метод расчета параметров корзины - суммы, скидки, количества позиций
+	 *
+	 * @access private
+	 */
+	private function recount() {
+		/** Обновим массив с информаций из каталога по позициям в корзине */
+		//$this->load_catalogue_items();
+
+		/**
+		 * Если надо всегда брать текущие цены, то каждый раз берем их из каталога, а не из корзины
+		 *
+		 * $this->set_catalogue_prices();
+		 */
+
+		$basket = $this->basket; 				// Просто сокращение
+		$basket['total_count'] = 0;				// Всего позиций
+		$basket['total_count_for_discount'] = 0;// Всего позиций для расчета скидки
+		$basket['total_price'] = 0;				// Общая стоимость товаров в корзине
+		$basket['total_price_for_discount'] = 0;// Общая стоимость товаров в корзин для расчета скидки
+		$basket['discount'] = 0;				// Величина скидки (%)
+		$basket['discount_type'] = '';			// Тип скидки (COUNT | SUM)
+		$basket['discounts'] = array();			// Массив уровней разных % значений скидки
+		$basket['discount_diff'] = 0;			// Сколько осталось до следующего уровня скидки
+		$basket['discount_next'] = 0;			// Величина скидки (%) на следующем уровне
+		$basket['discount_amount'] = 0;			// Величина скидки в деньгах
+		$basket['total_discount_price'] = 0;	// Общая стоимость товаров в корзине с учетом скидки
+
+		/** Выпоняем расчеты вышеназванных величин */
+		$this->calc_counts();
+//		$this->calc_discounts();
+	}
+
+
+	/**
+	 * Метод расчета количества товаров в корзине и их общей стоимости
+	 *
+	 * @access private
+	 */
+	private function calc_counts() {
+		$basket = $this->basket;
+
+		/** Проходим по всем размерам всех позиций в корзине */
+		if (count($basket['items'])) {
+			foreach($basket['items'] as $id => $item) {
+
+				/** Здесь будет количество вещей всех размеров одной позиции */
+				$basket['items'][$id]['count'] = 0;
+
+				foreach($item['sizes'] as $size => $count) {
+					if ($size == '?' and count($item['sizes']) > 1) {
+						/**
+						 * Если у этой позиции есть не только неопределенный размер,
+						 * то не учитываем отдельно неопределенный размер
+						 */
+					} else {
+						$basket['items'][$id]['count'] += $count;
+						$basket['total_count'] += $count;
+						$basket['total_price'] += $item['price']*$count;
+
+						if (empty($basket['items'][$id]['no_discount'])) {
+							$this->load->model('CatalogueModel');
+							$ee = $this->CatalogueModel->getItemsByIdsItems(array($id));
+							if($ee[0]['cat_type']==0){
+								$basket['total_count_for_discount'] += $count;
+								$basket['total_price_for_discount'] += $item['price']*$count;
+							} else {
+								$basket['discount_perfume'] = lang('Скидка на парфюмерию не распространяется!');
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	public function getBasketItemsIds($items = array())
+	{
+		$result = array();
+		foreach($items as $item) {
+			$result[] = $item['product_id'];
+		}
+		return $result;
 	}
 
 

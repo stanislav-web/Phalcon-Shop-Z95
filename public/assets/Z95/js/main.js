@@ -1348,7 +1348,8 @@ window.matchMedia=window.matchMedia||(function(e,f){var c,a=e.documentElement,b=
         this.search_jqxhr = null;
         global.hideStatus('loading');
     };
-};;var basket = new function() {
+};;
+var basket = new function() {
 
     this.ajax_timeout = null;
     this.hash = '';
@@ -1794,7 +1795,9 @@ window.matchMedia=window.matchMedia||(function(e,f){var c,a=e.documentElement,b=
         $('.small-basket .item-row').hide();
         $('.item-row').eq(i).show();
     };
-};;get_client_info = function(){
+};;
+
+get_client_info = function(){
     this.browser = this.searchString(this.dataBrowser) || "An unknown browser";
     this.version = this.searchVersion(navigator.userAgent)
         || this.searchVersion(navigator.appVersion)

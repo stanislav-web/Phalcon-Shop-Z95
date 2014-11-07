@@ -126,7 +126,7 @@
 			{
 				$sql = "SELECT 	".Categories::TABLE.".id AS id, ".Categories::TABLE.".parent_id AS parent_id,
 							".Categories::TABLE.".name AS name, ".Categories::TABLE.".alias AS alias,
-							".Categories::TABLE.".images AS images, ".Categories::TABLE.".description AS description
+							".Categories::TABLE.".description AS description
 							FROM  ".self::TABLE_CAT_SHOP_REL."
 							INNER JOIN ".Categories::TABLE."
 							ON (
