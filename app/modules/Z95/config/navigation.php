@@ -495,7 +495,6 @@
 						'name'       => 'iPhone/iPad',
 						'url'        => '/catalogue/apple',
 						'class'      => 'header-menu-item category',
-						'click'    => "event.stopPropagation(); if ($(this).hasClass('s')) { return true; } else { $('.header-menu-item .submenu').hide(); $('.header-menu-item a').removeClass('s'); $('.submenu', $(this).parent()).show(); $(this).addClass('s'); return false; }",
 						'controller' => 'catalogue',
 						'action'     => 'index',
 					],

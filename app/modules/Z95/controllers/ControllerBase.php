@@ -208,7 +208,7 @@ class ControllerBase extends \Phalcon\Mvc\Controller
 
 		// Получение категорий и подкатегорий для текущего магазина
 		$this->_shopCategories = $this->commonModel->getShopCategories($this->_shop['id'], true);
-
+		
 		// Инициализация навигации
 
 		$nav = $this->di->get('navigation');
