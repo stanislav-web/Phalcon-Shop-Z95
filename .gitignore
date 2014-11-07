@@ -2,6 +2,7 @@
 app/cache
 logs/
 atlassian-ide-plugin.xml
+phalcon-devtools
 .phalcon
 .htaccess
 .idea

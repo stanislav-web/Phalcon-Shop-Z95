@@ -266,25 +266,26 @@ class Products extends \Phalcon\Mvc\Model
 
 
 			$result = $this->_db->query($sql)->fetch();
+			if($result) {
+				foreach($result as $property => $value) {
 
-			foreach($result as $property => $value) {
+					if($property == 'all_tags_name') {
+						$result[$property] = explode(',', $value);
+					}
+					if($property == 'category_name') {
+						$result[$property] = explode(',', $value);
+					}
+					if($property == 'tags') {
+						$result[$property] = json_decode($value, true);
+					}
+					if($property == 'images') {
+						$result[$property] = json_decode($value, true);
+					}
+					if($property == 'filter_size') {
+						$result[$property] = explode(',', $value);
+					}
 
-				if($property == 'all_tags_name') {
-					$result[$property] = explode(',', $value);
 				}
-				if($property == 'category_name') {
-					$result[$property] = explode(',', $value);
-				}
-				if($property == 'tags') {
-					$result[$property] = json_decode($value, true);
-				}
-				if($property == 'images') {
-					$result[$property] = json_decode($value, true);
-				}
-				if($property == 'filter_size') {
-					$result[$property] = explode(',', $value);
-				}
-
 			}
 			// Сохраняем запрос в кэше
 			if($cache && $this->_cache) $backendCache->save(self::TABLE.'-'.strtolower(__FUNCTION__).'-'.$shop_price_id.'.cache', $result);
@@ -319,6 +320,53 @@ class Products extends \Phalcon\Mvc\Model
 				}
 			}
 		}
+		return $result;
+	}
+
+	public function recountBasketItems($item)
+	{
+		$id = key($item);
+		$items = array();
+		foreach($item[$id] as $key => $param){
+			list($size, $count) = explode('_', $item[$id][$key]);
+			$items[$id]['sizes'][$size] = $count;
+		}
+		return $items;
+	}
+
+	public function getBasketItems($basketItems, $shop_price_id)
+	{
+
+		if($basketItems == '' || null === $basketItems) {
+			return;
+		}
+		$ids = implode(',', array_keys($basketItems));
+
+		$sql = "SELECT 	".self::TABLE.".id AS product_id,  ".self::TABLE.".name AS product_name, ".self::TABLE.".articul, ".self::TABLE.".images,
+					".Brands::TABLE.".name AS brand, ".Brands::TABLE.".alias AS brand_alias, ".Prices::TABLE.".price
+
+					FROM ".self::TABLE."
+					INNER JOIN ".Prices::TABLE." ON (".Prices::TABLE.".id = $shop_price_id && ".Prices::TABLE.".product_id = ".self::TABLE.".id)
+					INNER JOIN ".Brands::TABLE." ON (".self::TABLE.".brand_id = ".Brands::TABLE.".id)
+					WHERE product_id IN ($ids) ";
+
+		$result = $this->_db->query($sql)->fetchAll();
+	
+		if(!empty($result)) {
+			//добавляем к вещам информацию о размерах и кол-ве
+			$total = 0;
+			foreach($result as $key => $item) {
+				if(isset($basketItems[$item['product_id']])) {
+					$result[$key]['sizes'] = $basketItems[$item['product_id']]['sizes'];
+					//считаем общее кол-во вещи одного артикула
+					$total = array_sum($basketItems[$item['product_id']]['sizes']);
+				}
+				$result[$key]['total'] = $total;
+				//парсим картинки
+				$result[$key]['images'] = json_decode($item['images'], true);
+			}
+		}
+
 		return $result;
 	}
 }

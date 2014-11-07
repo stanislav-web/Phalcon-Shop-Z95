@@ -26,7 +26,7 @@
 		'action'        => 'sale'
 	]);
 
-	$router->add("/cart/", [
+	$router->add("/cart", [
 		'module'    	=>  $module,
 		'namespace' 	=> 'Modules\\'.$module.'\Controllers\\',
 		'controller'    => 'cart',
@@ -73,4 +73,10 @@
 		'namespace' 	=> 'Modules\\'.$module.'\Controllers\\',
 		'controller'    => 'index',
 		'action'        => 'opt',
+	]);
+	$router->add("/order", [
+		'module'    	=>  $module,
+		'namespace' 	=> 'Modules\\'.$module.'\Controllers\\',
+		'controller'    => 'index',
+		'action'        => 'index',
 	]);

@@ -1,75 +1,95 @@
+
+<?php if(empty($basket) || null === $basket || empty($basket['items'])) { ?>
+<h2 class="basket">В корзине пусто</h2>
+<div style="padding: 10 0 20 0;">
+	Вы можете исправить это посетив <a href="/catalogue/">Каталог</a>
+</div>
+<?php } else { ?>
+
 <h2 class="basket">Сейчас в корзине:</h2>
 <table border="0" cellspacing="0" cellpadding="0" class="small-basket">
-	<tbody><tr class="item-row" id="basket_row_57453">
+	<tbody>
+		<?php $total = 0; ?>
+		<?php if(!empty($basket['items'])) { ?>
+			<?php foreach($basket['items'] as $counter => $item) { ?>
+
+				<tr class="item-row" id="basket_row_<?php echo $item['product_id']; ?>">
 		<td preview_id="57453" class="image">
 			<div style="z-index: 2;" class="basket-preview">
-				<div style="display: none;" id="preview_57453" class="basket-preview-big"><img src="http://z95.ru/f/p/150x225/catalogue/57453/IMG_7093-s.jpg"></div>
+				<div style="display: none;" id="preview_<?php echo $item['product_id']; ?>" class="basket-preview-big"><img src="http://z95.ru/f/p/150x225/catalogue/<?php echo $item['product_id']; ?>/<?php echo $item['images'][0]; ?>"></div>
 			</div>
 			<div style="z-index: 0;" class="basket-preview">
-				<div class="basket-preview-small"><img src="http://z95.ru/f/p/50x75/catalogue/57453/IMG_7093-s.jpg"></div>
+				<div class="basket-preview-small"><img src="http://z95.ru/f/p/50x75/catalogue/<?php echo $item['product_id']; ?>/<?php echo $item['images'][0]; ?>"></div>
 			</div>
 		</td>
 		<td preview_id="57453" class="title">
-			<div class="counter">1</div>
+			<div class="counter"><?php echo ++$counter; ?></div>
 
 
-			<a href="/catalogue/woman/sweaters-blouses/87237">
-				<span class="capitalize">блузка</span> Just Cavalli</a><br>
-			(87237)<br>
+			<a href="/catalogue/<?php echo $item['articul']; ?>">
+				<span class="capitalize"><?php echo $item['product_name'] ?></span> <?php echo $item['brand']; ?></a><br>
+			(<?php echo $item['articul']; ?>)<br>
 
 		</td>
-		<td class="sizes">
-			<table align="right" class="small-basket-sizes">
-				<tbody><tr>
-					<td width="50" class="number size">
-						M
+				<?php if(isset($item['sizes'])) { ?>
+					<td class="sizes">
+						<table align="right" class="small-basket-sizes">
+							<tbody>
+							<?php foreach($item['sizes'] as $size => $count) { ?>
+
+								<tr>
+								<td width="50" class="number size">
+									<?php echo $size; ?>
+								</td>
+								<td width="115" class="input">
+									<button onclick="var ov = $(this).next().val(); var nv = Math.max(0, parseInt(ov)-1); if (nv &lt; ov) { $(this).next().val(nv); basket.recount('<?php echo $item['product_id']; ?>', '<?php echo $size; ?>', $(this).next().val(), 'small'); }" class="button sign">−</button>
+									<input type="text" onchange="basket.recount('<?php echo $item['product_id']; ?>', '<?php echo $size; ?>', this.value, 'small')" onkeyup="basket.recount('<?php echo $item['product_id']; ?>', '<?php echo $size; ?>', this.value, 'small')" value="<?php echo $count; ?>" id="<?php echo $item['product_id']; ?>_<?php echo $size; ?>" size="2">
+									<button onclick="var ov = $(this).prev().val(); var nv = Math.min(10, parseInt(ov)+1); if (nv &gt; ov) { $(this).prev().val(nv); basket.recount('<?php echo $item['product_id']; ?>', '<?php echo $size; ?>', $(this).prev().val(), 'small'); }" class="button sign">+</button>
+									<div style="position:relative;"></div>
+								</td>
+								<td width="10" class="number">x</td>
+								<td width="45" class="number"><?php echo (int)$item['product_id']; ?></td>
+								<td width="10" class="number">=</td>
+								<td width="70" class="number recount"><?php echo $item['product_id'] * $count; ?> <?php echo $shop['currency_symbol']; ?></td>
+								<td width="20" align="right">
+									<button onclick="basket.recount('<?php echo $item['product_id']; ?>', '<?php echo $size ?>', 0, 'small', 0)" class="button delete sign" title="удалить">x</button>
+								</td>
+							</tr>
+								<?php $total = $total + $item['product_id'] * $count; ?>
+							<?php } ?>
+
+
+							</tbody>
+						</table>
 					</td>
-					<td width="115" class="input">
-						<button onclick="var ov = $(this).next().val(); var nv = Math.max(0, parseInt(ov)-1); if (nv &lt; ov) { $(this).next().val(nv); basket.recount('57453', 'M', $(this).next().val(), 'small'); }" class="button sign">−</button>
-						<input type="text" onchange="basket.recount('57453', 'M', this.value, 'small')" onkeyup="basket.recount('57453', 'M', this.value, 'small')" value="3" id="57453_M" size="2">
-						<button onclick="var ov = $(this).prev().val(); var nv = Math.min(10, parseInt(ov)+1); if (nv &gt; ov) { $(this).prev().val(nv); basket.recount('57453', 'M', $(this).prev().val(), 'small'); }" class="button sign">+</button>
-						<div style="position:relative;"></div>
-					</td>
-					<td width="10" class="number">x</td>
-					<td width="45" class="number">1130</td>
-					<td width="10" class="number">=</td>
-					<td width="70" class="number recount">3390 лари</td>
-					<td width="20" align="right">
-						<button onclick="basket.recount('57453', 'M', 0, 'small', 0)" class="button delete sign" title="удалить">x</button>
-					</td>
-				</tr>
+				<?php } ?>
+		</tr>
+			<?php } ?>
+		<?php } ?>
+		<tr>
+			<td class="total" colspan="4">
+				<table align="right" class="total">
+					<tbody><tr>
+						<td>Всего заказали на</td>
+						<td class="number"><?php echo $total; ?> <?php echo $shop['currency_symbol']; ?></td>
+					</tr>
 
-				</tbody></table>
-		</td>
-	</tr>
-	<tr>
-		<td class="total" colspan="4">
-			<table align="right" class="total">
-				<tbody><tr>
-					<td>Всего заказали на</td>
-					<td class="number">3390 лари</td>
-				</tr>
-				<tr>
-					<td>Скидка 30% (<a target="_blank" href="/discounts/">подробнее о скидках</a>)</td>
-					<td class="number discount">1017 лари</td>
-				</tr>
-				<tr>
-					<td>С учетом скидки</td>
-					<td class="number">2373 лари</td>
-				</tr>
-				<tr>
-					<td>Бесплатная доставка</td>
-					<td class="number"></td>
-				</tr>
+					<tr>
+						<td>Бесплатная доставка</td>
+						<td class="number"></td>
+					</tr>
 
 
-				</tbody></table>
-		</td>
-	</tr>
-	<tr>
-		<td align="center" colspan="4">
-			<button onclick="$('#SMALL_BASKET').hide();" class="button">Продолжить покупки</button>
-			<button onclick="window.location.href = '/basket/';" class="button">Перейти в корзину</button>
-		</td>
-	</tr>
-	</tbody></table>
+					</tbody>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td align="center" colspan="4">
+				<button onclick="$('#SMALL_BASKET').hide();" class="button">Продолжить покупки</button>
+				<button onclick="window.location.href = '/basket/';" class="button">Перейти в корзину</button>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<?php } ?>

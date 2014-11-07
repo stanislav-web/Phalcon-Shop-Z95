@@ -142,10 +142,13 @@ class CatalogueController extends ControllerBase
 				$item = $this->productsModel->getProductCard($articul, $this->_shop['price_id'], true);
 
 				// передача подходящих размеров для этого товара
-				$sizes = $this->tagsModel->getSizes($item['product_id'], true);
+				if($item) {
+					$sizes = $this->tagsModel->getSizes($item['product_id'], true);
+					$this->view->setVar("item", $item);
+				}
 
 				$this->view->setVar("sizes", $sizes);
-				$this->view->setVar("item", $item);
+
 				$this->view->setVar("categories" , $this->commonModel->categoriesToTree($this->_shopCategories));
 			}
 		}

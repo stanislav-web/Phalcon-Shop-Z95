@@ -1,3 +1,15 @@
+<?php if(!isset($item)){ ?>
+	<div id="CATALOGUE_SEARCH_RESULT">
+		<h1>Результат поиска: <span style="color: #A0A0A0;"><b></b>
+
+</span></h1>
+		<p>По вашему запросу ничего не нашли.
+			Попробуйте <a onclick="catalogue.clear_search(); $('#CATALOGUE_SEARCH').val(''); return false;" href="#">очистить</a>
+			или <a onclick="$('#CATALOGUE_SEARCH')[0].focus(); return false;" href="#">изменить</a> условия поиска</p>		</div>
+
+
+
+	<?php return;} ?>
 
 <div class="go-container prev" style="margin-left: 175px; display: block;" title="Предыдущая фотография">
 	<div class="button"></div>
@@ -286,7 +298,7 @@
 			<li>Оплата при получении в любом городе РФ.</li>
 			<li>Доставка заказа за 5 дней!</li>
 			<li>Возможность обмена/возврата после получения!</li></ul>			</div>
-	<!-- <div class="popup"><a href="/useful" target="_blank">Таблица соответствия размеров одежды</a></div> -->
+	<!-- <div class="popup"><a href="/about/useful/" target="_blank">Таблица соответствия размеров одежды</a></div> -->
 	<div style="padding-top:20px;" class="social">
 		<div id="vk_like"></div>
 		<script type="text/javascript">
@@ -374,7 +386,6 @@
 		$('.go-container.next').css({'margin-right':margin});
 	});
 </script>
-
 
 
 <span style="color:white">Рейтинг: 510000</span>
