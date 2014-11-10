@@ -79,7 +79,13 @@ class ControllerBase extends \Phalcon\Mvc\Controller
 		 * По умолчанию, хлебные крошки
 		 * @var null
 		 */
-		$_breadcrumbs = null;
+		$_breadcrumbs = null,
+
+		/**
+		 * скидки
+		 * @var null
+		 */
+		$_discounts = null;
 
 	public
 
@@ -212,6 +218,9 @@ class ControllerBase extends \Phalcon\Mvc\Controller
 		// Инициализация навигации
 
 		$nav = $this->di->get('navigation');
+
+		// получение скидок магазина
+		$this->_discounts = $this->shopModel->checkDiscounts($this->_shop);
 
 		// В конце запись переменных для шаблонов
 		$this->view->setVars([

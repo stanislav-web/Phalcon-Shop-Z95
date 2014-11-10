@@ -150,6 +150,7 @@ class CatalogueController extends ControllerBase
 				}
 
 				$this->view->setVar("sizes", $sizes);
+				$this->view->setVar("discounts", $this->_discounts);
 
 				$this->view->setVar("categories" , $this->commonModel->categoriesToTree($this->_shopCategories));
 			}

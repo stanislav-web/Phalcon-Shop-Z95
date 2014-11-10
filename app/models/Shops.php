@@ -16,6 +16,7 @@ class Shops extends \Phalcon\Mvc\Model
 	 * @const
 	 */
 	const TABLE = 'shops';
+	const SHOP_DISCOUNTS_TABLE = 'shop_discounts';
 
 	private
 
@@ -94,5 +95,33 @@ class Shops extends \Phalcon\Mvc\Model
 		}
 
 		return $result;
+	}
+
+	public function checkDiscounts($shop, $cache = false)
+	{
+		$result = null;
+
+		if($cache && $this->_cache) {
+			$backendCache = $this->getDI()->get('backendCache');
+			$result = $backendCache->get(self::TABLE.'-'.implode('-', __FUNCTION__).'.cache');
+		}
+
+		if($result === null) {    // Выполняем запрос из MySQL
+
+			$sql = "SELECT ".self::SHOP_DISCOUNTS_TABLE.".*
+					FROM ".self::SHOP_DISCOUNTS_TABLE;
+
+			$result = $this->_db->query($sql)->fetch();
+			if($result) {
+				return json_decode($result['discount'], true);
+			} else {
+				return null;
+			}
+			// Сохраняем запрос в кэше
+			if($cache && $this->_cache) $backendCache->save(self::TABLE.'-'.implode('-', __FUNCTION__).'.cache', $result);
+		}
+
+		return $result;
+
 	}
 }

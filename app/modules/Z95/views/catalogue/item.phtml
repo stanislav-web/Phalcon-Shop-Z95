@@ -69,16 +69,6 @@
 
 
 
-<script src="http://t.trafmag.com/tracking.js" type="text/javascript"></script>
-<script language="javascript">
-	var odinkod = {
-		"type": "product",
-		"product_id":"88658"
-	};
-	var gcb = Math.round(Math.random() * 100000);
-
-</script>
-
 <!-- Mail.ru -->
 <img alt="" style="width:0;height:0;position:absolute;" src="http://ad.mail.ru/w522.gif?shop=83&amp;offer=88658&amp;rnd=87275071"><table class="catalogue-item-details">
 <tbody><tr>
@@ -226,6 +216,27 @@
 			</span>
 			<?php echo $shop['currency_symbol']; ?>
 		</div>
+
+		<?php if(isset($discounts)) { ?>
+			<?php if(isset($discounts['count'])) { ?>
+				<?php if($item['discount'] !== null || !empty($item['discount'])) { ?>
+					<div class="price discount_price">
+						Цена со скидкой 50% (при покупке любых 5 вещей):<br>
+						<span class="price"><?php echo (int)$item['discount']/2; ?></span> руб.
+					</div>
+				<?php } ?>
+			<?php } ?>
+
+			<?php if(isset($discounts['sum'])) { ?>
+				<?php if($item['discount'] !== null || !empty($item['discount'])) { ?>
+					<div class="price discount_price">
+						Скидка 30% (при покупке на сумму 30000 <?php echo $shop['currency_symbol']; ?>):<br>
+						<span class="price"><?php echo (int)$item['discount']*30/100; ?></span> руб.
+					</div>
+				<?php } ?>
+			<?php } ?>
+
+		<?php } ?>
 
 
 	</div>
