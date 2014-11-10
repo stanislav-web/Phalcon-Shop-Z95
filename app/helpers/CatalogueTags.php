@@ -142,11 +142,19 @@ class CatalogueTags extends \Phalcon\Tag
 		return $results;
 	}
 
-
-	public static function categoriesToTree($array, $parent_id = 0) {
+	/**
+	 * categoriesToTree  Построение дерева категорий (с сортировкой)
+	 * @param      $array входящий массив с категориями
+	 * @param int  $parent_id внутри какого parent сортировать?
+	 * @param bool $sort Сортировать?
+	 * @return array
+	 */
+	public static function categoriesToTree(array $array, $parent_id = 0, $sort = false) {
 		$tree = array();
 
 		if( !empty($array)){
+			$array = self::arrayToAssoc($array, 'id');
+
 			foreach( $array as $id=> $element ){
 
 				$element = (array) $element;
@@ -158,9 +166,9 @@ class CatalogueTags extends \Phalcon\Tag
 
 				}
 			}
+			if($sort) $tree = self::sortCategories($tree);
 			return $tree;
 		}
-
 	}
 
 	/**
@@ -175,5 +183,24 @@ class CatalogueTags extends \Phalcon\Tag
 		$output = array();
 		foreach ($array as $key=>$val) $output[$val[$field]][] = $val;
 		return $output;
+	}
+
+	/**
+	 * Функция сортировки категорий на главной и каталоге
+	 *
+	 * @param $categories
+	 * @return mixed
+	 */
+	public static function sortCategories(array $categories)
+	{
+		foreach($categories as $id	=>	$category)
+		{
+			$new_id = $category['sort'].$id;
+			$new_categories[$new_id] = $category;
+		}
+
+		ksort($new_categories);
+		unset($categories);
+		return self::arrayToAssoc($new_categories, 'id');
 	}
 }

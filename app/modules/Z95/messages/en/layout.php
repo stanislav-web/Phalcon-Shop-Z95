@@ -10,6 +10,7 @@
 		"DELIVERY"         			=>  "DELIVERY",
 		"ABOUT US"         			=>  "ABOUT US",
 	    "NOT_FOUND"                 =>  "404 Page Not Found",
-		"ABOUT"                 	=>  "About"
+		"ABOUT"                 	=>  "About",
+		"ARTICUL"                 	=>  "Articul",
 
 	];

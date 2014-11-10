@@ -14,7 +14,7 @@ $(function() {
 
 		// обнуляю все selected и присваиваю только активной
 		sections.removeClass('selected');
-		links.removeClass('selected')
+		links.removeClass('selected');
 		parentSection.addClass('selected');
 
 		// Генерирую таблицу
@@ -36,15 +36,19 @@ $(function() {
 
 				// пробегаю по ссылкам
 				$(sectionObj).find('a').each(function(linkNum, linkObj) {
-					if($(linkObj).attr('href') == path ||  $(linkObj).attr('href') == path.slice(0,-1)) linkObj.addClass('selected');
+					if($(linkObj).attr('href') == path ||  $(linkObj).attr('href') == path.slice(0,-1)) $(linkObj).addClass('selected');
 					rows += linkObj.outerHTML;
 				});
 				rows	+='</td>';
 			});
-			table.html(rows);
-			// вставляю таблицу
-			$('.header-submenu .submenu table tr').appendTo(table).css('display', 'block');
-			$('#header-menu').append($('#header-submenu').css('display', 'block'));
+
+			if(rows.length)
+			{
+				table.html(rows);
+				// вставляю таблицу
+				$('.header-submenu .submenu table tr').appendTo(table).css('display', 'block');
+				$('#header-menu').append($('#header-submenu').css('display', 'block'));
+			}
 		}
 	});
 

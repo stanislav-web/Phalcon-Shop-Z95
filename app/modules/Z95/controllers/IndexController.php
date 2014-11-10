@@ -72,12 +72,13 @@
 				// получаю все дочерние категории каталога
 				// Получение подкатегорий выбранного магазина с изображением самого рейтингового товара в каждой категории
 
-				$subCategories = $this->categoriesModel->getSubcategories($this->_shop['id'], 0, '>', 'DESC', true);
+				$subCategories = $this->categoriesModel->getCategories($this->_shop['id'], 0, '>', 'ASC', true);
 
 				// вывожу по умолчанию страницу каталога c вложением subcategories
 				$this->view->setVars([
 					'banners'			=>	$banners,
-					'subcategories'		=>	$subCategories,
+					'tree'				=>	$this->_helper->categoriesToTree($this->_shopCategories, 0, true),
+					'subcategories'		=>	$this->_helper->arrayToAssoc($subCategories, 'id'),
 					'title'				=>	$title,
 				]);
 			}

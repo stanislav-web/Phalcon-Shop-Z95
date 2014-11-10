@@ -74,5 +74,42 @@ class CatalogueSizes extends \Phalcon\Tag
 		);
 	}
 
+	/**
+	 * compare_sizes($a,$b) Функция сравнения буквенно-цифровых размеров между собой для usort()
+	 *
+	 * @param $a string
+	 * @param $b string
+	 * @access static
+	 * @return array
+	 * @Stanislav : repair for call static from view
+	 */
+	public static function compareSizes($a,$b) {
+		$a = trim($a);
+		$b = trim($b);
+		$s = array(
+			"XXS"		=> 0,
+			"XS"        => 1,
+			"S"         => 2,
+			"M"         => 3,
+			"L"         => 4,
+			"XL"        => 5,
+			"XXL"       => 6,
+			"XXXL"      => 7,
+			"XXXXL"     => 8,
+			"XXXXXL"    => 9,
+			"XXXXXXL"   => 10,
+		);
+		if ($a == $b) return 0;
+		if (isset($s[$a]) && isset($s[$b])) return ($s[$a] > $s[$b] ? 1 : -1);
+		if (isset($s[$a])) return 1;
+		if (isset($s[$b])) return -1;
+		$a_is_num = preg_match('/^[0-9\.,]+$/', $a); //(intval($a).'' == $a || floatval($a).'' == $a);
+		$b_is_num = preg_match('/^[0-9\.,]+$/', $b); //intval($b).'' == $b || floatval($b).'' == $b);
+		if ($a_is_num && !$b_is_num) return -1;
+		if ($b_is_num && !$a_is_num) return 1;
+		if ($a_is_num && $b_is_num) return floatval($a) > floatval($b) ? 1 : -1;
+		return strnatcmp($a,$b);
+	}
+
 
 }

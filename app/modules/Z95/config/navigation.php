@@ -90,7 +90,7 @@
 							],
 							[
 								'name'       => 'Шарфы, платки, перчатки',
-								'url'        => '/catalogue/woman/swimwear',
+								'url'        => '/catalogue/woman/scarves-hats-gloves',
 								'controller' => 'catalogue',
 								'action'     => 'index',
 								'close'      => '</div>'
@@ -208,7 +208,7 @@
 							],
 							[
 								'name'       => 'Плавки',
-								'url'        => '/catalogue/man/swimming trunks',
+								'url'        => '/catalogue/man/swimming_trunks',
 								'controller' => 'catalogue',
 								'action'     => 'index',
 							],
@@ -294,7 +294,7 @@
 							],
 							[
 								'name'       => 'Мужские очки',
-								'url'        => '/catalogue/man/winter-fall',
+								'url'        => '/catalogue/glasses/glasses-men',
 								'controller' => 'catalogue',
 								'action'     => 'index',
 								'close'      => '</div>',
@@ -606,7 +606,7 @@
 							],
 							[
 								'name'       => 'Шарфы, платки, перчатки',
-								'url'        => '/catalogue/woman/swimwear',
+								'url'        => '/catalogue/woman/scarves-hats-gloves',
 								'controller' => 'catalogue',
 								'action'     => 'index',
 							],
@@ -656,7 +656,7 @@
 							],
 							[
 								'name'       => 'Плавки',
-								'url'        => '/catalogue/man/swimming trunks',
+								'url'        => '/catalogue/man/swimming_trunks',
 								'controller' => 'catalogue',
 								'action'     => 'index',
 							],

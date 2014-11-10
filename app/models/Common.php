@@ -125,7 +125,7 @@
 			if($result === null)
 			{
 				$sql = "SELECT 	".Categories::TABLE.".id AS id, ".Categories::TABLE.".parent_id AS parent_id,
-							".Categories::TABLE.".name AS name, ".Categories::TABLE.".alias AS alias,
+							".Categories::TABLE.".name AS name, ".Categories::TABLE.".alias AS alias, ".self::TABLE_CAT_SHOP_REL.".sort AS sort,
 							".Categories::TABLE.".description AS description
 							FROM  ".self::TABLE_CAT_SHOP_REL."
 							INNER JOIN ".Categories::TABLE."

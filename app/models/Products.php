@@ -245,7 +245,7 @@ class Products extends \Phalcon\Mvc\Model
 			$result = $backendCache->get(self::TABLE.'-'.strtolower(__FUNCTION__).'-'.$shop_price_id.'.cache');
 		}
 		if($result === null) {
-			$sql = "SELECT 	".self::TABLE.".id AS product_id,  ".self::TABLE.".name AS product_name, ".self::TABLE.".articul,
+			$sql = "SELECT 	".self::TABLE.".id AS product_id,  CONCAT(UPPER(SUBSTRING(".self::TABLE.".name, 1, 1)), LOWER(SUBSTRING(".self::TABLE.".name FROM 2))) AS product_name, ".self::TABLE.".articul,
 					".self::TABLE.".tags,
 					".self::TABLE.".images,
 					".self::TABLE.".filter_size,
@@ -263,7 +263,6 @@ class Products extends \Phalcon\Mvc\Model
 //					LEFT JOIN ".Categories::TABLE." ON (".Categories::TABLE.".id = ".Common::TABLE_PRODUCTS_REL.".category_id)
 					"INNER JOIN ".Brands::TABLE." ON (".self::TABLE.".brand_id = ".Brands::TABLE.".id)
 					WHERE ".self::TABLE.".articul = '".$articul."' LIMIT 1";
-
 
 			$result = $this->_db->query($sql)->fetch();
 			if($result) {

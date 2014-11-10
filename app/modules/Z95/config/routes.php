@@ -33,7 +33,7 @@
 		'action'        => 'index',
 	]);
 
-	$router->addGet("/catalogue/[0-9]+", [
+	$router->addGet("/catalogue/([a-z_-]+/[0-9]+)|(/[0-9]+)", [
 		'module'    	=>  $module,
 		'namespace' 	=> 'Modules\\'.$module.'\Controllers\\',
 		'controller'    => 'catalogue',
