@@ -1451,56 +1451,7 @@ var basket = new function() {
 
         if (!c) { c = $('#sizes_perfume')[0]; }
 
-        if (c) {
-            var quantity	= $(c).attr('quantity');
-            if (quantity == 'single') {
-                // Р­С‚Рѕ СЂРѕР·РЅРёС‡РЅС‹Р№ РјР°РіР°Р·РёРЅ, РІ РєРѕРЅС‚РµР№РЅРµСЂРµ РґРѕР»Р¶РЅС‹ Р±С‹С‚СЊ СЌР»РµРјРµРЅС‚С‹ type=checkbox
-                $('input[type="checkbox"]',c) // Р’С‹Р±РёСЂР°РµРј РІСЃРµ С‡РµРєР±РѕРєСЃС‹
-                    .each(
-                    function(i, el) {
-                        var size 			= $(el).attr('value');
-                        var max_count		= parseInt($(el).attr('max_count')) || 10;
-                        var basket_count	= d.items[d.id] ? (d.items[d.id].sizes[size] || 0) : 0;
 
-                        $(el).attr('basket_count', basket_count);
-                        $('#basket_count_'+size, c).html(basket_count > 0 ? basket_count : '&mdash;');
-
-                        if (basket_count >= Math.min(10, max_count)) {
-                            el.checked = true;
-                            el.disabled = true;
-                        } else if (size == 0 && i == 0) {
-                            el.checked = true;
-                            el.disabled = false;
-                        } else {
-                            el.checked = false;
-                            el.disabled = false;
-                        }
-
-                        if (el.checked) {
-                            $(el).attr('checked', 'checked');
-                        } else {
-                            $(el).removeAttr('checked');
-                        }
-                    });
-
-            } else if (quantity == 'multiple') {
-                // Р­С‚Рѕ РѕРїС‚РѕРІС‹Р№ РјР°РіР°Р·РёРЅ, РІ РєРѕРЅС‚РµР№РЅРµСЂРµ РґРѕР»Р¶РЅС‹ Р±С‹С‚СЊ СЌР»РµРјРµРЅС‚С‹ type=text
-                $('input[type="text"]',c) // Р’С‹Р±РёСЂР°РµРј СЌР»РµРјРµС‚С‹ РІРІРѕРґР°
-                    .each(
-                    function(i, el) {
-                        var size 			= $(el).attr('item_size');
-                        var max_count		= parseInt($(el).attr('max_count')) || 10;
-                        var basket_count	= d.items[d.id] ? (d.items[d.id].sizes[size] || 0) : 0;
-
-                        $(el).attr('basket_count', basket_count);
-                        $('#basket_count_'+$(el).attr('id'), c).html(basket_count > 0 ? basket_count : '&mdash;');
-
-                        el.value = '';
-                        el.disabled = (basket_count >= max_count);
-                    });
-            }
-            $('#add',c).attr({'disabled' : true});
-        }
     };
 
     this.getItems = function(containerId) {

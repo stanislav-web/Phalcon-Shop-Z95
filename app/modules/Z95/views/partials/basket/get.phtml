@@ -12,7 +12,6 @@
 		<?php $total = 0; ?>
 		<?php if(!empty($basket['items'])) { ?>
 			<?php foreach($basket['items'] as $counter => $item) { ?>
-
 				<tr class="item-row" id="basket_row_<?php echo $item['product_id']; ?>">
 		<td preview_id="57453" class="image">
 			<div style="z-index: 2;" class="basket-preview">
@@ -37,6 +36,7 @@
 							<tbody>
 							<?php foreach($item['sizes'] as $size => $count) { ?>
 
+								<?php $price = ($item['discount']) ?(int)$item['discount'] :(int)$item['price']; ?>
 								<tr>
 								<td width="50" class="number size">
 									<?php echo $size; ?>
@@ -48,14 +48,14 @@
 									<div style="position:relative;"></div>
 								</td>
 								<td width="10" class="number">x</td>
-								<td width="45" class="number"><?php echo (int)$item['product_id']; ?></td>
+								<td width="45" class="number"><?php echo $price; ?></td>
 								<td width="10" class="number">=</td>
-								<td width="70" class="number recount"><?php echo $item['product_id'] * $count; ?> <?php echo $shop['currency_symbol']; ?></td>
+								<td width="70" class="number recount"><?php echo $price * $count; ?> <?php echo $shop['currency_symbol']; ?></td>
 								<td width="20" align="right">
 									<button onclick="basket.recount('<?php echo $item['product_id']; ?>', '<?php echo $size ?>', 0, 'small', 0)" class="button delete sign" title="удалить">x</button>
 								</td>
 							</tr>
-								<?php $total = $total + $item['product_id'] * $count; ?>
+								<?php $total = $total + $price * $count; ?>
 							<?php } ?>
 
 

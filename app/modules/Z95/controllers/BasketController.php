@@ -88,9 +88,13 @@
 					$this->basket = $this->session->get('basket');
 
 					if(!empty($this->basket['items'])) {
+
 						$basketItemIds = $this->getBasketItemsIds($this->basket['items']);
+
 						foreach($this->basket['items'] as $key => $product) {
+							
 							if($product['product_id'] == $id) {
+
 								list($size, $count) = explode('_', $item[$id][0]);
 								if ($count > 0) {
 									$this->basket['items'][$key]['sizes'] = $product['sizes'];
@@ -111,7 +115,9 @@
 									unset($this->basket['items'][$key]);
 								}
 
+
 							} else if(in_array($id, $basketItemIds)){
+
 								foreach($this->basket['items'] as $cat_id => $cat) {
 									if($cat['product_id'] == $id) {
 										list($size, $count) = explode('_', $item[$id][0]);
@@ -122,7 +128,6 @@
 										}
 										foreach($item[$id] as $siz => $param){
 											list($size, $count) = explode('_', $item[$id][$siz]);
-
 											if($count > 0) {
 												$this->basket['items'][$cat_id]['sizes'][$size] = $count;
 											}
@@ -134,12 +139,16 @@
 											unset($this->basket['items'][$cat_id]);
 										}
 									}
+
 								}
 
 							} else {
-
+								
 								$newItems = $this->save($item);
+
 								$this->basket['items'][] = current($this->productsModel->getBasketItems($newItems, $this->_shop['price_id']));
+
+								break;
 							}
 
 						}

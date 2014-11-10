@@ -120,6 +120,8 @@ class CatalogueController extends ControllerBase
 	{
 		// Установка заголовка
 		$this->tag->prependTitle($this->_translate['TITLE'].' - ');
+//		$config = $this->di->get('config');
+//		$discounts = $config->discounts->toArray();
 
 		// проверка страницы в кэше
 

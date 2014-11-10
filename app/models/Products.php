@@ -249,6 +249,8 @@ class Products extends \Phalcon\Mvc\Model
 					".self::TABLE.".tags,
 					".self::TABLE.".images,
 					".self::TABLE.".filter_size,
+					".Prices::TABLE.".discount,
+					".Prices::TABLE.".percent,
 					".self::TABLE.".description AS description, "
 //					GROUP_CONCAT(CONCAT(".Tags::TABLE.".id)) AS all_tags,
 //					GROUP_CONCAT(CONCAT(".Tags::TABLE.".name)) AS all_tags_name,
@@ -343,7 +345,8 @@ class Products extends \Phalcon\Mvc\Model
 		$ids = implode(',', array_keys($basketItems));
 
 		$sql = "SELECT 	".self::TABLE.".id AS product_id,  ".self::TABLE.".name AS product_name, ".self::TABLE.".articul, ".self::TABLE.".images,
-					".Brands::TABLE.".name AS brand, ".Brands::TABLE.".alias AS brand_alias, ".Prices::TABLE.".price
+					".Brands::TABLE.".name AS brand, ".Brands::TABLE.".alias AS brand_alias, ".Prices::TABLE.".price,
+					".Prices::TABLE.".discount, ".Prices::TABLE.".percent
 
 					FROM ".self::TABLE."
 					INNER JOIN ".Prices::TABLE." ON (".Prices::TABLE.".id = $shop_price_id && ".Prices::TABLE.".product_id = ".self::TABLE.".id)

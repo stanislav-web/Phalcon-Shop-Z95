@@ -7,8 +7,6 @@
 			Попробуйте <a onclick="catalogue.clear_search(); $('#CATALOGUE_SEARCH').val(''); return false;" href="#">очистить</a>
 			или <a onclick="$('#CATALOGUE_SEARCH')[0].focus(); return false;" href="#">изменить</a> условия поиска</p>		</div>
 
-
-
 	<?php return;} ?>
 
 <div class="go-container prev" style="margin-left: 175px; display: block;" title="Предыдущая фотография">
@@ -30,7 +28,7 @@
 <script type="text/javascript">
 
 	var sonar_product = {
-		identifier: '88658'  // уникальный id товара
+		identifier: '<?php echo $item['product_id']; ?>'  // уникальный id товара
 	};
 
 </script>
@@ -214,7 +212,20 @@
 	</div>
 
 	<div class="prices">
-		<div class="price">Цена:<br> <span class="price"><?php echo (int)$item['price']; ?></span> <?php echo $shop['currency_symbol']; ?>.</div>
+
+		<div class="price">
+			Цена:
+			<br>
+			<span class="price">
+				<?php if($item['discount'] !== null || !empty($item['discount'])) { ?>
+					<s><?php echo (int)$item['price']; ?></s>
+					<?php echo (int)$item['discount']; ?>
+				<?php } else { ?>
+					<?php echo (int)$item['price']; ?>
+				<?php } ?>
+			</span>
+			<?php echo $shop['currency_symbol']; ?>
+		</div>
 
 
 	</div>
