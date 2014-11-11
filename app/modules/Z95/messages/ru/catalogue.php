@@ -20,4 +20,11 @@
 		"ALL_SALES"					=>	"Все скидки",
 		"ABOUT"						=>	"О нас",
 
+		"ALL_BRANDS"				=>  "Бренды",
+		"SORT_BY" => "Сортировка по",
+		"RATING_FIELD" => "популярности",
+		"NEW_FIELD" => "новизне",
+		"PRICE_FIELD" => "цене",
+		"DISCOUNT_FIELD" => "скидке",
+		"FILTER_FIELD" => "Фильтр по...",
 	];

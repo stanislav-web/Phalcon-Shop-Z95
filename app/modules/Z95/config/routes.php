@@ -5,6 +5,13 @@
 
 	// Роутер каталога
 
+	$router->add("/catalogue/brands/:params", [
+		'module'    	=>  $module,
+		'namespace' 	=> 'Modules\\'.$module.'\Controllers\\',
+		'controller'    => 'catalogue',
+		'action'        => 'brands',
+	]);
+
 	$router->addGet("/catalogue/:params", [
 		'module'    	=>  $module,
 		'namespace' 	=> 'Modules\\'.$module.'\Controllers\\',

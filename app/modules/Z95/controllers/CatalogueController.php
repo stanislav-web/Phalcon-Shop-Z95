@@ -54,6 +54,9 @@ class CatalogueController extends ControllerBase
 
 		$virtuals			=	['/catalogue/sale', '/catalogue/top', '/catalogue/favorites', '/catalogue/apple'];
 
+		//Лимит вывода товаров на страницу
+		private $_onpage = 100;
+
 	/**
 	 * initialize() Инициализирую конструктор
 	 * @access public
@@ -64,6 +67,18 @@ class CatalogueController extends ControllerBase
 		// Загружаю локализацию для контроллера
 		$this->loadCustomTrans('catalogue');
 		parent::initialize();
+
+		//Обработка AJAX запросов
+		if ($this->request->isAjax() == true) {
+
+			if($this->request->get('ajax')){
+				$method = $this->request->get('ajax');
+			}
+			$this->view->setRenderLevel(\Phalcon\Mvc\View::LEVEL_NO_RENDER);
+			$result = $this->{$method}();
+			$result = json_encode($result);
+			exit($result);
+		}
 
 		$this->requestUri	=	$this->request->getURI();
 
@@ -103,16 +118,24 @@ class CatalogueController extends ControllerBase
 			}
 			else
 			{
-				// На выборку товаров итд итп. Лучше использовать экшн который редиректит на этот index
-				// Выполнить метод и заглушить
-				exit('On a sample of the goods, etc. etc.. Better use action that redirect to the index');
+				//Получаем массив параметров для фильтрации
+				$filter = $this->categoriesModel->parseRemap($this->_shop['id'], $this->request->getQuery(), $this->_onpage);
+				//Проверка на вызов метода.
+				if(isset($filter['category']) || count($filter)>4){
+					//Вывод страницы категории
+					$this->_lineItems($filter);
+				}
 			}
 		}
 		else
 		{
-			// На выборку товаров итд итп. Лучше использовать экшн который редиректит на этот index
-			// Выполнить метод и заглушить
-			exit('On a sample of the goods, etc. etc.. Better use action that redirect to the index');
+			//Получаем массив параметров для фильтрации
+			$filter = $this->categoriesModel->parseRemap($this->_shop['id'], $this->request->getQuery(), $this->_onpage);
+			//Проверка на вызов метода.
+			if(isset($filter['category']) || count($filter)>4){
+				//Вывод страницы категории
+				$this->_lineItems($filter);
+			}
 		}
 	}
 
@@ -154,6 +177,33 @@ class CatalogueController extends ControllerBase
 		}
 			// Сохраняем вывод в кэш
 		if($this->_config->cache->frontend) $this->view->cache(array("key" => $this->cachePage(__FUNCTION__)));
+	}
+
+	/**
+	 * Вывод страницы всех брендов
+	 * @author <filchakov.denis@gmail.com>
+	 */
+	public function brandsAction(){
+		$title = $this->_translate['ALL_BRANDS'];
+		$this->tag->prependTitle($this->_translate['ALL_BRANDS'].' - ');
+
+		// Добавляю путь в цепочку навигации
+		$this->_breadcrumbs->add($title, $this->request->getURI());
+
+		$arrayBrand = $this->_helper->arrayToAssoc((array)$this->brandsModel->getAllBrands($this->_shop['id']), 'name');
+		$result = '';
+		foreach($arrayBrand as $name => $infoBrand){
+			$key = strtolower($name[0]);
+			$result[$key][] = $infoBrand;
+		}
+
+		$this->view->setVars([
+			'template'		=>	'brands',
+			'title' => $title,
+			'brands' => $result
+		]);
+
+		$this->view->pick("catalogue/index");
 	}
 
 	/**
@@ -337,5 +387,152 @@ class CatalogueController extends ControllerBase
 		// Сохраняем вывод в кэш
 		if($this->_config->cache->frontend) $this->view->cache(array("key" => $this->cachePage(__FUNCTION__)));
 	}
+
+	/**
+	 * Фильтрация товаров согласно новым условиям
+	 * @author <filchakov.denis@gmail.com>
+	 */
+	function filtration(){
+		$oldRules = $this->categoriesModel->parseRemap($this->_shop['id'], $_REQUEST, $this->_onpage);
+
+		$newUrl['_url'] = implode('/', $_REQUEST['tags']);
+
+		$newRules = $this->categoriesModel->parseRemap($this->_shop['id'], $newUrl, $this->_onpage);
+
+		if(isset($oldRules['sex'])){
+			$newRules['sex'] = $oldRules['sex'];
+		}
+
+		if(isset($oldRules['category'])){
+			$newRules['category'] = $oldRules['category'];
+		}
+		$newRules['page'] = 0;
+
+		$filter = $newRules;
+		//удаляем родительскую категорию
+		if(isset($filter['category'][array_search(1,$filter['category'])])){
+			unset($filter['category'][array_search(1,$filter['category'])]);
+		}
+		if(isset($filter['category'][array_search(2,$filter['category'])])){
+			unset($filter['category'][array_search(2,$filter['category'])]);
+		}
+		if(isset($filter['category']) && count($filter['category'])==0){
+			unset($filter['category']);
+		}
+
+
+		$itemLine = $this->categoriesModel->renderItemsLine($filter, $this->_shop['id']);
+		
+		$items = $itemLine['items'];
+
+		unset($itemLine['items']);
+
+		$view = new \Phalcon\Mvc\View\Simple();
+
+		$view->setViewsDir("../app/modules/".$this->_shop['code']."/views/");
+
+		$result['url'] = $this->categoriesModel->buildUrl($newRules);
+
+		$_REQUEST['_url'] = $result['url'];
+
+		if($items < ($itemLine['limit']*$itemLine['page'])){
+			$itemLine['page'] = 1;
+		}
+
+		$result['url'] = $result['url'];
+		$result['html'] = $view->render("partials/catalogue/itemsline",
+			array(
+				'items'      => $items,
+				'pagination' => $itemLine,
+				'viewTranslate' => $this->_translate,
+			));
+
+		echo json_encode($result);die;
+	}
+
+	/**
+	 * Генерация сайдбара
+	 * @author <filchakov.denis@gmail.com>
+	 * @return array
+	 */
+	function filterSidebar (){
+		$filter = $this->categoriesModel->parseRemap($this->_shop['id'], $this->request->getQuery(), $this->_onpage);
+		$sidebar = $this->categoriesModel->renderFilter($filter, $this->_shop['id']);
+
+		$result = '<form id="filters" onsubmit="return false">
+						<div class="tags-filter Shadow">
+						<div class="close" onclick="$(this).parent().toggleClass(\'hidden\'); $(\'#tags_filter_button\').removeClass(\'hidden\');" title="Закрыть фильтры"></div>
+							<div class="filters">
+								';
+		$result .= $sidebar;
+		$result .= '
+							</div>
+						</div>
+					</form>
+					<script>
+						$("#filters").change(function(event){
+							event.preventDefault();
+							$.ajax({
+								type: "GET",
+								url: window.location.href,
+								data: "ajax=filtration&"+$(this).serialize(),
+								dataType: "json",
+								success: function (ajax) {
+									window.history.pushState("", "", "/catalogue/"+ajax.url);
+									$(".element-catalogue_items").html(ajax.html);
+								}
+							});
+						});
+					</script>';
+
+		return array('html'=>$result);
+	}
+
+	/*
+	 * Вывод ленты товаров
+	 * @author <filchakov.denis@gmail.com>
+	 */
+	private function _lineItems($filter = array()){
+		//удаляем родительскую категорию
+		if(isset($filter['category'][array_search(1,$filter['category'])])){
+			unset($filter['category'][array_search(1,$filter['category'])]);
+		}
+		if(isset($filter['category'][array_search(2,$filter['category'])])){
+			unset($filter['category'][array_search(2,$filter['category'])]);
+		}
+		if(isset($filter['category']) && count($filter['category'])==0){
+			unset($filter['category']);
+		}
+
+
+		$itemLine = $this->categoriesModel->renderItemsLine($filter, $this->_shop['id']);
+
+		foreach($this->categoriesModel->getListing($this->_shop['id']) as $category){
+			if(str_replace('/catalogue/','',$this->request->getQuery()['_url'])==$category['url']){
+				$pagetitle = $category['name'];
+			}
+		}
+
+		$title = $this->_translate['CATALOGUE'];
+		$this->tag->prependTitle($title.' - ');
+
+		// Добавляю путь в цепочку навигации
+		$this->_breadcrumbs->add($pagetitle, $this->request->getURI());
+
+		$items = $itemLine['items'];
+
+
+
+		unset($itemLine['items']);
+		$this->view->setVars([
+			'template'   => 'itemsline',
+			'title'	=> $pagetitle,
+			'items'      => $items,
+			'pagination' => $itemLine
+		]);
+
+		$this->view->pick("catalogue/index");
+	}
+
 }
 

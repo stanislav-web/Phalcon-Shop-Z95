@@ -90,6 +90,7 @@ class ControllerBase extends \Phalcon\Mvc\Controller
 		$shopModel          =   false,
 		$commonModel        =   false,
 		$categoriesModel    =   false,
+		$brandsModel    =   false,
 		$productsModel      =   false,
 		$pricesModel        =   false,
 		$tagsModel			=	false,
@@ -198,6 +199,7 @@ class ControllerBase extends \Phalcon\Mvc\Controller
 		$this->shopModel        =   new \Models\Shops();
 		$this->productsModel    =   new \Models\Products();
 		$this->categoriesModel  =   new \Models\Categories();
+		$this->brandsModel  =   new \Models\Brands();
 		$this->pricesModel      =   new \Models\Prices();
 		$this->tagsModel      	=   new \Models\Tags();
 		$this->bannersModel     =   new \Models\Banners();

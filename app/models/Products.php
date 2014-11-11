@@ -16,6 +16,7 @@ class Products extends \Phalcon\Mvc\Model
 	 * @const
 	 */
 	const TABLE = 'products';
+	const PRODUCT_RELATION = 'products_relationship';
 
 	private
 
