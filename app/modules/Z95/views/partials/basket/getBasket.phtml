@@ -8,12 +8,21 @@
 
 	<?php
 	$totalCount = 0;
+	$totalSum = 0;
 	foreach($basket['items'] as $counter => $item) {
 		foreach($item['sizes'] as $size => $count) {
 			$totalCount = $totalCount + $count;
+			$totalSum = $totalSum + $count*(intval($item['discount']));
+
 		}
 	}
 	?>
+
+
+
+	<?php if(isset($discounts)) { ?>
+		<?php $this->view->partial('partials/basket/discountsRemember', array('discounts' => $discounts, 'totalCount' => $totalCount, 'totalSum' => $totalSum)); ?>
+	<?php } ?>
 
 	<table border="0" cellspacing="0" cellpadding="0" class="basket-basket">
 		<tbody>
@@ -81,31 +90,10 @@
 						<td>Всего заказали на</td>
 						<td class="number"><?php echo $total; ?> <?php echo $shop['currency_symbol']; ?></td>
 					</tr>
+
 					<?php if(isset($discounts)) { ?>
-						<?php if(isset($discounts['count']))  { ?>
-							<?php if($totalCount > 0 && $totalCount < 5) { ?>
-								<tr>
-									<td>Скидка <?php echo $discounts['count'][$totalCount] ?>% (<a target="_blank" href="/discounts/">подробнее о скидках</a>)</td>
-									<td class="number discount"><?php echo ($total*$discounts['count'][$totalCount]/100); ?> <?php echo $shop['currency_symbol'] ?></td>
-								</tr>
-								<tr>
-									<td>С учетом скидки</td>
-									<td class="number"><?php echo $total - ($total*$discounts['count'][$totalCount]/100); ?> <?php echo $shop['currency_symbol'] ?></td>
-								</tr>
-							<?php } ?>
-							<?php if($totalCount >= 5) { ?>
-								<tr>
-									<td>Скидка <?php echo end($discounts['count']); ?>% (<a target="_blank" href="/discounts/">подробнее о скидках</a>)</td>
-									<td class="number discount"><?php echo ($total*end($discounts['count'])/100); ?> <?php echo $shop['currency_symbol'] ?></td>
-								</tr>
-								<tr>
-									<td>С учетом скидки</td>
-									<td class="number"><?php echo $total - ($total*end($discounts['count'])/100); ?> <?php echo $shop['currency_symbol'] ?></td>
-								</tr>
-							<?php } ?>
-						<?php } else { ?>
-							Другой вид скидок
-						<?php } ?>
+						<?php $this->view->partial('partials/basket/discountsBasket', array('discounts' => $discounts, 'totalCount' => $totalCount, 'totalSum' => $totalSum, 'total' => $total)); ?>
+
 					<?php } ?>
 					<tr>
 						<td>Бесплатная доставка</td>
