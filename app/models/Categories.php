@@ -1,5 +1,6 @@
 <?php
 namespace Models;
+use Composer\Util\Filesystem;
 use Helpers\CatalogueTags;
 use Phalcon\Db\Result\Pdo;
 
@@ -260,6 +261,15 @@ class Categories extends \Phalcon\Mvc\Model
 				$url = preg_replace("#/$#", "", $url);
 				$url = str_replace('/catalogue/','',$url);
 				$url = explode('/',$url);
+
+				if(in_array('top',$url)){
+					$result['top'] = true;
+				}
+
+				if(in_array('new',$url)){
+					$result['new'] = true;
+				}
+
 				//Забираем категории
 				$sql = "SELECT c.id
 					FROM ".Common::TABLE_CAT_SHOP_REL." csr
@@ -339,6 +349,17 @@ class Categories extends \Phalcon\Mvc\Model
 					$result['price']['max'] = (int) $_GET['price']['max'];
 				}
 			}
+
+			if(isset($result['category'][array_search(1,$result['category'])])){
+				unset($result['category'][array_search(1,$result['category'])]);
+			}
+			if(isset($result['category'][array_search(2,$result['category'])])){
+				unset($result['category'][array_search(2,$result['category'])]);
+			}
+			if(isset($result['category']) && count($result['category'])==0){
+				unset($result['category']);
+			}
+
 			if ($cache && $this->_cache) $backendCache->save(self::TABLE . '-'.$url.'.cache', $result);
 		}
 		return $result;
@@ -352,6 +373,7 @@ class Categories extends \Phalcon\Mvc\Model
 	 * @return string
 	 */
 	public function renderFilter($filter = array(), $price_id = 1, $cache = false){
+
 		$sql = "
 			SELECT
 			pr.tag_id,
@@ -411,22 +433,34 @@ class Categories extends \Phalcon\Mvc\Model
 			}
 		}
 
-		if($filterSql!=''){
-			$sql .= $filterSql;
+		$sql .= $filterSql;
 
-				if(isset($filter['category'])){
-					$filterSql .= ' AND pr.category_id IN ('.implode(',',$filter['category']).')';
-				}
+			if(isset($filter['category'])){
+				$filterSql .= ' AND pr.category_id IN ('.implode(',',$filter['category']).')';
+			}
 
-			$sql .=  ' AND pr.product_id IN (SELECT p.id
-				FROM `products_relationship` pr
-				INNER JOIN `products` p ON (p.id = pr.product_id)
-				INNER JOIN `prices` price ON (p.id = price.product_id)
-				INNER JOIN `brands` brand ON (brand.id = p.brand_id) WHERE price.id = '.$price_id. '' .$filterSql.')
-			';
+		$topWhere = '';
+
+		if(isset($filter['top'])){
+			$topWhere .= 'INNER JOIN (SELECT id FROM products as products ';
+			if(isset($filter['sex'])){
+				$topWhere .= 'WHERE products.sex IN ('.$filter['sex'].')';
+			}
+			$topWhere .= ' GROUP BY articul ORDER BY rating DESC LIMIT 200) jp ON pr.product_id = jp.id';
 		}
 
+		$sql .=  ' AND pr.product_id IN (SELECT p.id
+			FROM `products_relationship` pr
+			INNER JOIN `products` p ON (p.id = pr.product_id)
+			INNER JOIN `prices` price ON (p.id = price.product_id)
+			INNER JOIN `brands` brand ON (brand.id = p.brand_id)
+			'.$topWhere.'
+			WHERE price.id = '.$price_id. '' .$filterSql.')
+		';
+
 		$sql .= ' GROUP BY pr.tag_id';
+
+
 
 		$tagsTMP = $this->_db->query($sql)->fetchAll();
 		foreach($tagsTMP as $valueTags){
@@ -460,6 +494,130 @@ class Categories extends \Phalcon\Mvc\Model
 		}
 		return $result;
 	}
+
+	/**
+	 * Формирование ленты товаров для категории TOP-200
+	 * @author <filchakov.denis@gmail.com>
+	 * @param array $filter
+	 * @param int $price_id
+	 * @param bool $cache
+	 * @return null
+	 */
+	public function renderTopItemsLine($filter = array(), $price_id = 1, $cache = false){
+		$result = null;
+		if ($cache && $this->_cache) {
+			$backendCache = $this->getDI()->get('backendCache');
+			$result = $backendCache->get(self::TABLE . '-'.md5(implode(',',$filter)).'.cache');
+		}
+
+		if ($result === null) {
+			$sql = 'SELECT SQL_CALC_FOUND_ROWS * FROM ( ';
+
+			$offset = $filter['page'] * $filter['limit'];
+			$sql .= "SELECT
+			p.*,
+			brand.name AS brand_name,
+			price.price AS price,
+			price.discount AS discount,
+			price.percent AS percent
+			FROM `".Products::PRODUCT_RELATION."` pr
+			INNER JOIN `".Products::TABLE."` p ON (p.id = pr.product_id)
+			INNER JOIN `".Prices::TABLE."` price ON (p.id = price.product_id)
+			INNER JOIN `".Brands::TABLE."` brand ON (brand.id = p.brand_id)";
+
+			if(isset($filter['top'])){
+				$sql .= 'INNER JOIN (SELECT id FROM products as products ';
+				if(isset($filter['sex'])){
+					$sql .= 'WHERE products.sex IN ('.$filter['sex'].')';
+				}
+				$sql .= ' GROUP BY articul ORDER BY rating DESC LIMIT 200) jp ON pr.product_id = jp.id';
+			}
+
+			$sql .= ' WHERE price.id = '.$price_id;
+
+			if(isset($filter['category'])){
+				$sql .= ' AND pr.category_id IN ('.implode(',',$filter['category']).')';
+			}
+			if(isset($filter['tags'])){
+				$sql .= ' AND ';
+				foreach($filter['tags'] as $tagValue){
+					$tags[] = " FIND_IN_SET('".$tagValue."', filter_tags) ";
+				}
+				$sql .= implode(' AND ', $tags);
+			}
+			if(isset($filter['sizes'])){
+				$sql .= ' AND ';
+				foreach($filter['sizes'] as $tagValue){
+					$tags[] = " FIND_IN_SET('".$tagValue."', filter_size) ";
+				}
+				$sql .= '('.implode(' OR ', $tags).')';
+			}
+
+			if(isset($filter['sex']) && isset($filter['sale'])){
+				$sex[] = 0;
+				$sex[] = 3;
+				$sex[] = $filter['sex'];
+
+				$sql .= ' AND p.sex IN ('.implode(',',$sex).') ';
+			} elseif (isset($filter['sex']) && is_numeric($filter['sex'])){
+				$sql .= ' AND p.sex = '.$filter['sex'];
+			}
+
+			if(isset($filter['sale']) && is_numeric($filter['sale']) && $filter['sale']>0){
+				$sql .= ' AND price.percent = '.$filter['sale'];
+			} elseif (isset($filter['sale']) && $filter['sale']==0){
+				$sql .= ' AND price.percent != 0';
+			}
+			if(isset($filter['new']) && is_numeric($filter['new'])){
+				$sql .= ' AND p.is_new = '.$filter['new'];
+			}
+			if(isset($filter['brand'])){
+				$sql .= ' AND ';
+				foreach($filter['brand'] as $brandValue){
+					$brand[] = " brand_id = ".$brandValue." ";
+				}
+				$sql .= ' ( '.implode(' OR ', $brand).' ) ';
+			}
+			if(isset($filter['price'])){
+				if(isset($filter['price']['min']) && is_numeric($filter['price']['min'])){
+					$sql .= ' AND price.discount >= '.$filter['price']['min'];
+				}
+				if(isset($filter['price']['max']) && is_numeric($filter['price']['max'])){
+					$sql .= ' AND price.discount <= '.$filter['price']['max'];
+				}
+			}
+
+			$sql .= ' GROUP BY articul ORDER BY rating DESC LIMIT 200) as p';
+
+			$result['limit'] = $filter['limit'];
+			$result['sortby'] = $filter['sortby'];
+			$result['orderby'] = $filter['orderby'];
+			if(isset($filter['sale'])){
+				$result['sale'] = $filter['sale'];
+			}
+			if(isset($filter['sortby'])){
+				switch($filter['sortby']){
+					case "new": $filter['sortby'] = 'date_create'; break;
+					case "price": $filter['sortby'] = 'discount'; break;
+					case "discount": $filter['sortby'] = 'percent'; break;
+					default: case "rating": $filter['sortby'] = 'rating'; break;
+				}
+			}
+
+			$sql .= ' GROUP BY articul ORDER BY '.$filter['sortby'].' '.$filter['orderby'];
+			$sql .= ' LIMIT '.$offset.', '.$filter['limit'];
+
+			$result['items'] = $this->_db->query($sql)->fetchAll();
+			$result['count'] = (int) $this->_db->query('SELECT FOUND_ROWS() as \'count\';')->fetch()['count'];
+			$result['page'] = $filter['page']+1;
+			$result['price'] = $filter['price'];
+
+			if ($cache && $this->_cache) $backendCache->save(self::TABLE . '-'.md5(implode(',',$filter)).'.cache', $result);
+		}
+
+		return $result;
+	}
+
 	/**
 	 * Формирование ленты товаров
 	 * @author <filchakov.denis@gmail.com>
@@ -489,6 +647,15 @@ class Categories extends \Phalcon\Mvc\Model
 			INNER JOIN `".Products::TABLE."` p ON (p.id = pr.product_id)
 			INNER JOIN `".Prices::TABLE."` price ON (p.id = price.product_id)
 			INNER JOIN `".Brands::TABLE."` brand ON (brand.id = p.brand_id)";
+
+			if(isset($filter['top'])){
+				$sql .= 'INNER JOIN (SELECT id FROM products as products ';
+				if(isset($filter['sex'])){
+					$sql .= 'WHERE products.sex IN ('.$filter['sex'].')';
+				}
+				$sql .= ' GROUP BY articul ORDER BY rating DESC LIMIT 200) jp ON pr.product_id = jp.id';
+			}
+
 			$sql .= ' WHERE price.id = '.$price_id;
 
 			if(isset($filter['category'])){
@@ -508,9 +675,17 @@ class Categories extends \Phalcon\Mvc\Model
 				}
 				$sql .= '('.implode(' OR ', $tags).')';
 			}
-			if(isset($filter['sex']) && is_numeric($filter['sex'])){
+
+			if(isset($filter['sex']) && isset($filter['sale'])){
+				$sex[] = 0;
+				$sex[] = 3;
+				$sex[] = $filter['sex'];
+
+				$sql .= ' AND p.sex IN ('.implode(',',$sex).') ';
+			} elseif (isset($filter['sex']) && is_numeric($filter['sex'])){
 				$sql .= ' AND p.sex = '.$filter['sex'];
 			}
+
 			if(isset($filter['sale']) && is_numeric($filter['sale']) && $filter['sale']>0){
 				$sql .= ' AND price.percent = '.$filter['sale'];
 			} elseif (isset($filter['sale']) && $filter['sale']==0){
@@ -551,6 +726,7 @@ class Categories extends \Phalcon\Mvc\Model
 
 			$sql .= ' GROUP BY articul ORDER BY '.$filter['sortby'].' '.$filter['orderby'];
 			$sql .= ' LIMIT '.$offset.', '.$filter['limit'];
+
 			$result['items'] = $this->_db->query($sql)->fetchAll();
 			$result['count'] = (int) $this->_db->query('SELECT FOUND_ROWS() as \'count\';')->fetch()['count'];
 			$result['page'] = $filter['page']+1;
@@ -566,6 +742,25 @@ class Categories extends \Phalcon\Mvc\Model
 	 */
 	public function buildUrl($param = array()){
 		$result = array();
+
+		$gender = array(
+			1 => 'man',
+			2 => 'woman'
+		);
+
+		$psevdo = array();
+		if(isset($param['new'])){
+			$psevdo[] = 'new';
+		}
+		if(isset($param['top'])){
+			$psevdo[] = 'top';
+		}
+
+		if(isset($param['sex'])){
+			//array_unshift($result, $gender[$param['sex']]);
+			$psevdo[] = $gender[$param['sex']];
+		}
+
 		if(isset($param['category'])){
 			$category = $this->_db->query('SELECT alias FROM '.self::TABLE.' WHERE id in ('.implode(',',$param['category']).')')->fetchAll();
 			foreach($category as $value){
@@ -580,6 +775,10 @@ class Categories extends \Phalcon\Mvc\Model
 				$result[] = urlencode($value['alias']);
 			}
 		}
+
+
+		$result = array_merge($psevdo, $result);
+
 
 		if($param['page']==0){
 			$param['page'] = 1;

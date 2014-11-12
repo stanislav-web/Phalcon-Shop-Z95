@@ -180,36 +180,69 @@ class CatalogueController extends ControllerBase
 	}
 
 	/**
-	 * Вывод страницы всех брендов
+	 * Страница всех брендов
 	 * @author <filchakov.denis@gmail.com>
 	 */
 	public function brandsAction(){
-		$title = $this->_translate['ALL_BRANDS'];
-		$this->tag->prependTitle($this->_translate['ALL_BRANDS'].' - ');
-
-		// Добавляю путь в цепочку навигации
-		$this->_breadcrumbs->add($title, $this->request->getURI());
+		$this->tag->appendTitle(' - '.$this->_translate['ALL_BRANDS']);
 
 		$arrayBrand = $this->_helper->arrayToAssoc((array)$this->brandsModel->getAllBrands($this->_shop['id']), 'name');
 		$result = '';
+
 		foreach($arrayBrand as $name => $infoBrand){
 			$key = strtolower($name[0]);
 			$result[$key][] = $infoBrand;
 		}
 
 		$this->view->setVars([
+			'title'	=> $this->_translate['ALL_BRANDS'],
 			'template'		=>	'brands',
-			'title' => $title,
-			'brands' => $result
+			'brands' => $result,
 		]);
 
-		$this->view->pick("catalogue/index");
+		return $this->view->render('catalogue', 'index')->pick("catalogue/index");
+	}
+
+	/*
+	 * Страница TOP200
+	 * @author <filchakov.denis@gmail.com>
+	 */
+	function topAction(){
+		$filter = $this->categoriesModel->parseRemap($this->_shop['id'], $this->request->getQuery(), $this->_onpage);
+		//$filter['top'] = true;
+		$this->_lineItems($filter);
+		$this->view->render('catalogue', 'index')->pick("catalogue/index");
+	}
+
+	/*
+	 * Лента скидок
+	 */
+	function saleAction(){
+		$filter = $this->categoriesModel->parseRemap($this->_shop['id'], $this->request->getQuery(), $this->_onpage);
+		if(is_numeric($this->request->get('sale'))){
+			$filter['sale'] = (int)$this->request->get('sale');
+		} else {
+			$filter['sale'] = 0;
+		}
+
+		$this->_lineItems($filter);
+
+		$this->view->setVars([
+			'title'			=>	$this->_translate['SALE'],
+		]);
+
+		$title = $this->_translate['DISCOUNT'].' '.$filter['sale'].'%';
+		$this->tag->prependTitle($title.' - ');
+
+		$this->_breadcrumbs->add($title, $this->request->getURI());
+
+		$this->view->render('catalogue', 'index')->pick("catalogue/index");
 	}
 
 	/**
 	 * Распродажа
 	 */
-	public function saleAction()
+	public function salepageAction()
 	{
 		$queryString = $this->request->getQuery();
 
@@ -394,44 +427,26 @@ class CatalogueController extends ControllerBase
 	 */
 	function filtration(){
 		$oldRules = $this->categoriesModel->parseRemap($this->_shop['id'], $_REQUEST, $this->_onpage);
-
 		$newUrl['_url'] = implode('/', $_REQUEST['tags']);
 
 		$newRules = $this->categoriesModel->parseRemap($this->_shop['id'], $newUrl, $this->_onpage);
 
-		if(isset($oldRules['sex'])){
-			$newRules['sex'] = $oldRules['sex'];
-		}
+		if(isset($oldRules['new']) && $oldRules['new']==true){$newRules['new'] = true;}
+		if(isset($oldRules['sex'])){$newRules['sex'] = $oldRules['sex'];}
+		if(isset($oldRules['top']) && $oldRules['top']==true){$newRules['top'] = true;}
+		if(isset($oldRules['category'])){$newRules['category'] = $oldRules['category']; }
 
-		if(isset($oldRules['category'])){
-			$newRules['category'] = $oldRules['category'];
-		}
 		$newRules['page'] = 0;
 
 		$filter = $newRules;
-		//удаляем родительскую категорию
-		if(isset($filter['category'][array_search(1,$filter['category'])])){
-			unset($filter['category'][array_search(1,$filter['category'])]);
-		}
-		if(isset($filter['category'][array_search(2,$filter['category'])])){
-			unset($filter['category'][array_search(2,$filter['category'])]);
-		}
-		if(isset($filter['category']) && count($filter['category'])==0){
-			unset($filter['category']);
-		}
-
 
 		$itemLine = $this->categoriesModel->renderItemsLine($filter, $this->_shop['id']);
-		
+
 		$items = $itemLine['items'];
 
 		unset($itemLine['items']);
 
-		$view = new \Phalcon\Mvc\View\Simple();
-
-		$view->setViewsDir("../app/modules/".$this->_shop['code']."/views/");
-
-		$result['url'] = $this->categoriesModel->buildUrl($newRules);
+		$result['url'] = $this->categoriesModel->buildUrl($filter);
 
 		$_REQUEST['_url'] = $result['url'];
 
@@ -440,6 +455,9 @@ class CatalogueController extends ControllerBase
 		}
 
 		$result['url'] = $result['url'];
+
+		$view = new \Phalcon\Mvc\View\Simple();
+		$view->setViewsDir("../app/modules/".$this->_shop['code']."/views/");
 		$result['html'] = $view->render("partials/catalogue/itemsline",
 			array(
 				'items'      => $items,
@@ -451,6 +469,16 @@ class CatalogueController extends ControllerBase
 	}
 
 	/**
+	 * Возвращает рекомендации
+	 */
+	function getRecommendedItems(){
+		$ids = explode(',', $_REQUEST['ids']);
+		$infoIds = $this->productsModel->getRecommend($ids);
+		$result['html'] = 'Здесь будут товары с ID — '.$infoIds;
+		return $result;
+	}
+
+	/**
 	 * Генерация сайдбара
 	 * @author <filchakov.denis@gmail.com>
 	 * @return array
@@ -458,6 +486,26 @@ class CatalogueController extends ControllerBase
 	function filterSidebar (){
 		$filter = $this->categoriesModel->parseRemap($this->_shop['id'], $this->request->getQuery(), $this->_onpage);
 		$sidebar = $this->categoriesModel->renderFilter($filter, $this->_shop['id']);
+
+		if($sidebar!=''){
+
+			$urlFilter = $filter;
+			if(isset($urlFilter['tags'])){
+				unset($urlFilter['tags']);
+			}
+
+			if(isset($urlFilter['price'])){
+				unset($urlFilter['price']);
+			}
+			$urlFilter['page'] = 0;
+			$urlClear = $this->categoriesModel->buildUrl($urlFilter);
+
+			$sidebar = '<a class="reset" href="/catalogue/'.$urlClear.'">Сбросить все</a>'.$sidebar;
+		}
+
+		if($sidebar==''){
+			return array('html'=>'');
+		}
 
 		$result = '<form id="filters" onsubmit="return false">
 						<div class="tags-filter Shadow">
@@ -471,6 +519,14 @@ class CatalogueController extends ControllerBase
 					</form>
 					<script>
 						$("#filters").change(function(event){
+							global.showStatus("common.loading");
+
+							if($(\'body\').scrollTop()>500){
+								$(\'html, body\').animate({
+									scrollTop: $("#CONTENT").offset().top
+								}, 1000);
+							}
+
 							event.preventDefault();
 							$.ajax({
 								type: "GET",
@@ -478,14 +534,43 @@ class CatalogueController extends ControllerBase
 								data: "ajax=filtration&"+$(this).serialize(),
 								dataType: "json",
 								success: function (ajax) {
+									global.hideStatus("common.loading");
 									window.history.pushState("", "", "/catalogue/"+ajax.url);
+									global.hideStatus(\'common.loading\');
+
 									$(".element-catalogue_items").html(ajax.html);
 								}
 							});
 						});
 					</script>';
 
-		return array('html'=>$result);
+
+		return array('html'=>$result, 'url'=>json_encode($filter));
+	}
+
+	/*
+	 * Страница новинок
+	 * @author <filchakov.denis@gmail.com>
+	 */
+	function newAction(){
+		$filter = $this->categoriesModel->parseRemap($this->_shop['id'], $this->request->getQuery(), $this->_onpage);
+		//удаляем родительскую категорию
+		//$filter['new'] = 1;
+		$this->_lineItems($filter);
+		$title = $this->_translate['NEW_CATEGORY'];
+		$this->_breadcrumbs->add($title, $this->request->getURI());
+		$this->view->render('catalogue', 'index')->pick("catalogue/index");
+	}
+
+	/**
+	 * Определение крошек по результату выборки
+	 * @param array $filter
+	 */
+	private function _breadTitle($filter = array()){
+		if(isset($filter['brand']) && !isset($filter['category'])){
+			$result = $this->brandsModel->get(array('id'=>current($filter['brand'])))['name'];
+		}
+		return $result;
 	}
 
 	/*
@@ -493,24 +578,26 @@ class CatalogueController extends ControllerBase
 	 * @author <filchakov.denis@gmail.com>
 	 */
 	private function _lineItems($filter = array()){
+
 		//удаляем родительскую категорию
-		if(isset($filter['category'][array_search(1,$filter['category'])])){
-			unset($filter['category'][array_search(1,$filter['category'])]);
-		}
-		if(isset($filter['category'][array_search(2,$filter['category'])])){
-			unset($filter['category'][array_search(2,$filter['category'])]);
-		}
-		if(isset($filter['category']) && count($filter['category'])==0){
-			unset($filter['category']);
-		}
 
-
-		$itemLine = $this->categoriesModel->renderItemsLine($filter, $this->_shop['id']);
+		if(isset($filter['top'])){
+			$itemLine = $this->categoriesModel->renderTopItemsLine($filter, $this->_shop['id']);
+		} else {
+			$itemLine = $this->categoriesModel->renderItemsLine($filter, $this->_shop['id']);
+		}
 
 		foreach($this->categoriesModel->getListing($this->_shop['id']) as $category){
-			if(str_replace('/catalogue/','',$this->request->getQuery()['_url'])==$category['url']){
+			$arrayUrl = explode('/',$this->request->getQuery()['_url']);
+			$arrayCategory = explode('/',$category['url']);
+			if(count(array_intersect($arrayCategory,$arrayUrl))==count($arrayCategory)){
 				$pagetitle = $category['name'];
 			}
+		}
+
+		//Перезаписываем название страницы
+		if($pagetitle==''){
+			$pagetitle = $this->_breadTitle($filter);
 		}
 
 		$title = $this->_translate['CATALOGUE'];
@@ -521,14 +608,13 @@ class CatalogueController extends ControllerBase
 
 		$items = $itemLine['items'];
 
-
-
 		unset($itemLine['items']);
 		$this->view->setVars([
 			'template'   => 'itemsline',
 			'title'	=> $pagetitle,
 			'items'      => $items,
-			'pagination' => $itemLine
+			'pagination' => $itemLine,
+			'itemsline' => array_keys($this->_helper->arrayToAssoc($items,'id'))
 		]);
 
 		$this->view->pick("catalogue/index");

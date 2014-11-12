@@ -1,0 +1,154 @@
+<div class="item">
+	<div style="z-index: 2; position: relative;">
+		<div style="display: none;" id="sizes_<?= $item['articul'] ?>" class="sizes_win"
+			 cat_id="<?= $item['articul'] ?>" price="<?= $item['discount'] ?>" quantity="single"
+			 layout_mode="right">
+			<img onclick="$('#sizes_<?= $item['articul'] ?>').fadeOut();" class="close_png" src="/assets/Z95/images/d-t.gif">
+
+			<form autocomplete="off">
+				<table>
+					<tbody>
+					<tr>
+						<td id="leftPart" style="padding: 0px 10px 0px 0px; height: 320px;">
+							<div style="height:275px;">
+								<a href="/catalogue/<?= $item['articul'] ?>/">
+									<img class="preview"
+										 src="http://img<?= rand(0, 9) ?>.z95.ru/f/p/225x275/catalogue/<?= $item['id'] ?>/<?= current(json_decode($item['images'], 1)) ?>">
+								</a>
+							</div>
+							<div class="info">
+								<a href="/catalogue/<?= $item['articul'] ?>/">
+									<b><?= $item['brand_name'] ?></b>
+									<?= $item['name'] ?> <span class="articul"><?= $item['articul'] ?></span>
+								</a>
+							</div>
+						</td>
+						<td id="rightPart" style="padding: 0px 10px 0px 0px;" part="">
+							<div class="warning hidden" id="warning" onclick="$(this).fadeOut();"></div>
+																	<span>
+							Выберите размер:
+						</span>
+							<br clear="all">
+
+							<div class="small-sizes">
+								<div class="size">
+									<label>
+										<input type="checkbox"
+											   onclick="basket.getItems('sizes_<?= $item['articul'] ?>')"
+											   value="L"
+											   max_count="1" basket_count="0"><br>
+										L </label>
+								</div>
+								<div class="size">
+									<label>
+										<input type="checkbox"
+											   onclick="basket.getItems('sizes_<?= $item['articul'] ?>')"
+											   value="XL"
+											   max_count="1" basket_count="0"><br>
+										XL </label>
+								</div>
+								<div class="size">
+									<label>
+										<input type="checkbox"
+											   onclick="basket.getItems('sizes_<?= $item['articul'] ?>')"
+											   value="XXL"
+											   max_count="1" basket_count="0"><br>
+										XXL </label>
+								</div>
+
+								<br clear="all"><br>
+
+								<div class="left">
+									<label>
+										<input onclick="basket.getItems('sizes_<?= $item['articul'] ?>')"
+											   type="checkbox" value="?"
+											   style="float: left; margin-right: 5px;">
+										Не уверен в размере — <br>хочу обсудить с менеджером</label>
+								</div>
+
+							</div>
+							<br clear="all">
+
+							<div class="add-button">
+								<button id="add" class="button" type="button" disabled="true"
+										onclick="basket.addToBasket('sizes_<?= $item['articul'] ?>', true);">
+									Добавить в корзину
+								</button>
+							</div>
+						</td>
+					</tr>
+					</tbody>
+				</table>
+			</form>
+		</div>
+
+	</div>
+	<div class="photo_hover" onmouseover="catalogue.startSlideShow('slide_show_<?= $item['articul'] ?>');"
+		 onmouseout="catalogue.stopSlideShow('slide_show_<?= $item['articul'] ?>');">
+		<a href="/catalogue/<?= $item['articul'] ?>/">
+			<img src="/assets/Z95/images/d-t.gif" style="width:225px; height:275px;">
+		</a>
+	</div>
+	<div style="z-index: 0; position: relative; width:225px; height:275px;"
+		 id="slide_show_<?= $item['articul'] ?>">
+		<ul>
+			<li class="show">
+				<a href="/catalogue/<?= $item['articul'] ?>/">
+					<img class="preview"
+						 src="http://img<?= rand(0, 9) ?>.z95.ru/f/p/225x275/catalogue/<?= $item['id'] ?>/<?= current(json_decode($item['images'], 1)) ?>">
+				</a>
+			</li>
+			<li class="">
+				<a href="/catalogue/<?= $item['articul'] ?>/">
+					<img class="preview add"
+						 src="http://img<?= rand(0, 9) ?>.z95.ru/f/p/225x275/catalogue/<?= $item['id'] ?>/<?= next(json_decode($item['images'], 1)) ?>">
+				</a>
+			</li>
+		</ul>
+	</div>
+	<div class="info">
+		<a href="/catalogue/<?= $item['articul'] ?>/">
+			<b><?= $item['brand_name'] ?></b>
+			<?= $item['name'] ?> <span class="articul"><?= $item['articul'] ?></span>
+		</a>
+
+		<div class="sizes">
+
+			<?php
+				if($item['filter_size']==true){
+					$arraySize = (array) explode(',',$item['filter_size']);
+					uksort($arraySize, "\Helpers\CatalogueSizes::compareSizes");
+					echo '<span style="color:gray">Размеры:</span> <span class="size-letters">';
+					if(count($arraySize)>0){
+						echo implode('/', $arraySize);
+						echo '</span>';
+					}
+
+				}
+			?>
+
+		</div>
+		<div class="price">
+			<?php  if ($item['discount'] == $item['price']) {
+				echo '<div>
+						 		&nbsp;' . $item['discount'] . '&nbsp;
+								<span class="sign">' . $shop['currency_symbol'] . '</span>
+							</div>';
+
+			} else {
+				echo '<div>
+								<s>' . $item['price'] . '</s>&nbsp;' . $item['discount'] . '&nbsp;
+								<span class="sign">' . $shop['currency_symbol'] . '</span>
+							</div>';
+			}
+			?>
+			<div id="sizes_button_<?= $item['articul'] ?>" class="sizes-button"
+				 onclick="basket.beforeAddToBasket('sizes_<?= $item['articul'] ?>');">
+				&nbsp;
+			</div>
+			<img alt="Понравилось" id="fav_icon_<?= $item['articul'] ?>"
+				 onclick="catalogue.addFavorites(<?= $item['articul'] ?>, this)" src="/assets/Z95/images/d-t.gif"
+				 class="like_off">
+		</div>
+	</div>
+</div>

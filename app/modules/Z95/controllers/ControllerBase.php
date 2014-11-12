@@ -228,10 +228,11 @@ class ControllerBase extends \Phalcon\Mvc\Controller
 	/**
 	 * Событие после выполнения всего роута
 	 */
-	public function afterExecuteRoute()
+	public function afterExecuteRoute(\Phalcon\Mvc\Dispatcher $dispatcher)
 	{
 		// Ставлю подхват хлебных крошек, когда уже произошел роутинг в контроллерах и добавлен путь в ->add()
 		$this->view->setVar('breadcrumbs', $this->_breadcrumbs->generate()); // крошки
+
 	}
 
 	/**

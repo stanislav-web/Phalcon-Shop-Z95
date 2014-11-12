@@ -28,7 +28,7 @@
 					<?=$this->tag->linkTo('about', 'О магазине'); ?>
 				</div>
 				<div class="item">
-					<?=$this->tag->linkTo('catalogue/brands', 'Бренды'); ?>
+					<?=$this->tag->linkTo('brands', 'Бренды'); ?>
 				</div>
 
 				<div class="sale">
@@ -37,13 +37,13 @@
 					</div><br>
 					<div class="percent">
 						<div class="item">
-							<?=$this->tag->linkTo('catalogue/sale', '20<span>%</span>'); ?>
+							<?=$this->tag->linkTo('catalogue/sale?sale=20', '20<span>%</span>'); ?>
 						</div>
 						<div class="item">
-							<?=$this->tag->linkTo('catalogue/sale', '50<span>%</span>'); ?>
+							<?=$this->tag->linkTo('catalogue/sale?sale=50', '50<span>%</span>'); ?>
 						</div>
 						<div class="item">
-							<?=$this->tag->linkTo('catalogue/sale', '70<span>%</span>'); ?>
+							<?=$this->tag->linkTo('catalogue/sale?sale=70', '70<span>%</span>'); ?>
 						</div>
 					</div>
 				</div>

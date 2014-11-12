@@ -121,4 +121,5 @@ class Brands extends \Phalcon\Mvc\Model
 		}
 		return $result;
 	}
+
 }

@@ -1,0 +1,52 @@
+<?php use Phalcon\Tag as Tag; ?>
+
+<div class="column main-column">
+	<div class="ITEMS_LIST">
+		<div id="CATALOGUE_SEARCH_RESULT"></div>
+	</div>
+
+	<?php
+		if (isset($banner['inner'][0])) {
+			$bannerInfo = $banner['inner'][0];
+			echo '<div class="inner_teaser"><a href="' . $bannerInfo->href . '" target="_blank" title="' . $bannerInfo->alt . '"><img src="/f/t/' . $bannerInfo->image . '" alt="' . $bannerInfo->alt . '"></a></div>';
+		}
+	?>
+
+	<div id="CONTENT">
+
+		<h1><?= $pagetitle ?></h1>
+		<ul class="Thermo">
+			<?= \Helpers\CatalogueTags::catalogueBreadcrumbs(' / ', 'home'); ?>
+		</ul>
+
+		<div class="clear"></div>
+		<div class="element-brands">
+			<table class="Brands" width="100%">
+				<?php
+					if (is_array($brands)) {
+						foreach ($brands as $index => $value) {
+							echo '<tr>' .
+								'<td class="letter" width="5%">' . strtoupper($index) . '</td>';
+							echo '<td>';
+							if (is_array($value)) {
+								//Разбиваем массив на три части, для вывода в колонки
+								$brandsInColump = ceil(count($value) / 3);
+								$chunkBrands    = array_chunk($value, $brandsInColump);
+								foreach ($chunkBrands as $num => $BrandsArray) {
+									echo '<div class="brands">';
+									foreach ($BrandsArray as $BrandID => $BrandValue) {
+										$status = $BrandValue['count'] >= 30 ? ' class="super"' : '';
+										echo '<div' . $status . '><a href="/catalogue/' . urlencode($BrandValue['name']) . '/">' . $BrandValue['name'] . '</a><span style="font-size: 0.7em; color: #B0B0B0;">(' . $BrandValue['count'] . ')</span></div>';
+									}
+									echo '</div>';
+								}
+							}
+							echo '</td>';
+							echo '</tr>';
+						}
+					}
+				?>
+			</table>
+		</div>
+	</div>
+</div>

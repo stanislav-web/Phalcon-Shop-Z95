@@ -3732,3 +3732,16 @@ h1 .small {
 .block.left{ float: left; width: 33%; }
 .block.right{ float: right; width: 33%; }
 .block.center{ display: inline-block; width: 33%; }
+
+.loader_items{
+    display: inline-block;
+    width: 100%;
+    clear: both;
+    padding: 12px 0;
+    background-color: #E4E8ED;
+    text-align: center;
+    font-weight: 700;
+    font-size: medium;
+    color: #4C6B8F;
+    margin-top: -1px;
+}
