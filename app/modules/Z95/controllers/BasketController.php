@@ -47,26 +47,18 @@
 		 */
 		public function indexAction()
 		{
-
-
 			$title = $this->tag->prependTitle($this->_translate['TITLE'].' - ');
-
 			// Добавляю путь в цепочку навигации
 			$this->_breadcrumbs->add($title, $this->request->getURI());
 
-			$this->view->setVar('basket', $this->session->get('basket'));
-//		$this->tag->appendTitle('- '.$this->_translate['TITLE']);
-//		// есть ли в корзине вещи
-//
-//		if($this->session->has('cart') && $this->session->get('cart') != '') {
-//			// Содержимое контроллера для формирования выдачи
-//			$cart = $this->session->get('cart');
-//			$ids = implode(',',array_keys($cart));
-//			$products = $this->productsModel->getProductsForCart($ids, $this->_shop->price_id, $cart);
-//
-//			$this->view->setVar("products", $products);
-//
-//		}
+			// check available discounts
+
+			$this->view->setVars(array('basket' => $this->session->get('basket'),
+									   'discounts' => $this->_discounts
+									));
+
+
+
 		}
 
 
@@ -88,9 +80,13 @@
 					$this->basket = $this->session->get('basket');
 
 					if(!empty($this->basket['items'])) {
+
 						$basketItemIds = $this->getBasketItemsIds($this->basket['items']);
+
 						foreach($this->basket['items'] as $key => $product) {
+
 							if($product['product_id'] == $id) {
+
 								list($size, $count) = explode('_', $item[$id][0]);
 								if ($count > 0) {
 									$this->basket['items'][$key]['sizes'] = $product['sizes'];
@@ -111,7 +107,9 @@
 									unset($this->basket['items'][$key]);
 								}
 
+
 							} else if(in_array($id, $basketItemIds)){
+
 								foreach($this->basket['items'] as $cat_id => $cat) {
 									if($cat['product_id'] == $id) {
 										list($size, $count) = explode('_', $item[$id][0]);
@@ -122,7 +120,6 @@
 										}
 										foreach($item[$id] as $siz => $param){
 											list($size, $count) = explode('_', $item[$id][$siz]);
-
 											if($count > 0) {
 												$this->basket['items'][$cat_id]['sizes'][$size] = $count;
 											}
@@ -134,12 +131,16 @@
 											unset($this->basket['items'][$cat_id]);
 										}
 									}
+
 								}
 
 							} else {
 
 								$newItems = $this->save($item);
+
 								$this->basket['items'][] = current($this->productsModel->getBasketItems($newItems, $this->_shop['price_id']));
+
+								break;
 							}
 
 						}
@@ -183,10 +184,14 @@
 
 //		$this->view->disable();
 			if($mode != 'small') {
-				ob_start($this->view->partial('partials/basket/getBasket', array('basket' => $this->session->get('basket'))));
+				ob_start($this->view->partial('partials/basket/getBasket', array('basket' => $this->session->get('basket'),
+																				 'discounts' => $this->_discounts
+																			)));
 				ob_end_flush();
 			} else {
-				ob_start($this->view->partial('partials/basket/get', array('basket' => $this->session->get('basket'))));
+				ob_start($this->view->partial('partials/basket/get', array('basket' => $this->session->get('basket'),
+																		   'discounts' => $this->_discounts
+						)));
 				ob_end_flush();
 			}
 

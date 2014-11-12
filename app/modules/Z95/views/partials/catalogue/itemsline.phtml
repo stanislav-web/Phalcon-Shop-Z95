@@ -137,7 +137,7 @@
 						<?php
 							if($item['filter_size']==true){
 								$arraySize = (array) explode(',',$item['filter_size']);
-								uksort($arraySize, "\Helpers\CatalogueSizes::compareSizes");
+								uksort($arraySize, "\Helpers\CatalogueSizes::itemCompareSize");
 								echo '<span style="color:gray">Размеры:</span> <span class="size-letters">';
 								if(count($arraySize)>0){
 									echo implode('/', $arraySize);

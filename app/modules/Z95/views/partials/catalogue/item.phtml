@@ -23,8 +23,9 @@
 <!-- Load scripts -->
 <script type="text/javascript">
 	var sonar_product = {
-		identifier: '<?=$item['articul'];?>'  // уникальный id товара
+		identifier: '<?=$item['product_id'];?>'  // уникальный id товара
 	};
+
 </script>
 <script type="text/javascript">
 	(function() {
@@ -40,7 +41,7 @@
 <!-- GRM -->
 <script type="text/javascript">
 	var google_tag_params = {
-		prodid: '88658',
+		prodid: '<?php echo $item['product_id']; ?>',
 		price: 10200,
 		pvalue: 10200,
 		pname: 'платье Alexander Wang',
@@ -60,11 +61,16 @@
 		else{f();}
 	})(document,window);
 </script>
+
+
+
+<!-- Mail.ru -->
+<img alt="" style="width:0;height:0;position:absolute;" src="http://ad.mail.ru/w522.gif?shop=83&amp;offer=88658&amp;rnd=87275071"><table class="catalogue-item-details">
 <!--<script src="http://t.trafmag.com/tracking.js" type="text/javascript"></script>-->
 <script language="javascript">
 	var odinkod = {
 		"type": "product",
-		"product_id":"88658"
+		"product_id":"<?php echo $item['product_id']; ?>"
 	};
 	var gcb = Math.round(Math.random() * 100000);
 
@@ -86,7 +92,7 @@
 					<?php } ?>
 				<?php } ?>
 			</div>
-			<img onclick="catalogue.showBigPhoto(60247);" title="ZOOM-ZOOM!" alt="ZOOM-ZOOM!" class="zoom" id="zz_button" src="/assets/Z95/images/megacon/zoom.png">
+			<img onclick="catalogue.showBigPhoto(<?php echo $item['product_id']; ?>);" title="ZOOM-ZOOM!" alt="ZOOM-ZOOM!" class="zoom" id="zz_button" src="/assets/Z95/images/megacon/zoom.png">
 		</div>
 	</div>
 	<!-- Measured sizes -->
@@ -138,7 +144,41 @@
 	</div>
 
 	<div class="prices">
-		<div class="price">Цена:<br> <span class="price"><?php echo (int)$item['price']; ?></span> <?php echo $shop['currency_symbol']; ?>.</div>
+
+		<div class="price">
+			Цена:
+			<br>
+			<span class="price">
+				<?php if($item['discount'] !== null || !empty($item['discount'])) { ?>
+					<s><?php echo (int)$item['price']; ?></s>
+					<?php echo (int)$item['discount']; ?>
+				<?php } else { ?>
+					<?php echo (int)$item['price']; ?>
+				<?php } ?>
+			</span>
+			<?php echo $shop['currency_symbol']; ?>
+		</div>
+
+		<?php if(isset($discounts)) { ?>
+			<?php if(isset($discounts['count'])) { ?>
+				<?php if($item['discount'] !== null || !empty($item['discount'])) { ?>
+					<div class="price discount_price">
+						Цена со скидкой 50% (при покупке любых 5 вещей):<br>
+						<span class="price"><?php echo (int)$item['discount']/2; ?></span> руб.
+					</div>
+				<?php } ?>
+			<?php } ?>
+
+			<?php if(isset($discounts['sum'])) { ?>
+				<?php if($item['discount'] !== null || !empty($item['discount'])) { ?>
+					<div class="price discount_price">
+						Скидка 30% (при покупке на сумму 30000 <?php echo $shop['currency_symbol']; ?>):<br>
+						<span class="price"><?php echo (int)$item['discount']*30/100; ?></span> руб.
+					</div>
+				<?php } ?>
+			<?php } ?>
+
+		<?php } ?>
 
 
 	</div>
@@ -205,7 +245,7 @@
 				</label>
 			</div>
 			<div style="clear:both"></div>
-			<div onclick="basket.addToBasket('sizes_<?php echo $item['product_id']; ?>');" class="add-button">
+				<div onclick="basket.addToBasket('sizes_<?php echo $item['product_id']; ?>');" class="add-button">
 				Добавить в корзину					</div>
 		</form>
 	</div>
@@ -286,6 +326,7 @@
 		 */
 	});
 </script>
+
 <script type="text/javascript">
 	var margin = Math.max(0,parseInt((($(window).width() - $('.page_container').width())*0.5 - $('.go-container').width())*0.5));
 	$('.go-container.prev').css({'margin-left':margin}).show().attr({title: 'Предыдущая фотография'}).click(function() {

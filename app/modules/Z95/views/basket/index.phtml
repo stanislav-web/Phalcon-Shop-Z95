@@ -12,12 +12,29 @@
 					Вы можете исправить это посетив <a href="/catalogue/">Каталог</a>
 				</div>
 			<?php } else { ?>
+
+				<?php
+				$totalCount = 0;
+				$totalSum = 0;
+				foreach($basket['items'] as $counter => $item) {
+					foreach($item['sizes'] as $size => $count) {
+						$totalCount = $totalCount + $count;
+						$totalSum = $totalSum + $count*(intval($item['discount']));
+
+					}
+				}
+				?>
+				
+				<?php if(isset($discounts)) { ?>
+					<?php $this->view->partial('partials/basket/discountsRemember', array('discounts' => $discounts, 'totalCount' => $totalCount, 'totalSum' => $totalSum)); ?>
+				<?php } ?>
+
 				<table border="0" cellspacing="0" cellpadding="0" class="basket-basket">
 				<tbody>
 				<?php $total = 0; ?>
 				<?php if(!empty($basket['items'])) { ?>
 					<?php foreach($basket['items'] as $counter => $item) { ?>
-
+						<?php $price = ($item['discount']) ?(int)$item['discount'] :(int)$item['price']; ?>
 						<tr class="item-row" id="basket_row_<?php echo $item['product_id']; ?>">
 							<td preview_id="57453" class="image">
 								<div style="z-index: 2;" class="basket-preview">
@@ -53,14 +70,14 @@
 													<div style="position:relative;"></div>
 												</td>
 												<td width="10" class="number">x</td>
-												<td width="45" class="number"><?php echo (int)$item['product_id']; ?></td>
+												<td width="45" class="number"><?php echo $price; ?></td>
 												<td width="10" class="number">=</td>
-												<td width="70" class="number recount"><?php echo $item['product_id'] * $count; ?> <?php echo $shop['currency_symbol']; ?></td>
+												<td width="70" class="number recount"><?php echo $price * $count; ?> <?php echo $shop['currency_symbol']; ?></td>
 												<td width="20" align="right">
 													<button onclick="basket.recount('<?php echo $item['product_id']; ?>', '<?php echo $size ?>', 0, 'basket', 0)" class="button delete sign" title="удалить">x</button>
 												</td>
 											</tr>
-											<?php $total = $total + $item['product_id'] * $count; ?>
+											<?php $total = $total + $price * $count; ?>
 										<?php } ?>
 
 
@@ -78,7 +95,9 @@
 								<td>Всего заказали на</td>
 								<td class="number"><?php echo $total; ?> <?php echo $shop['currency_symbol']; ?></td>
 							</tr>
-
+							<?php if(isset($discounts)) { ?>
+								<?php $this->view->partial('partials/basket/discountsBasket', array('discounts' => $discounts, 'totalCount' => $totalCount, 'totalSum' => $totalSum, 'total' => $total)); ?>
+							<?php } ?>
 							<tr>
 								<td>Бесплатная доставка</td>
 								<td class="number"></td>

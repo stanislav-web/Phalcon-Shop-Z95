@@ -56,11 +56,6 @@ class CatalogueController extends ControllerBase
 		 */
 		$requestUri			=	false,
 
-		/**
-		 * Виртуальные категории каталога
-		 * @var array
-		 */
-		$virtuals			=	[],
 
 		/**
 		 * Заголовок по умолчанию, если не присваивает в категориях и товарах
@@ -85,32 +80,16 @@ class CatalogueController extends ControllerBase
 		$this->loadCustomTrans('catalogue');
 		parent::initialize();
 
+		$this->requestUri	=	$this->request->getURI();
+
 		// Заголовок страницы
 		$this->tag->setTitle($this->_shop['title']);
 
 		// Получаю баннер для страницы
 		$this->banners = $this->bannersModel->getBanners($this->_shop['id'], true);
 
-		$this->requestUri	=	$this->request->getURI();
-
-		$path = parse_url($this->requestUri, PHP_URL_PATH);
-		$query = parse_url($this->requestUri, PHP_URL_PATH);
-
-		// присваиваю виртуальные категории
-
-		$this->virtuals	=	[
-			'/catalogue/sale'		=>	$this->_translate['SALE'],
-			'/catalogue/top'		=>	$this->_translate['TOP'],
-			'/catalogue/favorites'	=>	$this->_translate['FAVORITES'],
-		];
-
-		if(isset($this->virtuals[$path]) && !empty($query))
-		{
-			// уже ставим заголовок тут для виртуальной категории
-			// так как в выдаче товаров при проверке категории, заголовка не будет для виртуалок
-
-			$this->title = $this->virtuals[$path];
-		}
+		$path = parse_url($this->request->getURI(), PHP_URL_PATH);
+		$query = parse_url($this->request->getURI(), PHP_URL_PATH);
 	}
 
 	/**
@@ -160,6 +139,9 @@ class CatalogueController extends ControllerBase
 
 	public function itemAction()
 	{
+		//		$config = $this->di->get('config');
+		//		$discounts = $config->discounts->toArray();
+		
 		// проверка страницы в кэше
 
 		$content = null;
@@ -201,6 +183,7 @@ class CatalogueController extends ControllerBase
 						'item' 		=>  $item,
 						'sizes' 	=>  $sizes,
 						'title' 	=>  $title,
+						"discounts"	=>	$this->_discounts
 					]);
 				}
 				$this->view->setVar("categories" , $this->commonModel->categoriesToTree($this->_shopCategories));
@@ -291,11 +274,10 @@ class CatalogueController extends ControllerBase
 					}
 				}
 			}
-
 			$this->view->setVars([
 				'template'		=>	'sale',
 				"title" 		=> $title,
-				"salesGroup" 	=> array_reverse($result, true),
+				"salesGroup" 	=> $result,
 			]);
 
 			$this->view->pick("catalogue/index");
@@ -401,9 +383,9 @@ class CatalogueController extends ControllerBase
 	}
 
 	/*
- * Вывод ленты товаров
- * @author <filchakov.denis@gmail.com>
- */
+     * Вывод ленты товаров
+     * @author <filchakov.denis@gmail.com>
+     */
 	private function _lineItems($filter = array())
 	{
 		//удаляем родительскую категорию
