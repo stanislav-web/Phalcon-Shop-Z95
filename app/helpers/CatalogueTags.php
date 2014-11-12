@@ -203,4 +203,19 @@ class CatalogueTags extends \Phalcon\Tag
 		unset($categories);
 		return self::arrayToAssoc($new_categories, 'id');
 	}
+
+	/**
+	 * arrayUnshiftAssoc(&$arr, $key, $val) Add element of assoc array to first position
+	 * @param array $arr
+	 * @param string $key
+	 * @param string $val
+	 * @return int
+	 */
+	public static function arrayUnshiftAssoc(&$arr, $key, $val)
+	{
+		$arr = array_reverse($arr, true);
+		$arr[$key] = $val;
+		$arr = array_reverse($arr, true);
+		return count($arr);
+	}
 }

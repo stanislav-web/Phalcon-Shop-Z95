@@ -88,77 +88,12 @@
 			</div>
 			<img onclick="catalogue.showBigPhoto(60247);" title="ZOOM-ZOOM!" alt="ZOOM-ZOOM!" class="zoom" id="zz_button" src="/assets/Z95/images/megacon/zoom.png">
 		</div>
-
 	</div>
-	<!--***************************************************************************************************************************-->
-
-
-	<?php if (isset($item['tags'] )&& 2==1): ?>
-		<?php if (isset($item['tags']['dimensions']) && count($item['tags']['dimensions']) > 0): ?>
-			<?php $measures = \Helpers\CatalogueSizes::itemMeasures($item['tags']['dimensions']); ?>
-			<?php if (!empty($measures['values'])): ?>
-				<!-- Fitting room -->
-				<div class="measured_sizes">
-					<h4><?php echo 'Размеры в сантиметрах'; ?></h4>
-					<div class="overflowx"><!-- Sizes price -->
-						<table class="measure">
-							<tr>
-								<th>
-								</th>
-								<?php foreach($measures['sizes'] as $t): ?>
-									<th><?php echo $t; ?></th>
-								<?php endforeach; ?>
-							</tr>
-							<?php foreach($measures['values'] as $k => $v): ?>
-								<tr>
-									<td class="dimension_title">
-										<?php echo lang($dimensions[$k]['title']); ?>
-									</td>
-									<?php foreach($measures['values'][$k] as $size): ?>
-										<td><?php echo (isset($size)) ? $size : ''; ?></td>
-									<?php endforeach; ?>
-								</tr>
-							<?php endforeach; ?>
-						</table>
-					</div><!-- end Sizes price -->
-					<script type="text/javascript">
-						$(function()
-						{
-							// recolor table
-							$('table.measure tr th:eq(1)').addClass('tag_sizes');
-							$('table.measure tr').each(function() {
-								$(this).find('td:eq(1)').addClass('tag_dimensions');
-							});
-						});
-					</script>
-
-					<?php if(isset($item['category']) && !empty($category_dimensions_images[$item['category']])): ?>
-						<h4 class="measure_size">
-							<?php echo lang('Как мы меряем?') ?> <span onclick="$('#sh').toggle(); $(this).html(($(this).html() == '<?php echo lang('показать') ?>' ? '<?php echo lang('спрятать') ?>' : '<?php echo lang('показать') ?>'));"><?php echo lang('показать') ?></span>
-						</h4>
-						<table id="sh" style="display: none;">
-							<?php foreach ($category_dimensions_images[$item['category']] as $img): ?>
-								<?php if(!empty($dimensions_images[$img])): ?>
-									<tr>
-										<td><img src="/i/s/<?php echo $img ?>" class="tag_maxwidth480"></td>
-										<td><?php echo $dimensions_images[$img]['description'] ?></td>
-									</tr>
-								<?php endif; ?>
-							<?php endforeach; ?>
-						</table>
-					<?php endif; ?>
-				</div>
-				<!-- Fitting room -->
-			<?php endif; ?>
-		<?php endif; ?>
-	<?php endif; ?>
-
-
-
-
-
-	<!--***************************************************************************************************************************-->
-</td><td style="padding:0 10px;">
+	<!-- Measured sizes -->
+	<?php $this->partial('partials/catalogue/measured_sizes'); ?>
+	<!-- //Measured sizes -->
+</td>
+	<td style="padding:0 10px;">
 	<div onclick="catalogue.hideBigPhoto();" id="bphoto_overlay"></div>
 	<div id="bphoto_div">
 		<img style="z-index: 1100;" onclick="catalogue.hideBigPhoto()" class="close_png" src="/i/d-t.gif">
@@ -369,7 +304,7 @@
 		$('.go-container.next').css({'margin-right':margin});
 	});
 </script>
-<span style="color:white">Рейтинг: 510000</span>
+<span style="color:white">Рейтинг: <?php echo $item['rating']; ?></span>
 <style>
 	.inner_teaser { display: none; }
 </style>

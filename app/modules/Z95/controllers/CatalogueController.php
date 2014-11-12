@@ -50,6 +50,10 @@ class CatalogueController extends ControllerBase
 		 */
 		$banners			=	false,
 
+		/**
+		 * Текущий PATH из Url
+		 * @var bool
+		 */
 		$requestUri			=	false,
 
 		/**
@@ -57,12 +61,6 @@ class CatalogueController extends ControllerBase
 		 * @var array
 		 */
 		$virtuals			=	[],
-
-		/**
-		 * Исключения, алиасы которых подходят только для выдачи товаров
-		 * @var array
-		 */
-		$exclude			=	['apple'],
 
 		/**
 		 * Заголовок по умолчанию, если не присваивает в категориях и товарах
@@ -112,9 +110,6 @@ class CatalogueController extends ControllerBase
 			// так как в выдаче товаров при проверке категории, заголовка не будет для виртуалок
 
 			$this->title = $this->virtuals[$path];
-
-			// все остальное подхватиться в запрошенном action
-
 		}
 	}
 
@@ -296,10 +291,11 @@ class CatalogueController extends ControllerBase
 					}
 				}
 			}
+
 			$this->view->setVars([
 				'template'		=>	'sale',
 				"title" 		=> $title,
-				"salesGroup" 	=> $result,
+				"salesGroup" 	=> array_reverse($result, true),
 			]);
 
 			$this->view->pick("catalogue/index");
@@ -423,18 +419,19 @@ class CatalogueController extends ControllerBase
 			unset($filter['category']);
 		}
 
-		//if(isset($filter['category']))
-		//	$filter['category'] = end($filter['category']);
-
-
 		$itemLine = $this->categoriesModel->renderItemsLine($filter, $this->_shop['id']);
 
 		// url, категории
 		$listingCategories = $this->categoriesModel->getListing($this->_shop['id']);
+
 		foreach($listingCategories as $category)
 		{
 			if($this->request->getQuery()['_url']	==	$category['url'])
+			{
 				$title = $category['name'];
+				break;
+			}
+
 		}
 
 		// устанавливаем заголовок если нашли категорию

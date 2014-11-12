@@ -3147,6 +3147,19 @@ label {
 .tags {
     margin-top: 5px;
 }
+.overflowx {
+    overflow-x: auto;
+}
+.tag_sizes {
+    white-space: nowrap;
+    text-align: center;
+    background: #E0E0E0;
+}
+.tag_dimensions {
+    white-space: nowrap;
+    text-align: center;
+    background: #F0F0F0;
+}
 .favorites-count {
     background: none repeat scroll 0 0 black;
     border-radius: 14px;

@@ -111,7 +111,7 @@ class Categories extends \Phalcon\Mvc\Model
 			$result = $backendCache->get(self::TABLE . '-listing.cache');
 		}
 		if ($result === null) {
-			$sql = "SELECT CONCAT('/catalogue', (SELECT alias FROM ".self::TABLE." WHERE id = csr.category_parent_id), '/', (SELECT alias FROM ".self::TABLE." WHERE id = csr.category_id)) as 'url',
+			$sql = "SELECT CONCAT('/catalogue/', (SELECT alias FROM ".self::TABLE." WHERE id = csr.category_parent_id), '/', (SELECT alias FROM ".self::TABLE." WHERE id = csr.category_id)) as 'url',
 				(SELECT name FROM ".self::TABLE." WHERE id = csr.category_id) as 'name',
 				csr.category_id
 				FROM ".Common::TABLE_CAT_SHOP_REL." csr
@@ -437,7 +437,7 @@ class Categories extends \Phalcon\Mvc\Model
 				$sql .= ' ( '.implode(' OR ', $brand).' ) ';
 			}
 
-			if(isset($filter['price'])){
+			if(isset($filter['price'])) {
 				if(isset($filter['price']['min']) && is_numeric($filter['price']['min'])){
 					$sql .= ' AND price.discount >= '.$filter['price']['min'];
 				}
@@ -445,19 +445,18 @@ class Categories extends \Phalcon\Mvc\Model
 				if(isset($filter['price']['max']) && is_numeric($filter['price']['max'])){
 					$sql .= ' AND price.discount <= '.$filter['price']['max'];
 				}
-
 			}
 
 			$result['limit'] = $filter['limit'];
 			$result['sortby'] = $filter['sortby'];
 			$result['orderby'] = $filter['orderby'];
 
-			if(isset($filter['sale'])){
+			if(isset($filter['sale'])) {
 				$result['sale'] = $filter['sale'];
 			}
 
-			if(isset($filter['sortby'])){
-				switch($filter['sortby']){
+			if(isset($filter['sortby'])) {
+				switch($filter['sortby']) {
 					case "new": $filter['sortby'] = 'p.date_create'; break;
 					case "price": $filter['sortby'] = 'price.discount'; break;
 					case "discount": $filter['sortby'] = 'price.percent'; break;

@@ -247,20 +247,22 @@ class Products extends \Phalcon\Mvc\Model
 		if($result === null) {
 			$sql = "SELECT 	".self::TABLE.".id AS product_id,  CONCAT(UPPER(SUBSTRING(".self::TABLE.".name, 1, 1)), LOWER(SUBSTRING(".self::TABLE.".name FROM 2))) AS product_name, ".self::TABLE.".articul,
 					".self::TABLE.".tags,
+					".self::TABLE.".rating,
 					".self::TABLE.".images,
 					".self::TABLE.".filter_size,
-					".self::TABLE.".description AS description, "
-//					GROUP_CONCAT(CONCAT(".Tags::TABLE.".id)) AS all_tags,
-//					GROUP_CONCAT(CONCAT(".Tags::TABLE.".name)) AS all_tags_name,
-//					GROUP_CONCAT(CONCAT(".Categories::TABLE.".name)) AS category_name,
-					.Brands::TABLE.".name AS brand, ".Brands::TABLE.".alias AS brand_alias, ".Prices::TABLE.".price
+					".self::TABLE.".description AS description,"
+					// GROUP_CONCAT(CONCAT(".Tags::TABLE.".id)) AS all_tags,
+					// GROUP_CONCAT(CONCAT(".Tags::TABLE.".name)) AS all_tags_name,
+					// GROUP_CONCAT(CONCAT(".Categories::TABLE.".name)) AS category_name,
+					.Brands::TABLE.".name AS brand, ".Brands::TABLE.".alias AS brand_alias, ".Prices::TABLE.".price,"
+					.Common::TABLE_PRODUCTS_REL.".category_id AS category_id
 
 					FROM ".self::TABLE."
-					LEFT JOIN ".Prices::TABLE." ON (".Prices::TABLE.".id = $shop_price_id && ".Prices::TABLE.".product_id = ".self::TABLE.".id)" .
-//					INNER JOIN ".Common::TABLE_PRODUCTS_REL." ON (".self::TABLE.".id = ".Common::TABLE_PRODUCTS_REL.".product_id)
+					LEFT JOIN ".Prices::TABLE." ON (".Prices::TABLE.".id = $shop_price_id && ".Prices::TABLE.".product_id = ".self::TABLE.".id)
+					INNER JOIN ".Common::TABLE_PRODUCTS_REL." ON (".self::TABLE.".id = ".Common::TABLE_PRODUCTS_REL.".product_id)".
 
-//					LEFT JOIN ".Tags::TABLE." ON (".Tags::TABLE.".id = ".Common::TABLE_PRODUCTS_REL.".tag_id)
-//					LEFT JOIN ".Categories::TABLE." ON (".Categories::TABLE.".id = ".Common::TABLE_PRODUCTS_REL.".category_id)
+					//LEFT JOIN ".Tags::TABLE." ON (".Tags::TABLE.".id = ".Common::TABLE_PRODUCTS_REL.".tag_id)
+					//LEFT JOIN ".Categories::TABLE." ON (".Categories::TABLE.".id = ".Common::TABLE_PRODUCTS_REL.".category_id)
 					"INNER JOIN ".Brands::TABLE." ON (".self::TABLE.".brand_id = ".Brands::TABLE.".id)
 					WHERE ".self::TABLE.".articul = '".$articul."' LIMIT 1";
 

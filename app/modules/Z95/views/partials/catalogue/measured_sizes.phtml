@@ -1,0 +1,60 @@
+<? if(isset($item['tags']) && count($item['tags'])): ?>
+	<?php $measures = \Helpers\CatalogueSizes::itemMeasures($item['tags']['dimensions']); ?>
+	<div class="measured_sizes">
+		<h4><?=$viewTranslate['SIZES_IN_SM']?></h4>
+		<!-- Sizes price -->
+		<div class="overflowx">
+			<table class="measure">
+				<tr>
+					<th></th>
+					<?php foreach($measures['sizes'] as $t): ?>
+						<th style="white-space: nowrap; text-align: center;"><?php echo $t; ?></th>
+					<?php endforeach; ?>
+				</tr>
+				<?php foreach($measures['values'] as $k => $v): ?>
+					<tr>
+						<td class="dimension_title"><?=$viewTranslate['DIMENSIONS'][$k]; ?>
+						</td>
+						<?php foreach($measures['values'][$k] as $size): ?>
+							<td><?php echo (isset($size)) ? $size : ''; ?></td>
+						<?php endforeach; ?>
+					</tr>
+				<?php endforeach; ?>
+			</table>
+		</div>
+		<!-- /Sizes price -->
+		<script type="text/javascript">
+			$(function()
+			{
+				// recolor table
+				$('table.measure tr th:eq(1)').addClass('tag_sizes');
+				$('table.measure tr').each(function() {
+					$(this).find('td:eq(1)').addClass('tag_dimensions');
+				});
+			});
+		</script>
+		<!-- Measure image -->
+		<?php $categoryDimensions = \Helpers\CatalogueSizes::catalogueDimensionsImages($item['category_id']);
+			if(isset($item['category_id']) && isset($categoryDimensions)): ?>
+			<h4>
+				<br>
+				<?=$viewTranslate['HOW_WE_MEASURE']?> <span onclick="$('#sh').toggle(); $(this).html(($(this).html() == '<?=$viewTranslate['SHOW']?>' ? '<?=$viewTranslate['HIDE']?>' : '<?=$viewTranslate['SHOW']?>'));"><?=$viewTranslate['SHOW']?></span></h4>
+			<table id="sh" style="display: none;">
+				<?php foreach($categoryDimensions as $img): ?>
+					<?php $image = \Helpers\CatalogueSizes::dimensionsImages($img); ?>
+					<?php if(!empty($image)): ?>
+						<tr>
+							<td>
+								<img src="http://z95.com.ua/i/s/<?=$img?>" style="max-width: 480px;">
+							</td>
+							<td>
+								<?=$image['description']?>
+							</td>
+						</tr>
+					<?php endif; ?>
+				<?php endforeach; ?>
+			</table>
+		<?php endif; ?>
+		<!-- /Measure image -->
+	</div>
+<?php endif; ?>

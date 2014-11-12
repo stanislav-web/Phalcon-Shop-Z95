@@ -493,7 +493,7 @@
 					],
 					[
 						'name'       => 'iPhone/iPad',
-						'url'        => '/catalogue/apple',
+						'url'        => '/catalogue/accessories/apple',
 						'class'      => 'header-menu-item category',
 						'controller' => 'catalogue',
 						'action'     => 'index',
@@ -886,7 +886,7 @@
 					],
 					[
 						'name'       => 'iPhone/iPad',
-						'url'        => '/catalogue/apple',
+						'url'        => '/catalogue/accessories/apple',
 						'controller' => 'catalogue',
 						'action'     => 'index',
 					],
