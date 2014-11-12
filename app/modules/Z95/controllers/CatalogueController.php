@@ -66,7 +66,9 @@ class CatalogueController extends ControllerBase
 		 * Вывод вещей на страницу
 		 * @var int
 		 */
-		$_onpage			=	100;
+		$_onpage			=	100,
+
+		$virtuals			=	[];
 
 
 	/**
@@ -81,6 +83,7 @@ class CatalogueController extends ControllerBase
 		parent::initialize();
 		//Обработка AJAX запросов
 		if ($this->request->isAjax() == true) {
+
 			if($this->request->get('ajax')){
 				$method = $this->request->get('ajax');
 			}
@@ -103,10 +106,15 @@ class CatalogueController extends ControllerBase
 	}
 
 	/**
-	 * indexAction() По умолчанию главная страница
+ 	 * indexAction() По умолчанию главная страница
 	 * Должна быть пустая так как она отвечает за оборот экшенов
 	 * и служит главным layout для каталога
-	 */
+ 	 *
+ 	 * @see /catalogue/sale
+ 	 * @access public
+ 	 * @author Stanislav WEB
+ 	 * @return \Phalcon\Mvc\View -> render()
+ 	*/
 	public function indexAction()
 	{
 		if(isset($this->requestUri)) $action = $this->_helper->catalogueRouteTree($this->requestUri, ['catalogue']);
@@ -124,6 +132,7 @@ class CatalogueController extends ControllerBase
 			{
 				//Получаем массив параметров для фильтрации
 				$filter = $this->categoriesModel->parseRemap($this->_shop['id'], $this->request->getQuery(), $this->_onpage);
+
 				//Проверка на вызов метода.
 				if(isset($filter['category']) || count($filter)>4){
 					//Вывод страницы категории
@@ -146,15 +155,12 @@ class CatalogueController extends ControllerBase
 
 	public function itemAction()
 	{
-		//		$config = $this->di->get('config');
-		//		$discounts = $config->discounts->toArray();
-
 		// проверка страницы в кэше
 
 		$content = null;
-		if($this->_config->cache->frontend) {
+
+		if($this->_config->cache->frontend)
 			$content = $this->view->getCache()->exists($this->cachePage(__FUNCTION__));
-		}
 
 		if($content === null)
 		{
@@ -183,7 +189,20 @@ class CatalogueController extends ControllerBase
 					// Добавляю путь в цепочку навигации
 					$this->_breadcrumbs->add($title, $this->request->getURI());
 
+					// Получаю размеры
 					$sizes = $this->tagsModel->getSizes($item['product_id'], true);
+
+					$buyModel 	=	(new \Models\BuyTogether())->get(['top_ten'], ['id' => $item['product_id']], [], null, true);
+					if(!empty($buyModel))
+					{
+						// получаю покупаемые с товаром вещи
+
+						$productIds = json_decode($buyModel['top_ten']);
+
+						$buyItems = $this->productsModel->getProductsForBuy($productIds, $this->_shop['price_id'], 8, true);
+
+						$this->view->setVar('buyableItems', $buyItems);
+					}
 
 					$this->view->setVars([
 						'template'	=>	'item',
@@ -233,40 +252,30 @@ class CatalogueController extends ControllerBase
 	 */
 	function topAction(){
 		$filter = $this->categoriesModel->parseRemap($this->_shop['id'], $this->request->getQuery(), $this->_onpage);
+
+		// создание заголовка
+		$title = $this->_translate['TOP'];
+		$this->tag->setTitle($title.' - '.$this->_translate['CATALOGUE']);
+
+		// Добавляю путь в цепочку навигации
+		$this->_breadcrumbs->add($title, $this->request->getURI());
+
 		//$filter['top'] = true;
 		$this->_lineItems($filter);
+		$this->view->setVar('title', $title);
 		$this->view->render('catalogue', 'index')->pick("catalogue/index");
 	}
 
 	/*
-	 * Лента скидок
+	 * saleAction() Лента скидок. Метод выполняется одновременно как action
+	 * но в случае передачи параметров queryString перекидывает на выдачу
+	 *
+	 * @see /catalogue/sale
+	 * @access public
+	 * @author Stanislav WEB
+	 * @return \Phalcon\Mvc\View -> render()
 	 */
-	function saleAction(){
-		$filter = $this->categoriesModel->parseRemap($this->_shop['id'], $this->request->getQuery(), $this->_onpage);
-		if(is_numeric($this->request->get('sale'))){
-			$filter['sale'] = (int)$this->request->get('sale');
-		} else {
-			$filter['sale'] = 0;
-		}
-
-		$this->_lineItems($filter);
-
-		$this->view->setVars([
-			'title'			=>	$this->_translate['SALE'],
-		]);
-
-		$title = $this->_translate['DISCOUNT'].' '.$filter['sale'].'%';
-		$this->tag->prependTitle($title.' - ');
-
-		$this->_breadcrumbs->add($title, $this->request->getURI());
-
-		$this->view->render('catalogue', 'index')->pick("catalogue/index");
-	}
-
-	/**
-	 * Распродажа
-	 */
-	public function salepageAction()
+	public function saleAction()
 	{
 		$queryString = $this->request->getQuery();
 
@@ -307,7 +316,7 @@ class CatalogueController extends ControllerBase
 			// получаю колическво товаров по скидкам sex = 1,2....
 			$salesGroup = $this->_helper->groupArray(
 				$this->pricesModel->countProductsBySales($this->_shop['price_id'], [0,1,2,3], true),
-			'sex');
+				'sex');
 
 			// удаляю общий подсчет суммы товаров
 			array_pop($salesGroup);
@@ -319,7 +328,8 @@ class CatalogueController extends ControllerBase
 
 				unset($salesGroup[0], $salesGroup[3]);
 
-				$sum = []; foreach($temporary as $val) {
+				$sum = [];
+				foreach($temporary as $val) {
 					foreach($val as $content) {
 						@$sum[$content['percent']]	+=	$content['count'];
 					}
@@ -351,18 +361,21 @@ class CatalogueController extends ControllerBase
 		}
 	}
 
-	/**
-	 * Категории каталога с выводом изображений по рейтингу товаров
-	 */
+	/*
+ 	 * categoriesAction() Категории каталога с выводом изображений по рейтингу товаров
+	 *
+ 	 * @see /catalogue
+ 	 * @access public
+ 	 * @author Stanislav WEB
+ 	 * @return \Phalcon\Mvc\View -> render()
+ 	 */
 	public function categoriesAction()
 	{
 		// проверка страницы в кэше
 
 		$content = null;
 		if($this->_config->cache->frontend)
-		{
 			$content = $this->view->getCache()->exists($this->cachePage(__FUNCTION__));
-		}
 
 		if($content === null)
 		{
@@ -403,18 +416,20 @@ class CatalogueController extends ControllerBase
 		if($this->_config->cache->frontend) $this->view->cache(array("key" => $this->cachePage(__FUNCTION__)));
 	}
 
-	/**
-	 * Подкатегории каталога с выводом изображений по рейтингу товаров
-	 */
+	/*
+  	 * subcategoriesAction() Подкатегории каталога с выводом изображений по рейтингу товаров
+ 	 *
+  	 * @see /catalogue/{main_category}
+  	 * @access public
+  	 * @author Stanislav WEB
+  	 * @return \Phalcon\Mvc\View -> render()
+  	 */
 	public function subcategoriesAction()
 	{
-
 		// проверка страницы в кэше
 		$content = null;
 		if($this->_config->cache->frontend)
-		{
 			$content = $this->view->getCache()->exists($this->cachePage(__FUNCTION__));
-		}
 
 		if($content === null)
 		{
@@ -455,6 +470,8 @@ class CatalogueController extends ControllerBase
 	 * @author <filchakov.denis@gmail.com>
 	 */
 	function filtration(){
+
+
 		$oldRules = $this->categoriesModel->parseRemap($this->_shop['id'], $_REQUEST, $this->_onpage);
 		$newUrl['_url'] = implode('/', $_REQUEST['tags']);
 
@@ -470,7 +487,6 @@ class CatalogueController extends ControllerBase
 		$filter = $newRules;
 
 		$itemLine = $this->categoriesModel->renderItemsLine($filter, $this->_shop['id']);
-
 		$items = $itemLine['items'];
 
 		unset($itemLine['items']);
@@ -489,9 +505,11 @@ class CatalogueController extends ControllerBase
 		$view->setViewsDir("../app/modules/".$this->_shop['code']."/views/");
 		$result['html'] = $view->render("partials/catalogue/itemsline",
 			array(
-				'items'      => $items,
-				'pagination' => $itemLine,
+				'items'      	=> $items,
+				'pagination' 	=> $itemLine,
 				'viewTranslate' => $this->_translate,
+				'shop'			=>	$this->_shop,
+				'itemsline'		=>	$itemLine,
 			));
 
 		echo json_encode($result);die;
@@ -610,7 +628,6 @@ class CatalogueController extends ControllerBase
 	private function _lineItems($filter = array()){
 
 		//удаляем родительскую категорию
-
 		if(isset($filter['top'])){
 			$itemLine = $this->categoriesModel->renderTopItemsLine($filter, $this->_shop['id']);
 		} else {
@@ -641,10 +658,10 @@ class CatalogueController extends ControllerBase
 		unset($itemLine['items']);
 		$this->view->setVars([
 			'template'   => 'itemsline',
-			'title'	=> $pagetitle,
+			'title'		=> $pagetitle,
 			'items'      => $items,
 			'pagination' => $itemLine,
-			'itemsline' => array_keys($this->_helper->arrayToAssoc($items,'id'))
+			'itemsline' => array_keys($this->_helper->arrayToAssoc($items,'id')),
 		]);
 
 		$this->view->pick("catalogue/index");

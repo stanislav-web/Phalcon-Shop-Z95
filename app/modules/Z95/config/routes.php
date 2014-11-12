@@ -5,11 +5,18 @@
 
 	// Роутер каталога
 
-	$router->addGet("/catalogue/:params", [
+	$router->add("/catalogue/:params", [
 		'module'    	=>  $module,
 		'namespace' 	=> 'Modules\\'.$module.'\Controllers\\',
 		'controller'    => 'catalogue',
 		'action'        => 'index'
+	]);
+
+	$router->add("/catalogue/sale", [
+		'module'    	=>  $module,
+		'namespace' 	=> 'Modules\\'.$module.'\Controllers\\',
+		'controller'    => 'catalogue',
+		'action'        => 'sale'
 	]);
 
 	$router->add("/brands", [
@@ -19,36 +26,21 @@
 		'action'        => 'brands',
 	]);
 
-	$router->addGet("/catalogue/top/:params", [
+	$router->add("/catalogue/top/:params", [
 		'module'    	=>  $module,
 		'namespace' 	=> 'Modules\\'.$module.'\Controllers\\',
 		'controller'    => 'catalogue',
 		'action'        => 'top'
 	]);
 
-	$router->addGet("/catalogue/new/:params", [
+	$router->add("/catalogue/new/:params", [
 		'module'    	=>  $module,
 		'namespace' 	=> 'Modules\\'.$module.'\Controllers\\',
 		'controller'    => 'catalogue',
 		'action'        => 'new'
 	]);
 
-	$router->addGet("/catalogue/sale/:params", [
-		'module'    	=>  $module,
-		'namespace' 	=> 'Modules\\'.$module.'\Controllers\\',
-		'controller'    => 'catalogue',
-		'action'        => 'sale'
-	]);
-
-	//Странциа всех скидок
-	$router->addGet("/catalogue/sale", [
-		'module'    	=>  $module,
-		'namespace' 	=> 'Modules\\'.$module.'\Controllers\\',
-		'controller'    => 'catalogue',
-		'action'        => 'salepage'
-	]);
-
-	$router->addGet("/catalogue", [
+	$router->add("/catalogue", [
 		'module'    	=>  $module,
 		'namespace' 	=> 'Modules\\'.$module.'\Controllers\\',
 		'controller'    => 'catalogue',
@@ -62,7 +54,7 @@
 		'action'        => 'index',
 	]);
 
-	$router->addGet("/catalogue/([a-z_-]+/[0-9]+)|(/[0-9]+)", [
+	$router->add("/catalogue/([a-z_-]+/[0-9]+)|(/[0-9]+)", [
 		'module'    	=>  $module,
 		'namespace' 	=> 'Modules\\'.$module.'\Controllers\\',
 		'controller'    => 'catalogue',
@@ -106,7 +98,7 @@
 	$router->add("/order", [
 		'module'    	=>  $module,
 		'namespace' 	=> 'Modules\\'.$module.'\Controllers\\',
-		'controller'    => 'index',
+		'controller'    => 'order',
 		'action'        => 'index',
 	]);
 

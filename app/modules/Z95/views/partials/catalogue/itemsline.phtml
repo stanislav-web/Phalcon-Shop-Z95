@@ -1,5 +1,11 @@
-<?php $this->partial('partials/catalogue/filters');?>
-<?php $this->partial('partials/catalogue/sortbar'); ?>
+<?php
+	//@modify Stanislav добавление переменных в partial  шаблон
+	$this->partial('partials/catalogue/filters', ['pagination' => $pagination]);
+	$this->partial('partials/catalogue/sortbar', [
+		'pagination' => $pagination,
+		'viewTranslate' => $viewTranslate,
+	]);
+?>
 <script>
 	$.ajax({
 		type: "GET",
@@ -16,9 +22,11 @@
 <div class="CatalogueItems insert-filters">
 	<div id="filterSidebar"></div>
 	<?php foreach ($items as $item): ?>
+		<?php
+		// декодорию превью
+		$img = array_values(json_decode($item['images']))[0]; ?>
 		<?php $this->partial('partials/catalogue/item_short');?>
 	<?php endforeach; ?>
-
 	<?php if(count($items)<=20):?>
 		<a class="loader_items js_loader_items" href="" attr-ids="<?=implode(',',$itemsline);?>">Показать похожие</a>
 		<div class="js_wrapper_loader_items"></div>
@@ -78,5 +86,11 @@
 
 </div>
 <div style="clear: both;"></div>
-<?php $this->partial('partials/catalogue/filters');?>
-<?php $this->partial('partials/catalogue/sortbar'); ?>
+<?php
+	//@modify Stanislav добавление переменных в partial  шаблон
+	$this->partial('partials/catalogue/filters', ['pagination' => $pagination]);
+	$this->partial('partials/catalogue/sortbar', [
+		'pagination' => $pagination,
+		'viewTranslate' => $viewTranslate,
+	]);
+?>

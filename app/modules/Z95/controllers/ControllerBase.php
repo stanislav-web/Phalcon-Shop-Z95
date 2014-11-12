@@ -96,7 +96,7 @@
 		$shopModel          =   false,
 		$commonModel        =   false,
 		$categoriesModel    =   false,
-		$brandsModel    =   false,
+		$brandsModel    	=   false,
 		$productsModel      =   false,
 		$pricesModel        =   false,
 		$tagsModel			=	false,
@@ -216,7 +216,7 @@
 
 		// Получение категорий и подкатегорий для текущего магазина
 		$this->_shopCategories = $this->commonModel->getShopCategories($this->_shop['id'], true);
-		
+
 		// Инициализация навигации
 
 		$nav = $this->di->get('navigation');

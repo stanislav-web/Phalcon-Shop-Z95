@@ -9,7 +9,7 @@ namespace Models;
  * @package Shop
  * @subpackage Models
  */
-class Products extends \Phalcon\Mvc\Model
+class BuyTogether extends \Phalcon\Mvc\Model
 {
 	/**
 	 * Таблица в базе
@@ -46,6 +46,7 @@ class Products extends \Phalcon\Mvc\Model
 
 	/**
 	 * Получение данных из таблицы
+	 * @param array $fields pair fields | empty          	Параметр SELECT
 	 * @param array $data pair field=value | empty          Параметр WHERE
 	 * @param array $order pair field=sort type | empty     Сортировка: поле => порядок
 	 * @param int $limit 0123... |                          Лимит выборки
@@ -53,72 +54,39 @@ class Products extends \Phalcon\Mvc\Model
 	 * @access public
 	 * @return null | array
 	 */
-	public function get(array $data, $order = [], $limit = null, $cache = false)
+	public function get(array $fields = [], array $data = [], $order = [], $limit = null, $cache = false)
 	{
+
 		$result = null;
-
-		if($cache && $this->_cache) {
+		if ($cache && $this->_cache) {
 			$backendCache = $this->getDI()->get('backendCache');
-			$result = $backendCache->get(self::TABLE.'-'.implode('-', $data).'-'.$limit.'.cache');
+			$result = $backendCache->get(self::TABLE . '-' . implode('-', $data) . '.cache');
 		}
-
-		if($result === null) {    // Выполняем запрос из MySQL
-
-			$sql = "SELECT ".self::TABLE.".*
-				FROM ".self::TABLE;
-
-			if(!empty($data))
-			{
-				foreach($data as $key => $value)
-				{
-					if(is_array($value))
-						$sql .= " WHERE ".$key." IN(".join(',', $value)." ";
-					else $sql .= " WHERE ".$key." = '".$value."'";
+		if ($result === null) {    // Выполняем запрос из MySQL
+			if(!empty($fields))
+				$sql = "SELECT " . rtrim(implode(",",$fields), ",") . "
+					FROM " . self::TABLE;
+			else
+				$sql = "SELECT " . self::TABLE. ".*
+					FROM " . self::TABLE;
+			if (!empty($data)) {
+				foreach ($data as $key => $value) {
+					if (is_array($value))
+						$sql .= " WHERE " . $key . " IN(" . join(',', $value) . " ";
+					else $sql .= " WHERE " . $key . " = '" . $value . "'";
 				}
 			}
+			if (!empty($order)) $sql .= " ORDER BY " . key($order) . " " . $order[key($order)];
+			if (null != $limit) $sql .= " LIMIT " . $limit;
 
-			if(!empty($order)) $sql .= " ORDER BY ".key($order)." ".$order[key($order)];
-
-			if(null != $limit) $sql .= " LIMIT ".$limit;
-
-			if(null != $limit && $limit > 1) {
+			if (null != $limit && $limit > 1) {
 				$result = $this->_db->query($sql)->fetchAll();
 			} else {
 				$result = $this->_db->query($sql)->fetch();
 			}
 
 			// Сохраняем запрос в кэше
-			if($cache && $this->_cache) $backendCache->save(self::TABLE.'-'.implode('-', $data).'-'.$limit.'.cache', $result);
-		}
-		return $result;
-	}
-
-	/**
-	 * getProductsIds($product_id, $price_id, $limit = null, $cache = false) Вывод покупаемых товаров в связке к товару
-	 * @param      $product_id id товара к которому подбирать покупаемых
-	 * @param      $price_id ID ценовой категории магазина
-	 * @param null $limit лимит записей
-	 * @return \Phalcon\Paginator\Adapter\QueryBuilder
-	 */
-	public function getProducts($product_id, $price_id, $limit = null, $cache = false)
-	{
-		$result = null;
-
-		if($cache && $this->_cache)
-		{
-			$backendCache = $this->getDI()->get('backendCache');
-			$result = $backendCache->get(self::TABLE.'-'.$product_id.'-'.$price_id.'.cache');
-		}
-
-		if($result === null)
-		{
-			// Выполняем запрос из MySQL
-			$sql = "";
-
-			$result = $this->_db->query($sql)->fetch();
-
-			// Сохраняем запрос в кэше
-			if($cache && $this->_cache) $backendCache->save(self::TABLE.'-'.$product_id.'-'.$price_id.'.cache', $result);
+			if ($cache && $this->_cache) $backendCache->save(self::TABLE . '-' . implode('-', $data) . '.cache', $result);
 		}
 		return $result;
 	}

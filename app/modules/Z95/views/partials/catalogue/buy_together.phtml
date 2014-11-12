@@ -3,19 +3,28 @@
 		<div class="catalogue-items-bought not-m1">
 			<b><?=$viewTranslate['BUY_TOGETHER'];?>:</b>
 			<div class="item_list">
-				<div class="small_item">
-					<div class="preview">
-						<a href="/catalogue/woman/dresses/71041/">
-							<img src="http://img<?php echo rand(0,9); ?>.z95.ru/f/p/150x150/catalogue/42883/IMG_6099-s.jpg"></a></div>
-					<div class="hidden_title">
-						<a href="/catalogue/woman/dresses/71041/">
-							плаття <span style="white-space:nowrap">Chanel</span>
-						</a>
-						<div class="price">
-							<s>2730</s>&nbsp;2457&nbsp;<span class="sign">грн</span>
+				<?php if(isset($buyableItems) && sizeof($buyableItems) > 0 ):?>
+					<?php foreach($buyableItems as $bitem): ?>
+						<?php
+						// decode image
+						$images 	= json_decode($bitem['preview'], true);
+						?>
+						<div class="small_item">
+							<div class="preview">
+								<a href="<?=Helpers\LocationUrls::location('/catalogue/'.$bitem['articul']);?>">
+									<img src="http://img<?php echo rand(0,9); ?>.z95.ru/f/p/150x150/catalogue/<?=$bitem['id'];?>/<?=array_values($images)[0];?>"></a></div>
+							<div class="hidden_title">
+								<a href="<?=Helpers\LocationUrls::location('/catalogue/'.$bitem['articul']);?>">
+									<?=$bitem['name'];?> <span style="white-space:nowrap"><?=$bitem['brand_name'];?></span>
+								</a>
+								<div class="price">
+									<s><?=$bitem['price'];?></s>&nbsp;<?=$bitem['discount'];?>&nbsp;<span class="sign"><?=$shop['currency_symbol'];?></span>
+								</div>
+							</div>
 						</div>
-					</div>
-				</div>
+					<?php endforeach; ?>
+
+				<?php endif;?>
 			</div>
 		</div>
 	</td>

@@ -19,8 +19,8 @@
 				foreach($basket['items'] as $counter => $item) {
 					foreach($item['sizes'] as $size => $count) {
 						$totalCount = $totalCount + $count;
-						$totalSum = $totalSum + $count*(intval($item['discount']));
-
+						if(isset($item['discount']))
+							$totalSum = $totalSum + $count*(intval($item['discount']));
 					}
 				}
 				?>
@@ -34,7 +34,7 @@
 				<?php $total = 0; ?>
 				<?php if(!empty($basket['items'])) { ?>
 					<?php foreach($basket['items'] as $counter => $item) { ?>
-						<?php $price = ($item['discount']) ?(int)$item['discount'] :(int)$item['price']; ?>
+						<?php $price = (isset($item['discount'])) ?(int)$item['discount'] :(int)$item['price']; ?>
 						<tr class="item-row" id="basket_row_<?php echo $item['product_id']; ?>">
 							<td preview_id="57453" class="image">
 								<div style="z-index: 2;" class="basket-preview">

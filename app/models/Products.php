@@ -95,6 +95,42 @@ class Products extends \Phalcon\Mvc\Model
 	}
 
 	/**
+	 * getProductsForBuy(array $ids, $price_id, $limit = null, $cache = false) Покупаемые товары, передача array ids
+	 * @param   array   $ids ID товаров
+	 * @param   int		$price_id ценовая категория
+	 * @access 	public
+	 * @return 	array
+	 */
+	public function getProductsForBuy(array $ids, $price_id, $limit = null, $cache = false)
+	{
+		$result = null;
+
+		if($cache && $this->_cache)
+		{
+			$backendCache = $this->getDI()->get('backendCache');
+			$result = $backendCache->get(md5(self::TABLE.$price_id.join('_',$ids).$limit).'.cache');
+		}
+
+		if($result === null)
+		{
+			// Выполняем запрос из MySQL
+			$sql = "SELECT  prod.id AS id, prod.articul, prod.name, prod.preview, brand.name AS brand_name, price.price, price.discount
+					FROM  ".self::TABLE." prod
+					INNER JOIN ".Prices::TABLE." price ON (price.product_id = prod.id)
+					INNER JOIN ".Brands::TABLE." brand ON (brand.id = prod.brand_id)
+					WHERE prod.id IN(".join(',', $ids).") &&  price.id = ".$price_id;
+
+			if(null != $limit) $sql .= " LIMIT ".$limit;
+
+			$result = $this->_db->query($sql)->fetchAll();
+
+			// Сохраняем запрос в кэше
+			if($cache && $this->_cache) $backendCache->save(md5(self::TABLE.$price_id.join('_',$ids).$limit).'.cache', $result);
+		}
+		return $result;
+	}
+
+	/**
 	 * getProducts($price_id, $category_id, $limit = null, $page = 1, $cache = false) Вывод товаров в категории с постраничным выводом
 	 * @param      $price_id ID цены
 	 * @param      $category_id родительская категория
@@ -185,10 +221,6 @@ class Products extends \Phalcon\Mvc\Model
 		return $result;
 	}
 
-
-
-
-
 	public function getNewProducts($price_id, $limit = 1, $cache = false)
 	{
 		$result = null;
@@ -252,25 +284,17 @@ class Products extends \Phalcon\Mvc\Model
 					".self::TABLE.".images,
 					".self::TABLE.".filter_size,
 					".self::TABLE.".description AS description,"
-					// GROUP_CONCAT(CONCAT(".Tags::TABLE.".id)) AS all_tags,
-					// GROUP_CONCAT(CONCAT(".Tags::TABLE.".name)) AS all_tags_name,
-					// GROUP_CONCAT(CONCAT(".Categories::TABLE.".name)) AS category_name,
 					.Brands::TABLE.".name AS brand, ".Brands::TABLE.".alias AS brand_alias, ".Prices::TABLE.".price,"
 					.Common::TABLE_PRODUCTS_REL.".category_id AS category_id,
 					".Prices::TABLE.".discount,
 					".Prices::TABLE.".percent,
 					".self::TABLE.".description AS description, "
-//					GROUP_CONCAT(CONCAT(".Tags::TABLE.".id)) AS all_tags,
-//					GROUP_CONCAT(CONCAT(".Tags::TABLE.".name)) AS all_tags_name,
-//					GROUP_CONCAT(CONCAT(".Categories::TABLE.".name)) AS category_name,
 					.Brands::TABLE.".name AS brand, ".Brands::TABLE.".alias AS brand_alias, ".Prices::TABLE.".price
 
 					FROM ".self::TABLE."
 					LEFT JOIN ".Prices::TABLE." ON (".Prices::TABLE.".id = $shop_price_id && ".Prices::TABLE.".product_id = ".self::TABLE.".id)
 					INNER JOIN ".Common::TABLE_PRODUCTS_REL." ON (".self::TABLE.".id = ".Common::TABLE_PRODUCTS_REL.".product_id)".
 
-					//LEFT JOIN ".Tags::TABLE." ON (".Tags::TABLE.".id = ".Common::TABLE_PRODUCTS_REL.".tag_id)
-					//LEFT JOIN ".Categories::TABLE." ON (".Categories::TABLE.".id = ".Common::TABLE_PRODUCTS_REL.".category_id)
 					"INNER JOIN ".Brands::TABLE." ON (".self::TABLE.".brand_id = ".Brands::TABLE.".id)
 					WHERE ".self::TABLE.".articul = '".$articul."' LIMIT 1";
 
@@ -385,21 +409,20 @@ class Products extends \Phalcon\Mvc\Model
 	 * @author <filchakov.denis@gmail.com>
 	 * @param array $ids
 	 */
-	public function getRecommend($ids = array(), $limit = 10){
+	public function getRecommend($ids = array(), $limit = 10, $cache = false) {
 
 
 		$result = null;
 
 		if($cache && $this->_cache) {
 			$backendCache = $this->getDI()->get('backendCache');
-			$result = $backendCache->get(self::TABLE.'-'.implode('-', $data).'-'.$limit.'.cache');
+			$result = $backendCache->get(BuyTogether::TABLE.'-'.implode('-', $ids).'-'.$limit.'.cache');
 		}
 
 		if($result === null) {
-			$info = $this->_db->query("SELECT top_ten FROM catalogue_view_then_buy WHERE item_id IN (".implode(',',$ids).')')->fetchAll();
-			print_r($info);die;
+			$info = $this->_db->query("SELECT top_ten FROM ".BuyTogether::TABLE." WHERE id IN (".implode(',',$ids).')')->fetchAll();
 			// Сохраняем запрос в кэше
-			if($cache && $this->_cache) $backendCache->save(self::TABLE.'-'.implode('-', $data).'-'.$limit.'.cache', $result);
+			if($cache && $this->_cache) $backendCache->save(BuyTogether::TABLE.'-'.implode('-', $ids).'-'.$limit.'.cache', $result);
 		}
 
 	}

@@ -11,13 +11,13 @@
 					<tr>
 						<td id="leftPart" style="padding: 0px 10px 0px 0px; height: 320px;">
 							<div style="height:275px;">
-								<a href="/catalogue/<?= $item['articul'] ?>/">
-									<img class="preview"
-										 src="http://img<?= rand(0, 9) ?>.z95.ru/f/p/225x275/catalogue/<?= $item['id'] ?>/<?= current(json_decode($item['images'], 1)) ?>">
+
+								<a href="<?=\Helpers\LocationUrls::location($this->request->getURI().'/'.$item['articul']); ?>">
+									<img class="preview" src="http://img<?= rand(0, 9) ?>.z95.ru/f/p/225x275/catalogue/<?= $item['id'] ?>/<?=$img?>">
 								</a>
 							</div>
 							<div class="info">
-								<a href="/catalogue/<?= $item['articul'] ?>/">
+								<a href="<?=\Helpers\LocationUrls::location($this->request->getURI().'/'.$item['articul']); ?>">
 									<b><?= $item['brand_name'] ?></b>
 									<?= $item['name'] ?> <span class="articul"><?= $item['articul'] ?></span>
 								</a>
@@ -85,17 +85,17 @@
 	</div>
 	<div class="photo_hover" onmouseover="catalogue.startSlideShow('slide_show_<?= $item['articul'] ?>');"
 		 onmouseout="catalogue.stopSlideShow('slide_show_<?= $item['articul'] ?>');">
-		<a href="/catalogue/<?= $item['articul'] ?>/">
-			<img src="/assets/Z95/images/d-t.gif" style="width:225px; height:275px;">
+		<a href="<?=\Helpers\LocationUrls::location($this->request->getURI().'/'.$item['articul']); ?>">
+		<img src="/assets/Z95/images/d-t.gif" style="width:225px; height:275px;">
 		</a>
 	</div>
 	<div style="z-index: 0; position: relative; width:225px; height:275px;"
 		 id="slide_show_<?= $item['articul'] ?>">
 		<ul>
 			<li class="show">
-				<a href="/catalogue/<?= $item['articul'] ?>/">
-					<img class="preview"
-						 src="http://img<?= rand(0, 9) ?>.z95.ru/f/p/225x275/catalogue/<?= $item['id'] ?>/<?= current(json_decode($item['images'], 1)) ?>">
+				<a href="<?=\Helpers\LocationUrls::location($this->request->getURI().'/'.$item['articul']); ?>">
+					<?php $img = array_values(json_decode($item['images'], true))[0]; ?>
+				<img class="preview" src="http://img<?= rand(0, 9) ?>.z95.ru/f/p/225x275/catalogue/<?= $item['id'] ?>/<?=$img?>">
 				</a>
 			</li>
 			<li class="">
@@ -107,7 +107,7 @@
 		</ul>
 	</div>
 	<div class="info">
-		<a href="/catalogue/<?= $item['articul'] ?>/">
+		<a href="<?=\Helpers\LocationUrls::location($this->request->getURI().'/'.$item['articul']); ?>">
 			<b><?= $item['brand_name'] ?></b>
 			<?= $item['name'] ?> <span class="articul"><?= $item['articul'] ?></span>
 		</a>
