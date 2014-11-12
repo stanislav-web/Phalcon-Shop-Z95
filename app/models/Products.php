@@ -16,6 +16,7 @@ class Products extends \Phalcon\Mvc\Model
 	 * @const
 	 */
 	const TABLE = 'products';
+	const PRODUCT_RELATION = 'products_relationship';
 
 	private
 
@@ -377,5 +378,29 @@ class Products extends \Phalcon\Mvc\Model
 		}
 
 		return $result;
+	}
+
+	/**
+	 * Возвращает ТОП 10 рекомендованных товаров
+	 * @author <filchakov.denis@gmail.com>
+	 * @param array $ids
+	 */
+	public function getRecommend($ids = array(), $limit = 10){
+
+
+		$result = null;
+
+		if($cache && $this->_cache) {
+			$backendCache = $this->getDI()->get('backendCache');
+			$result = $backendCache->get(self::TABLE.'-'.implode('-', $data).'-'.$limit.'.cache');
+		}
+
+		if($result === null) {
+			$info = $this->_db->query("SELECT top_ten FROM catalogue_view_then_buy WHERE item_id IN (".implode(',',$ids).')')->fetchAll();
+			print_r($info);die;
+			// Сохраняем запрос в кэше
+			if($cache && $this->_cache) $backendCache->save(self::TABLE.'-'.implode('-', $data).'-'.$limit.'.cache', $result);
+		}
+
 	}
 }

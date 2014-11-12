@@ -96,6 +96,7 @@
 		$shopModel          =   false,
 		$commonModel        =   false,
 		$categoriesModel    =   false,
+		$brandsModel    =   false,
 		$productsModel      =   false,
 		$pricesModel        =   false,
 		$tagsModel			=	false,
@@ -204,6 +205,7 @@
 		$this->shopModel        =   new \Models\Shops();
 		$this->productsModel    =   new \Models\Products();
 		$this->categoriesModel  =   new \Models\Categories();
+		$this->brandsModel  =   new \Models\Brands();
 		$this->pricesModel      =   new \Models\Prices();
 		$this->tagsModel      	=   new \Models\Tags();
 		$this->bannersModel     =   new \Models\Banners();
@@ -236,10 +238,11 @@
 	/**
 	 * Событие после выполнения всего роута
 	 */
-	public function afterExecuteRoute()
+	public function afterExecuteRoute(\Phalcon\Mvc\Dispatcher $dispatcher)
 	{
 		// Ставлю подхват хлебных крошек, когда уже произошел роутинг в контроллерах и добавлен путь в ->add()
 		$this->view->setVar('breadcrumbs', $this->_breadcrumbs->generate()); // крошки
+
 	}
 
 	/**

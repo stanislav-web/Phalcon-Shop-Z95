@@ -12,18 +12,47 @@
 		'action'        => 'index'
 	]);
 
+	$router->add("/brands", [
+		'module'    	=>  $module,
+		'namespace' 	=> 'Modules\\'.$module.'\Controllers\\',
+		'controller'    => 'catalogue',
+		'action'        => 'brands',
+	]);
+
+	$router->addGet("/catalogue/top/:params", [
+		'module'    	=>  $module,
+		'namespace' 	=> 'Modules\\'.$module.'\Controllers\\',
+		'controller'    => 'catalogue',
+		'action'        => 'top'
+	]);
+
+	$router->addGet("/catalogue/new/:params", [
+		'module'    	=>  $module,
+		'namespace' 	=> 'Modules\\'.$module.'\Controllers\\',
+		'controller'    => 'catalogue',
+		'action'        => 'new'
+	]);
+
+	$router->addGet("/catalogue/sale/:params", [
+		'module'    	=>  $module,
+		'namespace' 	=> 'Modules\\'.$module.'\Controllers\\',
+		'controller'    => 'catalogue',
+		'action'        => 'sale'
+	]);
+
+	//Странциа всех скидок
+	$router->addGet("/catalogue/sale", [
+		'module'    	=>  $module,
+		'namespace' 	=> 'Modules\\'.$module.'\Controllers\\',
+		'controller'    => 'catalogue',
+		'action'        => 'salepage'
+	]);
+
 	$router->addGet("/catalogue", [
 		'module'    	=>  $module,
 		'namespace' 	=> 'Modules\\'.$module.'\Controllers\\',
 		'controller'    => 'catalogue',
 		'action'        => 'categories'
-	]);
-
-	$router->addGet("/catalogue/sale", [
-		'module'    	=>  $module,
-		'namespace' 	=> 'Modules\\'.$module.'\Controllers\\',
-		'controller'    => 'catalogue',
-		'action'        => 'sale'
 	]);
 
 	$router->add("/cart", [
@@ -80,3 +109,6 @@
 		'controller'    => 'index',
 		'action'        => 'index',
 	]);
+
+	// Удаление косых в конце
+	$router->removeExtraSlashes(true);

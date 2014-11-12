@@ -79,5 +79,15 @@
 		"HOW_WE_MEASURE"		=>	'Как мы меряем?',
 		"SHOW"					=>	'показать',
 		"HIDE"					=>	'спрятать',
-		"BUY_TOGETHER"			=>	'Покупают вместе'
+		"BUY_TOGETHER"			=>	'Покупают вместе',
+		"NEW_CATEGORY"						=>  "Новинки",
+		"DISCOUNT"						=>	"Скидка",
+
+		"ALL_BRANDS"				=>  "Бренды",
+		"SORT_BY" => "Сортировка по",
+		"RATING_FIELD" => "популярности",
+		"NEW_FIELD" => "новизне",
+		"PRICE_FIELD" => "цене",
+		"DISCOUNT_FIELD" => "скидке",
+		"FILTER_FIELD" => "Фильтр по...",
 	];

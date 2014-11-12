@@ -95,4 +95,31 @@ class Brands extends \Phalcon\Mvc\Model
 
 		return $result;
 	}
+
+	/**
+	 * Получение списка брендов с количеством позиций в каждом из них
+	 * @author <filchakov.denis@gmail.com>
+	 *
+	 */
+	public function getAllBrands($shopID = 1){
+		$result = null;
+		if($cache && $this->_cache) {
+			$backendCache = $this->getDI()->get('backendCache');
+			$result = $backendCache->get(self::TABLE.$shopID.'-allbrands.cache');
+		}
+		if($result === null){
+			$sql = 'SELECT b.name, COUNT(product.brand_id) as \'count\'
+					FROM `products_relationship` rel
+					INNER JOIN `products` product ON (product.id = rel.product_id)
+					INNER JOIN `prices` price ON (price.product_id = product.id)
+					INNER JOIN brands b ON b.id = product.brand_id
+					WHERE price.id = '.$shopID.'
+					GROUP BY product.brand_id
+					ORDER BY name ASC';
+			$result = $this->_db->query($sql)->fetchAll();
+			if($cache && $this->_cache) $backendCache->save(self::TABLE.$shopID.'-allbrands.cache', $result);
+		}
+		return $result;
+	}
+
 }

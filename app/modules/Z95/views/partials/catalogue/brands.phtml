@@ -1,0 +1,28 @@
+<div class="element-brands">
+	<table class="Brands" width="100%">
+		<?php
+			if (is_array($brands)) {
+				foreach ($brands as $index => $value) {
+					echo '<tr>' .
+						'<td class="letter" width="5%">' . strtoupper($index) . '</td>';
+					echo '<td>';
+					if (is_array($value)) {
+						//Разбиваем массив на три части, для вывода в колонки
+						$brandsInColump = ceil(count($value) / 3);
+						$chunkBrands    = array_chunk($value, $brandsInColump);
+						foreach ($chunkBrands as $num => $BrandsArray) {
+							echo '<div class="brands">';
+							foreach ($BrandsArray as $BrandID => $BrandValue) {
+								$status = $BrandValue['count'] >= 30 ? ' class="super"' : '';
+								echo '<div' . $status . '><a href="/catalogue/' . urlencode($BrandValue['name']) . '/">' . $BrandValue['name'] . '</a><span style="font-size: 0.7em; color: #B0B0B0;">(' . $BrandValue['count'] . ')</span></div>';
+							}
+							echo '</div>';
+						}
+					}
+					echo '</td>';
+					echo '</tr>';
+				}
+			}
+		?>
+	</table>
+</div>
