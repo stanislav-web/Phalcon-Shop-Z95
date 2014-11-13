@@ -131,13 +131,13 @@ class Products extends \Phalcon\Mvc\Model
 	}
 
 	/**
-	 * getProducts($price_id, $category_id, $limit = null, $page = 1, $cache = false) Вывод товаров в категории с постраничным выводом
+	 * getProducts($price_id, array $condition = array(), $offset = 0, $limit = 10, array $order = [], $cache = false) Вывод товаров в категории с постраничным выводом
 	 * @param      $price_id ID цены
 	 * @param      $category_id родительская категория
 	 * @param null $limit лимит записей
 	 * @return \Phalcon\Paginator\Adapter\QueryBuilder
 	 */
-	public function getProducts($price_id, array $condition = array(), $offset = 0, $limit = 10, $cache = false)
+	public function getProducts($price_id, array $condition = array(), $offset = 0, $limit = 10, array $order = [], $cache = false)
 	{
 		$result = null;
 
@@ -145,20 +145,21 @@ class Products extends \Phalcon\Mvc\Model
 		{
 			$backendCache = $this->getDI()->get('backendCache');
 			;
-			$result = $backendCache->get(md5(self::TABLE.$price_id.join('_',$condition).$offset.$limit).'.cache');
+			$result = $backendCache->get(md5(self::TABLE.$price_id.join('',$condition).$offset.$limit.join('',$order)).'.cache');
 		}
 
 		if($result === null)
 		{
 		    // Выполняем запрос из MySQL
-			$sql = "SELECT SQL_CALC_FOUND_ROWS prod.`id`,
-					prod.`id` AS id, prod.`articul` AS articul, prod.`images` AS images, prod.name AS name, prod.description as description,
-					brand.name AS brand_name,
+			$sql = "SELECT SQL_CALC_FOUND_ROWS prod.`id`, prod.`filter_size`,
+					prod.`articul` AS articul, prod.`preview` AS preview, prod.name AS name, prod.description as description,
+					brand.name AS brand_name, prod.is_new,
 					price.price AS price, price.discount AS discount
 					FROM `".Common::TABLE_PRODUCTS_REL."` rel
 					INNER JOIN `".self::TABLE."` prod ON (prod.id = rel.product_id)
 					INNER JOIN `".Prices::TABLE."` price ON (prod.id = price.product_id)
-					INNER JOIN `".Brands::TABLE."` brand ON (brand.id = prod.brand_id)
+					LEFT JOIN `".Brands::TABLE."` brand ON (brand.id = prod.brand_id)
+					INNER JOIN `".Categories::TABLE."` cat ON (cat.id = rel.category_id)
 					WHERE price.id = ".$price_id;
 
 			foreach($condition as $key => $value)
@@ -169,26 +170,86 @@ class Products extends \Phalcon\Mvc\Model
 				{
 					if(is_array($condition[$key]))
 						$sql .= " && ".$key." = ".$condition[$key][0]." ";
-					else $sql .= " && ".$key." = ".$condition[$key]." ";
-
+					else
+					{
+						if($condition[$key][0] != '')
+							$sql .= " && ".$key." = ".$condition[$key]." ";
+					}
 				}
 			}
 
-			$sql .= "LIMIT ".$offset.",  ".$limit;
+			if(!empty($order))
+				$sql .= " ORDER BY ".key($order)." ".$order[key($order)];
 
+			if($limit > 0)
+				$sql .= " LIMIT ".$offset.",  ".$limit;
 
 			$result = $this->_db->query($sql)->fetchAll();
 
 			$sql = "SELECT FOUND_ROWS() as `count`";
-
 			$found = $this->_db->query($sql)->fetch();
 			$result['count'] = $found['count'];
 
 			// Сохраняем запрос в кэше
-			if($cache && $this->_cache) $backendCache->save(md5(self::TABLE.$price_id.join('_',$condition).$offset.$limit).'.cache', $result);
+			if($cache && $this->_cache) $backendCache->save(md5(self::TABLE.$price_id.join('',$condition).$offset.$limit.join('',$order)).'.cache', $result);
 		}
 		return $result;
 	}
+
+	/**
+	 * getTopProducts($price_id, array $condition = array(), $limit = 200, $cache = false) Вывод ТОП товаров с параметрами
+	 * @param      $price_id ID цены
+	 * @param      $condition условие Where
+	 * @param int $limit лимит записей
+	 * @return \Phalcon\Paginator\Adapter\QueryBuilder
+	 */
+	public function getTopProducts($price_id, array $condition = array(), $limit = 200, $cache = false)
+	{
+		$result = null;
+
+		if($cache && $this->_cache)
+		{
+			$backendCache = $this->getDI()->get('backendCache');
+
+			$result = $backendCache->get(md5(self::TABLE.$price_id.join('',$condition).$limit).'.cache');
+		}
+
+		if($result === null)
+		{
+			$cond = false;
+
+			foreach($condition as $key => $value)
+			{
+				if(sizeof($value) != 1)
+					$cond .= " && ".$key." IN(".join(',', $value).") ";
+				else
+				{
+					if(is_array($condition[$key]))
+						$cond .= " && ".$key." = ".$condition[$key][0]." ";
+					else $cond .= " && ".$key." = ".$condition[$key]." ";
+				}
+			}
+
+			// Выполняем запрос из MySQL
+			$sql = "SELECT prod.`id`, prod.`filter_size`,
+					prod.`articul` AS articul, prod.`preview` AS preview, prod.name AS name, prod.description as description, prod.is_new,
+					brand.name AS brand_name,
+					price.price AS price, price.discount AS discount
+					FROM `".Common::TABLE_PRODUCTS_REL."` rel
+					INNER JOIN `".self::TABLE."` prod ON (prod.id = rel.product_id)
+					INNER JOIN `".Prices::TABLE."` price ON (prod.id = price.product_id)
+					LEFT JOIN `".Brands::TABLE."` brand ON (brand.id = prod.brand_id)
+					INNER JOIN `".Categories::TABLE."` cat ON (cat.id = rel.category_id)
+					WHERE price.id = ".$price_id." ".$cond." ORDER BY prod.rating DESC LIMIT ".$limit;
+
+			$result = $this->_db->query($sql)->fetchAll();
+
+			// Сохраняем запрос в кэше
+			if($cache && $this->_cache) $backendCache->save(md5(self::TABLE.$price_id.join('',$condition).$limit).'.cache', $result);
+		}
+		return $result;
+	}
+
 
 	/**
 	 * getProductsIds($price_id, $category_id, $cache = false) Запрос IDS всех товаров в категории
@@ -238,30 +299,6 @@ class Products extends \Phalcon\Mvc\Model
 					 WHERE ".Products::TABLE.".published = 1
 					 AND ".Prices::TABLE.".id = " . $price_id .
 				" ORDER BY ".Products::TABLE.".id DESC LIMIT " . $limit;
-
-			$result = $this->_db->query($sqlNewProducts)->fetchAll();
-
-			// Сохраняем запрос в кэше
-			if($cache && $this->_cache) $backendCache->save(self::TABLE.'-'.strtolower(__FUNCTION__).'-'.$limit.'.cache', $result);
-		}
-		return $result;
-	}
-
-	public function getTopProducts($price_id, $limit = 1, $cache = false)
-	{
-		$result = null;
-		if($cache && $this->_cache) {
-			$backendCache = $this->getDI()->get('backendCache');
-			$result = $backendCache->get(self::TABLE.'-'.strtolower(__FUNCTION__).'-'.$limit.'.cache');
-		}
-		if($result === null) {
-			$sqlNewProducts = "SELECT ".self::TABLE.".name, ".self::TABLE.".description, ".self::TABLE.".articul, ".Prices::TABLE.".price, brands.name AS brand, brands.alias AS brands_alias
-					 FROM ".Products::TABLE."
-					 INNER JOIN ".Prices::TABLE." ON ".Products::TABLE.".id = ".Prices::TABLE.".product_id
-					 INNER JOIN ".Brands::TABLE." ON ".Products::TABLE.".brand_id = ".Brands::TABLE.".id
-					 WHERE ".Products::TABLE.".published = 1
-					 AND ".Prices::TABLE.".id = " . $price_id .
-				" ORDER BY ".Products::TABLE.".rating DESC LIMIT " . $limit;
 
 			$result = $this->_db->query($sqlNewProducts)->fetchAll();
 

@@ -104,12 +104,14 @@ class CatalogueController extends ControllerBase
 			}
 			else
 			{
+
 				// ВСЕ что сюда переходит и есть выдача товаров
 				(new Router())	->setRules($action)
 								->setShop($this->_shop)
-								->setCollection(Catalogue::arrayToAssoc($this->_shopCategories, 'alias'))
-								->setExclude(['top' => 'ТОП 200', 'favorites' => 'Понравилось', 'new' => 'Новинки', 'sale' => 'Распродажа'])
+								->setCollection(Catalogue::arrayToAssoc($this->_shopCategories, 'id'))
+								->setExclude(['top' => 'ТОП 200', 'favorites' => 'Понравилось', 'new' => 'Новинки', 'sales' => 'Распродажа'])
 								->setNav($this->_breadcrumbs)
+								->setTranslate($this->_translate)
 								->render($this->productsModel);
 			}
 		}
@@ -136,7 +138,7 @@ class CatalogueController extends ControllerBase
 			if($this->request->isGet())
 			{
 				// Содержимое контроллера для формирования выдачи
-				$this->_routeTree = Catalogue::catalogueRouteTree($this->request->getURI(), [
+				$this->_routeTree = Catalogue::catalogueRouteRules($this->request->getURI(), [
 						'catalogue'
 					]);
 
@@ -166,12 +168,11 @@ class CatalogueController extends ControllerBase
 						// если найдена дочерняя категория товара, ищем ее родителя
 						$parent = Catalogue::findInTree($this->_shopCategories, 'id', $child[0]['parent_id']);
 
-						$this->_breadcrumbs
-							// добавляю категорию подкатегории
-							->add($parent[0]['name'], 'catalogue/'.$parent[0]['alias'])
+						if(!empty($parent)) // добавляю категорию подкатегории
+							$this->_breadcrumbs->add($parent[0]['name'], 'catalogue/'.$parent[0]['alias']);
 
 							// добавляю категорию товара
-							->add($child[0]['name'], 'catalogue/'.$parent[0]['alias'].'/'.$child[0]['alias'])
+							$this->_breadcrumbs->add($child[0]['name'], 'catalogue/'.$parent[0]['alias'].'/'.$child[0]['alias'])
 
 							// добавляю карточку товара в цепочку навигации
 							->add($title, $this->request->getURI());

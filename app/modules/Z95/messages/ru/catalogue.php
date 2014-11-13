@@ -90,4 +90,6 @@
 		"PRICE_FIELD" => "цене",
 		"DISCOUNT_FIELD" => "скидке",
 		"FILTER_FIELD" => "Фильтр по...",
+		"MAN" 			=> "Мужчины",
+		"WOMAN" 		=> "Женщины",
 	];

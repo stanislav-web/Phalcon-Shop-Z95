@@ -22,8 +22,8 @@
 
 							[
 								'open'       => '<div class="block left">',
-								'name'       => 'ТОП',
-								'url'        => '/catalogue/women/top',
+								'name'       => 'ТОП 200',
+								'url'        => '/catalogue/top/woman',
 								'classLink'  => 'top',
 								'controller' => 'catalogue',
 								'action'     => 'index',
@@ -145,6 +145,12 @@
 								'action'     => 'index',
 							],
 							[
+								'name'       => 'Мужские очки',
+								'url'        => '/catalogue/glasses/glasses-man',
+								'controller' => 'catalogue',
+								'action'     => 'index',
+							],
+							[
 								'name'       => 'Медицинские очки',
 								'url'        => '/catalogue/glasses/medicine',
 								'controller' => 'catalogue',
@@ -164,8 +170,8 @@
 						'childs'     => [
 							[
 								'open'       => '<div class="block left">',
-								'name'       => 'ТОП',
-								'url'        => '/catalogue/man/top',
+								'name'       => 'ТОП 200',
+								'url'        => '/catalogue/top/man',
 								'classLink'  => 'top',
 								'controller' => 'catalogue',
 								'action'     => 'index',
@@ -388,7 +394,7 @@
 							],
 							[
 								'name'       => 'Брелки и подвески',
-								'url'        => '/catalogue/accessories/',
+								'url'        => '/catalogue/accessories/trinket',
 								'controller' => 'catalogue',
 								'action'     => 'index',
 							],
@@ -820,8 +826,8 @@
 								'action'     => 'index',
 							],
 							[
-								'name'       => 'Брелки и подвески',
-								'url'        => '/catalogue/accessories/',
+								'name'       => 'Брелоки и подвески',
+								'url'        => '/catalogue/accessories/trinket',
 								'controller' => 'catalogue',
 								'action'     => 'index',
 							],

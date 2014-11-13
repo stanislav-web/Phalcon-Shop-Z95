@@ -115,6 +115,21 @@ class Catalogue
 		return $results;
 	}
 
+	public static function findInTree2($array, $key, $value, $key2, $value2)
+	{
+		$results = array();
+
+		$arrIt = new \RecursiveIteratorIterator(new \RecursiveArrayIterator($array));
+
+		foreach ($arrIt as $sub) {
+			$subArray = $arrIt->getSubIterator();
+			if ($subArray[$key2] == $value2 && $subArray[$key] == $value) {
+				$results[] = iterator_to_array($subArray);
+			}
+		}
+		return $results;
+	}
+
 	/**
 	 * findInTree($array, $key, $value) Исключение из массивов по ключ=>значение
 	 * @param array object $array исходный массив

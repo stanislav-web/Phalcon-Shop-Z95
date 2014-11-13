@@ -102,5 +102,13 @@
 		'action'        => 'index',
 	]);
 
+	$router->add("/customer/cart/:params", [
+		'module'    	=>  $module,
+		'namespace' 	=> 'Modules\\'.$module.'\Controllers\\',
+		'controller'    => 'basket',
+		'action'        => 'index',
+	]);
+
+
 	// Удаление косых в конце
 	$router->removeExtraSlashes(true);

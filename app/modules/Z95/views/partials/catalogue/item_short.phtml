@@ -1,17 +1,17 @@
 <div class="item">
 	<div style="z-index: 2; position: relative;">
-		<div style="display: none;" id="sizes_<?= $item['articul'] ?>" class="sizes_win"
-			 cat_id="<?= $item['articul'] ?>" price="<?= $item['discount'] ?>" quantity="single"
+		<div style="display: none;" id="sizes_<?= $item['id'] ?>" class="sizes_win"
+			 cat_id="<?= $item['id'] ?>" price="<?= $item['discount'] ?>" quantity="single"
 			 layout_mode="right">
-			<img onclick="$('#sizes_<?= $item['articul'] ?>').fadeOut();" class="close_png" src="/assets/Z95/images/d-t.gif">
 
+			<img onclick="$('#sizes_<?= $item['id'] ?>').fadeOut();" class="close_png" src="/assets/Z95/images/d-t.gif">
+			<!-- Форма покупки -->
 			<form autocomplete="off">
 				<table>
 					<tbody>
 					<tr>
 						<td id="leftPart" style="padding: 0px 10px 0px 0px; height: 320px;">
 							<div style="height:275px;">
-
 								<a href="<?=\Helpers\LocationUrls::location($this->request->getURI().'/'.$item['articul']); ?>">
 									<img class="preview" src="http://img<?= rand(0, 9) ?>.z95.ru/f/p/225x275/catalogue/<?= $item['id'] ?>/<?=$img?>">
 								</a>
@@ -25,53 +25,37 @@
 						</td>
 						<td id="rightPart" style="padding: 0px 10px 0px 0px;" part="">
 							<div class="warning hidden" id="warning" onclick="$(this).fadeOut();"></div>
-																	<span>
-							Выберите размер:
-						</span>
+							<span>Выберите размер:</span>
 							<br clear="all">
 
+							<?php if(isset($arraySize) && $arraySize != ''): ?>
 							<div class="small-sizes">
-								<div class="size">
-									<label>
-										<input type="checkbox"
-											   onclick="basket.getItems('sizes_<?= $item['articul'] ?>')"
-											   value="L"
+								<?php foreach($arraySize as $size): ?>
+									<div class="size">
+										<label>
+											<input type="checkbox"
+											   onclick="basket.getItems('sizes_<?= $item['id'] ?>')"
+											   value="<?=$size;?>"
 											   max_count="1" basket_count="0"><br>
-										L </label>
-								</div>
-								<div class="size">
-									<label>
-										<input type="checkbox"
-											   onclick="basket.getItems('sizes_<?= $item['articul'] ?>')"
-											   value="XL"
-											   max_count="1" basket_count="0"><br>
-										XL </label>
-								</div>
-								<div class="size">
-									<label>
-										<input type="checkbox"
-											   onclick="basket.getItems('sizes_<?= $item['articul'] ?>')"
-											   value="XXL"
-											   max_count="1" basket_count="0"><br>
-										XXL </label>
-								</div>
-
+											<?=$size;?>
+										</label>
+									</div>
+								<?php endforeach; ?>
 								<br clear="all"><br>
 
 								<div class="left">
 									<label>
-										<input onclick="basket.getItems('sizes_<?= $item['articul'] ?>')"
+										<input onclick="basket.getItems('sizes_<?= $item['id'] ?>')"
 											   type="checkbox" value="?"
 											   style="float: left; margin-right: 5px;">
 										Не уверен в размере — <br>хочу обсудить с менеджером</label>
 								</div>
-
 							</div>
+							<?php endif; ?>
 							<br clear="all">
-
 							<div class="add-button">
 								<button id="add" class="button" type="button" disabled="true"
-										onclick="basket.addToBasket('sizes_<?= $item['articul'] ?>', true);">
+										onclick="basket.addToBasket('sizes_<?= $item['id'] ?>', true);">
 									Добавить в корзину
 								</button>
 							</div>
@@ -80,74 +64,66 @@
 					</tbody>
 				</table>
 			</form>
+			<!-- /Форма покупки -->
 		</div>
-
 	</div>
-	<div class="photo_hover" onmouseover="catalogue.startSlideShow('slide_show_<?= $item['articul'] ?>');"
-		 onmouseout="catalogue.stopSlideShow('slide_show_<?= $item['articul'] ?>');">
+
+	<div class="photo_hover" onmouseover="catalogue.startSlideShow('slide_show_<?= $item['id'] ?>');"
+		 onmouseout="catalogue.stopSlideShow('slide_show_<?= $item['id'] ?>');">
 		<a href="<?=\Helpers\LocationUrls::location($this->request->getURI().'/'.$item['articul']); ?>">
-		<img src="/assets/Z95/images/d-t.gif" style="width:225px; height:275px;">
+			<img src="/assets/Z95/images/d-t.gif" style="width:225px; height:275px;">
 		</a>
 	</div>
-	<div style="z-index: 0; position: relative; width:225px; height:275px;"
-		 id="slide_show_<?= $item['articul'] ?>">
+
+	<div style="z-index: 0; position: relative; width:225px; height:275px;" id="slide_show_<?= $item['id'] ?>">
+		<?php if(isset($item['is_new']) && $item['is_new'] == 1): ?>
+			<img src="/assets/Z95/images/new_flag.png" class="new_flag">
+		<?php endif; ?>
 		<ul>
 			<li class="show">
 				<a href="<?=\Helpers\LocationUrls::location($this->request->getURI().'/'.$item['articul']); ?>">
-					<?php $img = array_values(json_decode($item['images'], true))[0]; ?>
-				<img class="preview" src="http://img<?= rand(0, 9) ?>.z95.ru/f/p/225x275/catalogue/<?= $item['id'] ?>/<?=$img?>">
+					<img class="preview" src="http://img<?= rand(0, 9) ?>.z95.ru/f/p/225x275/catalogue/<?= $item['id'] ?>/<?=$img?>">
 				</a>
 			</li>
 			<li class="">
-				<a href="/catalogue/<?= $item['articul'] ?>/">
-					<img class="preview add"
-						 src="http://img<?= rand(0, 9) ?>.z95.ru/f/p/225x275/catalogue/<?= $item['id'] ?>/<?= next(json_decode($item['images'], 1)) ?>">
+				<a href="<?=\Helpers\LocationUrls::location($this->request->getURI().'/'.$item['articul']); ?>">
+					<img class="preview add" src="http://img<?= rand(0, 9) ?>.z95.ru/f/p/225x275/catalogue/<?= $item['id'] ?>/<?= next(json_decode($item['preview'], true)) ?>">
 				</a>
 			</li>
 		</ul>
 	</div>
+
 	<div class="info">
 		<a href="<?=\Helpers\LocationUrls::location($this->request->getURI().'/'.$item['articul']); ?>">
-			<b><?= $item['brand_name'] ?></b>
+			<b><?= (isset($item['brand_name'])) ? $item['brand_name'] : ''?></b>
 			<?= $item['name'] ?> <span class="articul"><?= $item['articul'] ?></span>
 		</a>
-
+		<?php if(isset($arraySize) && !empty($arraySize)): ?>
 		<div class="sizes">
-
-			<?php
-				if($item['filter_size']==true){
-					$arraySize = (array) explode(',',$item['filter_size']);
-					uksort($arraySize, "\Helpers\CatalogueSizes::itemCompareSize");
-					echo '<span style="color:gray">Размеры:</span> <span class="size-letters">';
-					if(count($arraySize)>0){
-						echo implode('/', $arraySize);
-						echo '</span>';
-					}
-
-				}
-			?>
-
+			<span style="color:gray">Размеры:</span> <span class="size-letters">
+				<?php echo implode('/', $arraySize); ?>
+			</span>
 		</div>
-		<div class="price">
-			<?php  if ($item['discount'] == $item['price']) {
-				echo '<div>
-						 		&nbsp;' . $item['discount'] . '&nbsp;
-								<span class="sign">' . $shop['currency_symbol'] . '</span>
-							</div>';
+		<?php endif; ?>
 
-			} else {
-				echo '<div>
-								<s>' . $item['price'] . '</s>&nbsp;' . $item['discount'] . '&nbsp;
-								<span class="sign">' . $shop['currency_symbol'] . '</span>
-							</div>';
-			}
-			?>
-			<div id="sizes_button_<?= $item['articul'] ?>" class="sizes-button"
-				 onclick="basket.beforeAddToBasket('sizes_<?= $item['articul'] ?>');">
+		<div class="price">
+			<?php if($item['discount'] == $item['price']): ?>
+			<div>
+				&nbsp; <?=$item['discount']; ?> '&nbsp;
+				<span class="sign"><?=$shop['currency_symbol'];?></span>
+			</div>
+			<?php else :?>
+			<div>
+				<s><?=$item['price'];?></s>&nbsp;<?=$item['discount'];?>&nbsp;
+				<span class="sign"><?=$shop['currency_symbol'];?></span>
+			</div>
+			<?endif;?>
+			<div id="sizes_button_<?= $item['id'] ?>" class="sizes-button"
+				 onclick="basket.beforeAddToBasket('sizes_<?= $item['id'] ?>');">
 				&nbsp;
 			</div>
-			<img alt="Понравилось" id="fav_icon_<?= $item['articul'] ?>"
-				 onclick="catalogue.addFavorites(<?= $item['articul'] ?>, this)" src="/assets/Z95/images/d-t.gif"
+			<img alt="Понравилось" id="fav_icon_<?= $item['id'] ?>"
+				 onclick="catalogue.addFavorites(<?= $item['id'] ?>, this)" src="/assets/Z95/images/d-t.gif"
 				 class="like_off">
 		</div>
 	</div>

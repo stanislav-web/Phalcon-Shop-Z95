@@ -42,6 +42,18 @@ class Router extends \Phalcon\Mvc\Controller
 			$_rules	= false,
 
 			/**
+		 	 * Половая принадлежность
+		 	 * @var int
+		 	 */
+			$_gender	= 0,
+
+			/**
+		 	 * Фильтр. FALSE
+		 	 * @var array
+		 	 */
+			$_filter	= [],
+
+			/**
 			 * Категории: набор исключений (для виртуальных категорий)
 		 	 * @var array
 		 	 */
@@ -58,6 +70,12 @@ class Router extends \Phalcon\Mvc\Controller
 		 	 * @var \Breadcrumbs\Breadcrumbs
 		 	 */
 			$_breadcrumbs	=	false,
+
+			/**
+		 	 * Мастер переводов
+		 	 * @var \Phalcon\Translate\Adapter\NativeArray
+		 	 */
+			$_translate	=	false,
 
 			/**
 		 	 * Заголовок: состояние по умолчанию
@@ -142,7 +160,8 @@ class Router extends \Phalcon\Mvc\Controller
 	protected function setTitle($title)
 	{
 		$this->_title	=	$title;
-		$this->tag->prependTitle($title.' - ');
+		$this->tag->prependTitle($this->_translate[$title].' - ');
+
 		return $this;
 	}
 
@@ -158,6 +177,17 @@ class Router extends \Phalcon\Mvc\Controller
 	}
 
 	/**
+	 * Установка навигационной цепочки
+	 * @param \Phalcon\Translate\Adapter\NativeArray $translate
+	 * @return \Mappers\Router
+	 */
+	public function setTranslate(\Phalcon\Translate\Adapter\NativeArray $translate)
+	{
+		$this->_translate	=	$translate;
+		return $this;
+	}
+
+	/**
 	 * Установка шаблона для вывода
 	 * @param string $template
 	 * @return \Mappers\Router
@@ -166,6 +196,44 @@ class Router extends \Phalcon\Mvc\Controller
 	{
 		$this->_template	=	$template;
 		return $this;
+	}
+
+	/**
+	 * Определение ID пола
+	 * @param array $string
+	 * @return \Mappers\Router
+	 */
+	protected function setGender($array)
+	{
+		if(in_array('man', $array))
+			$this->_gender	=	1;
+		else if(in_array('men', $array))
+			$this->_gender	=	1;
+		else if(in_array('women', $array))
+			$this->_gender	=	2;
+		else if(in_array('woman', $array))
+			$this->_gender	=	2;
+		else if(in_array('kids', $array))
+			$this->_gender	=	3;
+		else
+			$this->_gender = 0;
+		return $this;
+	}
+
+	/**
+	 * Получить ID пола по алиасу
+	 * @param string $key
+	 * @return int key
+	 */
+	protected function getGender($key)
+	{
+		$gender = ['man' 	=> 1,
+				   'men' 	=> 1,
+				   'woman' 	=> 2,
+				   'women' 	=> 2,
+				   'kids' 	=> 3
+		];
+		return $gender[$key];
 	}
 
 	/**
@@ -227,6 +295,8 @@ class Router extends \Phalcon\Mvc\Controller
 
 		// определяю категорию отображения
 		// сначала проверяю ее в виртуальных, так как их меньше
+
+
 		$intersect = array_intersect($this->_rules->catalogue, array_values(array_flip($this->_exclude)));
 
 		if(isset($this->_exclude[$this->_rules->current])
@@ -238,36 +308,120 @@ class Router extends \Phalcon\Mvc\Controller
 				'name'	=>	$this->_exclude[$intersect[0]],
 				'alias'	=>	$intersect[0]
 			];
+
+
+			switch($category['alias'])
+			{
+				case 'new':			// Новые
+
+					$items	=	$this->_model->getProducts(
+						$this->_shop['price_id'], [
+							'prod.is_new'	=>	1
+						], 0, $this->_pages, ['prod.rating' => 'DESC'], true);
+
+				break;
+
+				case 'top':			// Топ 200
+
+					// проверяю на фильтры gender
+					$gender = end($this->_rules->catalogue);
+
+					if($gender != 'top') {
+						$this->_filter['prod.sex'] = $this->getGender($gender);
+						$this->setTitle(strtoupper($gender));
+					}
+
+					// гребу топ
+					$items	=	$this->_model->getTopProducts($this->_shop['price_id'], $this->_filter, 200, true);
+
+				break;
+
+				case 'favorites':	// Добавленные в избранное
+
+					$items	=	[];
+
+				break;
+
+				case 'sales':		// Распродажи
+
+					// проверяю на фильтры gender
+					$gender = end($this->_rules->catalogue);
+
+					if(!empty($this->_rules->query))
+						$this->_filter	=	$this->_rules->query;
+
+
+					if($gender != 'sales') {
+
+						$this->_filter['prod.sex'] = $this->getGender($gender);
+						$this->setTitle(strtoupper($gender));
+					}
+
+					// гребу выдачу
+
+					$items	=	$this->_model->getProducts($this->_shop['price_id'], $this->_filter, 0, 200, [], true);
+
+				break;
+				default :
+					case 'top';
+			}
+
+			// если есть в массиве счетчик удаляю его
+			if(isset($items['count']))
+				$count = array_pop($items);
 		}
 		else
 		{
 			// Обычная выдача категорий
 
-			// получаю параметры текущей категории
-			$category = $this->_collection[$this->_rules->current];
-
-			// ищем родителя категории, (уже сброшены, поэтому родитель всегда 0)
-			$parent = Catalogue::findInTree($this->_collection, 'alias', $this->_rules->catalogue[0]);
-
-			// добавляю в навигацию
-			$this->_breadcrumbs->add($parent[0]['name'], 'catalogue/'.$parent[0]['alias']);
-
-			//@todo Будет проверка на фильтры
+			// определяю какой пол должен быть показан
+			$this->setGender($this->_rules->catalogue);
 
 
-			$items	=	$this->_model->getProducts(
-								$this->_shop['price_id'],
-								['rel.category_id'	=>	$category['id']]
-								, 0, $this->_pages,
-								true);
+			// 	ищем родителя категории, (уже сброшены, поэтому родитель всегда 0)
+			$parent = Catalogue::findInTree($this->_collection, 'alias', $this->_rules->catalogue[0])[0];
 
-			$count = array_pop($items);
+			if($parent)
+			{
 
+				// поиск по полу и алиасу в массиве (findInTree2 продублировал)
+				if($this->_gender > 0) // поиск с полом
+					$category = Catalogue::findInTree2($this->_collection, 'alias', $this->_rules->catalogue[1], 'sex', $this->_gender)[0];
+				else
+					$category = Catalogue::findInTree($this->_collection, 'alias', $this->_rules->catalogue[1])[0];
 
-			// задаю шаблон для вывода результата выдачи
-			$this->setItems($items)->setTemplate('itemsline');
+				// непутевая ситуация... если нам выдало,
+				// что категория для выборки товара у нас называется как пол человека, мы должны теперь найти ее parent_id
+				// и узнать реальную картину, снова поискать в дереве и пересобрать
+				if($this->getGender($this->_rules->catalogue[1]))
+				{
+					// ущнаем ID родителя
+					$parent = Catalogue::findInTree($this->_collection, 'alias', $this->_rules->catalogue[0])[0];
+					// пол нам известен, id родителя тоже... теперь найдем id реальной категории и вперед на поиск
+
+					$category = Catalogue::findInTree2($this->_collection, 'parent_id', $parent['id'], 'sex', $this->_gender)[0];
+				}
+
+				// добавляю в навигацию
+				$this->_breadcrumbs->add($parent['name'], 'catalogue/'.$parent['alias']);
+
+				//@todo Будет проверка на фильтры
+
+				$items	=	$this->_model->getProducts(
+					$this->_shop['price_id'], [
+						'cat.id'			=>	$category['id'],
+						'cat.sex'			=>	($this->_gender > 0) ? $this->_gender : false,
+					], 0, $this->_pages, ['prod.rating' => 'DESC'], true);
+
+				$count = array_pop($items);
+			}
+			else // не найдена такая категория вообще
+				return $this->view->render('error', 'show404')->pick("error/show404");
+
 		}
 
+		// задаю шаблон для вывода результата выдачи
+		$this->setItems($items)->setTemplate('itemsline');
 
 		// Устанавливаю мета данные
 		$this->setTitle($category['name']);

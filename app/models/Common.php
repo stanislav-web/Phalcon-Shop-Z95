@@ -124,7 +124,7 @@
 
 			if($result === null)
 			{
-				$sql = "SELECT 	".Categories::TABLE.".id AS id, ".Categories::TABLE.".parent_id AS parent_id,
+				$sql = "SELECT 	".Categories::TABLE.".id AS id, ".Categories::TABLE.".parent_id AS parent_id, sex,
 							".Categories::TABLE.".name AS name, ".Categories::TABLE.".alias AS alias, ".self::TABLE_CAT_SHOP_REL.".sort AS sort,
 							".Categories::TABLE.".description AS description
 							FROM  ".self::TABLE_CAT_SHOP_REL."
@@ -134,7 +134,6 @@
 									&& ".self::TABLE_CAT_SHOP_REL.".category_parent_id = ".Categories::TABLE.".parent_id
 								)
 							WHERE ".self::TABLE_CAT_SHOP_REL.".shop_id = ".$shop_id;
-
 
 				$result = $this->_db->query($sql)->fetchAll();
 

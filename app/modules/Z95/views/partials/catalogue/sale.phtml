@@ -1,29 +1,29 @@
 <?php
-	$genderList[1] = 'man';
-	$genderList[2] = 'woman';
+	$genderList[1]	=	'man';
+	$genderList[2]	=	'woman';
 ?>
 <div class="index-top-categories">
-<?php if(!empty($salesGroup)): ?>
-	<?php foreach($salesGroup as $gender => $values): $opacity = 1;?>
-		<div class="category id_<?=$gender;?>">
-			<h2><?=($gender == 1) ? 'Мужчинам' : 'Женщинам'?><span class="count"></span></h2>
-			<div class="discount-tiles">
-				<?php $values = array_reverse($values); foreach($values as $sales): ?>
-					<?php if($sales['percent'] != 100): ?>
-						<a href="<?=\Helpers\LocationUrls::location('/catalogue/sale/'.$genderList[$gender].'?sale='.$sales['percent']); ?>" class="tile" style="opacity: <?=$opacity;?>">
-							<div class="value"><?=$sales['percent'];?>%</div>
-							<div class="count">наименований — <span><?=$sales['count'];?></span></div>
-						</a>
-					<?php endif; ?>
-				<? $opacity = sprintf("%f", ($opacity - 0.15)); endforeach; ?>
-				<a href="<?=\Helpers\LocationUrls::location('/catalogue/sale/'.$genderList[$gender]); ?>" class="tile" style="opacity: <?=$opacity;?>">
-					<div class="value">Все</div>
-					<div class="count">наименований — <span><?=$values[0]['count'];?></span></div>
-				</a>
+	<?php if(!empty($salesGroup)): ?>
+		<?php foreach(array_reverse($salesGroup, true) as $gender => $values): $opacity = 1;?>
+			<div class="category id_<?=$gender;?>">
+				<h2><?=($gender == 1) ? 'Мужчинам' : 'Женщинам'?><span class="count"></span></h2>
+				<div class="discount-tiles">
+					<?php $values = array_reverse($values); foreach($values as $sales): ?>
+						<?php if($sales['percent'] != 100): ?>
+							<a href="<?=\Helpers\LocationUrls::location('/catalogue/sales/'.$genderList[$gender].'?percent='.$sales['percent']); ?>" class="tile" style="opacity: <?=$opacity;?>">
+								<div class="value"><?=$sales['percent'];?>%</div>
+								<div class="count">наименований — <span><?=$sales['count'];?></span></div>
+							</a>
+						<?php endif; ?>
+						<? $opacity = sprintf("%f", ($opacity - 0.1)); endforeach; ?>
+					<a href="<?=\Helpers\LocationUrls::location('/catalogue/sales?percent='.$values[0]['percent']); ?>" class="tile" style="opacity: <?=$opacity;?>">
+						<div class="value">Все</div>
+						<div class="count">наименований — <span><?=$values[0]['count'];?></span></div>
+					</a>
+				</div>
 			</div>
-		</div>
-	<?php endforeach; ?>
-<?php else: ?>
-	Распродаж нет
-<?php endif; ?>
+		<?php endforeach; ?>
+	<?php else: ?>
+		Распродаж нет
+	<?php endif; ?>
 </div>

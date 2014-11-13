@@ -8,8 +8,12 @@
 <?php
 	$totalCount = 0;
 	foreach($basket['items'] as $counter => $item) {
-		foreach($item['sizes'] as $size => $count) {
-			$totalCount = $totalCount + $count;
+
+		if(!empty($item))
+		{
+			foreach($item['sizes'] as $size => $count) {
+				$totalCount = ($totalCount+$count);
+			}
 		}
 	}
 ?>
@@ -122,7 +126,7 @@
 		<tr>
 			<td align="center" colspan="4">
 				<button onclick="$('#SMALL_BASKET').hide();" class="button">Продолжить покупки</button>
-				<button onclick="window.location.href = '/basket/';" class="button">Перейти в корзину</button>
+				<button onclick="window.location.href = '/customer/cart';" class="button">Перейти в корзину</button>
 			</td>
 		</tr>
 	</tbody>

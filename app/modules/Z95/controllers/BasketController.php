@@ -54,7 +54,7 @@
 			// check available discounts
 
 			$this->view->setVars(array('basket' => $this->session->get('basket'),
-									   'discounts' => $this->_discounts
+									   'discounts' => $this->_shop['discounts']
 									));
 
 
@@ -185,12 +185,12 @@
 //		$this->view->disable();
 			if($mode != 'small') {
 				ob_start($this->view->partial('partials/basket/getBasket', array('basket' => $this->session->get('basket'),
-																				 'discounts' => $this->_discounts
+																				 'discounts' => $this->_shop['discounts']
 																			)));
 				ob_end_flush();
 			} else {
 				ob_start($this->view->partial('partials/basket/get', array('basket' => $this->session->get('basket'),
-																		   'discounts' => $this->_discounts
+																		   'discounts' => $this->_shop['discounts']
 						)));
 				ob_end_flush();
 			}
