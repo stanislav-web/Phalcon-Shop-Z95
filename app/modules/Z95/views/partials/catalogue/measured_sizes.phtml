@@ -1,5 +1,5 @@
 <? if(isset($item['tags']) && count($item['tags'])): ?>
-	<?php $measures = \Helpers\CatalogueSizes::itemMeasures($item['tags']['dimensions']); ?>
+	<?php $measures = Helpers\Catalogue::itemMeasures($item['tags']['dimensions']); ?>
 	<div class="measured_sizes">
 		<h4><?=$viewTranslate['SIZES_IN_SM']?></h4>
 		<!-- Sizes price -->
@@ -34,14 +34,14 @@
 			});
 		</script>
 		<!-- Measure image -->
-		<?php $categoryDimensions = \Helpers\CatalogueSizes::catalogueDimensionsImages($item['category_id']);
+		<?php $categoryDimensions = Helpers\Catalogue::catalogueDimensionsImages($item['category_id']);
 			if(isset($item['category_id']) && isset($categoryDimensions)): ?>
 			<h4>
 				<br>
 				<?=$viewTranslate['HOW_WE_MEASURE']?> <span onclick="$('#sh').toggle(); $(this).html(($(this).html() == '<?=$viewTranslate['SHOW']?>' ? '<?=$viewTranslate['HIDE']?>' : '<?=$viewTranslate['SHOW']?>'));"><?=$viewTranslate['SHOW']?></span></h4>
 			<table id="sh" style="display: none;">
 				<?php foreach($categoryDimensions as $img): ?>
-					<?php $image = \Helpers\CatalogueSizes::dimensionsImages($img); ?>
+					<?php $image = Helpers\Catalogue::dimensionsImages($img); ?>
 					<?php if(!empty($image)): ?>
 						<tr>
 							<td>

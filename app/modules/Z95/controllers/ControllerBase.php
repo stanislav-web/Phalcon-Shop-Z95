@@ -17,7 +17,6 @@
 	 * @var $this->_translate   доступ к переводчику
 	 * @var $this->_shop        параметры текущего магазина
 	 * @var $this->_shopCategories        все категории магазина
-	 * @var $this->_helper      помошник для каталога
 	 *
 	 * @package Shop
 	 * @subpackage Controllers
@@ -44,12 +43,6 @@
 			 * @var object Phalcon\Config()
 			 */
 			$_config        = null,
-
-			/**
-			 * Объект помощника
-			 * @var object Helpers\CatalogueTags()
-			 */
-			$_helper        = null,
 
 			/**
 			 * Объект Кэширования из Di
@@ -79,13 +72,7 @@
 		 * По умолчанию, хлебные крошки
 		 * @var null
 		 */
-		$_breadcrumbs = null,
-
-		/**
-		 * скидки
-		 * @var null
-		 */
-		$_discounts = null;
+		$_breadcrumbs = null;
 
 	public
 
@@ -190,22 +177,19 @@
 	{
 		// Загрузка конфигураций
 
-			$this->_config	=	$this->di->get('config');
-			$this->_helper	=	new \Helpers\CatalogueTags();
+		$this->_config	=	$this->di->get('config');
 
-			// Загрузка локалей и навигации
+		// Загрузка локалей
 
-			$this->_breadcrumbs = $this->di->get('breadcrumbs');
+		$this->loadMainTrans();
 
-			$this->loadMainTrans();
-
-			// Инициализация моделей (объекты доступны в контроллерах и views)
+		// Инициализация моделей (объекты доступны в контроллерах и views)
 
 		$this->commonModel      =   new \Models\Common();
 		$this->shopModel        =   new \Models\Shops();
 		$this->productsModel    =   new \Models\Products();
 		$this->categoriesModel  =   new \Models\Categories();
-		$this->brandsModel  =   new \Models\Brands();
+		$this->brandsModel  	=   new \Models\Brands();
 		$this->pricesModel      =   new \Models\Prices();
 		$this->tagsModel      	=   new \Models\Tags();
 		$this->bannersModel     =   new \Models\Banners();
@@ -220,9 +204,7 @@
 		// Инициализация навигации
 
 		$nav = $this->di->get('navigation');
-		
-		// получение скидок магазина
-		$this->_discounts = $this->shopModel->checkDiscounts($this->_shop);
+		$this->_breadcrumbs = $this->di->get('breadcrumbs');
 
 		// В конце запись переменных для шаблонов
 		$this->view->setVars([
@@ -237,22 +219,27 @@
 
 	/**
 	 * Событие после выполнения всего роута
+	 * Срабатывает, когда фреймворку известен только роутинг
+	 * @param \Phalcon\Mvc\Dispatcher $dispatcher
+	 * @return null
 	 */
 	public function afterExecuteRoute(\Phalcon\Mvc\Dispatcher $dispatcher)
 	{
 		// Ставлю подхват хлебных крошек, когда уже произошел роутинг в контроллерах и добавлен путь в ->add()
 		$this->view->setVar('breadcrumbs', $this->_breadcrumbs->generate()); // крошки
-
 	}
 
 	/**
-	 * Страница для кэша
+	 * Генерация ключа для кэширование views
 	 * @param $method Метод action из контроллера
 	 * @return string
 	 */
 	public function cachePage($method)
 	{
 		if($this->_shop)
-			return strtolower($this->_shop->code.'-'.$this->_lang.'-'.($this->request->getURI() == '/') ? '_' : $this->request->getURI().'-'.substr($method, 0, -6).'.cache');
+		{
+			$md5 = strtolower($this->_shop->code.'-'.$this->_lang.'-'.($this->request->getURI() == '/') ? '_' : $this->request->getURI().'-'.substr($method, 0, -6));
+			return $md5.'.cache';
+		}
 	}
 }

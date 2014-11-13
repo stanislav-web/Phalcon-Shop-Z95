@@ -1,5 +1,7 @@
 <?php
 	namespace Modules\Z95\Controllers;
+	use \Helpers;
+
 	/**
 	 * Class IndexController Главная страница и статика
 	 *
@@ -77,8 +79,8 @@
 				// вывожу по умолчанию страницу каталога c вложением subcategories
 				$this->view->setVars([
 					'banners'			=>	$banners,
-					'tree'				=>	$this->_helper->categoriesToTree($this->_shopCategories, 0, true),
-					'subcategories'		=>	$this->_helper->arrayToAssoc($subCategories, 'id'),
+					'tree'				=>	Helpers\Catalogue::categoriesToTree($this->_shopCategories, 0, true),
+					'subcategories'		=>	Helpers\Catalogue::arrayToAssoc($subCategories, 'id'),
 					'title'				=>	$title,
 				]);
 			}
@@ -106,31 +108,31 @@
 				return $this->response->setHeader("Location", $referer);
 			else
 				return $this->dispatcher->forward(['controller' => 'index', 'action' => 'index']);
-		}
-
-		public function aboutAction()
-		{
-
-		}
-
-		public function discountsAction()
-		{
-
-		}
-
-		public function deliveryAction()
-		{
-
-		}
-
-		public function returnAction()
-		{
-
-		}
-
-		public function optAction()
-		{
-
-		}
 	}
+
+	public function aboutAction()
+	{
+
+	}
+
+	public function discountsAction()
+	{
+
+	}
+
+	public function deliveryAction()
+	{
+
+	}
+
+	public function returnAction()
+	{
+
+	}
+
+	public function optAction()
+	{
+
+	}
+}
 

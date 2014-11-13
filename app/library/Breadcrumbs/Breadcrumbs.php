@@ -9,24 +9,32 @@ class Breadcrumbs {
 	 * Набор для хранения элементов
 	 * @var
 	 */
-	private $_elements;
+	private $_elements,
+
+
+		/**
+		 * Набор для хранения элементов
+		 * @var
+		 */
+		$_request;
 
 	/**
 	 * Принимаю по умолчанию параметры главной страницы
 	 */
 	public function __construct()
 	{
+		$this->_request	=	new Request();
 		// Ставлю началом в цепочке главную страницу
 
 		$this->_elements[] = [
 			'active' => false,
-			'link'   => '/',
+			'link'   => '/'.$this->_request->getHttpHost(),
 			'text'   => 'Главная',
 		];
-		if((new Request())->getURI() != '/catalogue')
+		if($this->_request->getURI() != '/catalogue')
 			$this->_elements[] = [
 				'active' => false,
-				'link'   => 'catalogue',
+				'link'   => '/'.$this->_request->getHttpHost().'/catalogue',
 				'text'   => 'Каталог',
 			];
 	}
@@ -41,9 +49,11 @@ class Breadcrumbs {
 	{
 		$this->_elements[] = [
 			'active' => false,
-			'link'   => '/' . $link,
+			'link'   => '/'.$this->_request->getHttpHost().'/'.$link,
 			'text'   => $caption,
 		];
+
+		return $this;
 	}
 
 	/**

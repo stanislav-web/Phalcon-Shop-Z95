@@ -30,14 +30,14 @@
 		'module'    	=>  $module,
 		'namespace' 	=> 'Modules\\'.$module.'\Controllers\\',
 		'controller'    => 'catalogue',
-		'action'        => 'top'
+		'action'        => 'index'
 	]);
 
 	$router->add("/catalogue/new/:params", [
 		'module'    	=>  $module,
 		'namespace' 	=> 'Modules\\'.$module.'\Controllers\\',
 		'controller'    => 'catalogue',
-		'action'        => 'new'
+		'action'        => 'index'
 	]);
 
 	$router->add("/catalogue", [

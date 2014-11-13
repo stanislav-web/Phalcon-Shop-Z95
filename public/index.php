@@ -54,7 +54,6 @@ try {
 			'path'      => APP_PATH.'/modules/'.$module.'/Module.php',
 		],
 	]);
-
 	// Обработка запроса
 	echo $application->handle()->getContent();
 }

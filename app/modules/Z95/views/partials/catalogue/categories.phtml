@@ -4,7 +4,7 @@
 		<?php if(!empty($subcategories)): ?>
 			<?php foreach($tree as $main_category_id => $main_category): // прохожусь сначала по дереву категорий ?>
 				<?php if(isset($main_category['childs']) && !empty($main_category['childs'])): ?>
-					<?php $sub_categories_tree = Helpers\CatalogueTags::arrayToAssoc($main_category['childs'], 'id'); // упорядочиваю дочерние ?>
+					<?php $sub_categories_tree = Helpers\Catalogue::arrayToAssoc($main_category['childs'], 'id'); // упорядочиваю дочерние ?>
 					<?php foreach($sub_categories_tree as $sub_category_id => $category):?>
 						<?php if(isset($subcategories[$sub_category_id])): ?>
 							<?php

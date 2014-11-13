@@ -1,6 +1,5 @@
 <?php
 namespace Modules\Z95\Controllers;
-use \Helpers\Catalogue;
 
 /**
  * Class CatalogueController Каталог (Карточка товара, вывод из категорий)
@@ -23,6 +22,8 @@ use \Helpers\Catalogue;
  * @var $this->request      информация об HTTP запросах
  * @var $this->router       посмотреть параметры текущего роута, настроить роуты
  *
+ * @var \Helpers\CatalogueTags::catalogueNavTree($request) помошник для построения дерева навигации
+ *
  * @package Shop
  * @subpackage Controllers
  */
@@ -32,7 +33,7 @@ class CatalogueController extends ControllerBase
 	private
 
 		/**
-		 * Роутинг в виде дерева
+		 * Все категории каталога
 		 * @var bool
 		 */
 		$_routeTree = false,
@@ -56,6 +57,12 @@ class CatalogueController extends ControllerBase
 		$requestUri			=	false,
 
 		/**
+		 * Заголовок по умолчанию, если не присваивает в категориях и товарах
+		 * @var string
+		 */
+		$title				=	'',
+
+		/**
 		 * Вывод вещей на страницу
 		 * @var int
 		 */
@@ -71,19 +78,31 @@ class CatalogueController extends ControllerBase
 	 */
 	public function initialize()
 	{
-		parent::initialize();
-
 		// Загружаю локализацию для контроллера
 		$this->loadCustomTrans('catalogue');
+		parent::initialize();
+		//Обработка AJAX запросов
+		if ($this->request->isAjax() == true) {
 
-		// текущий request_uri
+			if($this->request->get('ajax')){
+				$method = $this->request->get('ajax');
+			}
+			$this->view->setRenderLevel(\Phalcon\Mvc\View::LEVEL_NO_RENDER);
+			$result = $this->{$method}();
+			$result = json_encode($result);
+			exit($result);
+		}
 		$this->requestUri	=	$this->request->getURI();
-
-		// Заголовок страницы по умолчанию
+		// Заголовок страницы
 		$this->tag->setTitle($this->_shop['title']);
-
 		// Получаю баннер для страницы
 		$this->banners = $this->bannersModel->getBanners($this->_shop['id'], true);
+		$path = parse_url($this->request->getURI(), PHP_URL_PATH);
+		$query = parse_url($this->request->getURI(), PHP_URL_PATH);
+		if(in_array($path, $this->virtuals) && !empty($query))
+		{
+			$this->requestUri = false;
+		}
 	}
 
 	/**
@@ -91,19 +110,18 @@ class CatalogueController extends ControllerBase
 	 * Должна быть пустая так как она отвечает за оборот экшенов
 	 * и служит главным layout для каталога
  	 *
+ 	 * @see /catalogue/sale
  	 * @access public
  	 * @author Stanislav WEB
- 	 * @return null
+ 	 * @return \Phalcon\Mvc\View -> render()
  	*/
 	public function indexAction()
 	{
-		if(isset($this->requestUri)) $action = Catalogue::catalogueRouteRules($this->requestUri);
-
+		if(isset($this->requestUri)) $action = $this->_helper->catalogueRouteTree($this->requestUri, ['catalogue']);
 		if(isset($action->catalogue))
 		{
 			// если подобран роутинг каталога, считаем количество запрошенных категорий, [0] в конце - каталог всегда первый в URL
-			$this->currentCategory = Catalogue::findInTree($this->_shopCategories, 'alias', $action->catalogue[0]);
-
+			$this->currentCategory = $this->_helper->findInTree($this->_shopCategories, 'alias', $action->catalogue[0]);
 			if(sizeof($action->catalogue) == 1 && isset($this->currentCategory[0]))
 			{
 				$this->currentCategory = current($this->currentCategory);
@@ -112,21 +130,29 @@ class CatalogueController extends ControllerBase
 			}
 			else
 			{
-				// ВСЕ что сюда переходит и есть выдача товаров
+				//Получаем массив параметров для фильтрации
+				$filter = $this->categoriesModel->parseRemap($this->_shop['id'], $this->request->getQuery(), $this->_onpage);
 
-				var_dump($action);
-				exit('Response');
+				//Проверка на вызов метода.
+				if(isset($filter['category']) || count($filter)>4){
+					//Вывод страницы категории
+					$this->_lineItems($filter);
+				}
+			}
+		}
+		else
+		{
+
+			//Получаем массив параметров для фильтрации
+			$filter = $this->categoriesModel->parseRemap($this->_shop['id'], $this->request->getQuery(), $this->_onpage);
+			//Проверка на вызов метода.
+			if(isset($filter['category']) || count($filter)>4){
+				//Вывод страницы категории
+				$this->_lineItems($filter);
 			}
 		}
 	}
 
-	/**
-	 * itemAction() Карточка товара
-	 *
-	 * @access public
-	 * @author vavas , Stanislav WEB
-	 * @return null
-	 */
 	public function itemAction()
 	{
 		// проверка страницы в кэше
@@ -141,7 +167,7 @@ class CatalogueController extends ControllerBase
 			if($this->request->isGet())
 			{
 				// Содержимое контроллера для формирования выдачи
-				$this->_routeTree = Catalogue::catalogueRouteTree($this->request->getURI(), [
+				$this->_routeTree = $this->_helper->catalogueRouteTree($this->request->getURI(), [
 						'catalogue'
 					]);
 
@@ -149,11 +175,7 @@ class CatalogueController extends ControllerBase
 				// /catalogue/88828
 				// /catalogue/man/winter-fall/88828
 
-				$articul 	= end($this->_routeTree->catalogue);
-
-				// получаю категорию из которой был получен этот товар (точнее из которой на него попали)
-				$alias	=	$this->_routeTree->catalogue[count($this->_routeTree->catalogue)-2];
-				$child = Catalogue::findInTree($this->_shopCategories, 'alias', $alias);
+				$articul = end($this->_routeTree->catalogue);
 
 				$item = $this->productsModel->getProductCard($articul, $this->_shop['price_id'], true);
 
@@ -164,30 +186,13 @@ class CatalogueController extends ControllerBase
 					$title = $item['product_name'].' '.$item['brand'];
 					$this->tag->prependTitle($title.' - ');
 
-					if(!empty($child))
-					{
-						//@modify Stanislav WEB цепочка крошек до карточки товаров
-
-						// если найдена дочерняя категория товара, ищем ее родителя
-						$parent = Catalogue::findInTree($this->_shopCategories, 'id', $child[0]['parent_id']);
-
-						$this->_breadcrumbs
-							// добавляю категорию подкатегории
-							->add($parent[0]['name'], 'catalogue/'.$parent[0]['alias'])
-
-							// добавляю категорию товара
-							->add($child[0]['name'], 'catalogue/'.$parent[0]['alias'].'/'.$child[0]['alias'])
-
-							// добавляю карточку товара в цепочку навигации
-							->add($title, $this->request->getURI());
-					}
+					// Добавляю путь в цепочку навигации
+					$this->_breadcrumbs->add($title, $this->request->getURI());
 
 					// Получаю размеры
 					$sizes = $this->tagsModel->getSizes($item['product_id'], true);
 
-					// Определение покупаемых товаров
 					$buyModel 	=	(new \Models\BuyTogether())->get(['top_ten'], ['id' => $item['product_id']], [], null, true);
-
 					if(!empty($buyModel))
 					{
 						// получаю покупаемые с товаром вещи
@@ -204,7 +209,7 @@ class CatalogueController extends ControllerBase
 						'item' 		=>  $item,
 						'sizes' 	=>  $sizes,
 						'title' 	=>  $title,
-						"discounts"	=>	(!empty($this->_shop['discounts'])) ? json_decode($this->_shop['discounts'], true) : ''
+						"discounts"	=>	$this->_discounts
 					]);
 				}
 				$this->view->setVar("categories" , $this->commonModel->categoriesToTree($this->_shopCategories));
@@ -224,7 +229,7 @@ class CatalogueController extends ControllerBase
 	public function brandsAction(){
 		$this->tag->appendTitle(' - '.$this->_translate['ALL_BRANDS']);
 
-		$arrayBrand = Catalogue::arrayToAssoc((array)$this->brandsModel->getAllBrands($this->_shop['id']), 'name');
+		$arrayBrand = $this->_helper->arrayToAssoc((array)$this->brandsModel->getAllBrands($this->_shop['id']), 'name');
 		$result = '';
 
 		foreach($arrayBrand as $name => $infoBrand){
@@ -309,7 +314,7 @@ class CatalogueController extends ControllerBase
 			$this->_breadcrumbs->add($title, $this->request->getURI());
 
 			// получаю колическво товаров по скидкам sex = 1,2....
-			$salesGroup = Catalogue::groupArray(
+			$salesGroup = $this->_helper->groupArray(
 				$this->pricesModel->countProductsBySales($this->_shop['price_id'], [0,1,2,3], true),
 				'sex');
 
@@ -399,8 +404,8 @@ class CatalogueController extends ControllerBase
 			$this->view->setVars([
 				'template'			=>	'categories',
 				'banners'			=>	$this->banners,
-				'tree'				=>	Catalogue::categoriesToTree($this->_shopCategories, 0, true),
-				'subcategories'		=>	Catalogue::arrayToAssoc($subCategories, 'id'),
+				'tree'				=>	$this->_helper->categoriesToTree($this->_shopCategories, 0, true),
+				'subcategories'		=>	$this->_helper->arrayToAssoc($subCategories, 'id'),
 				'title'				=>	$title,
 			]);
 
@@ -447,8 +452,8 @@ class CatalogueController extends ControllerBase
 				$this->view->setVars([
 					'template'			=>	'categories',
 					'banners'			=>	$this->banners,
-					'tree'				=>	Catalogue::categoriesToTree($this->_shopCategories, 0, true),
-					'subcategories'		=>	Catalogue::arrayToAssoc($subCategories, 'id'),
+					'tree'				=>	$this->_helper->categoriesToTree($this->_shopCategories, 0, true),
+					'subcategories'		=>	$this->_helper->arrayToAssoc($subCategories, 'id'),
 					'title'				=>	$title,
 				]);
 			}
@@ -656,7 +661,7 @@ class CatalogueController extends ControllerBase
 			'title'		=> $pagetitle,
 			'items'      => $items,
 			'pagination' => $itemLine,
-			'itemsline' => array_keys(Catalogue::arrayToAssoc($items,'id')),
+			'itemsline' => array_keys($this->_helper->arrayToAssoc($items,'id')),
 		]);
 
 		$this->view->pick("catalogue/index");

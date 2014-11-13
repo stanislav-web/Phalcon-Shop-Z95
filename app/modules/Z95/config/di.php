@@ -134,7 +134,7 @@
 
 	// Компонент DB. Регистрирую коннект к MySQL
 
-	$di->setShared('db', function() {
+	$di->set('db', function() {
 
 		return new \Phalcon\Db\Adapter\Pdo\Mysql([
 			"host"      => 	$this->_config['database']['host'],

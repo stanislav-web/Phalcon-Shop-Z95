@@ -41,7 +41,7 @@
 			<?php if(!empty($subcategories)): ?>
 				<?php foreach($tree as $main_category_id => $main_category): // прохожусь сначала по дереву категорий ?>
 					<?php if(isset($main_category['childs']) && !empty($main_category['childs'])): ?>
-						<?php $sub_categories_tree = Helpers\CatalogueTags::arrayToAssoc($main_category['childs'], 'id'); // упорядочиваю дочерние ?>
+						<?php $sub_categories_tree = Helpers\Catalogue::arrayToAssoc($main_category['childs'], 'id'); // упорядочиваю дочерние ?>
 						<?php foreach($sub_categories_tree as $sub_category_id => $category):?>
 							<?php if(isset($subcategories[$sub_category_id])): ?>
 								<?php
@@ -49,12 +49,12 @@
 								$images 	= json_decode($subcategories[$sub_category_id]['img'], true);
 								$product_id	=	min(array_keys($images));
 								?>
-								<div class="catalogue-category" onclick="window.location.href= '<?=\Helpers\LocationUrls::location('/catalogue/'.$subcategories[$sub_category_id]['parent_alias'].'/'.$subcategories[$sub_category_id]['alias']);?>'">
+								<div class="catalogue-category" onclick="window.location.href= '<?=Helpers\LocationUrls::location('/catalogue/'.$subcategories[$sub_category_id]['parent_alias'].'/'.$subcategories[$sub_category_id]['alias']);?>'">
 									<div class="leader">
 										<img class="image" src="http://img<?php echo rand(0,9); ?>.z95.ru/f/p/c_0_100_300_400/sep-tilt_shift/600x600/catalogue/<?=$product_id;?>/<?=$images[$product_id][1];?>">
 									</div>
 									<div class="title">
-										<a href="<?=\Helpers\LocationUrls::location('/catalogue/'.$subcategories[$sub_category_id]['parent_alias'].'/'.$subcategories[$sub_category_id]['alias']);?>"><?=$subcategories[$sub_category_id]['name'];?></a>
+										<a href="<?=Helpers\LocationUrls::location('/catalogue/'.$subcategories[$sub_category_id]['parent_alias'].'/'.$subcategories[$sub_category_id]['alias']);?>"><?=$subcategories[$sub_category_id]['name'];?></a>
 										<span class="count"><?=$subcategories[$sub_category_id]['count_prod'];?></span>
 									</div>
 								</div>
