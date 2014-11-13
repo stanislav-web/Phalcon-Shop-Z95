@@ -31,7 +31,7 @@
 		<!-- /Block tags module -->
 
 		<!-- Render content -->
-		<?php $this->partial('partials/catalogue/'.$template); ?>
+		<?php if($template) $this->partial('partials/catalogue/'.$template); ?>
 		<!-- /Render content -->
 	</div>
 </div>

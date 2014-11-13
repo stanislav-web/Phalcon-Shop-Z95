@@ -25,9 +25,13 @@
 		],
 		// Настройка директорий
 		'application' => [
+			'controllersDir' => APP_PATH.'/modules/'.self::MODULE.'/controllers',
+			'modelsDir' 	 => APP_PATH.'/models',
+			'helpersDir' 	 => APP_PATH.'/helpers',
 			'messagesDir'    => APP_PATH.'/modules/'.self::MODULE.'/messages',
 			'viewsDir'       => APP_PATH.'/modules/'.self::MODULE.'/views',
 			'cacheDir'       => APP_PATH.'/modules/'.self::MODULE.'/cache',
+			'mappersDir'     => APP_PATH.'/modules/'.self::MODULE.'/mappers',
 			'baseUri'        => '/',
 		],
 	];

@@ -43,9 +43,10 @@ class Z95 implements ModuleDefinitionInterface
 		$loader = new Loader();
 
 		$loader->registerNamespaces([
-			'Modules\Z95\Controllers' 	=> APP_PATH.'/modules/'.self::MODULE.'/controllers/',
-			'Models'      				=> APP_PATH.'/models/',
-			'Helpers'      				=> APP_PATH.'/helpers/',
+			'Modules\Z95\Controllers' 	=> 	$this->_config['application']['controllersDir'],
+			'Models'      				=> 	$this->_config['application']['modelsDir'],
+			'Helpers'      				=> 	$this->_config['application']['helpersDir'],
+			'Mappers'					=>	$this->_config['application']['mappersDir'],
 		])
 		->registerDirs([
 			APP_PATH.'/library/',

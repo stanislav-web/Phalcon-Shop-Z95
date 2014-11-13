@@ -144,7 +144,8 @@ class Products extends \Phalcon\Mvc\Model
 		if($cache && $this->_cache)
 		{
 			$backendCache = $this->getDI()->get('backendCache');
-			$result = $backendCache->get(self::TABLE.'-'.$price_id.'-'.join('_',$condition).'-'.$offset.'-'.$limit.'.cache');
+			;
+			$result = $backendCache->get(md5(self::TABLE.$price_id.join('_',$condition).$offset.$limit).'.cache');
 		}
 
 		if($result === null)
@@ -175,15 +176,16 @@ class Products extends \Phalcon\Mvc\Model
 
 			$sql .= "LIMIT ".$offset.",  ".$limit;
 
+
 			$result = $this->_db->query($sql)->fetchAll();
 
 			$sql = "SELECT FOUND_ROWS() as `count`";
 
 			$found = $this->_db->query($sql)->fetch();
-			$result['count'] = $found->count;
+			$result['count'] = $found['count'];
 
 			// Сохраняем запрос в кэше
-			if($cache && $this->_cache) $backendCache->save(self::TABLE.'-'.$price_id.'-'.join('_',$condition).'-'.$offset.'-'.$limit.'.cache', $result);
+			if($cache && $this->_cache) $backendCache->save(md5(self::TABLE.$price_id.join('_',$condition).$offset.$limit).'.cache', $result);
 		}
 		return $result;
 	}

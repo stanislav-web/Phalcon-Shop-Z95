@@ -1,6 +1,7 @@
 <?php
 namespace Modules\Z95\Controllers;
-use \Helpers\Catalogue;
+use \Helpers\Catalogue,
+	\Mappers\Router;
 
 /**
  * Class CatalogueController Каталог (Карточка товара, вывод из категорий)
@@ -53,16 +54,7 @@ class CatalogueController extends ControllerBase
 		 * Текущий PATH из Url
 		 * @var bool
 		 */
-		$requestUri			=	false,
-
-		/**
-		 * Вывод вещей на страницу
-		 * @var int
-		 */
-		$_onpage			=	100,
-
-		$virtuals			=	[];
-
+		$requestUri			=	false;
 
 	/**
 	 * initialize() Инициализирую конструктор
@@ -113,9 +105,12 @@ class CatalogueController extends ControllerBase
 			else
 			{
 				// ВСЕ что сюда переходит и есть выдача товаров
-
-				var_dump($action);
-				exit('Response');
+				(new Router())	->setRules($action)
+								->setShop($this->_shop)
+								->setCollection(Catalogue::arrayToAssoc($this->_shopCategories, 'alias'))
+								->setExclude(['top' => 'ТОП 200', 'favorites' => 'Понравилось', 'new' => 'Новинки', 'sale' => 'Распродажа'])
+								->setNav($this->_breadcrumbs)
+								->render($this->productsModel);
 			}
 		}
 	}
@@ -124,7 +119,7 @@ class CatalogueController extends ControllerBase
 	 * itemAction() Карточка товара
 	 *
 	 * @access public
-	 * @author vavas , Stanislav WEB
+	 * @author vavas , Stanislav §
 	 * @return null
 	 */
 	public function itemAction()

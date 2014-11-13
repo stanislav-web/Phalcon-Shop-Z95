@@ -1,27 +1,28 @@
 <?php
 	//@modify Stanislav добавление переменных в partial  шаблон
-	$this->partial('partials/catalogue/filters', ['pagination' => $pagination]);
-	$this->partial('partials/catalogue/sortbar', [
-		'pagination' => $pagination,
-		'viewTranslate' => $viewTranslate,
-	]);
+	//$this->partial('partials/catalogue/filters', ['pagination' => $pagination]);
+	//$this->partial('partials/catalogue/sortbar', [
+	//	'pagination' 	=> $pagination,
+	//	'viewTranslate' => $viewTranslate,
+	//]);
 ?>
-<script>
-	$.ajax({
-		type: "GET",
-		url: window.location.href,
-		data: "ajax=filterSidebar",
-		dataType: "json",
-		success: function (ajax) {
-			$("#filterSidebar").html(ajax.html);
-			return false;
-		}
-	});
-</script>
+<!-- Выдача товаров -->
+<div class="CatalogueItems insert-filters">
+	<!-- Сайдбар -->
+	<div id="filterSidebar"></div>
+	<!-- /Сайдбар -->
+	<!-- Вывод палитры товаров -->
+	<?php if(isset($items) && !empty($items)): ?>
+
+
+	<?php endif; ?>
+	<!-- /Вывод палитры товаров -->
+</div>
+<!-- /Выдача товаров -->
 
 <div class="CatalogueItems insert-filters">
 	<div id="filterSidebar"></div>
-	<?php foreach ($items as $item): ?>
+
 		<?php
 		// декодорию превью
 		$img = array_values(json_decode($item['images']))[0]; ?>

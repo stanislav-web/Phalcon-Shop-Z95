@@ -294,7 +294,7 @@
 							],
 							[
 								'name'       => 'Мужские очки',
-								'url'        => '/catalogue/glasses/glasses-men',
+								'url'        => '/catalogue/glasses/glasses-man',
 								'controller' => 'catalogue',
 								'action'     => 'index',
 								'close'      => '</div>',
@@ -479,7 +479,7 @@
 							],
 							[
 								'name'       => 'Мужские очки',
-								'url'        => '/catalogue/glasses/glasses-men',
+								'url'        => '/catalogue/glasses/glasses-man',
 								'controller' => 'catalogue',
 								'action'     => 'index',
 							],
