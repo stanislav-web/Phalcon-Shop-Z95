@@ -48,12 +48,12 @@ class JsonController extends ControllerBase
 		parent::initialize();
 
 		if($this->request->isAjax() == false) {
-			$this->flash->error('The request is not ajax');
-			$this->_isJsonResponse	=	true;
-			return false;
-		}
-		else	// устанавливаю, что ответ будет в Json
-			$this->_isJsonResponse	=	true;
+		$this->flash->error('The request is not ajax');
+		$this->_isJsonResponse	=	true;
+		return false;
+	}
+	else	// устанавливаю, что ответ будет в Json
+		$this->_isJsonResponse	=	true;
 
 		// текущий request_uri
 		$this->requestUri	=	$this->request->getURI();

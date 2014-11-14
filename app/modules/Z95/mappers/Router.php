@@ -1,7 +1,7 @@
 <?php
 namespace Mappers;
 use Helpers\Catalogue,
-	Phalcon\Paginator\Adapter\NativeArray as Paginator,
+	Phalcon\Mvc\View,
 	Models;
 
 /**
@@ -240,7 +240,7 @@ class Router extends \Phalcon\Mvc\Controller
 				   'women' 	=> '2',
 				   'kids' 	=> '3'
 		];
-		return $gender[$key];
+		return (array_key_exists($key, $gender)) ? $gender[$key] : false;
 	}
 
 	/**
@@ -266,13 +266,22 @@ class Router extends \Phalcon\Mvc\Controller
 	}
 
 	/**
-	 * Установка исключений
-	 * @param boolean $boolean
+	 * Отображаем каталог как json ответ
 	 * @return \Mappers\Router
 	 */
-	public function setJson($boolean)
+	public function json()
 	{
-		$this->_isJson	=	$boolean;
+		$this->_isJson	=	true;
+
+		$this->view->disable();
+		$this->response->setContentType('application/json', 'UTF-8');
+
+		// отключаю лишние представления
+		$this->view->disableLevel([
+
+			View::LEVEL_LAYOUT 		=> true,
+			View::LEVEL_MAIN_LAYOUT => true
+		]);
 		return $this;
 	}
 
@@ -433,6 +442,7 @@ class Router extends \Phalcon\Mvc\Controller
 				// непутевая ситуация... если нам выдало,
 				// что категория для выборки товара у нас называется как пол человека, мы должны теперь найти ее parent_id
 				// и узнать реальную картину, снова поискать в дереве и пересобрать
+
 				if($this->getGender($this->_rules->catalogue[1]))
 				{
 					// узнаем ID родителя
@@ -486,16 +496,33 @@ class Router extends \Phalcon\Mvc\Controller
 		$this->setTitle($category['name']);
 		$this->_breadcrumbs->add($category['name'], 'catalogue/'.$category['alias']);
 
-		// передача переменных в шаблон
-		$this->view->setVars([
+
+		$templateVars	=	[
 			'title'			=>	$this->_title,
 			'template'  	=> 	$this->_template,
 			'items'			=>	$this->_items,
 			'pagination'	=>	$this->_pagination,
 			'query'			=>	$this->_rules->query
-		]);
+		];
 
-		// рендеринг шаблона
-		$this->view->pick("catalogue/index");
+		if($this->_isJson)
+		{
+			// создаю Json контекст
+
+			$this->response->setJsonContent([
+				'response'	=>	$this->view->getRender('partials/catalogue', $this->_template, $templateVars)
+			]);
+
+			// отправляю ответ
+			$this->response->send();
+		}
+		else
+		{
+			// передача переменных в шаблон
+			$this->view->setVars($templateVars);
+
+			// рендеринг шаблона
+			$this->view->pick("catalogue/index");
+		}
 	}
 }

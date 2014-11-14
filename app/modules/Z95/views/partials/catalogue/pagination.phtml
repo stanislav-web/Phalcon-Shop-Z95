@@ -1,34 +1,41 @@
-<div class="paging pages pagination-links" style="border: 0;">
-	<?php $p = 1; for($i = 0; $i < $pagination['pages']; $i++): ?>
-		<?php if ($p == $pagination['current']): // если текущая ?>
-			<div class="link page selected"><?=$pagination['current'];?></div>
-		<?php else:?>
-			<div class="link page" onclick="$(this).find('a')[0].click();">
+<?php
+	// сколько показано уже
+	$show = ($pagination['current'] > 1) ? $pagination['current']*$pagination['limit'] : $pagination['current'];
+?>
+<?php if($this->request->get('limit') == $pagination['count']): ?>
+	<div class="paging">
+		<div class="info">Показаны все <?=$pagination['count'];?></div>
+	</div>
+<?php else: ?>
+	<div class="paging pages pagination-links" style="border: 0;">
+		<?php $p = 1; for($i = 0; $i < $pagination['pages']; $i++): ?>
+			<?php if ($p == $pagination['current']): // если текущая ?>
+				<div class="link page selected"><?=$pagination['current'];?></div>
+			<?php else:?>
 				<?php if(!empty($query)): ?>
-					<a href="?<?=http_build_query(array_merge($query, ['page' => $p])); ?>"><?= $p;?></a>
+					<a class="link page isAjax" href="?<?=http_build_query(array_merge($query, ['page' => $p])); ?>"><?= $p;?></a>
 				<?php else: ?>
-					<a href="?<?=http_build_query(['page' => $p]); ?>"><?= $p;?></a>
+					<a class="link page isAjax" href="?<?=http_build_query(['page' => $p]); ?>"><?= $p;?></a>
 				<?php endif;?>
-			</div>
-		<?php endif;?>
-	<?php $p++; endfor; ?>
-
-	<?php if($pagination['pages'] == 1 && $pagination['count'] > $pagination['limit']): // выдаю недостающую страницу?>
-		<div class="link page" onclick="$(this).find('a')[0].click();">
-			<?php if(!empty($query)): ?>
-				<a href="?<?=http_build_query(array_merge($query, ['page' => $p])); ?>"><?= $p;?></a>
-			<?php else: ?>
-				<a href="?<?=http_build_query(['page' => $p]); ?>"><?= $p;?></a>
 			<?php endif;?>
+			<?php $p++; endfor; ?>
+
+		<?php if($pagination['pages'] == 1 && $pagination['count'] > $pagination['limit']): // выдаю недостающую страницу?>
+			<?php if(!empty($query)): ?>
+				<a class="link page isAjax" href="?<?=http_build_query(array_merge($query, ['page' => $p])); ?>"><?= $p;?></a>
+			<?php else: ?>
+				<a class="link page isAjax" href="?<?=http_build_query(['page' => $p]); ?>"><?= $p;?></a>
+			<?php endif;?>
+		<?php endif;?>
+	</div>
+	<div style="clear: both;"></div>
+	<script type="text/javascript">
+		$('.pagination-links a').attr({onclick: "var p = $(this).html(); return catalogue.page(p);"});
+	</script>
+	<div class="paging">
+		<div class="info">Показаны с <?=$show;?> по <?=($show+$pagination['limit']);?> из <?=$pagination['count'];?></div>
+		<div class="link active">
+			<a class="link page isAjax" href="?limit=<?=$pagination['count'];?>">Показать все</a>
 		</div>
-	<?php endif;?>
-</div>
-<div style="clear: both;"></div>
-<script type="text/javascript">
-	$('.pagination-links a').attr({onclick: "var p = $(this).html(); return catalogue.page(p);"});
-</script>
-<div class="paging">
-	<div class="info">Показаны с <?=($pagination['current'] > 1) ? $pagination['current']*$pagination['limit'] : $pagination['current'];?> по
-		<?=(($pagination['current'] > 1) ? $pagination['current']*$pagination['limit'] : $pagination['current'])+$pagination['limit'];?> из <?=$pagination['count'];?></div>
-	<div class="link active"><a href="?<?//=http_build_query(array_merge($query, ['limit' => $pagination['count']])); ?>">Показать все</a></div>
-</div>
+	</div>
+<?php endif; ?>

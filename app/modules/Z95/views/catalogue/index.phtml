@@ -24,12 +24,7 @@
 	<?endif;?>
 
 	<div class="clear"></div>
-	<div class="element-catalogue_items">
-
-		<!-- Block tags module -->
-		<?php //if(in_array($template, $sometemplates)) $this->partial('partials/catalogue/tags-cloud'); ?>
-		<!-- /Block tags module -->
-
+	<div class="element-catalogue_items" id="renderItems">
 		<!-- Render content -->
 		<?php if($template) $this->partial('partials/catalogue/'.$template); ?>
 		<!-- /Render content -->

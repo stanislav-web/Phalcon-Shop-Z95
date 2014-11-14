@@ -104,16 +104,29 @@ class CatalogueController extends ControllerBase
 			}
 			else
 			{
-				// ВСЕ что сюда переходит и есть выдача товаров
-				if($this->request->isAjax() == false)
-					(new Router())	->setRules($action)
-								->setShop($this->_shop)
-								->setCollection(Catalogue::arrayToAssoc($this->_shopCategories, 'id'))
-								->setExclude(['top' => 'ТОП 200', 'favorites' => 'Понравилось', 'new' => 'Новинки', 'sales' => 'Распродажа'])
-								->setNav($this->_breadcrumbs)
-								->setTranslate($this->_translate)
-								->render($this->productsModel);
-
+				// для json рендеринга
+				if($this->request->isAjax())
+				{
+					(new Router())->json()
+						->setRules($action)
+						->setShop($this->_shop)
+						->setCollection(Catalogue::arrayToAssoc($this->_shopCategories, 'id'))
+						->setExclude(['top' => 'ТОП 200', 'favorites' => 'Понравилось', 'new' => 'Новинки', 'sales' => 'Распродажа'])
+						->setNav($this->_breadcrumbs)
+						->setTranslate($this->_translate)
+						->render($this->productsModel);
+				}
+				else
+				{
+					(new Router())
+						->setRules($action)
+						->setShop($this->_shop)
+						->setCollection(Catalogue::arrayToAssoc($this->_shopCategories, 'id'))
+						->setExclude(['top' => 'ТОП 200', 'favorites' => 'Понравилось', 'new' => 'Новинки', 'sales' => 'Распродажа'])
+						->setNav($this->_breadcrumbs)
+						->setTranslate($this->_translate)
+						->render($this->productsModel);
+				}
 			}
 		}
 	}

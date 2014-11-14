@@ -48,11 +48,29 @@
 <script>
 	$(function() {
 
-		var sideBar =	document.getElementById('filterSidebar');
+		var sideBar 	=	document.getElementById('filterSidebar');
+		var renderItems =	document.getElementById('renderItems');
 
 		$.getJSON("/json/tags", function(data) {
 			if(data.response.length)
 				$(sideBar).html(data.response);
+		});
+
+
+		$('a.isAjax').on('click', function(e) {
+			global.showStatus('common.loading');
+
+			e.preventDefault();
+			var url =	window.location.pathname +$(this).attr('href');
+
+			$.getJSON(url, function(data) {
+				console.log(data);
+
+				if(data.response.length)
+					$(renderItems).html(data.response);
+					window.history.pushState("","", url);
+				global.hideStatus('common.loading');
+			});
 		});
 
 	});
