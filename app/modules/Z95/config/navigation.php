@@ -266,7 +266,7 @@
 							],
 							[
 								'name'       => 'Мужские ремни',
-								'url'        => '/catalogue/staraps/man',
+								'url'        => '/catalogue/straps/man',
 								'controller' => 'catalogue',
 								'action'     => 'index',
 							],

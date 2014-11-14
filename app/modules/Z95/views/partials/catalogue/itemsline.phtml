@@ -1,5 +1,9 @@
-<?php
-	//@modify Stanislav добавление переменных в partial  шаблон
+<?php if(!empty($pagination)): ?>
+	<!-- Постраничная навигация -->
+	<? $this->partial('partials/catalogue/pagination', ['pagination' => $pagination]); ?>
+	<!-- /Постраничная навигация -->
+<?php endif;?>
+<?
 	//$this->partial('partials/catalogue/filters', ['pagination' => $pagination]);
 	//$this->partial('partials/catalogue/sortbar', [
 	//	'pagination' 	=> $pagination,
@@ -35,14 +39,12 @@
 </div>
 <!-- /Выдача товаров -->
 <div style="clear: both;"></div>
-<?php
-	//@modify Stanislav добавление переменных в partial  шаблон
-	//$this->partial('partials/catalogue/filters', ['pagination' => $pagination]);
-	//$this->partial('partials/catalogue/sortbar', [
-	//	'pagination' => $pagination,
-	//	'viewTranslate' => $viewTranslate,
-	//]);
-?>
+
+<?php if(!empty($pagination)): ?>
+	<!-- Постраничная навигация -->
+	<? $this->partial('partials/catalogue/pagination', ['pagination' => $pagination]); ?>
+	<!-- /Постраничная навигация -->
+<?php endif;?>
 <script>
 	$(function() {
 

@@ -134,7 +134,6 @@ class Tags extends \Phalcon\Mvc\Model
 						WHERE tags.parent_id = 0
 					) ORDER BY id";
 
-			//exit($sql);
 			$result = $this->_db->query($sql)->fetchAll();
 
 			// Сохраняем запрос в кэше

@@ -4,7 +4,7 @@
 		<a class="reset " href="#" onclick="if ($(this).hasClass('active')) { catalogue.reset_filters(); } return false;">Сбросить все</a>
 
 		<!-- Показываю размеры, если есть -->
-		<?php if(isset($tagsCloud['sizes'])): ?>
+		<?php if(isset($tagsCloud['sizes']) && !empty($tagsCloud['sizes'])): ?>
 			<div class="group" onclick="$('.parent-of-sizes').toggle();">Размеры</div>
 			<?php foreach($tagsCloud['sizes'] as $key => $val): ?>
 				<div class="tag parent-of-sizes" style="display: inline-block; min-width: 20%;">
@@ -15,10 +15,10 @@
 			<?php endforeach; ?>
 
 		<?php endif; ?>
-		<!-- Показываю размеры, если есть -->
+		<!-- /Показываю размеры, если есть -->
 
 		<!-- Показываю теги, если есть -->
-		<?php if(isset($tagsCloud['tags'])): ?>
+		<?php if(isset($tagsCloud['tags']) && !empty($tagsCloud['tags'])): ?>
 			<?php foreach($tagsCloud['tags'] as $tags): ?>
 				<?php if(!empty($tags['childs'])): ?>
 					<div class="group" onclick="$('.parent-of-<?=$tags['id'];?>').toggle();"><?=$tags['name'];?></div>
@@ -35,6 +35,22 @@
 				<?php endif; ?>
 			<?php endforeach; ?>
 		<?php endif; ?>
-		<!-- Показываю теги, если есть -->
+		<!-- /Показываю теги, если есть -->
+
+		<!-- Показываю бренды, если есть -->
+			<?php if(isset($tagsCloud['brands']) && !empty($tagsCloud['brands'])): ?>
+				<div class="group" onclick="$('.parent-of-brands').toggle();">Бренды</div>
+				<?php foreach($tagsCloud['brands'] as $brand): ?>
+					<?php if(is_array($brand)): ?>
+						<div class="tag parent-of-brands">
+							<label>
+								<input type="checkbox" name="brands[]" value="<?=$brand['id'];?>" onchange="catalogue.filter();"><?=$brand['name'];?> <span class="count">(<?=$brand['count_products'];?>)</span>
+							</label>
+							<a href="/catalogue/woman/dresses/tags/povsednevnoe/" onclick=""></a>
+						</div>
+					<?php endif; ?>
+				<?php endforeach; ?>
+			<?php endif; ?>
+		<!-- /Показываю бренды, если есть -->
 	</div>
 </div>

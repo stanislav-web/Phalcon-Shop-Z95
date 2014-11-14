@@ -97,11 +97,48 @@ class Brands extends \Phalcon\Mvc\Model
 	}
 
 	/**
+	 * Получение списка брендов для товаров в выбранной категории
+	 * использую для фильтров
+	 *
+	 * @param  int    $category_id
+	 * @param bool $cache
+	 * @return null
+	 */
+	public function getBrandsByCategory($category_id, $cache = false)
+	{
+		$result = null;
+
+		if($cache && $this->_cache)
+		{
+			$backendCache = $this->getDI()->get('backendCache');
+			$result = $backendCache->get(md5(self::TABLE.$category_id).'.cache');
+		}
+
+		if($result === null)
+		{
+			// Выполняем запрос из MySQL
+			$sql = "SELECT brand.id, brand.name, COUNT(brand.id) AS count_products
+					FROM brands brand
+					INNER JOIN products prod ON (brand.id = prod.brand_id)
+					INNER JOIN products_relationship rel ON (rel.product_id = prod.id)
+					WHERE rel.category_id = ".$category_id."
+					GROUP BY brand.id
+					ORDER BY count_products DESC, brand.name";
+
+			$result = $this->_db->query($sql)->fetchAll();
+
+			// Сохраняем запрос в кэше
+			if($cache && $this->_cache) $backendCache->save(md5(self::TABLE.$category_id).'.cache', $result);
+		}
+		return $result;
+	}
+
+	/**
 	 * Получение списка брендов с количеством позиций в каждом из них
 	 * @author <filchakov.denis@gmail.com>
 	 *
 	 */
-	public function getAllBrands($shopID = 1){
+	public function getAllBrands($shopID = 1, $cache = false){
 		$result = null;
 		if($cache && $this->_cache) {
 			$backendCache = $this->getDI()->get('backendCache');

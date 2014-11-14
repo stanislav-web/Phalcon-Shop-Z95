@@ -84,6 +84,7 @@ class JsonController extends ControllerBase
 			$category = $this->session->get('category');
 			if(!empty($category))
 			{
+				// выгребаю теги
 				$tags = $this->tagsModel->getTags($category['id'], true);
 
 				// return ['sizes' => ..., 'tags' => ...]
@@ -93,6 +94,10 @@ class JsonController extends ControllerBase
 			{
 				// выдача тегов для виртуалок
 			}
+
+			// выгребаю бренды
+			//@notice возможно стоит сделать проверку, если есть теги, то не делаем запускаем бренды в фильтр
+			$tagsCloud['brands'] = $this->brandsModel->getBrandsByCategory($category['id'], true);
 
 			$this->response->setJsonContent([
 				'response'	=>	$this->view->getRender('partials/json', 'tags', [

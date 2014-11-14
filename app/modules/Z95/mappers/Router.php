@@ -1,7 +1,7 @@
 <?php
 namespace Mappers;
 use Helpers\Catalogue,
-	Phalcon\Session\Bag,
+	Phalcon\Paginator\Adapter\NativeArray as Paginator,
 	Models;
 
 /**
@@ -100,7 +100,7 @@ class Router extends \Phalcon\Mvc\Controller
 			 * Вывод товаров на страницу
 		 	 * @var int
 		 	 */
-			$_pages	=	100,
+			$_limit	=	100,
 
 			/**
 			 * Пагинация: состояние по умолчанию
@@ -292,7 +292,7 @@ class Router extends \Phalcon\Mvc\Controller
 					$this->_shop['price_id'], [
 						'prod.is_new = '	=>	'1',
 						'price.price > '	=>	'0'
-					], 0, $this->_pages, ['prod.id'], ['prod.date_income DESC'], true);
+					], 0, $this->_limit, ['prod.id'], ['prod.date_income DESC'], true);
 
 				break;
 
@@ -308,8 +308,9 @@ class Router extends \Phalcon\Mvc\Controller
 					$this->setTitle(strtoupper($gender));
 				}
 
-				// гребу топ
-				$items	=	$this->_model->getTopProducts($this->_shop['price_id'], $this->_filter, 200, true);
+				// гребу топ, устанавливаю макс. число для выдачи, тем самым отключаю для топа постраничный вывод
+				$this->_limit	=	200;
+				$items	=	$this->_model->getTopProducts($this->_shop['price_id'], $this->_filter, $this->_limit, true);
 
 				break;
 
@@ -323,7 +324,6 @@ class Router extends \Phalcon\Mvc\Controller
 
 				// проверяю на фильтры gender
 				$gender = end($this->_rules->catalogue);
-
 
 				if($gender != 'sales') {
 
@@ -415,7 +415,6 @@ class Router extends \Phalcon\Mvc\Controller
 		else
 		{
 			// Обычная выдача категорий
-
 			// определяю какой пол должен быть показан
 			$this->setGender($this->_rules->catalogue);
 
@@ -425,7 +424,6 @@ class Router extends \Phalcon\Mvc\Controller
 
 			if($parent)
 			{
-
 				// поиск по полу и алиасу в массиве (findInTree2 продублировал)
 				if($this->_gender > 0) // поиск с полом
 					$category = Catalogue::findInTree2($this->_collection, 'alias', $this->_rules->catalogue[1], 'sex', $this->_gender)[0];
@@ -437,7 +435,7 @@ class Router extends \Phalcon\Mvc\Controller
 				// и узнать реальную картину, снова поискать в дереве и пересобрать
 				if($this->getGender($this->_rules->catalogue[1]))
 				{
-					// ущнаем ID родителя
+					// узнаем ID родителя
 					$parent = Catalogue::findInTree($this->_collection, 'alias', $this->_rules->catalogue[0])[0];
 					// пол нам известен, id родителя тоже... теперь найдем id реальной категории и вперед на поиск
 
@@ -453,7 +451,8 @@ class Router extends \Phalcon\Mvc\Controller
 					$this->_shop['price_id'], [														// WHERE
 						'rel.category_id  = '	=>	$category['id'],
 						'prod.sex = '			=>	($this->_gender > 0) ? $this->_gender : false,
-					], 0, $this->_pages, [], ['prod.rating DESC'], true);							// OFFSET, LIMIT, GROUP, SORT, CACHE
+					],
+					$this->_rules->query, true);
 
 				// сохраняю связь чтобы не дергать из MySQL. Записываю параметры текущей категории в сессию
 				// она каждый раз перезаписывается по мере новой загрузки категории, поэтому не стоит волноваться
@@ -462,10 +461,22 @@ class Router extends \Phalcon\Mvc\Controller
 				$this->session->set('category', $category);
 
 				$count = array_pop($items);
+
+				// постраничная навигация
+				if($count > $this->_limit)
+				{
+					$current = $this->request->getQuery("page");
+					$this->_pagination	=	[
+						'limit'		=>	$this->_limit,
+						'offset'	=>	$this->_limit,
+						'current'	=>	($current) ? $current : 1,
+						'count'		=>	$count,
+						'pages'		=>	floor($count/$this->_limit)
+					];
+				}
 			}
 			else // не найдена такая категория вообще
 				return $this->view->render('error', 'show404')->pick("error/show404");
-
 		}
 
 		// задаю шаблон для вывода результата выдачи
@@ -481,6 +492,7 @@ class Router extends \Phalcon\Mvc\Controller
 			'template'  	=> 	$this->_template,
 			'items'			=>	$this->_items,
 			'pagination'	=>	$this->_pagination,
+			'query'			=>	$this->_rules->query
 		]);
 
 		// рендеринг шаблона
