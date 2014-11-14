@@ -104,15 +104,16 @@ class CatalogueController extends ControllerBase
 			}
 			else
 			{
-
 				// ВСЕ что сюда переходит и есть выдача товаров
-				(new Router())	->setRules($action)
+				if($this->request->isAjax() == false)
+					(new Router())	->setRules($action)
 								->setShop($this->_shop)
 								->setCollection(Catalogue::arrayToAssoc($this->_shopCategories, 'id'))
 								->setExclude(['top' => 'ТОП 200', 'favorites' => 'Понравилось', 'new' => 'Новинки', 'sales' => 'Распродажа'])
 								->setNav($this->_breadcrumbs)
 								->setTranslate($this->_translate)
 								->render($this->productsModel);
+
 			}
 		}
 	}
@@ -190,7 +191,7 @@ class CatalogueController extends ControllerBase
 
 						$productIds = json_decode($buyModel['top_ten']);
 
-						$buyItems = $this->productsModel->getProductsForBuy($productIds, $this->_shop['price_id'], 8, true);
+						$buyItems = $this->productsModel->getProductsForBuy($productIds, $this->_shop['price_id'], 6, true);
 
 						$this->view->setVar('buyableItems', $buyItems);
 					}
@@ -235,26 +236,6 @@ class CatalogueController extends ControllerBase
 		]);
 
 		return $this->view->render('catalogue', 'index')->pick("catalogue/index");
-	}
-
-	/*
-	 * Страница TOP200
-	 * @author <filchakov.denis@gmail.com>
-	 */
-	function topAction(){
-		$filter = $this->categoriesModel->parseRemap($this->_shop['id'], $this->request->getQuery(), $this->_onpage);
-
-		// создание заголовка
-		$title = $this->_translate['TOP'];
-		$this->tag->setTitle($title.' - '.$this->_translate['CATALOGUE']);
-
-		// Добавляю путь в цепочку навигации
-		$this->_breadcrumbs->add($title, $this->request->getURI());
-
-		//$filter['top'] = true;
-		$this->_lineItems($filter);
-		$this->view->setVar('title', $title);
-		$this->view->render('catalogue', 'index')->pick("catalogue/index");
 	}
 
 	/*
@@ -457,56 +438,6 @@ class CatalogueController extends ControllerBase
 	}
 
 	/**
-	 * Фильтрация товаров согласно новым условиям
-	 * @author <filchakov.denis@gmail.com>
-	 */
-	function filtration(){
-
-
-		$oldRules = $this->categoriesModel->parseRemap($this->_shop['id'], $_REQUEST, $this->_onpage);
-		$newUrl['_url'] = implode('/', $_REQUEST['tags']);
-
-		$newRules = $this->categoriesModel->parseRemap($this->_shop['id'], $newUrl, $this->_onpage);
-
-		if(isset($oldRules['new']) && $oldRules['new']==true){$newRules['new'] = true;}
-		if(isset($oldRules['sex'])){$newRules['sex'] = $oldRules['sex'];}
-		if(isset($oldRules['top']) && $oldRules['top']==true){$newRules['top'] = true;}
-		if(isset($oldRules['category'])){$newRules['category'] = $oldRules['category']; }
-
-		$newRules['page'] = 0;
-
-		$filter = $newRules;
-
-		$itemLine = $this->categoriesModel->renderItemsLine($filter, $this->_shop['id']);
-		$items = $itemLine['items'];
-
-		unset($itemLine['items']);
-
-		$result['url'] = $this->categoriesModel->buildUrl($filter);
-
-		$_REQUEST['_url'] = $result['url'];
-
-		if($items < ($itemLine['limit']*$itemLine['page'])){
-			$itemLine['page'] = 1;
-		}
-
-		$result['url'] = $result['url'];
-
-		$view = new \Phalcon\Mvc\View\Simple();
-		$view->setViewsDir("../app/modules/".$this->_shop['code']."/views/");
-		$result['html'] = $view->render("partials/catalogue/itemsline",
-			array(
-				'items'      	=> $items,
-				'pagination' 	=> $itemLine,
-				'viewTranslate' => $this->_translate,
-				'shop'			=>	$this->_shop,
-				'itemsline'		=>	$itemLine,
-			));
-
-		echo json_encode($result);die;
-	}
-
-	/**
 	 * Возвращает рекомендации
 	 */
 	function getRecommendedItems(){
@@ -586,77 +517,5 @@ class CatalogueController extends ControllerBase
 
 		return array('html'=>$result, 'url'=>json_encode($filter));
 	}
-
-	/*
-	 * Страница новинок
-	 * @author <filchakov.denis@gmail.com>
-	 */
-	function newAction(){
-		$filter = $this->categoriesModel->parseRemap($this->_shop['id'], $this->request->getQuery(), $this->_onpage);
-		//удаляем родительскую категорию
-		//$filter['new'] = 1;
-		$this->_lineItems($filter);
-		$title = $this->_translate['NEW_CATEGORY'];
-		$this->_breadcrumbs->add($title, $this->request->getURI());
-		$this->view->render('catalogue', 'index')->pick("catalogue/index");
-	}
-
-	/**
-	 * Определение крошек по результату выборки
-	 * @param array $filter
-	 */
-	private function _breadTitle($filter = array()){
-		if(isset($filter['brand']) && !isset($filter['category'])){
-			$result = $this->brandsModel->get(array('id'=>current($filter['brand'])))['name'];
-		}
-		return $result;
-	}
-
-	/*
-	 * Вывод ленты товаров
-	 * @author <filchakov.denis@gmail.com>
-	 */
-	private function _lineItems($filter = array()){
-
-		//удаляем родительскую категорию
-		if(isset($filter['top'])){
-			$itemLine = $this->categoriesModel->renderTopItemsLine($filter, $this->_shop['id']);
-		} else {
-			$itemLine = $this->categoriesModel->renderItemsLine($filter, $this->_shop['id']);
-		}
-
-		foreach($this->categoriesModel->getListing($this->_shop['id']) as $category){
-			$arrayUrl = explode('/',$this->request->getQuery()['_url']);
-			$arrayCategory = explode('/',$category['url']);
-			if(count(array_intersect($arrayCategory,$arrayUrl))==count($arrayCategory)){
-				$pagetitle = $category['name'];
-			}
-		}
-
-		//Перезаписываем название страницы
-		if($pagetitle==''){
-			$pagetitle = $this->_breadTitle($filter);
-		}
-
-		$title = $this->_translate['CATALOGUE'];
-		$this->tag->prependTitle($title.' - ');
-
-		// Добавляю путь в цепочку навигации
-		$this->_breadcrumbs->add($pagetitle, $this->request->getURI());
-
-		$items = $itemLine['items'];
-
-		unset($itemLine['items']);
-		$this->view->setVars([
-			'template'   => 'itemsline',
-			'title'		=> $pagetitle,
-			'items'      => $items,
-			'pagination' => $itemLine,
-			'itemsline' => array_keys(Catalogue::arrayToAssoc($items,'id')),
-		]);
-
-		$this->view->pick("catalogue/index");
-	}
-
 }
 

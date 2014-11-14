@@ -152,7 +152,7 @@
 							],
 							[
 								'name'       => 'Медицинские очки',
-								'url'        => '/catalogue/glasses/medicine',
+								'url'        => '/catalogue/*/medicine',
 								'controller' => 'catalogue',
 								'action'     => 'index',
 								'close'      => '</div>'
@@ -260,19 +260,19 @@
 							],
 							[
 								'name'       => 'Сумки',
-								'url'        => '/catalogue/bags/men',
+								'url'        => '/catalogue/bags/man',
 								'controller' => 'catalogue',
 								'action'     => 'index',
 							],
 							[
 								'name'       => 'Мужские ремни',
-								'url'        => '/catalogue/staraps/men',
+								'url'        => '/catalogue/staraps/man',
 								'controller' => 'catalogue',
 								'action'     => 'index',
 							],
 							[
 								'name'       => 'Обувь',
-								'url'        => '/catalogue/shoes/men',
+								'url'        => '/catalogue/shoes/man',
 								'controller' => 'catalogue',
 								'action'     => 'index',
 							],
@@ -433,7 +433,7 @@
 							[
 								'open'       => '<div class="block left">',
 								'name'       => 'Мужские сумки',
-								'url'        => '/catalogue/bags/men',
+								'url'        => '/catalogue/bags/man',
 								'controller' => 'catalogue',
 								'action'     => 'index',
 							],
@@ -454,7 +454,7 @@
 							[
 								'open'       => '<div class="block left">',
 								'name'       => 'Мужские ремни',
-								'url'        => '/catalogue/straps/men',
+								'url'        => '/catalogue/straps/man',
 								'controller' => 'catalogue',
 								'action'     => 'index',
 							],
@@ -713,7 +713,7 @@
 							],
 							[
 								'name'       => 'Мужская обувь',
-								'url'        => '/catalogue/shoes/men',
+								'url'        => '/catalogue/shoes/man',
 								'controller' => 'catalogue',
 								'action'     => 'index',
 							],
@@ -752,7 +752,7 @@
 
 							[
 								'name'       => 'Мужские ремни',
-								'url'        => '/catalogue/straps/men',
+								'url'        => '/catalogue/straps/man',
 								'controller' => 'catalogue',
 								'action'     => 'index',
 							],
@@ -775,7 +775,7 @@
 
 							[
 								'name'       => 'Мужские сумки',
-								'url'        => '/catalogue/bags/men',
+								'url'        => '/catalogue/bags/man',
 								'controller' => 'catalogue',
 								'action'     => 'index',
 							],

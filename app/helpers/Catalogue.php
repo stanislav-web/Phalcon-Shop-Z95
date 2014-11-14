@@ -182,6 +182,40 @@ class Catalogue
 		}
 	}
 
+
+	/**
+	 * tagsToTree(array $elements) Теги с размерами превращию в дерево
+	 * @param array $elements
+	 * @return array
+	 */
+	public static function tagsToTree(array $elements)
+	{
+		$tags	=	[];
+		$sizes 	= 	[];
+
+		// вычисляю размеры
+
+		foreach($elements as $element)
+			if($element['parent_id'] == '')
+				$sizes[]	=	$element;
+		$sizes = self::arrayToAssoc($sizes, 'id');
+
+		// вычисляю теги
+
+		$elements = self::arrayToAssoc($elements, 'id');
+		foreach($elements as $k => $val)
+			if(!isset($sizes[$k]))
+				$tags[]	=	$val;
+
+
+		// создаю дерево тегов
+		$tree	=	self::categoriesToTree($tags, 0);
+		return [
+			'sizes'	=>	$sizes,
+			'tags'	=>	$tree
+		];
+	}
+
 	/**
 	 * Функция перегрупировки массива по значению
 	 *
@@ -213,11 +247,6 @@ class Catalogue
 		ksort($new_categories);
 		unset($categories);
 		return self::arrayToAssoc($new_categories, 'id');
-	}
-
-	public static function catalogueMapper()
-	{
-
 	}
 
 	/**

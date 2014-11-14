@@ -104,45 +104,41 @@ class Tags extends \Phalcon\Mvc\Model
 	 * @param bool $cache
 	 * @return null
 	 */
-	public function getByProductIds($category_id, $cache = false)
+	public function getTags($category_id, $cache = false)
 	{
 		$result = null;
 
 		if ($cache && $this->_cache) {
 			$backendCache = $this->getDI()->get('backendCache');
-			$result = $backendCache->get(self::TABLE.'-'.strtolower(__FUNCTION__).'-' .$category_id.'.cache');
+			$md5 = md5(self::TABLE.'-'.strtolower(__FUNCTION__).'-' .$category_id);
+			$result = $backendCache->get($md5.'.cache');
 		}
 
-		if($result === null) {    // Выполняем запрос из MySQL
+		if($result === null)
+		{
+		    // Выполняем запрос из MySQL
 
-			//	-- Old school
-			//	SELECT STRAIGHT_JOIN DISTINCT(tag.id) as id, tag.parent_id, tag.name, tag.alias
-			//		FROM tags tag
-			//		INNER JOIN products_relationship rel ON tag.id = rel.tag_id
-			//		WHERE product_id IN(
-			//		SELECT product_id FROM products_relationship WHERE category_id = {$category_id}
-			//		)
+			$sql = "(	SELECT tag.id as id, tag.parent_id, tag.name, tag.alias, COUNT(rel_tags.product_id) AS count_products
+						FROM tags tag
 
-			//	-- New school
+						LEFT JOIN 	products_relationship rel_tags ON (tag.id = rel_tags.tag_id)
+						LEFT JOIN 	products_relationship rel_categories USING (product_id)
 
-			// 	SELECT tag.id as id, tag.parent_id, tag.name, tag.alias
-			//	FROM products_relationship rel_tags
-			//	INNER JOIN  products_relationship rel_cat ON rel_cat.category_id = {$category_id}
-			//	INNER JOIN 	tags tag ON (tag.id = rel_tags.tag_id)
-			//	&& rel_cat.product_id = rel_tags.product_id
-			//	GROUP BY tag.id;
+						WHERE rel_categories.category_id = ".$category_id."
+						GROUP BY tag.id
+					)
+					UNION ALL
+					(
+						SELECT tags.id as id, tags.parent_id, tags.name, tags.alias, NULL
+						FROM tags
+						WHERE tags.parent_id = 0
+					) ORDER BY id";
 
-			$sql = "SELECT tag.id as id, tag.parent_id, tag.name, tag.alias, COUNT(rel_cat.product_id) AS count_products
-					FROM ".Common::TABLE_PRODUCTS_REL." rel_tags
-					INNER JOIN ".Common::TABLE_PRODUCTS_REL." rel_cat ON rel_cat.category_id = ".$category_id."
-					INNER JOIN 	".Tags::TABLE." tag ON (tag.id = rel_tags.tag_id)
-					&& rel_cat.product_id = rel_tags.product_id
-					GROUP BY tag.id";
-
+			//exit($sql);
 			$result = $this->_db->query($sql)->fetchAll();
 
 			// Сохраняем запрос в кэше
-			if ($cache && $this->_cache) $backendCache->save(self::TABLE.'-'.strtolower(__FUNCTION__).'-' .$category_id.'.cache', $result);
+			if ($cache && $this->_cache) $backendCache->save($md5.'.cache', $result);
 		}
 		return $result;
 	}

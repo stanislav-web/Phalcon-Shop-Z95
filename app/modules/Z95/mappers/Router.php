@@ -1,6 +1,7 @@
 <?php
 namespace Mappers;
 use Helpers\Catalogue,
+	Phalcon\Session\Bag,
 	Models;
 
 /**
@@ -105,7 +106,13 @@ class Router extends \Phalcon\Mvc\Controller
 			 * Пагинация: состояние по умолчанию
 		 	 * @var bool
 		 	 */
-			$_pagination	=	false;
+			$_pagination	=	false,
+
+			/**
+			 * Json выдача
+		 	 * @var bool
+		 	 */
+			$_isJson		=	false;
 
 	/**
 	 * Установка модели
@@ -227,11 +234,11 @@ class Router extends \Phalcon\Mvc\Controller
 	 */
 	protected function getGender($key)
 	{
-		$gender = ['man' 	=> 1,
-				   'men' 	=> 1,
-				   'woman' 	=> 2,
-				   'women' 	=> 2,
-				   'kids' 	=> 3
+		$gender = ['man' 	=> '1',
+				   'men' 	=> '1',
+				   'woman' 	=> '2',
+				   'women' 	=> '2',
+				   'kids' 	=> '3'
 		];
 		return $gender[$key];
 	}
@@ -258,6 +265,90 @@ class Router extends \Phalcon\Mvc\Controller
 		return $this;
 	}
 
+	/**
+	 * Установка исключений
+	 * @param boolean $boolean
+	 * @return \Mappers\Router
+	 */
+	public function setJson($boolean)
+	{
+		$this->_isJson	=	$boolean;
+		return $this;
+	}
+
+	/**
+	 * Переключатель режима отображения виртуальных категорий
+	 * @param string $type
+	 * @access public
+	 * @return array
+	 */
+	public function virtualSwitcher($type)
+	{
+		switch($type['alias'])
+		{
+			case 'new':			// Новые
+
+				$items	=	$this->_model->getProducts(
+					$this->_shop['price_id'], [
+						'prod.is_new = '	=>	'1',
+						'price.price > '	=>	'0'
+					], 0, $this->_pages, ['prod.id'], ['prod.date_income DESC'], true);
+
+				break;
+
+			case 'top':			// Топ 200
+
+				// проверяю на фильтры gender
+				$gender = end($this->_rules->catalogue);
+
+				if($gender != 'top') {
+					$this->_filter	=	[
+						'prod.sex = ' 		=> $this->getGender($gender),
+					];
+					$this->setTitle(strtoupper($gender));
+				}
+
+				// гребу топ
+				$items	=	$this->_model->getTopProducts($this->_shop['price_id'], $this->_filter, 200, true);
+
+				break;
+
+			case 'favorites':	// Добавленные в избранное
+
+				$items	=	[];
+
+				break;
+
+			case 'sales':		// Распродажи
+
+				// проверяю на фильтры gender
+				$gender = end($this->_rules->catalogue);
+
+
+				if($gender != 'sales') {
+
+					$this->_filter	=	[
+						'prod.sex ' 		=> [0, 3, $this->getGender($gender)],
+						'price.discount > ' => '0',
+					];
+
+					if(!empty($this->_rules->query))
+						$this->_filter[key($this->_rules->query).' = ']	=	$this->_rules->query[key($this->_rules->query)];
+
+					$this->setTitle(strtoupper($gender));
+				}
+
+				// гребу выдачу
+
+				$items	=	$this->_model->getProducts($this->_shop['price_id'], $this->_filter, 0, 100, ['prod.id'], ['(price.price/price.percent) DESC, prod.rating'], true);
+
+				break;
+			default :
+			case 'top';
+		}
+		return $items;
+	}
+
 	/*
 	 * Вывод результатов
 	 * @param object 	$rules 		правила для маппера
@@ -265,7 +356,7 @@ class Router extends \Phalcon\Mvc\Controller
 	 * @param array 	$exclude 	исключения: вирт. категории
 	 * @return null
 	 */
-	public function render($model = false, array $shop = [], $rules = false, array $collection = [], array $exclude = [])
+	public function render($model = false, array $shop = [], $rules = false, array $collection = [], array $exclude = [], $json = false)
 	{
 
 		// устанавливаю параметры магазина
@@ -288,6 +379,11 @@ class Router extends \Phalcon\Mvc\Controller
 		if(!$this->_collection)
 			$this->setCollection($collection);
 
+		// устанавливаю режим выдачи
+
+		if($json == true)
+			$this->setJson(true);
+
 		// устанавливаю исключения (предусмотрена возможность если их и не будет)
 
 		if(!$this->_exclude && !empty($exclude))
@@ -309,62 +405,8 @@ class Router extends \Phalcon\Mvc\Controller
 				'alias'	=>	$intersect[0]
 			];
 
-
-			switch($category['alias'])
-			{
-				case 'new':			// Новые
-
-					$items	=	$this->_model->getProducts(
-						$this->_shop['price_id'], [
-							'prod.is_new'	=>	1
-						], 0, $this->_pages, ['prod.rating' => 'DESC'], true);
-
-				break;
-
-				case 'top':			// Топ 200
-
-					// проверяю на фильтры gender
-					$gender = end($this->_rules->catalogue);
-
-					if($gender != 'top') {
-						$this->_filter['prod.sex'] = $this->getGender($gender);
-						$this->setTitle(strtoupper($gender));
-					}
-
-					// гребу топ
-					$items	=	$this->_model->getTopProducts($this->_shop['price_id'], $this->_filter, 200, true);
-
-				break;
-
-				case 'favorites':	// Добавленные в избранное
-
-					$items	=	[];
-
-				break;
-
-				case 'sales':		// Распродажи
-
-					// проверяю на фильтры gender
-					$gender = end($this->_rules->catalogue);
-
-					if(!empty($this->_rules->query))
-						$this->_filter	=	$this->_rules->query;
-
-
-					if($gender != 'sales') {
-
-						$this->_filter['prod.sex'] = $this->getGender($gender);
-						$this->setTitle(strtoupper($gender));
-					}
-
-					// гребу выдачу
-
-					$items	=	$this->_model->getProducts($this->_shop['price_id'], $this->_filter, 0, 200, [], true);
-
-				break;
-				default :
-					case 'top';
-			}
+			// переключатель
+			$items = $this->virtualSwitcher($category);
 
 			// если есть в массиве счетчик удаляю его
 			if(isset($items['count']))
@@ -408,10 +450,16 @@ class Router extends \Phalcon\Mvc\Controller
 				//@todo Будет проверка на фильтры
 
 				$items	=	$this->_model->getProducts(
-					$this->_shop['price_id'], [
-						'cat.id'			=>	$category['id'],
-						'cat.sex'			=>	($this->_gender > 0) ? $this->_gender : false,
-					], 0, $this->_pages, ['prod.rating' => 'DESC'], true);
+					$this->_shop['price_id'], [														// WHERE
+						'rel.category_id  = '	=>	$category['id'],
+						'prod.sex = '			=>	($this->_gender > 0) ? $this->_gender : false,
+					], 0, $this->_pages, [], ['prod.rating DESC'], true);							// OFFSET, LIMIT, GROUP, SORT, CACHE
+
+				// сохраняю связь чтобы не дергать из MySQL. Записываю параметры текущей категории в сессию
+				// она каждый раз перезаписывается по мере новой загрузки категории, поэтому не стоит волноваться
+				// это будет главный ключ используемый для связи тегов и категорий
+				// {id:31848, parent_id:394, sex:0, name:Браслеты, alias:bracelet, sort:0, description:}
+				$this->session->set('category', $category);
 
 				$count = array_pop($items);
 			}

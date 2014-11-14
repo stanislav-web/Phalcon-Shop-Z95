@@ -137,14 +137,14 @@ class Products extends \Phalcon\Mvc\Model
 	 * @param null $limit лимит записей
 	 * @return \Phalcon\Paginator\Adapter\QueryBuilder
 	 */
-	public function getProducts($price_id, array $condition = array(), $offset = 0, $limit = 10, array $order = [], $cache = false)
+	public function getProducts($price_id, array $condition = array(), $offset = 0, $limit = 10, array $group = [], array $order = [], $cache = false)
 	{
 		$result = null;
 
 		if($cache && $this->_cache)
 		{
 			$backendCache = $this->getDI()->get('backendCache');
-			;
+
 			$result = $backendCache->get(md5(self::TABLE.$price_id.join('',$condition).$offset.$limit.join('',$order)).'.cache');
 		}
 
@@ -152,34 +152,42 @@ class Products extends \Phalcon\Mvc\Model
 		{
 		    // Выполняем запрос из MySQL
 			$sql = "SELECT SQL_CALC_FOUND_ROWS prod.`id`, prod.`filter_size`,
-					prod.`articul` AS articul, prod.`preview` AS preview, prod.name AS name, prod.description as description,
+					prod.`articul` AS articul, prod.`preview` AS preview, prod.name AS name,
 					brand.name AS brand_name, prod.is_new,
 					price.price AS price, price.discount AS discount
 					FROM `".Common::TABLE_PRODUCTS_REL."` rel
 					INNER JOIN `".self::TABLE."` prod ON (prod.id = rel.product_id)
 					INNER JOIN `".Prices::TABLE."` price ON (prod.id = price.product_id)
 					LEFT JOIN `".Brands::TABLE."` brand ON (brand.id = prod.brand_id)
-					INNER JOIN `".Categories::TABLE."` cat ON (cat.id = rel.category_id)
 					WHERE price.id = ".$price_id;
 
-			foreach($condition as $key => $value)
+					//-- INNER JOIN `".Categories::TABLE."` cat ON (cat.id = rel.category_id)
+
+			if(!empty($condition))
 			{
-				if(sizeof($value) != 1)
-					$sql .= " && ".$key." IN(".join(',', $value).") ";
-				else
+				foreach($condition as $key => $value)
 				{
-					if(is_array($condition[$key]))
-						$sql .= " && ".$key." = ".$condition[$key][0]." ";
+					if(sizeof($value) != 1)
+						$sql .= " && ".$key." IN(".join(',', $value).") ";
 					else
 					{
-						if($condition[$key][0] != '')
-							$sql .= " && ".$key." = ".$condition[$key]." ";
+						if(is_array($condition[$key]))
+							$sql .= " && ".$key." ".$condition[$key][0]." ";
+						else
+						{
+
+							if($condition[$key][0] != '')
+								$sql .= " && ".$key." ".$condition[$key]." ";
+						}
 					}
 				}
 			}
 
+			if(!empty($group))
+				$sql .= " GROUP BY ".$group[0];
+
 			if(!empty($order))
-				$sql .= " ORDER BY ".key($order)." ".$order[key($order)];
+				$sql .= " ORDER BY ".$order[0];
 
 			if($limit > 0)
 				$sql .= " LIMIT ".$offset.",  ".$limit;
@@ -225,21 +233,19 @@ class Products extends \Phalcon\Mvc\Model
 				else
 				{
 					if(is_array($condition[$key]))
-						$cond .= " && ".$key." = ".$condition[$key][0]." ";
-					else $cond .= " && ".$key." = ".$condition[$key]." ";
+						$cond .= " && ".$key." ".$condition[$key][0]." ";
+					else $cond .= " && ".$key." ".$condition[$key]." ";
 				}
 			}
 
 			// Выполняем запрос из MySQL
 			$sql = "SELECT prod.`id`, prod.`filter_size`,
-					prod.`articul` AS articul, prod.`preview` AS preview, prod.name AS name, prod.description as description, prod.is_new,
+					prod.`articul` AS articul, prod.`preview` AS preview, prod.name AS name, prod.is_new,
 					brand.name AS brand_name,
 					price.price AS price, price.discount AS discount
-					FROM `".Common::TABLE_PRODUCTS_REL."` rel
-					INNER JOIN `".self::TABLE."` prod ON (prod.id = rel.product_id)
+					FROM `".self::TABLE."` prod
 					INNER JOIN `".Prices::TABLE."` price ON (prod.id = price.product_id)
 					LEFT JOIN `".Brands::TABLE."` brand ON (brand.id = prod.brand_id)
-					INNER JOIN `".Categories::TABLE."` cat ON (cat.id = rel.category_id)
 					WHERE price.id = ".$price_id." ".$cond." ORDER BY prod.rating DESC LIMIT ".$limit;
 
 			$result = $this->_db->query($sql)->fetchAll();

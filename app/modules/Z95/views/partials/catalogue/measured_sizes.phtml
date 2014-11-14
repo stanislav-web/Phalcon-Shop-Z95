@@ -1,4 +1,4 @@
-<? if(isset($item['tags']) && count($item['tags'])): ?>
+<? if(isset($item['tags']) && isset($item['tags']['dimensions'])): ?>
 	<?php $measures = Helpers\Catalogue::itemMeasures($item['tags']['dimensions']); ?>
 	<div class="measured_sizes">
 		<h4><?=$viewTranslate['SIZES_IN_SM']?></h4>

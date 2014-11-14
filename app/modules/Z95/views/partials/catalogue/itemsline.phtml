@@ -10,7 +10,7 @@
 <div class="CatalogueItems insert-filters">
 
 	<!-- Сайдбар -->
-	<div id="filterSidebar"></div>
+	<div class="tags-filter Shadow" id="filterSidebar"></div>
 	<!-- /Сайдбар -->
 
 	<!-- Вывод палитры -->
@@ -43,3 +43,15 @@
 	//	'viewTranslate' => $viewTranslate,
 	//]);
 ?>
+<script>
+	$(function() {
+
+		var sideBar =	document.getElementById('filterSidebar');
+
+		$.getJSON("/json/tags", function(data) {
+			if(data.response.length)
+				$(sideBar).html(data.response);
+		});
+
+	});
+</script>

@@ -111,25 +111,6 @@
 				break;
 		}
 		return $cache;
-
-	});
-
-	// Компонент frontendCache для кэширования Frontend (шаблоны, стили, скрипты)
-
-	$di->set('viewCache', function(){
-
-		// Кэширование Frontend (шаблоны, стили, скрипты)
-		$frontCache = new Phalcon\Cache\Frontend\Output([
-			"lifetime" => $this->_config['cache']['cache_frontend_lifetime']
-		]);
-
-		// Настройки файлов кэша
-		$cache = new Phalcon\Cache\Backend\File($frontCache, [
-			"cacheDir"  => $this->_config['application']['cacheDir'].'/frontend/',
-			"prefix"    => $this->_config['cache']['cache_frontend_prefix']
-		]);
-		return $cache;
-
 	});
 
 	// Компонент DB. Регистрирую коннект к MySQL
@@ -167,16 +148,4 @@
 		$cookies->useEncryption(false);
 		return $cookies;
 
-	});
-
-	// Компонент FlashMessenger. Классы для вывода окон
-
-	$di->set('flash', function() {
-
-		$flash = new Phalcon\Flash\Direct([
-			'error'     => 'alert alert-error',
-			'success'   => 'alert alert-success',
-			'notice'    => 'alert alert-info',
-		]);
-		return $flash;
 	});

@@ -109,6 +109,5 @@
 		'action'        => 'index',
 	]);
 
-
 	// Удаление косых в конце
 	$router->removeExtraSlashes(true);
