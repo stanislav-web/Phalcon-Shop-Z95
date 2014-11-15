@@ -66,27 +66,42 @@ class Products extends \Phalcon\Mvc\Model
 	 * @access public
 	 * @return null | array
 	 */
-	public function get(array $data, $order = [], $limit = null, $cache = false)
+	public function get(array $fields = [], array $data, $order = [], $limit = null, $cache = false)
 	{
 		$result = null;
 
 		if($cache && $this->_cache) {
 			$backendCache = $this->getDI()->get('backendCache');
-			$result = $backendCache->get(self::TABLE.'-'.implode('-', $data).'-'.$limit.'.cache');
+			$md5	=	md5(self::TABLE.'-'.implode('-', $data).'-'.$limit);
+			$result = $backendCache->get($md5.'.cache');
 		}
 
 		if($result === null) {    // Выполняем запрос из MySQL
 
-			$sql = "SELECT ".self::TABLE.".*
-				FROM ".self::TABLE;
+			if(!empty($fields))
+				$sql = "SELECT " . rtrim(implode(", ",$fields), ", ") . "
+					FROM " . self::TABLE." prod";
+			else
+				$sql = "SELECT " . self::TABLE. ".*
+					FROM " . self::TABLE." prod";
+
+			$sql .= " INNER JOIN `".Prices::TABLE."` price ON (prod.id = price.product_id)
+					  LEFT JOIN `".Brands::TABLE."` brand ON (brand.id = prod.brand_id)";
 
 			if(!empty($data))
 			{
+				$sql .= " WHERE";
+				$i = 0;
 				foreach($data as $key => $value)
 				{
+					if($i > 0) $sql .= " AND";
 					if(is_array($value))
-						$sql .= " WHERE ".$key." IN(".join(',', $value)." ";
-					else $sql .= " WHERE ".$key." = '".$value."'";
+					{
+
+						$sql .= " ".$key." IN(".join(',', $value).") ";
+					}
+					else $sql .= " ".$key." = '".$value."'";
+				 	$i++;
 				}
 			}
 
@@ -101,7 +116,7 @@ class Products extends \Phalcon\Mvc\Model
 			}
 
 			// Сохраняем запрос в кэше
-			if($cache && $this->_cache) $backendCache->save(self::TABLE.'-'.implode('-', $data).'-'.$limit.'.cache', $result);
+			if($cache && $this->_cache) $backendCache->save($md5.'.cache', $result);
 		}
 		return $result;
 	}

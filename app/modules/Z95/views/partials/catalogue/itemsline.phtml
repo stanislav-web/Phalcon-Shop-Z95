@@ -51,11 +51,27 @@
 		var sideBar 	=	document.getElementById('filterSidebar');
 		var renderItems =	document.getElementById('renderItems');
 
-		$.getJSON("/json/tags", function(data) {
-			if(data.response.length)
-				$(sideBar).html(data.response);
-		});
+		var exludeSidebar = [
+			'favorites',
+			'brands'
+			],
+			currentPath	=	window.location.pathname.split('/').slice(-1)[0];
 
+		if(!$.inArray(currentPath, exludeSidebar))
+		{
+			$(sideBar).hide();
+		}
+		else
+		{
+			// показую сайдбар
+			$.getJSON("/json/tags", function(data) {
+				if(data.response.length)
+					$(sideBar).html(data.response);
+			});
+		}
+
+
+		// обработка ajax для перерисовки выдачи
 
 		$('a.isAjax').on('click', function(e) {
 			global.showStatus('common.loading');

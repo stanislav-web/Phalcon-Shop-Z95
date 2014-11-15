@@ -12,6 +12,9 @@ $(function() {
 		activeLink 		= 	$('div.header-menu a[href="'+path+'"]'),
 		parentSection 	= 	activeLink.closest('.header-menu-item.category');
 
+		// обновляю избранное
+		$('#FavoritesCount').html(<?=sizeof($this->session->get('favorites')); ?>);
+
 		// обнуляю все selected и присваиваю только активной
 		sections.removeClass('selected');
 		links.removeClass('selected');

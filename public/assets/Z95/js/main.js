@@ -1142,18 +1142,16 @@ window.matchMedia=window.matchMedia||(function(e,f){var c,a=e.documentElement,b=
 
     this.addFavorites = function(cat_id, img_obj) {
         if (cat_id) {
-            $.get('/ajax/catalogue/add_favorites/'+cat_id, '',
+            $.get('/json/favorites/?item='+cat_id, '',
                 function(data) {
-                    if (data.success) {
-                        if (data.status == 1) {
-                            $('#fav_icon_'+data.id).attr('class', 'like_on');
-                            $('#fav_text_'+data.id).html('Р‘РѕР»СЊС€Рµ РЅРµ РЅСЂР°РІРёС‚СЃСЏ');
-                        } else {
+                        if (data.status == 0) {
                             $('#fav_icon_'+data.id).attr('class', 'like_off');
-                            $('#fav_text_'+data.id).html('РџРѕРЅСЂР°РІРёР»РѕСЃСЊ');
+                            $('#fav_text_'+data.id).html('Больше не нравится');
+                        } else if (data.status == 1) {
+                            $('#fav_icon_'+data.id).attr('class', 'like_on');
+                            $('#fav_text_'+data.id).html('Понравилось');
                         }
                         $('#FavoritesCount').html(data.count);
-                    }
                 },
                 'json'
             );

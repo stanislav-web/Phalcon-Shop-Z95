@@ -502,7 +502,8 @@ class Router extends \Phalcon\Mvc\Controller
 			'template'  	=> 	$this->_template,
 			'items'			=>	$this->_items,
 			'pagination'	=>	$this->_pagination,
-			'query'			=>	$this->_rules->query
+			'query'			=>	$this->_rules->query,
+			'favorites'		=>	$this->session->get('favorites')
 		];
 
 		if($this->_isJson)

@@ -71,7 +71,7 @@
 					foreach($data as $key => $value)
 					{
 						if(is_array($value))
-							$sql .= " WHERE " . $key . " IN(" . join(',', $value) . " ";
+							$sql .= " WHERE " . $key . " IN(" . join(',', $value) . ") ";
 						else $sql .= " WHERE " . $key . " = '" . $value . "'";
 					}
 				}

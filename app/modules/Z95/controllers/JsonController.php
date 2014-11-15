@@ -111,6 +111,57 @@ class JsonController extends ControllerBase
 	}
 
 	/**
+	 * favoritesAction() Экшн для коллекции добавления в избранное по ajax
+	 *
+	 * @access public
+	 * @author Stanislav WEB
+	 * @return json
+	 */
+	public function favoritesAction()
+	{
+		$item_id = $this->request->get('item');
+		if(isset($item_id) && is_numeric($item_id))
+		{
+			if($this->_isJsonResponse)
+			{
+				// Выдать ответ в JSON
+				$this->setJsonResponse();
+
+				// отключаю лишние представления
+				$this->view->disableLevel([
+
+					View::LEVEL_LAYOUT 		=> true,
+					View::LEVEL_MAIN_LAYOUT => true
+				]);
+
+				// выбираю всю коллекцию пользователя
+				$favorites = (array)$this->session->get('favorites');
+
+				if(isset($favorites[$item_id])) // удаляю из избранного
+				{
+					unset($favorites[$item_id]);
+					$status = 0;
+				}
+				else 	// добаляю в избранное
+					$favorites[$item_id]	=	$status = 1;
+
+				$this->session->set('favorites', $favorites);
+
+				$this->response->setJsonContent([
+					'id'		=>	$item_id,
+					'count'		=>	sizeof($this->session->get('favorites')),
+					'status'	=>	$status,
+					'favorites'	=>	$favorites
+				]);
+
+				// отправляю ответ
+				$this->response->send();
+			}
+		}
+
+	}
+
+	/**
 	 * setJsonResponse() Установка режима выдачи ответа в JSON
 	 * @access public
 	 * @return null

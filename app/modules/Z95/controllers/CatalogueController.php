@@ -252,6 +252,45 @@ class CatalogueController extends ControllerBase
 	}
 
 	/*
+ 	 * favoritesAction()  Избранные вещи
+ 	 *
+ 	 * @see /catalogue/favorites
+ 	 * @access public
+ 	 * @author Stanislav WEB
+ 	 * @return \Phalcon\Mvc\View -> render()
+ 	 */
+	public function favoritesAction()
+	{
+		$title = $this->_translate['FAVORITES'];
+		$this->tag->prependTitle($this->_translate['FAVORITES'].' - ');
+
+		// Добавляю путь в цепочку навигации
+		$this->_breadcrumbs->add($title, $this->request->getURI());
+
+		$favorites = $this->session->get('favorites');
+		if(isset($favorites) && !empty($favorites))
+		{
+			$favorites = array_keys($favorites);
+
+			// собираю чистый запрос на конструкторе
+			$items = $this->productsModel->get([
+				'prod.id', 'prod.name', 'prod.articul', 'prod.preview', 'price.price', 'price.discount', 'brand.name as brand_name'
+			],
+			['prod.id' => $favorites, 'price.id' => $this->_shop['price_id']], ['id' =>'ASC'], sizeof($favorites), true);
+		}
+
+		$this->view->setVars([
+			'template'	=>	'itemsline',
+			'title' 	=> 	$title,
+			'items' 	=> 	$items,
+			'favorites'	=>	$this->session->get('favorites')
+
+		]);
+
+		$this->view->pick("catalogue/index");
+	}
+
+	/*
 	 * saleAction() Лента скидок. Метод выполняется одновременно как action
 	 * но в случае передачи параметров queryString перекидывает на выдачу
 	 *
@@ -458,77 +497,6 @@ class CatalogueController extends ControllerBase
 		$infoIds = $this->productsModel->getRecommend($ids);
 		$result['html'] = 'Здесь будут товары с ID — '.$infoIds;
 		return $result;
-	}
-
-	/**
-	 * Генерация сайдбара
-	 * @author <filchakov.denis@gmail.com>
-	 * @return array
-	 */
-	function filterSidebar (){
-		$filter = $this->categoriesModel->parseRemap($this->_shop['id'], $this->request->getQuery(), $this->_onpage);
-
-		$sidebar = $this->categoriesModel->renderFilter($filter, $this->_shop['id']);
-
-		if($sidebar!=''){
-
-			$urlFilter = $filter;
-			if(isset($urlFilter['tags'])){
-				unset($urlFilter['tags']);
-			}
-
-			if(isset($urlFilter['price'])){
-				unset($urlFilter['price']);
-			}
-			$urlFilter['page'] = 0;
-			$urlClear = $this->categoriesModel->buildUrl($urlFilter);
-
-			$sidebar = '<a class="reset" href="/catalogue/'.$urlClear.'">Сбросить все</a>'.$sidebar;
-		}
-
-		if($sidebar==''){
-			return array('html'=>'');
-		}
-
-		$result = '<form id="filters" onsubmit="return false">
-						<div class="tags-filter Shadow">
-						<div class="close" onclick="$(this).parent().toggleClass(\'hidden\'); $(\'#tags_filter_button\').removeClass(\'hidden\');" title="Закрыть фильтры"></div>
-							<div class="filters">
-								';
-		$result .= $sidebar;
-		$result .= '
-							</div>
-						</div>
-					</form>
-					<script>
-						$("#filters").change(function(event){
-							global.showStatus("common.loading");
-
-							if($(\'body\').scrollTop()>500){
-								$(\'html, body\').animate({
-									scrollTop: $("#CONTENT").offset().top
-								}, 1000);
-							}
-
-							event.preventDefault();
-							$.ajax({
-								type: "GET",
-								url: window.location.href,
-								data: "ajax=filtration&"+$(this).serialize(),
-								dataType: "json",
-								success: function (ajax) {
-									global.hideStatus("common.loading");
-									window.history.pushState("", "", "/catalogue/"+ajax.url);
-									global.hideStatus(\'common.loading\');
-
-									$(".element-catalogue_items").html(ajax.html);
-								}
-							});
-						});
-					</script>';
-
-
-		return array('html'=>$result, 'url'=>json_encode($filter));
 	}
 }
 

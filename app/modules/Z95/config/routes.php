@@ -26,6 +26,13 @@
 		'action'        => 'brands',
 	]);
 
+	$router->add("/catalogue/favorites", [
+		'module'    	=>  $module,
+		'namespace' 	=> 'Modules\\'.$module.'\Controllers\\',
+		'controller'    => 'catalogue',
+		'action'        => 'favorites',
+	]);
+
 	$router->add("/catalogue/top/:params", [
 		'module'    	=>  $module,
 		'namespace' 	=> 'Modules\\'.$module.'\Controllers\\',
