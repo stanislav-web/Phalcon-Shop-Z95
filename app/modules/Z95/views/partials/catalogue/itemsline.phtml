@@ -2,6 +2,10 @@
 	<!-- Постраничная навигация -->
 	<? $this->partial('partials/catalogue/pagination', ['pagination' => $pagination]); ?>
 	<!-- /Постраничная навигация -->
+<?php else:?>
+	<div class="paging">
+		<div class="info">Показаны все <?=$count;?></div>
+	</div>
 <?php endif;?>
 <?
 	//$this->partial('partials/catalogue/filters', ['pagination' => $pagination]);
@@ -32,18 +36,22 @@
 			?>
 		<?php endforeach; ?>
 	<?php else: ?>
-		В данном разделе товаров нет
+		<h2>Ничего не найдено</h2>
+		<h4>Попробуйте изменить условия поиска</h4>
 	<?php endif; ?>
 	<!-- /Вывод палитры -->
 
 </div>
 <!-- /Выдача товаров -->
 <div style="clear: both;"></div>
-
 <?php if(!empty($pagination)): ?>
 	<!-- Постраничная навигация -->
 	<? $this->partial('partials/catalogue/pagination', ['pagination' => $pagination]); ?>
 	<!-- /Постраничная навигация -->
+<?php else:?>
+	<div class="paging">
+		<div class="info">Показаны все <?=$count;?></div>
+	</div>
 <?php endif;?>
 <script>
 	$(function() {
@@ -74,9 +82,11 @@
 		// обработка ajax для перерисовки выдачи
 
 		$('a.isAjax').on('click', function(e) {
-			global.showStatus('common.loading');
 
 			e.preventDefault();
+
+			global.showStatus('common.loading');
+
 			var url =	window.location.pathname +$(this).attr('href');
 
 			$.getJSON(url, function(data) {
@@ -88,6 +98,5 @@
 				global.hideStatus('common.loading');
 			});
 		});
-
 	});
 </script>

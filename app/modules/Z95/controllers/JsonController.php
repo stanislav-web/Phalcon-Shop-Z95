@@ -89,19 +89,21 @@ class JsonController extends ControllerBase
 
 				// return ['sizes' => ..., 'tags' => ...]
 				$tagsCloud = Catalogue::tagsToTree($tags);
+
+				// выгребаю бренды
+				//@notice возможно стоит сделать проверку, если есть теги, то не делаем запускаем бренды в фильтр
+				$tagsCloud['brands'] = $this->brandsModel->getBrandsByCategory($category['id'], true);
 			}
 			else
 			{
-				// выдача тегов для виртуалок
+				//@todo выдача тегов для виртуалок
 			}
-
-			// выгребаю бренды
-			//@notice возможно стоит сделать проверку, если есть теги, то не делаем запускаем бренды в фильтр
-			$tagsCloud['brands'] = $this->brandsModel->getBrandsByCategory($category['id'], true);
 
 			$this->response->setJsonContent([
 				'response'	=>	$this->view->getRender('partials/json', 'tags', [
-					'tagsCloud'	=>	$tagsCloud
+					'tagsCloud'		=>	$tagsCloud,
+					'query'			=>	$this->session->get('query'), // параметры в адресной строке ?tags[]=246&tags[]=456 || brand[]=234&brand[]=43
+					'request_uri'	=>	$this->session->get('request_uri'),	// для сброса фильтров
 				])
 			]);
 

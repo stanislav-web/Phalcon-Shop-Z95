@@ -14,7 +14,8 @@
 							echo '<div class="brands">';
 							foreach ($BrandsArray as $BrandID => $BrandValue) {
 								$status = $BrandValue['count'] >= 30 ? ' class="super"' : '';
-								echo '<div' . $status . '><a href="/catalogue/' . urlencode($BrandValue['name']) . '/">' . $BrandValue['name'] . '</a><span style="font-size: 0.7em; color: #B0B0B0;">(' . $BrandValue['count'] . ')</span></div>';
+								//echo '<div' . $status . '><a href="/catalogue/brands/' . urlencode($BrandValue['name']) . '/">' . $BrandValue['name'] . '</a><span style="font-size: 0.7em; color: #B0B0B0;">(' . $BrandValue['count'] . ')</span></div>';
+								echo '<div' . $status . '><a href="/catalogue/brands/' . $BrandValue['id']. '/">' . $BrandValue['name'] . '</a><span style="font-size: 0.7em; color: #B0B0B0;">(' . $BrandValue['count'] . ')</span></div>';
 							}
 							echo '</div>';
 						}

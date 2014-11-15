@@ -16,7 +16,7 @@
 							</a>
 						<?php endif; ?>
 						<? $opacity = sprintf("%f", ($opacity - 0.1)); endforeach; ?>
-					<a href="<?=\Helpers\LocationUrls::location('/catalogue/sales?percent='.$values[0]['percent']); ?>" class="tile" style="opacity: <?=$opacity;?>">
+					<a href="<?=\Helpers\LocationUrls::location('/catalogue/sales/'.$genderList[$gender]); ?>" class="tile" style="opacity: <?=$opacity;?>">
 						<div class="value">Все</div>
 						<div class="count">наименований — <span><?=$values[0]['count'];?></span></div>
 					</a>
@@ -27,3 +27,4 @@
 		Распродаж нет
 	<?php endif; ?>
 </div>
+

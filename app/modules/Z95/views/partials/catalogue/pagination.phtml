@@ -13,18 +13,18 @@
 				<div class="link page selected"><?=$pagination['current'];?></div>
 			<?php else:?>
 				<?php if(!empty($query)): ?>
-					<a class="link page isAjax" href="?<?=http_build_query(array_merge($query, ['page' => $p])); ?>"><?= $p;?></a>
+					<a class="link page isAjax" href="?<?=urldecode(http_build_query(array_merge($query, ['page' => $p]))); ?>"><?= $p;?></a>
 				<?php else: ?>
-					<a class="link page isAjax" href="?<?=http_build_query(['page' => $p]); ?>"><?= $p;?></a>
+					<a class="link page isAjax" href="?<?=urldecode(http_build_query(['page' => $p])); ?>"><?= $p;?></a>
 				<?php endif;?>
 			<?php endif;?>
 			<?php $p++; endfor; ?>
 
 		<?php if($pagination['pages'] == 1 && $pagination['count'] > $pagination['limit']): // выдаю недостающую страницу?>
 			<?php if(!empty($query)): ?>
-				<a class="link page isAjax" href="?<?=http_build_query(array_merge($query, ['page' => $p])); ?>"><?= $p;?></a>
+				<a class="link page isAjax" href="?<?=urldecode(http_build_query(array_merge($query, ['page' => $p]))); ?>"><?= $p;?></a>
 			<?php else: ?>
-				<a class="link page isAjax" href="?<?=http_build_query(['page' => $p]); ?>"><?= $p;?></a>
+				<a class="link page isAjax" href="?<?=urldecode(http_build_query(['page' => $p])); ?>"><?= $p;?></a>
 			<?php endif;?>
 		<?php endif;?>
 	</div>

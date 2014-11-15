@@ -53,7 +53,13 @@
 			<div class="top-cart">
 				<div class="cart" onclick="basket.get_small_basket()"><img src="/assets/<?php echo $shop['code']; ?>/images/z95ru/icon-cart.png" /></div>
 				<h3><a href="/customer/cart">Корзина</a></h3>
-				<span id="BASKET_INFO"></span>
+				<span id="BASKET_INFO">
+					<div class="basket-mini">
+						<?php if(!empty($minicart)): ?>
+							<?=\Helpers\Catalogue::declOfNum($minicart['total'], ['вещь','вещи','вещей']);?>  на <?=$minicart['sum'];?> <?=$shop['currency_symbol']; ?>
+						<?php endif; ?>
+					</div>
+				</span>
 			</div>
 		</td>
 	</tr>

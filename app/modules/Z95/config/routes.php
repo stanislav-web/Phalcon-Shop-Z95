@@ -68,6 +68,13 @@
 		'action'        => 'item'
 	]);
 
+	$router->add("/catalogue/brands/([0-9]{1,3})", [
+		'module'    	=>  $module,
+		'namespace' 	=> 'Modules\\'.$module.'\Controllers\\',
+		'controller'    => 'catalogue',
+		'action'        => 'index'
+	]);
+
 	$router->add("/about", [
 		'module'    	=>  $module,
 		'namespace' 	=> 'Modules\\'.$module.'\Controllers\\',

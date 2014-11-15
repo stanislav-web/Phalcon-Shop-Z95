@@ -109,7 +109,7 @@
 		<div class="price">
 			<?php if($item['discount'] == $item['price']): ?>
 			<div>
-				&nbsp; <?=$item['discount']; ?> '&nbsp;
+				&nbsp; <?=$item['discount']; ?> &nbsp;
 				<span class="sign"><?=$shop['currency_symbol'];?></span>
 			</div>
 			<?php else :?>
@@ -118,10 +118,18 @@
 				<span class="sign"><?=$shop['currency_symbol'];?></span>
 			</div>
 			<?endif;?>
-			<div id="sizes_button_<?= $item['id'] ?>" class="sizes-button"
-				 onclick="basket.beforeAddToBasket('sizes_<?= $item['id'] ?>');">
-				&nbsp;
-			</div>
+			<?php //if(!empty($arraySize)):?>
+				<div id="sizes_button_<?= $item['id'] ?>" class="sizes-button"
+					 onclick="basket.beforeAddToBasket('sizes_<?= $item['id'] ?>');">
+					&nbsp;
+				</div>
+			<?php //else:?>
+				<!--<div id="sizes_button_<?= $item['id'] ?>" class="sizes-button" quantity="single" cat_id="<?= $item['id'] ?>" price="<?=($item['discount'] == $item['price']) ? $item['price'] : $item['discount'];?>"
+					 onclick="basket.addToBasket(<?= $item['id'] ?>, false);">
+					&nbsp;
+				</div>-->
+			<?php //endif;?>
+
 			<img alt="Понравилось" id="fav_icon_<?= $item['id'] ?>"
 				 onclick="catalogue.addFavorites(<?= $item['id'] ?>, this)" src="/assets/Z95/images/d-t.gif"
 				 class="<?=(isset($favorites[$item['id']])) ? 'like_on' : 'like_off' ?>">

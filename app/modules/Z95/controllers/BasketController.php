@@ -1,5 +1,6 @@
 <?php
 	namespace Modules\Z95\Controllers;
+	use Helpers\Catalogue;
 
 	/**
 	 * Class BasketController Корзина
@@ -54,7 +55,7 @@
 			// check available discounts
 
 			$this->view->setVars(array('basket' => $this->session->get('basket'),
-									   'discounts' => $this->_shop['discounts']
+									   'discounts' => json_decode($this->_shop['discounts'], true)
 									));
 
 
@@ -70,11 +71,10 @@
 
 			$selected = '';
 
-//		$this->session->destroy();die;
 			if ($item !== false && count($item)) {
 				$id = key($item);
 				/** Вызываем основной метод изменения состава корзины */
-//			$this->basket['items'] = $this->save($item);
+
 				if($this->session->has('basket')) {
 
 					$this->basket = $this->session->get('basket');
@@ -156,10 +156,6 @@
 					$this->basket['items'][] = current($this->productsModel->getBasketItems($newItems, $this->_shop['price_id']));
 				}
 
-
-
-
-
 				/** Формируем идентификатор обработанного размера позиции для передачи js-бибиотеку */
 //			$id = key($item);
 				if (count($item[$id]) == 1) {
@@ -185,18 +181,18 @@
 //		$this->view->disable();
 			if($mode != 'small') {
 				ob_start($this->view->partial('partials/basket/getBasket', array('basket' => $this->session->get('basket'),
-																				 'discounts' => $this->_shop['discounts']
+																				 'discounts' => json_decode($this->_shop['discounts'], true)
 																			)));
 				ob_end_flush();
 			} else {
 				ob_start($this->view->partial('partials/basket/get', array('basket' => $this->session->get('basket'),
-																		   'discounts' => $this->_shop['discounts']
+																		   'discounts' => json_decode($this->_shop['discounts'], true)
 						)));
 				ob_end_flush();
 			}
 
-
-
+			//@upd Stanislav WEB чтобы работал ajax в minicart
+			$mini	=	Catalogue::basketMini($this->basket['items']);
 			//Set the content of the response
 			return $this->response->setContent(json_encode(
 				array('success' 	=>	true,
@@ -205,7 +201,8 @@
 					  'items' 		=>	$this->basket['items'],
 					  'selected'	=>	$selected,
 					  'id' 			=> 	isset($id) ? $id : 0,
-					  'total'		=> 	0,
+					  'total'		=> 	$mini['total'],
+					  'basket_info'	=>	($mini['total'] > 0) ?Catalogue::declOfNum($mini['total'], ['вещь','вещи','вещей']).' на '.$mini['sum'].' '.$this->_shop['currency_symbol']: '',
 					  'basket' 		=> 	ob_get_contents(),
 				)));
 
@@ -216,20 +213,6 @@
 			$this->view->disable();
 		}
 
-
-		public function removeFromCartAction()
-		{
-			var_dump('add-remove-from-basket');
-			die;
-			if($this->session->has('cart') && $this->session->get('cart') != '') {
-
-				$session = $this->session->get('cart');
-				$this->view->disable();
-				unset($session[$this->request->getPost('product_id')]);
-				$this->session->set("cart", $session);
-				return $this->response->setContent(json_encode(array('result' => true)));
-			}
-		}
 
 		/**
 		 * Метод сохранения корзины в сессию при отсутсвии переполнения

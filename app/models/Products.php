@@ -42,6 +42,11 @@ class Products extends \Phalcon\Mvc\Model
 			'sort'		=>	'rating',
 			'order'		=>	'desc',
 			'sex'		=>	false,
+			'tags'		=>	false,
+			'brands'	=>	false,
+			'discount'	=>	false,
+			'discount >' => false,
+			'percent'	=>	false,
 	);
 
 	/**
@@ -97,7 +102,6 @@ class Products extends \Phalcon\Mvc\Model
 					if($i > 0) $sql .= " AND";
 					if(is_array($value))
 					{
-
 						$sql .= " ".$key." IN(".join(',', $value).") ";
 					}
 					else $sql .= " ".$key." = '".$value."'";
@@ -148,23 +152,22 @@ class Products extends \Phalcon\Mvc\Model
 	}
 
 	/**
-	 * getProducts($price_id, array $condition = array(), $offset = 0, $limit = 10, array $order = [], $cache = false) Вывод товаров в категории с постраничным выводом
+	 * getProducts(array $condition = array(), $offset = 0, $limit = 10, array $order = [], $cache = false) Вывод товаров в категории с постраничным выводом
 	 * @param      $price_id ID цены
 	 * @param      $category_id родительская категория
 	 * @param null $limit лимит записей
 	 * @return \Phalcon\Paginator\Adapter\QueryBuilder
 	 */
-	public function getProducts($price_id, array $condition = [], $filters, $cache = false)
+	public function getProducts(array $condition = [], $filters, $cache = false)
 	{
 		// фильтрую полученные фильтры
 		$this->setFilters($filters);
-
 		$result = null;
 
 		if($cache && $this->_cache)
 		{
 			$backendCache = $this->getDI()->get('backendCache');
-			$md5 = md5(self::TABLE.$price_id.join('',$condition).join('',$this->_filters));
+			$md5 = md5(self::TABLE.join('',$condition).join('',$this->_filters));
 			$result = $backendCache->get($md5.'.cache');
 		}
 
@@ -178,43 +181,89 @@ class Products extends \Phalcon\Mvc\Model
 					FROM `".Common::TABLE_PRODUCTS_REL."` rel
 					INNER JOIN `".self::TABLE."` prod ON (prod.id = rel.product_id)
 					INNER JOIN `".Prices::TABLE."` price ON (prod.id = price.product_id)
-					LEFT JOIN `".Brands::TABLE."` brand ON (brand.id = prod.brand_id)
-					WHERE price.id = ".$price_id;
+					LEFT JOIN `".Brands::TABLE."` brand ON (brand.id = prod.brand_id)";
+
+			// фильтрация по тегам
+			if(!empty($this->_filters['tags'])) {
+				$sql .= " LEFT JOIN `" . Common::TABLE_PRODUCTS_REL . "` tags ON (rel.product_id = tags.product_id)";
+			}
 
 			if(!empty($condition))
 			{
+				$sql .= " WHERE";
+				$i = 0;
 				foreach($condition as $key => $value)
 				{
 					if(sizeof($value) != 1)
-						$sql .= " && ".$key." IN(".join(',', $value).") ";
+						$sql .= " ".$key." IN(".join(',', $value).") ";
 					else
 					{
+						if($i > 0) $sql .= " &&";
+
 						if(is_array($condition[$key]))
-							$sql .= " && ".$key." ".$condition[$key][0]." ";
+							$sql .= " ".$key." ".$condition[$key][0]." ";
 						else
 						{
 
 							if($condition[$key][0] != '')
-								$sql .= " && ".$key." ".$condition[$key]." ";
+								$sql .= " ".$key." ".$condition[$key]." ";
 						}
 					}
+					$i++;
 				}
+			}
+
+			// фильтрация по тегам
+			if(!empty($this->_filters['tags']))
+			{
+				$sql = rtrim($sql,'&&');
+				$sql .= " && tags.tag_id IN(".join(',', $this->_filters['tags']).") ";
+
+			}
+
+			// фильтрация по брендам
+			if(!empty($this->_filters['brands']))
+			{
+				$sql = rtrim($sql,'&&');
+				$sql .= " && brand.id IN(".join(',', $this->_filters['brands']).") ";
+			}
+
+			// фильтрация по полу
+
+			if(!empty($this->_filters['sex']))
+			{
+				$sql = rtrim($sql,'&&');
+				$sql .= " && sex IN(".join(',', $this->_filters['sex']).") ";
+			}
+
+			// фильтрация по проценту скидки
+
+			if(!empty($this->_filters['percent']))
+			{
+				$sql = rtrim($sql,'&&');
+				$sql .= " && percent = ".(int)$this->_filters['percent'];
+			}
+			elseif($this->_filters['discount >'] != null) // фильтр по всем дисконтам
+			{
+				$sql = rtrim($sql,'&&');
+				$sql .= " && discount > ".(int)$this->_filters['discount >'];
 			}
 
 			// Группировка
 			if(!empty($this->_filters['group']))
+			{
+				$sql = rtrim($sql,'&&');
 				$sql .= " GROUP BY ".$this->_filters['group'];
+			}
 
 			// Сортировка
 			if(!empty($this->_filters['sort']))
 				$sql .= " ORDER BY ".$this->_filters['sort'].' '.$this->_filters['order'];
 
 			// Смещение и лимит
-
-
 			if(!empty($this->_filters['offset']) && !empty($this->_filters['limit']))
 				$sql .= " LIMIT ".(int)$this->_filters['offset'].",  ".(int)$this->_filters['limit'];
-			elseif($this->_filters['limit'] > 0)
+			elseif(isset($this->_filters['limit']) > 0)
 				$sql .= " LIMIT ".(int)$this->_filters['limit'];
 
 			$result = $this->_db->query($sql)->fetchAll();

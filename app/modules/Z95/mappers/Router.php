@@ -297,11 +297,17 @@ class Router extends \Phalcon\Mvc\Controller
 		{
 			case 'new':			// Новые
 
-				$items	=	$this->_model->getProducts(
-					$this->_shop['price_id'], [
+				if(!isset($this->_rules->query['sort']))
+					$this->_rules->query['sort']	=	'prod.date_income';
+					$this->_rules->query['order']	=	'desc';
+
+				$items	=	$this->_model->getProducts([
 						'prod.is_new = '	=>	'1',
-						'price.price > '	=>	'0'
-					], 0, $this->_limit, ['prod.id'], ['prod.date_income DESC'], true);
+						'price.price > '	=>	'0',
+						'price.id ='			=>	$this->_shop['price_id'],
+						'prod.sex = '			=>	($this->_gender > 0) ? $this->_gender : false,
+					],
+					$this->_rules->query, true);
 
 				break;
 
@@ -323,37 +329,54 @@ class Router extends \Phalcon\Mvc\Controller
 
 				break;
 
-			case 'favorites':	// Добавленные в избранное
-
-				$items	=	[];
-
-				break;
-
 			case 'sales':		// Распродажи
 
 				// проверяю на фильтры gender
 				$gender = end($this->_rules->catalogue);
-
 				if($gender != 'sales') {
 
-					$this->_filter	=	[
-						'prod.sex ' 		=> [0, 3, $this->getGender($gender)],
-						'price.discount > ' => '0',
+					$this->_rules->query	=	[
+						'sex' 			=> 	[0, 3, $this->getGender($gender)],
+						'discount >' 	=> '0',
+						'percent' 		=> $this->_rules->query['percent'],
 					];
-
-					if(!empty($this->_rules->query))
-						$this->_filter[key($this->_rules->query).' = ']	=	$this->_rules->query[key($this->_rules->query)];
 
 					$this->setTitle(strtoupper($gender));
 				}
 
 				// гребу выдачу
 
-				$items	=	$this->_model->getProducts($this->_shop['price_id'], $this->_filter, 0, 100, ['prod.id'], ['(price.price/price.percent) DESC, prod.rating'], true);
+				if(!isset($this->_rules->query['sort']))
+				{
+					$this->_rules->query['sort']	=	'(price.price/price.percent)';
+					$this->_rules->query['order']	=	'desc';
+				}
+
+				$items	=	$this->_model->getProducts([
+						'price.id ='	=>	$this->_shop['price_id'],
+					],
+					$this->_rules->query, true);
 
 				break;
+
+			case 'brands':		// Бренды
+
+				$brand_id = $this->_rules->current;
+
+				// гребу выдачу
+
+				$items	=	$this->_model->getProducts([
+						'brand.id = '	=>	$brand_id,
+					], null, true);
+
+				$this->title	=	$items[0]['brand_name'];
+
+				$this->setTitle(strtoupper($items[0]['brand_name']));
+			break;
+
 			default :
-			case 'top';
+				case 'top';
+			break;
 		}
 		return $items;
 	}
@@ -408,18 +431,116 @@ class Router extends \Phalcon\Mvc\Controller
 			|| !empty($intersect))
 		{
 			// Обработка виртуалок
-
+			$this->session->destroy('category');
 			$category	= [
 				'name'	=>	$this->_exclude[$intersect[0]],
 				'alias'	=>	$intersect[0]
 			];
 
 			// переключатель
-			$items = $this->virtualSwitcher($category);
+			switch($category['alias'])
+			{
+				case 'new':			// Новые
+
+					if(!isset($this->_rules->query['sort']))
+						$this->_rules->query['sort']	=	'prod.date_income';
+					$this->_rules->query['order']	=	'desc';
+
+					$items	=	$this->_model->getProducts([
+							'prod.is_new = '	=>	'1',
+							'price.price > '	=>	'0',
+							'price.id ='			=>	$this->_shop['price_id'],
+							'prod.sex = '			=>	($this->_gender > 0) ? $this->_gender : false,
+						],
+						$this->_rules->query, true);
+
+					break;
+
+				case 'top':			// Топ 200
+
+					// проверяю на фильтры gender
+					$gender = end($this->_rules->catalogue);
+
+					if($gender != 'top') {
+						$this->_filter	=	[
+							'prod.sex = ' 		=> $this->getGender($gender),
+						];
+						$this->setTitle(strtoupper($gender));
+					}
+
+					// гребу топ, устанавливаю макс. число для выдачи, тем самым отключаю для топа постраничный вывод
+					$this->_limit	=	200;
+					$items	=	$this->_model->getTopProducts($this->_shop['price_id'], $this->_filter, $this->_limit, true);
+
+					break;
+
+				case 'sales':		// Распродажи
+
+					// проверяю на фильтры gender
+					$gender = end($this->_rules->catalogue);
+					if($gender != 'sales') {
+
+						$this->_rules->query	=	[
+							'sex' 			=> 	[0, 3, $this->getGender($gender)],
+							'discount >' 	=> '0',
+							'percent' 		=> $this->_rules->query['percent'],
+						];
+
+						$this->setTitle(strtoupper($gender));
+					}
+
+					// гребу выдачу
+
+					if(!isset($this->_rules->query['sort']))
+					{
+						$this->_rules->query['sort']	=	'(price.price/price.percent)';
+						$this->_rules->query['order']	=	'desc';
+					}
+
+					$items	=	$this->_model->getProducts([
+							'price.id ='	=>	$this->_shop['price_id'],
+						],
+						$this->_rules->query, true);
+
+					break;
+
+				case 'brands':		// Бренды
+
+					$brand_id = $this->_rules->current;
+
+					// гребу выдачу
+
+					$items	=	$this->_model->getProducts([
+						'brand.id = '	=>	$brand_id,
+					], null, true);
+
+					$category['name']	=	$items[0]['brand_name'];
+					$this->_breadcrumbs->add($this->_translate['BRANDS'], 'catalogue/brands');
+
+					$this->setTitle(strtoupper($category['name']));
+					break;
+
+				default :
+				case 'top';
+				break;
+			}
 
 			// если есть в массиве счетчик удаляю его
 			if(isset($items['count']))
 				$count = array_pop($items);
+			else $count	=	sizeof($items);
+
+			// постраничная навигация
+			if($count > $this->_limit)
+			{
+				$current = $this->request->getQuery("page");
+				$this->_pagination	=	[
+					'limit'		=>	$this->_limit,
+					'current'	=>	($current) ? $current : 1,
+					'count'		=>	$count,
+					'pages'		=>	floor($count/$this->_limit)
+				];
+			}
 		}
 		else
 		{
@@ -455,11 +576,9 @@ class Router extends \Phalcon\Mvc\Controller
 				// добавляю в навигацию
 				$this->_breadcrumbs->add($parent['name'], 'catalogue/'.$parent['alias']);
 
-				//@todo Будет проверка на фильтры
-
-				$items	=	$this->_model->getProducts(
-					$this->_shop['price_id'], [														// WHERE
-						'rel.category_id  = '	=>	$category['id'],
+				$items	=	$this->_model->getProducts([														// WHERE
+						'rel.category_id  	= '	=>	$category['id'],
+						'price.id ='			=>	$this->_shop['price_id'],
 						'prod.sex = '			=>	($this->_gender > 0) ? $this->_gender : false,
 					],
 					$this->_rules->query, true);
@@ -478,7 +597,6 @@ class Router extends \Phalcon\Mvc\Controller
 					$current = $this->request->getQuery("page");
 					$this->_pagination	=	[
 						'limit'		=>	$this->_limit,
-						'offset'	=>	$this->_limit,
 						'current'	=>	($current) ? $current : 1,
 						'count'		=>	$count,
 						'pages'		=>	floor($count/$this->_limit)
@@ -488,14 +606,18 @@ class Router extends \Phalcon\Mvc\Controller
 			else // не найдена такая категория вообще
 				return $this->view->render('error', 'show404')->pick("error/show404");
 		}
+		// сохраняю параметры адресной строки
+		$this->session->set('query', $this->_rules->query);
+		$this->session->set('request_uri', $this->_rules->path);
 
 		// задаю шаблон для вывода результата выдачи
 		$this->setItems($items)->setTemplate('itemsline');
 
 		// Устанавливаю мета данные
-		$this->setTitle($category['name']);
-		$this->_breadcrumbs->add($category['name'], 'catalogue/'.$category['alias']);
 
+		$this->setTitle($category['name']);
+
+		$this->_breadcrumbs->add($category['name'], 'catalogue/'.$category['alias']);
 
 		$templateVars	=	[
 			'title'			=>	$this->_title,
@@ -503,6 +625,7 @@ class Router extends \Phalcon\Mvc\Controller
 			'items'			=>	$this->_items,
 			'pagination'	=>	$this->_pagination,
 			'query'			=>	$this->_rules->query,
+			'count'			=>	(isset($count)) ? $count : 0,
 			'favorites'		=>	$this->session->get('favorites')
 		];
 

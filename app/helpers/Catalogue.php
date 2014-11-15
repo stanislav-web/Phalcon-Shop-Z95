@@ -182,6 +182,32 @@ class Catalogue
 		}
 	}
 
+	public static function declOfNum($number, $titles) {
+		$cases = array (2, 0, 1, 1, 1, 2);
+		return $number . ' ' . $titles[($number % 100 > 4 && $number % 100 < 20) ? 2 : $cases[min($number % 10, 5)] ] . ' ';
+	}
+
+	/**
+	 * basketMini(array $basket) подсчет в мини корзине
+	 *
+	 * @param array $basket['items']
+	 * @return array
+	 */
+	public static function basketMini(array $basket)
+	{
+		$cart = [
+			'total' =>	0,
+			'sum' 	=>	0
+		];
+
+		foreach($basket as $item => $val)
+		{
+			$countSizes = (isset($basket[$item]['sizes'])) ? sizeof($basket[$item]['sizes']) : 0;
+			$cart['total']	+= (isset($val['sizes']) && !empty($val['sizes']))  ? sizeof($val['sizes']) : 0;
+			$cart['sum']	+= ((isset($val['discount']))  ? $val['discount'] : 0) * $countSizes;
+		}
+		return $cart;
+	}
 
 	/**
 	 * tagsToTree(array $elements) Теги с размерами превращию в дерево

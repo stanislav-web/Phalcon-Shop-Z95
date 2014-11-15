@@ -136,25 +136,26 @@ class Brands extends \Phalcon\Mvc\Model
 	/**
 	 * Получение списка брендов с количеством позиций в каждом из них
 	 * @author <filchakov.denis@gmail.com>
-	 *
+	 * @modify Stanislav WEB
 	 */
 	public function getAllBrands($shopID = 1, $cache = false){
 		$result = null;
 		if($cache && $this->_cache) {
 			$backendCache = $this->getDI()->get('backendCache');
-			$result = $backendCache->get(self::TABLE.$shopID.'-allbrands.cache');
+			$md5 = md5(self::TABLE.$shopID.'-allbrands');
+			$result = $backendCache->get($md5.'.cache');
 		}
-		if($result === null){
-			$sql = 'SELECT b.name, COUNT(product.brand_id) as \'count\'
-					FROM `products_relationship` rel
-					INNER JOIN `products` product ON (product.id = rel.product_id)
+		if($result === null)
+		{
+			$sql = "SELECT b.id, b.name, COUNT(*) AS `count`
+					FROM brands b
+					INNER JOIN `products` product ON (product.brand_id = b.id)
 					INNER JOIN `prices` price ON (price.product_id = product.id)
-					INNER JOIN brands b ON b.id = product.brand_id
-					WHERE price.id = '.$shopID.'
-					GROUP BY product.brand_id
-					ORDER BY name ASC';
+					WHERE price.id = ".$shopID."
+					GROUP BY b.id ORDER BY name ASC";
+
 			$result = $this->_db->query($sql)->fetchAll();
-			if($cache && $this->_cache) $backendCache->save(self::TABLE.$shopID.'-allbrands.cache', $result);
+			if($cache && $this->_cache) $backendCache->save($md5.'.cache', $result);
 		}
 		return $result;
 	}

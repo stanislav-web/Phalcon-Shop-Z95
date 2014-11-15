@@ -1,5 +1,6 @@
 <?php
 	namespace Modules\Z95\Controllers;
+	use Helpers\Catalogue;
 
 	/**
 	 * Class ControllerBase Расширяет остальные контроллеры
@@ -206,8 +207,15 @@
 		$nav = $this->di->get('navigation');
 		$this->_breadcrumbs = $this->di->get('breadcrumbs');
 
+		// проверка корзины
+		$basket = $this->session->get('basket');
+		if(!empty($basket['items']))
+			$minicart = Catalogue::basketMini($basket['items']);
+
 		// В конце запись переменных для шаблонов
+
 		$this->view->setVars([
+			'minicart'		=>	(isset($minicart)) ? $minicart : [],		// информация по мини корзине
 			'language'	    =>	$this->_lang,       // текущий язык
 			'languages'	    =>	$this->_languages,  // все доступные языки
 			'shop' 		    => 	$this->_shop,       // параметры магазина

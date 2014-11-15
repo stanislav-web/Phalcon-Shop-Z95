@@ -111,7 +111,7 @@ class CatalogueController extends ControllerBase
 						->setRules($action)
 						->setShop($this->_shop)
 						->setCollection(Catalogue::arrayToAssoc($this->_shopCategories, 'id'))
-						->setExclude(['top' => 'ТОП 200', 'favorites' => 'Понравилось', 'new' => 'Новинки', 'sales' => 'Распродажа'])
+						->setExclude(['top' => 'ТОП 200', 'favorites' => 'Понравилось', 'new' => 'Новинки', 'sales' => 'Распродажа', 'brands' => 'Бренды'])
 						->setNav($this->_breadcrumbs)
 						->setTranslate($this->_translate)
 						->render($this->productsModel);
@@ -122,13 +122,16 @@ class CatalogueController extends ControllerBase
 						->setRules($action)
 						->setShop($this->_shop)
 						->setCollection(Catalogue::arrayToAssoc($this->_shopCategories, 'id'))
-						->setExclude(['top' => 'ТОП 200', 'favorites' => 'Понравилось', 'new' => 'Новинки', 'sales' => 'Распродажа'])
+						->setExclude(['top' => 'ТОП 200', 'favorites' => 'Понравилось', 'new' => 'Новинки', 'sales' => 'Распродажа', 'brands' => 'Бренды'])
 						->setNav($this->_breadcrumbs)
 						->setTranslate($this->_translate)
 						->render($this->productsModel);
 				}
 			}
 		}
+
+		// ну и баннер на каждой странице ))
+		$this->view->setVar('banners', $this->banners);
 	}
 
 	/**
@@ -230,8 +233,11 @@ class CatalogueController extends ControllerBase
 	/**
 	 * Страница всех брендов
 	 * @author <filchakov.denis@gmail.com>
+	 * @modify Stanislav WEB
 	 */
-	public function brandsAction(){
+	public function brandsAction()
+	{
+
 		$this->tag->appendTitle(' - '.$this->_translate['ALL_BRANDS']);
 
 		$arrayBrand = Catalogue::arrayToAssoc((array)$this->brandsModel->getAllBrands($this->_shop['id']), 'name');
@@ -245,10 +251,11 @@ class CatalogueController extends ControllerBase
 		$this->view->setVars([
 			'title'	=> $this->_translate['ALL_BRANDS'],
 			'template'		=>	'brands',
-			'brands' => $result,
+			'brands' 		=> $result,
+			'banners'		=> $this->banners
 		]);
 
-		return $this->view->render('catalogue', 'index')->pick("catalogue/index");
+		$this->view->pick("catalogue/index");
 	}
 
 	/*
@@ -274,7 +281,7 @@ class CatalogueController extends ControllerBase
 
 			// собираю чистый запрос на конструкторе
 			$items = $this->productsModel->get([
-				'prod.id', 'prod.name', 'prod.articul', 'prod.preview', 'price.price', 'price.discount', 'brand.name as brand_name'
+				'prod.id', 'prod.name', 'prod.articul', 'prod.preview', 'price.price', 'price.discount', 'brand.name as brand_name', 'filter_size'
 			],
 			['prod.id' => $favorites, 'price.id' => $this->_shop['price_id']], ['id' =>'ASC'], sizeof($favorites), true);
 		}
@@ -283,8 +290,9 @@ class CatalogueController extends ControllerBase
 			'template'	=>	'itemsline',
 			'title' 	=> 	$title,
 			'items' 	=> 	$items,
-			'favorites'	=>	$this->session->get('favorites')
-
+			'count'		=>	sizeof($items),
+			'favorites'	=>	$this->session->get('favorites'),
+			'banners'		=> $this->banners
 		]);
 
 		$this->view->pick("catalogue/index");
@@ -379,6 +387,7 @@ class CatalogueController extends ControllerBase
 				'template'		=>	'sale',
 				"title" 		=> $title,
 				"salesGroup" 	=> $result,
+				'banners'		=> $this->banners
 			]);
 
 			$this->view->pick("catalogue/index");
@@ -487,16 +496,6 @@ class CatalogueController extends ControllerBase
 		}
 		// Сохраняем вывод в кэш
 		if($this->_config->cache->frontend) $this->view->cache(array("key" => $this->cachePage(__FUNCTION__)));
-	}
-
-	/**
-	 * Возвращает рекомендации
-	 */
-	function getRecommendedItems(){
-		$ids = explode(',', $_REQUEST['ids']);
-		$infoIds = $this->productsModel->getRecommend($ids);
-		$result['html'] = 'Здесь будут товары с ID — '.$infoIds;
-		return $result;
 	}
 }
 

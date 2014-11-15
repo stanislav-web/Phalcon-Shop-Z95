@@ -1,35 +1,34 @@
 <!-- / Catalogue layout -->
 <div class="column main-column">
 	<?php if(isset($banners['inner']) && !empty($banners['inner'])): ?>
-	<div class="inner_teaser">
-		<a href="<?=\Helpers\LocationUrls::location('/catalogue/sale'); ?>" >
-			<?= $this->tag->image(array('f/t/'.$banners['inner'][0]['image'])); ?>
-		</a>
-	</div>
-</div>
-<?endif;?>
-<!-- Catalogue content layout -->
-<div id="CONTENT">
-	<h1><?=$title;?> <?=(isset($item['articul'])) ? '('.$layoutTranslate['ARTICUL'].': '.$item['articul'].')' : ''; ?></h1>
-	<?php if(!empty($breadcrumbs)): ?>
-		<!-- Bread Crumbs -->
-		<ul class="Thermo">
-			<?php foreach($breadcrumbs as $crumb): ?>
-				<li>
-					<?=($crumb['active']) ? $crumb['text'] : $this->tag->linkTo($crumb['link'], $crumb['text']).' / '; ?>
-				</li>
-			<?php endforeach; ?>
-		</ul>
-		<!-- Bread Crumbs -->
+		<div class="inner_teaser">
+			<a href="<?=\Helpers\LocationUrls::location('/catalogue/sale'); ?>" >
+				<?= $this->tag->image(array('f/t/'.$banners['inner'][0]['image'])); ?>
+			</a>
+		</div>
 	<?endif;?>
+	<!-- Catalogue content layout -->
+	<div id="CONTENT">
+		<h1><?=$title;?> <?=(isset($item['articul'])) ? '('.$layoutTranslate['ARTICUL'].': '.$item['articul'].')' : ''; ?></h1>
+		<?php if(!empty($breadcrumbs)): ?>
+			<!-- Bread Crumbs -->
+			<ul class="Thermo">
+				<?php foreach($breadcrumbs as $crumb): ?>
+					<li>
+						<?=($crumb['active']) ? $crumb['text'] : $this->tag->linkTo($crumb['link'], $crumb['text']).' / '; ?>
+					</li>
+				<?php endforeach; ?>
+			</ul>
+			<!-- Bread Crumbs -->
+		<?endif;?>
 
-	<div class="clear"></div>
-	<div class="element-catalogue_items" id="renderItems">
-		<!-- Render content -->
-		<?php if($template) $this->partial('partials/catalogue/'.$template); ?>
-		<!-- /Render content -->
+		<div class="clear"></div>
+		<div class="element-catalogue_items" id="renderItems">
+			<!-- Render content -->
+			<?php if($template) $this->partial('partials/catalogue/'.$template); ?>
+			<!-- /Render content -->
+		</div>
 	</div>
-</div>
-<!-- /Catalogue content layout -->
+	<!-- /Catalogue content layout -->
 </div>
 <!-- / Catalogue layout -->
