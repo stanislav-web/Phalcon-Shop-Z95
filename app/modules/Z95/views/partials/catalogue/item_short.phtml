@@ -108,13 +108,13 @@
 
 		<div class="price">
 			<?php if($item['discount'] == $item['price']): ?>
-			<div>
-				&nbsp; <?=$item['discount']; ?> &nbsp;
+			<div style="white-space: nowrap">
+				&nbsp; <?=number_format($item['discount'], 0, '.', ' '); ?> &nbsp;
 				<span class="sign"><?=$shop['currency_symbol'];?></span>
 			</div>
 			<?php else :?>
 			<div>
-				<s><?=$item['price'];?></s>&nbsp;<?=$item['discount'];?>&nbsp;
+				<s style="white-space: nowrap"><?=number_format($item['price'], 0, '.', ' ');?></s>&nbsp;<?=number_format($item['discount'], 0, '.', ' ');?>&nbsp;
 				<span class="sign"><?=$shop['currency_symbol'];?></span>
 			</div>
 			<?endif;?>

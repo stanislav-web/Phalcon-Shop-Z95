@@ -220,7 +220,7 @@ class CatalogueController extends ControllerBase
 						"discounts"	=>	(!empty($this->_shop['discounts'])) ? json_decode($this->_shop['discounts'], true) : ''
 					]);
 				}
-				$this->view->setVar("categories" , $this->commonModel->categoriesToTree($this->_shopCategories));
+				$this->view->setVar("categories" , Catalogue::categoriesToTree($this->_shopCategories));
 
 				// ссылаюсь на вывод в action index с видом catalogue/index
 				$this->view->render('catalogue', 'index')->pick("catalogue/index");
@@ -289,10 +289,10 @@ class CatalogueController extends ControllerBase
 		$this->view->setVars([
 			'template'	=>	'itemsline',
 			'title' 	=> 	$title,
-			'items' 	=> 	$items,
-			'count'		=>	sizeof($items),
-			'favorites'	=>	$this->session->get('favorites'),
-			'banners'		=> $this->banners
+			'items' 	=> 	(sizeof($favorites) == 1)  ? [$items] : $items,
+			'count'		=>	sizeof($favorites),
+			'favorites'	=>	$favorites,
+			'banners'	=> $this->banners
 		]);
 
 		$this->view->pick("catalogue/index");

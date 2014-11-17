@@ -1,31 +1,30 @@
+<?php if(isset($buyableItems) && sizeof($buyableItems) > 0 ):?>
 <tr>
 	<td colspan="2">
 		<div class="catalogue-items-bought not-m1">
 			<b><?=$viewTranslate['BUY_TOGETHER'];?>:</b>
 			<div class="item_list">
-				<?php if(isset($buyableItems) && sizeof($buyableItems) > 0 ):?>
-					<?php foreach($buyableItems as $bitem): ?>
-						<?php
-						// decode image
-						$images 	= json_decode($bitem['preview'], true);
-						?>
-						<div class="small_item">
-							<div class="preview">
-								<a href="<?=Helpers\LocationUrls::location('/catalogue/'.$bitem['articul']);?>">
-									<img src="http://img<?php echo rand(0,9); ?>.z95.ru/f/p/150x150/catalogue/<?=$bitem['id'];?>/<?=array_values($images)[0];?>"></a></div>
-							<div class="hidden_title">
-								<a href="<?=Helpers\LocationUrls::location('/catalogue/'.$bitem['articul']);?>">
-									<?=$bitem['name'];?> <span style="white-space:nowrap"><?=$bitem['brand_name'];?></span>
-								</a>
-								<div class="price">
-									<s><?=$bitem['price'];?></s>&nbsp;<?=$bitem['discount'];?>&nbsp;<span class="sign"><?=$shop['currency_symbol'];?></span>
-								</div>
+				<?php foreach($buyableItems as $bitem): ?>
+					<?php
+					// decode image
+					$images 	= json_decode($bitem['preview'], true);
+					?>
+					<div class="small_item">
+						<div class="preview">
+							<a href="<?=Helpers\LocationUrls::location('/catalogue/'.$bitem['articul']);?>">
+								<img src="http://img<?php echo rand(0,9); ?>.z95.ru/f/p/150x150/catalogue/<?=$bitem['id'];?>/<?=array_values($images)[0];?>"></a></div>
+						<div class="hidden_title">
+							<a href="<?=Helpers\LocationUrls::location('/catalogue/'.$bitem['articul']);?>">
+								<?=$bitem['name'];?> <span style="white-space:nowrap"><?=$bitem['brand_name'];?></span>
+							</a>
+							<div class="price">
+								<s><?=$bitem['price'];?></s>&nbsp;<?=$bitem['discount'];?>&nbsp;<span class="sign"><?=$shop['currency_symbol'];?></span>
 							</div>
 						</div>
-					<?php endforeach; ?>
-
-				<?php endif;?>
+					</div>
+				<?php endforeach; ?>
 			</div>
 		</div>
 	</td>
 </tr>
+<?php endif;?>

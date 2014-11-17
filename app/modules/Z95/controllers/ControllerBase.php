@@ -213,6 +213,7 @@
 			$minicart = Catalogue::basketMini($basket['items']);
 
 		// В конце запись переменных для шаблонов
+		$this->session->set('price_id', $this->_shop['price_id']);
 
 		$this->view->setVars([
 			'minicart'		=>	(isset($minicart)) ? $minicart : [],		// информация по мини корзине
@@ -220,7 +221,6 @@
 			'languages'	    =>	$this->_languages,  // все доступные языки
 			'shop' 		    => 	$this->_shop,       // параметры магазина
 			'navigation' 	=> 	$nav,               // топ меню навигации
-			'newProducts'   =>  $this->productsModel->getNewProducts($this->_shop['price_id'], 6,  true)       // новые товары
 		]);
 	}
 

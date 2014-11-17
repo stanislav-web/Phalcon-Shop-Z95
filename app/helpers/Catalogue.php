@@ -100,7 +100,7 @@ class Catalogue
 	 * @access static
 	 * @return array
 	 */
-	public static function findInTree($array, $key, $value)
+	public static function findInTree($array, $key, $value, $key2 = null, $value2 = null)
 	{
 		$results = array();
 
@@ -108,23 +108,17 @@ class Catalogue
 
 		foreach ($arrIt as $sub) {
 			$subArray = $arrIt->getSubIterator();
-			if ($subArray[$key] === $value) {
-				$results[] = iterator_to_array($subArray);
+			if(!is_null($key2) && !is_null($value2))
+			{
+				if ($subArray[$key2] == $value2 && $subArray[$key] == $value) {
+					$results[] = iterator_to_array($subArray);
+				}
 			}
-		}
-		return $results;
-	}
-
-	public static function findInTree2($array, $key, $value, $key2, $value2)
-	{
-		$results = array();
-
-		$arrIt = new \RecursiveIteratorIterator(new \RecursiveArrayIterator($array));
-
-		foreach ($arrIt as $sub) {
-			$subArray = $arrIt->getSubIterator();
-			if ($subArray[$key2] == $value2 && $subArray[$key] == $value) {
-				$results[] = iterator_to_array($subArray);
+			else
+			{
+				if ($subArray[$key] === $value) {
+					$results[] = iterator_to_array($subArray);
+				}
 			}
 		}
 		return $results;
@@ -158,31 +152,89 @@ class Catalogue
 	 * @param      $array входящий массив с категориями
 	 * @param int  $parent_id внутри какого parent сортировать?
 	 * @param bool $sort Сортировать?
+	 * @param bool $sumFiled суммировать поля?
 	 * @return array
 	 */
-	public static function categoriesToTree(array $array, $parent_id = 0, $sort = false) {
+	public static function categoriesToTree(array $array, $parent_id = 0, $sort = false, $sumField = '') {
 		$tree = array();
 
 		if( !empty($array)){
-			$array = self::arrayToAssoc($array, 'id');
 
 			foreach( $array as $id => $element ){
 
 				$element = (array) $element;
 				if( !isset($element['parent_id']) ) continue;
-				if( $element['parent_id'] == $parent_id ){
+				if( $element['parent_id'] == $parent_id ) {
 					$tree[$id] = $element;
 					unset($array[$element['id']]);
 					$tree[$id]['childs'] = self::categoriesToTree($array, $element['id']);
-
 				}
 			}
 			if($sort) $tree = self::sortCategories($tree);
+
+			if(!empty($sumField))
+			{
+				// суммирую количество в дочерних категориях по [$sumField] и приписываю к родителю
+
+				$tree = self::arraySort(self::getChildrenSum($tree, $sumField), $sumField, true);
+			}
+			$tree = self::arrayToAssoc($tree, 'id');
+
 			return $tree;
 		}
 	}
 
-	public static function declOfNum($number, $titles) {
+	/**
+	 *  arraySort($array, $key) сортировка обычного массива
+	 * @param $array исх. массив
+	 * @param $key ключ по которому сортировать
+	 * @param $desc обратный порядок?
+	 * @return mixed
+	 */
+	public static function arraySort($array, $key, $desc = false)
+	{
+
+		$ascending = function($a, $b) use ($key) {
+			if ($a[$key] == $b[$key]) {
+				return 0;
+			}
+			return ($a[$key] < $b[$key]) ? -1 : 1;
+		};
+		usort($array, $ascending);
+
+		if($desc) $array = array_reverse($array, true);
+		return $array;
+	}
+
+	/**
+	 * getChildrenSum($array, $field) Подсчет суммы всех сумм в дочерних элементах
+	 * @param $array
+	 * @param $field
+	 * @return mixed
+	 */
+	public static function getChildrenSum($array, $field)
+	{
+		foreach($array as $k => $item)
+		{
+			if(!empty($item['childs']))
+			{
+				$array[$k][$field] = array_sum(array_map(
+					function($element){
+						return $element['count_products'];
+					},
+					$item['childs']));
+			}
+		}
+		return $array;
+	}
+
+	/**
+	 * Склонение числительных Catalogue::declOfNum(5, ['вещь', 'вещей', 'вещи'])
+	 * @param $number
+	 * @param array $titles
+	 * @return string
+	 */
+	public static function declOfNum($number, array $titles) {
 		$cases = array (2, 0, 1, 1, 1, 2);
 		return $number . ' ' . $titles[($number % 100 > 4 && $number % 100 < 20) ? 2 : $cases[min($number % 10, 5)] ] . ' ';
 	}
@@ -193,18 +245,21 @@ class Catalogue
 	 * @param array $basket['items']
 	 * @return array
 	 */
-	public static function basketMini(array $basket)
+	public static function basketMini($basket = [])
 	{
 		$cart = [
 			'total' =>	0,
 			'sum' 	=>	0
 		];
 
-		foreach($basket as $item => $val)
+		if(!empty($basket))
 		{
-			$countSizes = (isset($basket[$item]['sizes'])) ? sizeof($basket[$item]['sizes']) : 0;
-			$cart['total']	+= (isset($val['sizes']) && !empty($val['sizes']))  ? sizeof($val['sizes']) : 0;
-			$cart['sum']	+= ((isset($val['discount']))  ? $val['discount'] : 0) * $countSizes;
+			foreach($basket as $item => $val)
+			{
+				$countSizes = (isset($basket[$item]['sizes'])) ? sizeof($basket[$item]['sizes']) : 0;
+				$cart['total']	+= (isset($val['sizes']) && !empty($val['sizes']))  ? sizeof($val['sizes']) : 0;
+				$cart['sum']	+= ((isset($val['discount']))  ? $val['discount'] : 0) * $countSizes;
+			}
 		}
 		return $cart;
 	}
@@ -359,7 +414,22 @@ class Catalogue
 		);
 	}
 
-	/**
+	public static function arraySumm(array $array, $field)
+	{
+		$totals = array();
+
+		foreach($array AS $el)
+		{
+			if (!isset($totals[$bank['name']]))
+				$totals[$bank['name']] = 0;
+
+			$totals[$bank['name']] += $bank['amount'];
+		}
+	}
+
+
+
+/**
 	 * itemCompareSize($a,$b) helps callback to compare item size
 	 * @var string $itemSizeField
 	 * return array
@@ -425,7 +495,7 @@ class Catalogue
 			'18325' => array('shirt.png', 'jeans.png'), /* 'back_lenght','shoulders_width','chest_width','sleeve_lenght','pants_lenght','internal_lenght','planting_depth0','waist' */ // 'Спортивные костюмы'
 			'24552' => array('shirt.png', 'jeans.png'), /* 'back_lenght','shoulders_width','chest_width0','sleeve_lenght','pants_lenght','internal_lenght','planting_depth0','waist' */ // 'Костюмы'
 		];
-		return $categories[$category_id];
+		return isset($categories[$category_id]) ? $categories[$category_id] : false;
 	}
 
 	/**

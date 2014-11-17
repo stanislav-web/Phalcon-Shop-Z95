@@ -194,6 +194,7 @@
 			//@upd Stanislav WEB чтобы работал ajax в minicart
 			$mini	=	Catalogue::basketMini($this->basket['items']);
 			//Set the content of the response
+
 			return $this->response->setContent(json_encode(
 				array('success' 	=>	true,
 					  'mode' 		=>	$this->request->getQuery('mode'),
@@ -202,7 +203,7 @@
 					  'selected'	=>	$selected,
 					  'id' 			=> 	isset($id) ? $id : 0,
 					  'total'		=> 	$mini['total'],
-					  'basket_info'	=>	($mini['total'] > 0) ?Catalogue::declOfNum($mini['total'], ['вещь','вещи','вещей']).' на '.$mini['sum'].' '.$this->_shop['currency_symbol']: '',
+					  'basket_info'	=>	(isset($mini['total']) && $mini['total'] > 0) ?Catalogue::declOfNum($mini['total'], ['вещь','вещи','вещей']).' на '.$mini['sum'].' '.$this->_shop['currency_symbol']: '',
 					  'basket' 		=> 	ob_get_contents(),
 				)));
 

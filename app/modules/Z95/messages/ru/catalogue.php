@@ -3,6 +3,7 @@
 	 *  Русская локализация для CatalogController
 	 */
 	$messages = [
+		"MAIN"						=>	"Главная",
 		"TITLE"                     =>  "Каталог",
 		"COUNT_PRODUCTS"			=>	"Тут %d товаров",
 		"CATALOGUE"					=>	"Каталог",
@@ -23,6 +24,8 @@
 		"ALL_SALES"					=>	"Все скидки",
 		"ABOUT"						=>	"О нас",
 		"ALL_BRANDS"				=>  "Бренды",
+		"NEW"						=>  "Новинки",
+		"KIDS"						=>  "Детские",
 		"SORT_BY" => "Сортировка по",
 		"RATING_FIELD" => "популярности",
 		"NEW_FIELD" => "новизне",

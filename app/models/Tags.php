@@ -132,7 +132,7 @@ class Tags extends \Phalcon\Mvc\Model
 						SELECT tags.id as id, tags.parent_id, tags.name, tags.alias, NULL
 						FROM tags
 						WHERE tags.parent_id = 0
-					) ORDER BY id";
+					) ORDER BY count_products DESC";
 
 			$result = $this->_db->query($sql)->fetchAll();
 

@@ -1,6 +1,6 @@
 <?php
 	namespace Modules\Z95\Controllers;
-	use \Helpers;
+	use \Helpers\Catalogue;
 
 	/**
 	 * Class IndexController Главная страница и статика
@@ -79,8 +79,8 @@
 				// вывожу по умолчанию страницу каталога c вложением subcategories
 				$this->view->setVars([
 					'banners'			=>	$banners,
-					'tree'				=>	Helpers\Catalogue::categoriesToTree($this->_shopCategories, 0, true),
-					'subcategories'		=>	Helpers\Catalogue::arrayToAssoc($subCategories, 'id'),
+					'tree'				=>	Catalogue::categoriesToTree($this->_shopCategories, 0, true),
+					'subcategories'		=>	Catalogue::arrayToAssoc($subCategories, 'id'),
 					'title'				=>	$title,
 				]);
 			}

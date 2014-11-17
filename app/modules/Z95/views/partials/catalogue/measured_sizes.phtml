@@ -35,7 +35,7 @@
 		</script>
 		<!-- Measure image -->
 		<?php $categoryDimensions = Helpers\Catalogue::catalogueDimensionsImages($item['category_id']);
-			if(isset($item['category_id']) && isset($categoryDimensions)): ?>
+			if(isset($item['category_id']) && $categoryDimensions != false): ?>
 			<h4>
 				<br>
 				<?=$viewTranslate['HOW_WE_MEASURE']?> <span onclick="$('#sh').toggle(); $(this).html(($(this).html() == '<?=$viewTranslate['SHOW']?>' ? '<?=$viewTranslate['HIDE']?>' : '<?=$viewTranslate['SHOW']?>'));"><?=$viewTranslate['SHOW']?></span></h4>

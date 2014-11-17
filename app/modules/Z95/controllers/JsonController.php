@@ -56,7 +56,7 @@ class JsonController extends ControllerBase
 		$this->_isJsonResponse	=	true;
 
 		// текущий request_uri
-		$this->requestUri	=	$this->request->getURI();
+		$this->requestUri	=	$this->session->get('request_uri');
 	}
 
 	/**
@@ -82,6 +82,7 @@ class JsonController extends ControllerBase
 
 			// получаю теги для выбранной категории+товары
 			$category = $this->session->get('category');
+
 			if(!empty($category))
 			{
 				// выгребаю теги
@@ -96,14 +97,16 @@ class JsonController extends ControllerBase
 			}
 			else
 			{
-				//@todo выдача тегов для виртуалок
+				// Выдача сайд бара для виртуалок, выдаю категории с подсчетом количества по сумме в дочерних категориях
+				$tagsCloud['categories'] = Catalogue::categoriesToTree(Catalogue::arrayToAssoc($this->_shopCategories, 'id'), 0, false, 'count_products');
+
 			}
 
 			$this->response->setJsonContent([
 				'response'	=>	$this->view->getRender('partials/json', 'tags', [
 					'tagsCloud'		=>	$tagsCloud,
 					'query'			=>	$this->session->get('query'), // параметры в адресной строке ?tags[]=246&tags[]=456 || brand[]=234&brand[]=43
-					'request_uri'	=>	$this->session->get('request_uri'),	// для сброса фильтров
+					'request_uri'	=>	$this->requestUri,	// для сброса фильтров
 				])
 			]);
 

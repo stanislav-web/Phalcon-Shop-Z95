@@ -1,8 +1,9 @@
 <?php
 	// сколько показано уже
 	$show = ($pagination['current'] > 1) ? $pagination['current']*$pagination['limit'] : $pagination['current'];
+	$for = ($pagination['count'] > $show+$pagination['limit']) ?  ($show+$pagination['limit']) : $pagination['count'];
 ?>
-<?php if($this->request->get('limit') == $pagination['count']): ?>
+<?php if($this->request->get('limit') == $pagination['count'] || $category['alias'] == 'top'): ?>
 	<div class="paging">
 		<div class="info">Показаны все <?=$pagination['count'];?></div>
 	</div>
@@ -29,11 +30,8 @@
 		<?php endif;?>
 	</div>
 	<div style="clear: both;"></div>
-	<script type="text/javascript">
-		$('.pagination-links a').attr({onclick: "var p = $(this).html(); return catalogue.page(p);"});
-	</script>
 	<div class="paging">
-		<div class="info">Показаны с <?=$show;?> по <?=($show+$pagination['limit']);?> из <?=$pagination['count'];?></div>
+		<div class="info">Показаны с <?=$show;?> по <?=($for);?> из <?=$pagination['count'];?></div>
 		<div class="link active">
 			<a class="link page isAjax" href="?limit=<?=$pagination['count'];?>">Показать все</a>
 		</div>

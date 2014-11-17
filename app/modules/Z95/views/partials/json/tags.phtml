@@ -1,10 +1,44 @@
 <!-- Облако тегов -->
+<?php if(isset($query['page'])) unset($query['page']); ?>
 <div id="tags_block_left" class="block tags_block black nobackground">
 	<div class="close" onclick="$(this).parent().parent().toggleClass('hidden'); $('#tags_filter_button').removeClass('hidden');" title="Закрыть фильтры"></div>
 	<div class="filters">
 		<?php if(isset($request_uri)):?>
-			<a class="link page isAjax reset" href="<?=$request_uri;?>">Сбросить все</a>
+			<a class="link page isAjaxTag reset" href="<?=$request_uri;?>">Сбросить все</a>
 		<?php endif;?>
+
+		<!-- Показываю категории, если есть -->
+		<?php if(isset($tagsCloud['categories']) && !empty($tagsCloud['categories'])): ?>
+			<div class="group categories" onclick="$('.parent-of-categories').toggle();">Категории</div>
+			<?php foreach($tagsCloud['categories'] as $categories): ?>
+				<?php if(!empty($categories['childs'])): ?>
+					<?php
+					$url = (isset($query) && !empty($query)) ? array_merge($query, ['categories['.$categories['id'].']' => $categories['id']]) : ['categories['.$categories['id'].']' => $categories['id']];
+					?>
+					<label>
+						<input type="checkbox" href="?<?=urldecode(http_build_query($url)); ?>" rel="<?=$categories['id'];?>" class="parent link page isAjaxTag" value="<?=$categories['id'];?>" <?=(!empty($query['category']) && in_array($categories['id'], $categories['category'])) ? 'checked': '';?>>
+						<a style="color: #777" rel="<?=$categories['id'];?>" class="link page isAjaxTag" href="?<?=urldecode(http_build_query($url)); ?>"><?=$categories['name'];?>
+						</a>
+					</label>
+					<?php foreach($categories['childs'] as $category): ?>
+						<?php if(is_array($category) && $category['count_products'] > 0): ?>
+							<div class="tag category parent-of-categories parent-of-category-<?=$categories['id'];?>">
+								<?php
+									$url = (isset($query) && !empty($query)) ? array_merge($query, ['categories['.$category['id'].']' => $category['id']]) : ['categories['.$category['id'].']' => $category['id']];
+								?>
+								<label style="margin-left: 15px;">
+									<input type="checkbox" data-parent="<?=$categories['id'];?>" value="<?=$category['id'];?>" <?=(!empty($query['categories']) && in_array($category['id'], $query['categories'])) ? 'checked': '';?>>
+									<a style="color: #777" class="link page isAjaxTag" href="?<?=urldecode(http_build_query($url)); ?>"><?=$category['name'];?>
+										<!--(<?=$category['count_products'];?>)-->
+									</a>
+								</label>
+							</div>
+						<?php endif; ?>
+						<?php unset($url); endforeach; ?>
+				<?php endif; ?>
+			<?php endforeach; ?>
+		<?php endif; ?>
+		<!-- /Показываю категории, если есть -->
 
 		<!-- Показываю размеры, если есть -->
 		<?php if(isset($tagsCloud['sizes']) && !empty($tagsCloud['sizes'])): ?>
@@ -15,8 +49,8 @@
 						$url = (isset($query) && !empty($query)) ? array_merge($query, ['tags['.$val['id'].']' => $val['id']]) : ['tags['.$val['id'].']' => $val['id']];
 					?>
 					<label>
-						<input type="checkbox" value="<?=$val['id'];?>" <?=(!empty($query['tags']) && in_array($val['id'], $query['tags'])) ? 'checked': '';?>>
-							<a style="color: #777" rel="<?=$val['id'];?>" class="link page isAjax" href="?<?=urldecode(http_build_query($url)); ?>"><?=$val['name'];?>
+						<input type="checkbox" rel="<?=$val['id'];?>" href="?<?=urldecode(http_build_query($url)); ?>" class="link page isAjaxTag" value="<?=$val['id'];?>" <?=(!empty($query['tags']) && in_array($val['id'], $query['tags'])) ? 'checked': '';?>>
+							<a style="color: #777" rel="<?=$val['id'];?>" class="link page isAjaxTag" href="?<?=urldecode(http_build_query($url)); ?>"><?=$val['name'];?>
 						(<?=$val['count_products'];?>)
 						</a>
 					</label>
@@ -37,8 +71,8 @@
 									$url = (isset($query) && !empty($query)) ? array_merge($query, ['tags['.$tag['id'].']' => $tag['id']]) : ['tags['.$tag['id'].']' => $tag['id']];
 								?>
 								<label>
-									<input type="checkbox" value="<?=$tag['id'];?>" <?=(!empty($query['tags']) && in_array($tag['id'], $query['tags'])) ? 'checked': '';?>>
-										<a style="color: #777" rel="<?=$tag['id'];?>" class="link page isAjax" href="?<?=urldecode(http_build_query($url)); ?>"><?=$tag['name'];?>
+									<input type="checkbox" class="link page isAjaxTag" rel="<?=$tag['id'];?>" href="?<?=urldecode(http_build_query($url)); ?>" value="<?=$tag['id'];?>" <?=(!empty($query['tags']) && in_array($tag['id'], $query['tags'])) ? 'checked': '';?>>
+										<a style="color: #777" rel="<?=$tag['id'];?>" class="link page isAjaxTag" href="?<?=urldecode(http_build_query($url)); ?>"><?=$tag['name'];?>
 											(<?=$tag['count_products'];?>)
 										</a>
 								</label>
@@ -61,8 +95,8 @@
 									<?php
 										$url = (isset($query) && !empty($query)) ? array_merge($query, ['brands['.$brand['id'].']' => $brand['id']]) : ['brands['.$brand['id'].']' => $brand['id']];
 									?>
-									<input type="checkbox" value="<?=$brand['id'];?>" <?=(!empty($query['brands']) && in_array($brand['id'], $query['brands'])) ? 'checked': '';?>>
-									<a style="color: #777" rel="<?=$brand['id'];?>" class="link page isAjax" href="?<?=urldecode(http_build_query($url)); ?>"><?=$brand['name'];?>
+									<input type="checkbox" rel="<?=$brand['id'];?>" class="link page isAjaxTag" href="?<?=urldecode(http_build_query($url)); ?>" value="<?=$brand['id'];?>" <?=(!empty($query['brands']) && in_array($brand['id'], $query['brands'])) ? 'checked': '';?>>
+									<a style="color: #777" rel="<?=$brand['id'];?>" class="link page isAjaxTag" href="?<?=urldecode(http_build_query($url)); ?>"><?=$brand['name'];?>
 											(<?=$brand['count_products'];?>)
 										</a>
 								</label>
@@ -74,35 +108,26 @@
 	</div>
 </div>
 <!-- /Облако тегов -->
-
-<script>
-	$(function() {
-
-		$("a.link.page.isAjax").on('click', function(e) {
-
+<script type="text/javascript">
+		$(".link.page.isAjaxTag").on('click change', function(e) {
 			e.preventDefault();
 			global.showStatus('common.loading');
 
-			// делаю отметки при клике на ссылку чекбокса
-			var checkBoxes = $(this).prev(),
-				rel = $(this).attr('rel'),
-				currentURL	= window.location.pathname +$(this).attr('href');
+			// определяю по чем кликнули (чек или линк)
+			var cb 			= 	$(this).is(':checkbox') ? $(this) : $(this).prev(),
+				rel 		= 	$(this).attr('rel'),
+				currentURL	=	window.location.pathname + $(this).attr('href');
 
-				checkBoxes.prop("checked", !checkBoxes.prop("checked"));
+			cb.prop("checked", !cb.prop("checked"));
 
-			if(!checkBoxes.is(':checked'))	// снимаю галочку
+			if(!cb.is(':checked'))	// снимаю галочку
 			{
 				currentURL = document.URL;
 				var currentArrayUrl = URLToArray(currentURL);
-				console.log(currentArrayUrl);
 				clearUrl(currentArrayUrl, rel);
-				console.log(currentArrayUrl);
 				currentQueryString = ArrayToURL(currentArrayUrl);
-				console.log(currentQueryString);
 				currentURL = window.location.pathname+'?'+currentQueryString;
-				console.log(currentURL);
 			}
-
 			$.getJSON(currentURL, function(data) {
 				if(data.response.length)
 					$(renderItems).html(data.response);
@@ -110,7 +135,6 @@
 				global.hideStatus('common.loading');
 			});
 		});
-	});
 
 
 	function URLToArray(url) {
@@ -141,29 +165,5 @@
 			}
 		}
 		return false;
-	}
-
-	function parseURL(url) {
-		var parser = document.createElement('a'),
-			searchObject = {},
-			queries, split, i;
-		// Let the browser do the work
-		parser.href = url;
-		// Convert query string to object
-		queries = parser.search.replace(/^\?/, '').split('&');
-		for( i = 0; i < queries.length; i++ ) {
-			split = queries[i].split('=');
-			searchObject[split[0]] = split[1];
-		}
-		return {
-			protocol: parser.protocol,
-			host: parser.host,
-			hostname: parser.hostname,
-			port: parser.port,
-			pathname: parser.pathname,
-			search: parser.search,
-			searchObject: searchObject,
-			hash: parser.hash
-		};
 	}
 </script>
