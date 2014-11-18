@@ -38,7 +38,7 @@ class Products extends \Phalcon\Mvc\Model
 		$_price_id	=	1,
 
 		/**
-		 * Доступные фильтры по умолчанию
+		 * Доступные фильтры для модели по умолчанию
 		 * @var array
 		 */
 		$_filters	=	array(
@@ -168,7 +168,7 @@ class Products extends \Phalcon\Mvc\Model
 	 * @param      $price_id ID цены
 	 * @param      $category_id родительская категория
 	 * @param null $limit лимит записей
-	 * @return \Phalcon\Paginator\Adapter\QueryBuilder
+	 * @return \\PDO native array
 	 */
 	public function getProductsCategories($condition, $filters, $cache = false)
 	{
@@ -241,16 +241,10 @@ class Products extends \Phalcon\Mvc\Model
 				else $sql .= " && brand.id = ".(int)$this->_filters['brands'];
 			}
 
-			// Группировка
-			if(!empty($this->_filters['group']))
-			{
-				$sql = rtrim($sql,'&&');
-				$sql .= " GROUP BY ".$this->_filters['group'];
-			}
-
 			// Сортировка
 			if(!empty($this->_filters['sort']))
 			{
+				$sql = rtrim($sql,'&&');
 				$sort = implode(', ', array_map(function ($v, $k) { return sprintf("%s %s", $k, $v); }, $this->_filters['sort'], array_keys($this->_filters['sort'])));
 				$sql .= " ORDER BY ".$sort;
 			}
@@ -273,13 +267,12 @@ class Products extends \Phalcon\Mvc\Model
 		return $result;
 	}
 
-
 	/**
 	 * getProducts(array $condition = array(), $offset = 0, $limit = 10, array $order = [], $cache = false) Вывод товаров в категории с постраничным выводом
 	 * @param      $price_id ID цены
 	 * @param      $category_id родительская категория
 	 * @param null $limit лимит записей
-	 * @return \Phalcon\Paginator\Adapter\QueryBuilder
+	 * @return \PDO native array
 	 */
 	public function getProducts($filters, $cache = false)
 	{
@@ -412,18 +405,18 @@ class Products extends \Phalcon\Mvc\Model
 		return $result;
 	}
 
-
 	/**
 	 * getProductsDiscount($filters, $cache = false) Вывод товаров для скидок, (оптимальный запрос)
 	 * @param      $price_id ID цены
 	 * @param      $category_id родительская категория
 	 * @param null $limit лимит записей
-	 * @return \Phalcon\Paginator\Adapter\QueryBuilder
+	 * @return \PDO native array
 	 */
 	public function getProductsDiscount($filters, $cache = false)
 	{
 		// фильтрую полученные фильтры
 		$this->setFilters($filters);
+
 		$result = null;
 
 		if($cache && $this->_cache)
@@ -440,40 +433,10 @@ class Products extends \Phalcon\Mvc\Model
 					prod.`articul` AS articul, prod.`preview` AS preview, prod.name AS name,
 					brand.name AS brand_name, prod.is_new,
 					price.price AS price, price.discount AS discount
-					FROM `".Common::TABLE_PRODUCTS_REL."` rel
-					INNER JOIN `".self::TABLE."` prod ON (prod.id = rel.product_id)
-					INNER JOIN `".Prices::TABLE."` price  ON (prod.id = price.product_id && discount > 0)
-					LEFT JOIN `".Brands::TABLE."` brand ON (brand.id = prod.brand_id)";
+					FROM `prices` price
+					INNER JOIN `products` prod   ON (prod.id = price.product_id && (discount > 0 && price.id = ".(int)$this->_price_id."))
+					LEFT JOIN `brands` brand ON (brand.id = prod.brand_id) WHERE 1=1";
 
-			// фильтрация по тегам
-			if(!empty($this->_filters['tags'])) {
-				$sql .= " LEFT JOIN `" . Common::TABLE_PRODUCTS_REL . "` tags ON (rel.product_id = tags.product_id)";
-			}
-
-			$sql .= " WHERE price.id = ".(int)$this->_price_id." &&";
-			if(!empty($condition))
-			{
-				$i = 0;
-				foreach($condition as $key => $value)
-				{
-					if(sizeof($value) != 1)
-						$sql .= " ".$key." IN(".join(',', $value).") ";
-					else
-					{
-						if($i > 0) $sql .= " &&";
-
-						if(is_array($condition[$key]))
-							$sql .= " ".$key." ".$condition[$key][0]." ";
-						else
-						{
-
-							if($condition[$key][0] != '')
-								$sql .= " ".$key." ".$condition[$key]." ";
-						}
-					}
-					$i++;
-				}
-			}
 
 			// выборка из категорий
 
@@ -523,13 +486,6 @@ class Products extends \Phalcon\Mvc\Model
 				$sql .= " && is_new = ".(int)$this->_filters['is_new'];
 			}
 
-			// Группировка
-			if(!empty($this->_filters['group']))
-			{
-				$sql = rtrim($sql,'&&');
-				$sql .= " GROUP BY ".$this->_filters['group'];
-			}
-
 			// Сортировка
 			if(!empty($this->_filters['sort']))
 			{
@@ -542,7 +498,6 @@ class Products extends \Phalcon\Mvc\Model
 				$sql .= " LIMIT ".(int)$this->_filters['offset'].",  ".(int)$this->_filters['limit'];
 			elseif(isset($this->_filters['limit']) > 0)
 				$sql .= " LIMIT ".(int)$this->_filters['limit'];
-
 
 			$result = $this->_db->query($sql)->fetchAll();
 
@@ -561,7 +516,7 @@ class Products extends \Phalcon\Mvc\Model
 	 * @param      $price_id ID цены
 	 * @param      $condition условие Where
 	 * @param int $limit лимит записей
-	 * @return \Phalcon\Paginator\Adapter\QueryBuilder
+	 * @return \PDO native array
 	 */
 	public function getTopProducts($filters, $limit = 200, $cache = false)
 	{
@@ -713,17 +668,6 @@ class Products extends \Phalcon\Mvc\Model
 			if($cache && $this->_cache) $backendCache->save(self::TABLE.'-'.strtolower(__FUNCTION__).'-'.$shop_price_id.'.cache', $result);
 		}
 		return $result;
-	}
-
-	public function recountBasketItems($item)
-	{
-		$id = key($item);
-		$items = array();
-		foreach($item[$id] as $key => $param){
-			list($size, $count) = explode('_', $item[$id][$key]);
-			$items[$id]['sizes'][$size] = $count;
-		}
-		return $items;
 	}
 
 	public function getBasketItems($basketItems, $shop_price_id)
