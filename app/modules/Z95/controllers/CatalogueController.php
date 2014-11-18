@@ -109,6 +109,7 @@ class CatalogueController extends ControllerBase
 				{
 					(new Router())->json()
 						->setRules($action)
+						->setShop($this->_shop)
 						->setCollection(Catalogue::arrayToAssoc($this->_shopCategories, 'id'))
 						->setExclude(['top' => 'ТОП 200', 'favorites' => 'Понравилось', 'new' => 'Новинки', 'sales' => 'Распродажа', 'brands' => 'Бренды'])
 						->setNav($this->_breadcrumbs)
@@ -119,6 +120,7 @@ class CatalogueController extends ControllerBase
 				{
 					(new Router())
 						->setRules($action)
+						->setShop($this->_shop)
 						->setCollection(Catalogue::arrayToAssoc($this->_shopCategories, 'id'))
 						->setExclude(['top' => 'ТОП 200', 'favorites' => 'Понравилось', 'new' => 'Новинки', 'sales' => 'Распродажа', 'brands' => 'Бренды'])
 						->setNav($this->_breadcrumbs)

@@ -148,7 +148,7 @@ class Catalogue
 	}
 
 	/**
-	 * categoriesToTree  Построение дерева категорий (с сортировкой + суммирование по любому полю)
+	 * categoriesToTree  Построение дерева категорий (с сортировкой)
 	 * @param      $array входящий массив с категориями
 	 * @param int  $parent_id внутри какого parent сортировать?
 	 * @param bool $sort Сортировать?
@@ -234,31 +234,13 @@ class Catalogue
 	 * @param array $titles
 	 * @return string
 	 */
-	public static function declOfNum($number, array $titles)
-	{
+	public static function declOfNum($number, array $titles) {
 		$cases = array (2, 0, 1, 1, 1, 2);
 		return $number . ' ' . $titles[($number % 100 > 4 && $number % 100 < 20) ? 2 : $cases[min($number % 10, 5)] ] . ' ';
 	}
 
 	/**
-	 * @param $tot_rows вещей в запросе
-	 * @param $pp вещей на страницу
-	 * @param $curr_page номер текущей страницы
-	 * @return array
-	 */
-	public static function getPagingInfo($tot_rows,$pp,$curr_page)
-	{
-		$pages = ceil($tot_rows / $pp); // calc pages
-
-		$data = array(); // start out array
-		$data['si']        = ($curr_page * $pp) - $pp; // what row to start at
-		$data['pages']     = $pages;                   // add the pages
-		$data['curr_page'] = $curr_page;               // Whats the current page
-		return $data; //return the paging data
-	}
-
-	/**
-	 * basketMini(array $basket) подсчет суммы покупок в мини корзине
+	 * basketMini(array $basket) подсчет в мини корзине
 	 *
 	 * @param array $basket['items']
 	 * @return array
@@ -280,23 +262,6 @@ class Catalogue
 			}
 		}
 		return $cart;
-	}
-
-	/**
-	 * recountBasketItems(array $item) Пересчет суммы в большой корзине
-	 * @param array $item
-	 * @author vavas
-	 * @return array
-	 */
-	public function recountBasketItems(array $item)
-	{
-		$id = key($item);
-		$items = array();
-		foreach($item[$id] as $key => $param){
-			list($size, $count) = explode('_', $item[$id][$key]);
-			$items[$id]['sizes'][$size] = $count;
-		}
-		return $items;
 	}
 
 	/**
@@ -381,7 +346,7 @@ class Catalogue
 	}
 
 	/**
-	 * itemMeasures($itemDimensions) Получение используемых размеров
+	 * itemMeasures($itemDimensions) get using item dimensions
 	 * @param array $itemDimensions
 	 * @return array filtered values like
 	 * Usable Values Array
@@ -449,7 +414,22 @@ class Catalogue
 		);
 	}
 
-	/**
+	public static function arraySumm(array $array, $field)
+	{
+		$totals = array();
+
+		foreach($array AS $el)
+		{
+			if (!isset($totals[$bank['name']]))
+				$totals[$bank['name']] = 0;
+
+			$totals[$bank['name']] += $bank['amount'];
+		}
+	}
+
+
+
+/**
 	 * itemCompareSize($a,$b) helps callback to compare item size
 	 * @var string $itemSizeField
 	 * return array

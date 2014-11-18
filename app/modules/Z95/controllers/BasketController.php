@@ -261,7 +261,7 @@
 				} else {
 					//добавляем новую вещь
 
-					$items = Catalogue::recountBasketItems($basket_items);
+					$items = $this->productsModel->recountBasketItems($basket_items);
 				}
 
 //			$this->session->set('basket', array('items' => $basket['items']));
@@ -269,7 +269,7 @@
 
 			} else {
 
-				$items = Catalogue::recountBasketItems($basket_items);
+				$items = $this->productsModel->recountBasketItems($basket_items);
 
 				$this->session->set('basket', array('items' => $items));
 				return $items;
