@@ -1,66 +1,70 @@
-<?php
-	/* Входные параметры */
-	$count_pages = ceil($pagination['count'] / $pagination['limit']);
-	$active = $pagination['page'];
-	$count_show_pages = 4;
-	$count = $pagination['count'];
-	$item_page = $count - (($active - 1) * $pagination['limit'] + 1);
-	if ($item_page >= $pagination['limit']) {
-		$item_page = ($active - 1) * $pagination['limit'] + $pagination['limit']; //$pagination['limit'];
-	} else {
-		$item_page = $item_page + ($active - 1) * $pagination['limit'] + 1;
-	}
-	unset($pagination['count']);
-	$url = $_REQUEST['_url'] . '?' . http_build_query($pagination);
-	unset($pagination['page']);
-	$url_page = $_REQUEST['_url'] . '?' . http_build_query($pagination) . "&page=";
-	if (true) { // Всё это только если количество страниц больше 1
-		$left  = $active - 1;
-		$right = $count_pages - $active;
-		if ($left < floor($count_show_pages / 2)) $start = 1;
-		else $start = $active - floor($count_show_pages / 2);
-		$end = $start + $count_show_pages - 1;
-		if ($end > $count_pages) {
-			$start -= ($end - $count_pages);
-			$end = $count_pages;
-			if ($start < 1) $start = 1;
-		}
-		?>
-		<div class="paging pages pagination-links" style="border: 0;">
-			<?php if ($active >= 4) { ?>
-				<div class="link page" onclick="$(this).find('a')[0].click();"><a
-						href="<?php if ($active == 2) { ?><?= $url ?><?php } else { ?><?= $url_page ?>1<?php } ?>">1</a>
-				</div>
-				<div class="middle">...</div>
-			<?php } ?>
-			<?php for ($i = $start; $i <= $end; $i++) { ?>
-				<?php if ($i == $active) { ?>
-					<div class="link page selected"><?= $i ?></div><?php } else { ?>
-					<div class="link page" onclick="$(this).find('a')[0].click();"><a
-						href="<?php if ($i == 1) { $pagination['page'] = 1;$url = $_REQUEST['_url'] . '?' . http_build_query($pagination);?><?= $url ?><?php } else { ?><?= $url_page . $i ?><?php } ?>"><?= $i ?></a>
-					</div><?php } ?>
-			<?php } ?>
-			<?php if ($active != $count_pages && ($count_pages - $active) >= 2) { ?>
-				<div class="middle">...</div>
-				<div class="link page" onclick="$(this).find('a')[0].click();"><a
-						href="<?= $url_page . $count_pages ?>"><?= $count_pages; ?></a></div>
-			<?php } ?>
-		</div>
-		<div style="clear: both;"></div>
-		<div class="paging">
-			<div class="info">Показаны с <?= ($active - 1) * $pagination['limit'] + 1; ?> по <?= $item_page; ?>
-				из <?= $count; ?></div>
-			<?php
-				if ($pagination['limit'] == 500) {
-					$pagination['limit'] = 100;
-					echo '<div class="link active"><a href="' . $_REQUEST['_url'] . '?' . http_build_query($pagination) . '">Показать по 100</a></div>';
-				} elseif ($pagination['limit'] == 100) {
-					$pagination['limit'] = 500;
-					echo '<div class="link active"><a href="' . $_REQUEST['_url'] . '?' . http_build_query($pagination) . '">Показать по 500</a></div>';
-				} else {
-					$pagination['limit'] = 500;
-					echo '<div class="link active"><a href="' . $_REQUEST['_url'] . '?' . http_build_query($pagination) . '">Показать все</a></div>';
-				}
-			?>
-		</div>
-	<?php } ?>
+<!-- Фильтры -->
+<div class="paging">
+	<div class="info"><?=$viewTranslate["SORT_BY"];?></div>
+
+	<?php
+		// определяю состояние по умолчанию
+
+		if(!isset($query['sort']['rating']) || !in_array($query['sort']['rating'], ['asc', 'desc']))
+			$sort['rating']	=	'desc';
+		else if($query['sort']['rating'] == 'desc')
+			$sort['rating']	=	'asc';
+		else $sort['rating'] =	'desc';
+
+		if(!isset($query['sort']['date_income']) || !in_array($query['sort']['date_income'], ['asc', 'desc']))
+			$sort['date_income']	=	'desc';
+		else if($query['sort']['date_income'] == 'desc')
+			$sort['date_income']	=	'asc';
+		else $sort['date_income'] =	'desc';
+
+		if(!isset($query['sort']['price']) || !in_array($query['sort']['price'], ['asc', 'desc']))
+			$sort['price']	=	'asc';
+		else if($query['sort']['price'] == 'desc')
+			$sort['price']	=	'asc';
+		else $sort['price'] =	'desc';
+
+		if(!isset($query['sort']['discount']) || !in_array($query['sort']['discount'], ['asc', 'desc']))
+			$sort['discount']	=	'asc';
+		else if($query['sort']['discount'] == 'desc')
+			$sort['discount']	=	'asc';
+		else $sort['discount'] =	'desc';
+	?>
+
+	<div class="link <?=(isset($query['sort']['rating'])) ? 'selected' : '';?>" onclick="$(this).child().click();">
+		<?php if(!empty($query)): ?>
+			<a class="isAjax" href="?<?=urldecode(http_build_query(array_merge($query, ['sort' => ['rating' => $sort['rating']]]))); ?>"><?=$viewTranslate["RATING_FIELD"];?></a>
+		<?php else: ?>
+			<a class="isAjax" href="?<?=urldecode(http_build_query(['sort' => ['rating' => $sort['rating']]])); ?>"><?=$viewTranslate["RATING_FIELD"];?></a>
+		<?php endif;?>
+		<?php if($sort['rating'] != 'desc'):?> <span>▼</span><?php else:?> <span>▲</span><?php endif;?>
+	</div>
+
+	<div class="link <?=(isset($query['sort']['date_income'])) ? 'selected' : '';?>" onclick="$(this).child().click();">
+		<?php if(!empty($query)): ?>
+			<a class="isAjax" href="?<?=urldecode(http_build_query(array_merge($query, ['sort' => ['date_income' => $sort['date_income']]]))); ?>"><?=$viewTranslate["NEW_FIELD"];?></a>
+		<?php else: ?>
+			<a class="isAjax" href="?<?=urldecode(http_build_query(['sort' => ['date_income' => $sort['date_income']]])); ?>"><?=$viewTranslate["NEW_FIELD"];?></a>
+		<?php endif;?>
+		<?php if($sort['date_income'] != 'desc'):?> <span>▼</span><?php else:?> <span>▲</span><?php endif;?>
+	</div>
+
+	<div class="link <?=(isset($query['sort']['price'])) ? 'selected' : '';?>" onclick="$(this).child().click();">
+		<?php if(!empty($query)): ?>
+			<a class="isAjax" href="?<?=urldecode(http_build_query(array_merge($query, ['sort' => ['price' => $sort['price']]]))); ?>"><?=$viewTranslate["PRICE_FIELD"];?></a>
+		<?php else: ?>
+			<a class="isAjax" href="?<?=urldecode(http_build_query(['sort' => ['price' => $sort['price']]])); ?>"><?=$viewTranslate["PRICE_FIELD"];?></a>
+		<?php endif;?>
+		<?php if($sort['price'] != 'desc'):?> <span>▼</span><?php else:?> <span>▲</span><?php endif;?>
+	</div>
+
+	<div class="link <?=(isset($query['sort']['discount'])) ? 'selected' : '';?>" onclick="$(this).child().click();">
+		<?php if(!empty($query)): ?>
+			<a class="isAjax" href="?<?=urldecode(http_build_query(array_merge($query, ['sort' => ['discount' => $sort['discount']]]))); ?>"><?=$viewTranslate["DISCOUNT_FIELD"];?></a>
+		<?php else: ?>
+			<a class="isAjax" href="?<?=urldecode(http_build_query(['sort' => ['discount' => $sort['discount']]])); ?>"><?=$viewTranslate["DISCOUNT_FIELD"];?></a>
+		<?php endif;?>
+		<?php if($sort['discount'] != 'asc'):?> <span>▼</span><?php else:?> <span>▲</span><?php endif;?>
+	</div>
+</div>
+<div class="clear hr"></div>
+<!-- Фильтры -->

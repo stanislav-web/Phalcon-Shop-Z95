@@ -131,7 +131,7 @@
 							shop_rel.category_id = cat.id
 							-- && shop_rel.category_parent_id = cat.parent_id
 						)
-						LEFT JOIN `products_relationship` prod_rel  USING(category_id)
+						LEFT JOIN `".self::TABLE_PRODUCTS_REL."` prod_rel  USING(category_id)
 						WHERE shop_rel.shop_id = ".$shop_id."
 						GROUP BY shop_rel.category_id";
 

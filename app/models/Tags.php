@@ -86,6 +86,8 @@ class Tags extends \Phalcon\Mvc\Model
 
 			if (null != $limit) $sql .= " LIMIT " . $limit;
 
+			$this->getDI()->get('logger')->log($sql."\r\n",\Phalcon\Logger::INFO);
+
 			if (null == $limit || $limit > 1) {
 				$result = $this->_db->query($sql)->fetchAll();
 			} else {

@@ -99,8 +99,7 @@
 	protected function _getTransPath()
 	{
 		$translationPath = APP_PATH.'/modules/'.$this->router->getModuleName().'/messages/';
-
-		$language = $this->session->get("language");
+		$language = $this->session->get("catalogue");
 
 		if(!$language)
 		{
@@ -117,7 +116,6 @@
 			{
 				$this->_lang = $language;
 				$this->session->set("language", $this->_lang);
-
 			}
 			else
 			{
@@ -138,6 +136,7 @@
 	public function loadMainTrans()
 	{
 		$translationPath = $this->_getTransPath();
+
 		$messages = [];
 		require $translationPath."/layout.php";
 
@@ -186,18 +185,19 @@
 
 		// Инициализация моделей (объекты доступны в контроллерах и views)
 
-		$this->commonModel      =   new \Models\Common();
-		$this->shopModel        =   new \Models\Shops();
-		$this->productsModel    =   new \Models\Products();
-		$this->categoriesModel  =   new \Models\Categories();
-		$this->brandsModel  	=   new \Models\Brands();
-		$this->pricesModel      =   new \Models\Prices();
-		$this->tagsModel      	=   new \Models\Tags();
-		$this->bannersModel     =   new \Models\Banners();
+		if(!$this->commonModel) $this->commonModel      =   new \Models\Common();
+		if(!$this->shopModel) $this->shopModel        =   new \Models\Shops();
+		if(!$this->productsModel) $this->productsModel    =   new \Models\Products();
+		if(!$this->categoriesModel) $this->categoriesModel  =   new \Models\Categories();
+		if(!$this->brandsModel) $this->brandsModel  	=   new \Models\Brands();
+		if(!$this->pricesModel) $this->pricesModel      =   new \Models\Prices();
+		if(!$this->tagsModel) $this->tagsModel      	=   new \Models\Tags();
+		if(!$this->bannersModel) $this->bannersModel     =   new \Models\Banners();
 
 		// Получение параметров текущего магазина
 
-		$this->_shop = $this->shopModel->get(['code'	=>	$this->router->getModuleName()],[], 1, true);
+		if(null === $this->_shop)
+			$this->_shop = $this->shopModel->get(['code'	=>	$this->router->getModuleName()],[], 1, true);
 
 		// Получение категорий и подкатегорий для текущего магазина
 		$this->_shopCategories = $this->commonModel->getShopCategories($this->_shop['id'], true);

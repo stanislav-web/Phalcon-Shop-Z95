@@ -154,6 +154,8 @@ class Brands extends \Phalcon\Mvc\Model
 					WHERE price.id = ".$shopID."
 					GROUP BY b.id ORDER BY name ASC";
 
+			$this->getDI()->get('logger')->log($sql."\r\n",\Phalcon\Logger::INFO);
+
 			$result = $this->_db->query($sql)->fetchAll();
 			if($cache && $this->_cache) $backendCache->save($md5.'.cache', $result);
 		}

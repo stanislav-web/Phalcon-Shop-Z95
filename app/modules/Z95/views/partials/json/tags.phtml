@@ -133,6 +133,7 @@
 					$(renderItems).html(data.response);
 				window.history.pushState("","", currentURL);
 				global.hideStatus('common.loading');
+				$('html, body').animate({scrollTop:$('#renderItems').position().top+(210)}, 'slow');
 			});
 		});
 

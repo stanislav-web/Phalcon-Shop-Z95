@@ -5,7 +5,7 @@
 		Models;
 
 	/**
-	 * Class Router  Маршрутизатор выдачи товаров
+	 * Class Router  Маппер для выдачи товаров
 	 *
 	 * @package Shop
 	 * @subpackage Mappers
@@ -17,6 +17,7 @@
 	 *				->setNav($this->_breadcrumbs)
 	 *				->render();
 	 *          </code>
+	 * @return template | json
 	 */
 	class Router extends \Phalcon\Mvc\Controller
 	{
@@ -88,7 +89,7 @@
 			 * Шаблон выдачи: состояние по умолчанию
 			 * @var bool
 			 */
-			$_template = false,
+			$_template = 'itemsline',
 
 			/**
 			 * Шаблон выдачи: состояние по умолчанию
@@ -119,8 +120,8 @@
 			 * @var array
 			 */
 			$_sex = [
-			'UNI' => 0, 'MAN' => 1, 'WOMAN' => 2, 'KIDS' => 3
-		];
+				'UNI' => 0, 'MAN' => 1, 'WOMAN' => 2, 'KIDS' => 3
+			];
 
 		/**
 		 * Установка модели
@@ -147,6 +148,8 @@
 		/**
 		 * Установка правил магазина
 		 * @param array $shop
+		 * @deprecated
+		 * @see \Models\Products $this->getDI()->getSession()->get('price_id')
 		 * @return \Mappers\Router
 		 */
 		public function setShop(array $shop)
@@ -295,100 +298,6 @@
 			return $this;
 		}
 
-		/**
-		 * Переключатель режима отображения виртуальных категорий
-		 * @param string $type
-		 * @access public
-		 * @return array
-		 */
-		public function virtualSwitcher($type)
-		{
-			switch ($type['alias']) {
-				case 'new':            // Новые
-
-					if (!isset($this->_rules->query['sort']))
-						$this->_rules->query['sort'] = 'prod.date_income';
-					$this->_rules->query['order'] = 'desc';
-
-					$items = $this->_model->getProducts([
-							'prod.is_new = ' => '1',
-							'price.price > ' => '0',
-							'price.id ='     => $this->_shop['price_id'],
-							'prod.sex = '    => ($this->_gender > 0) ? $this->_gender : false,
-						],
-						$this->_rules->query, true);
-
-					break;
-
-				case 'top':            // Топ 200
-
-					// проверяю на фильтры gender
-					$gender = end($this->_rules->catalogue);
-
-					if ($gender != 'top') {
-						$this->_filter = [
-							'prod.sex = ' => $this->getGender($gender),
-						];
-						$this->setTitle(strtoupper($gender));
-					}
-
-					// гребу топ, устанавливаю макс. число для выдачи, тем самым отключаю для топа постраничный вывод
-					$this->_limit = 200;
-					$items = $this->_model->getTopProducts($this->_shop['price_id'], $this->_filter, $this->_limit, true);
-
-					break;
-
-				case 'sales':        // Распродажи
-
-					// проверяю на фильтры gender
-					$gender = end($this->_rules->catalogue);
-					if ($gender != 'sales') {
-
-						$this->_rules->query = [
-							'sex'        => [0, 3, $this->getGender($gender)],
-							'discount >' => '0',
-							'percent'    => $this->_rules->query['percent'],
-						];
-
-						$this->setTitle(strtoupper($gender));
-					}
-
-					// гребу выдачу
-
-					if (!isset($this->_rules->query['sort'])) {
-						$this->_rules->query['sort'] = '(price.price/price.percent)';
-						$this->_rules->query['order'] = 'desc';
-					}
-
-					$items = $this->_model->getProducts([
-							'price.id =' => $this->_shop['price_id'],
-						],
-						$this->_rules->query, true);
-
-					break;
-
-				case 'brands':        // Бренды
-
-					$brand_id = $this->_rules->current;
-
-					// гребу выдачу
-
-					$items = $this->_model->getProducts([
-						'brand.id = ' => $brand_id,
-					], null, true);
-
-					$this->title = $items[0]['brand_name'];
-
-					$this->setTitle(strtoupper($items[0]['brand_name']));
-					break;
-
-				default :
-				case 'top';
-					break;
-			}
-			return $items;
-		}
-
 		/*
 		 * Вывод результатов
 		 * @param object 	$rules 		правила для маппера
@@ -403,11 +312,6 @@
 
 			if (!$this->_model)
 				$this->setModel($model);
-
-			// устанавливаю параметры магазина
-
-			if (!$this->_shop)
-				$this->setShop($shop);
 
 			// устанавливаю правила, если их не задали
 
@@ -476,7 +380,7 @@
 			$this->session->set('request_uri', $this->_rules->path);
 
 			// задаю шаблон для вывода результата выдачи
-			$this->setItems($items)->setTemplate('itemsline');
+			$this->setItems($items); //->setTemplate('itemsline');
 
 			// Устанавливаю мета данные
 
@@ -485,6 +389,7 @@
 			$templateVars = [
 				'title'      => $this->_title,
 				'template'   => $this->_template,
+				'path'		 =>	$this->_rules->path,
 				'items'      => $this->_items,
 				'pagination' => $this->_pagination,
 				'query'      => $this->_rules->query,
@@ -523,7 +428,7 @@
 			$this->_breadcrumbs
 				->add($this->_translate['MAIN'], '/')
 				->add($this->_translate['CATALOGUE'], 'catalogue')
-				->add($this->_translate['BRANDS'], 'catalogue/brands');
+				->add($this->_translate['BRANDS'], 'brands');
 
 			$this->_title = $this->_translate['BRANDS'];
 
@@ -537,8 +442,8 @@
 				$this->_title = $this->_title . ' - ' . $this->_translate[$title[$this->_gender]];
 
 				$this->_rules->query['sex'] = $this->_gender;
+				$this->session->set('sex', $this->_gender);
 			}
-
 
 			if (!isset($this->_rules->query['sort'])) {
 				$this->_rules->query = array_merge($this->_rules->query, [
@@ -551,7 +456,7 @@
 			$items = $this->_model->getProducts($this->_rules->query, true);
 
 			if(!empty($items)) {
-				$this->_breadcrumbs->add($items[0]['brand_name']);
+				$this->_breadcrumbs->add($items[0]['brand_name'], true);
 				$this->_title = $items[0]['brand_name'];
 			}
 			return $items;
@@ -575,14 +480,12 @@
 			// фильтрую пол
 			$this->setGender($this->_rules->catalogue);
 
-			$this->_rules->query['is_new'] = 1;
-
-
 			if (!empty($this->_gender)) {
 				$title = array_flip($this->_sex);
 				$this->_title = $this->_title . ' - ' . $this->_translate[$title[$this->_gender]];
 
 				$this->_rules->query['sex'] = $this->_gender;
+				$this->session->set('sex', $this->_gender);
 			}
 
 			if (!isset($this->_rules->query['sort'])) {
@@ -592,10 +495,10 @@
 					]
 				]);
 			}
-			$this->_breadcrumbs->add($this->_title);
+			$this->_breadcrumbs->add($this->_title, true);
 
 			// Устанавливаю заголовок
-			$items = $this->_model->getProductsDiscount($this->_rules->query, true);
+			$items = $this->_model->getNewProducts($this->_rules->query, true);
 			return $items;
 		}
 
@@ -622,8 +525,12 @@
 				$this->_title = $this->_title . ' - ' . $this->_translate[$title[$this->_gender]];
 
 				$this->_rules->query['sex'] = [0, 3, $this->_gender];
+				$this->session->set('sex', $this->_gender);
 			}
+			else
+				$this->session->remove('sex');
 
+			if(isset($this->_rules->query['percent'])) $this->_title = $this->_title.' '.$this->_rules->query['percent'].'%';
 			if (!isset($this->_rules->query['sort'])) {
 				$this->_rules->query = array_merge($this->_rules->query, [
 					'sort' => [
@@ -639,7 +546,7 @@
 					'rating'  => 'desc',
 				];
 			}
-			$this->_breadcrumbs->add($this->_title);
+			$this->_breadcrumbs->add($this->_title, true);
 
 			$items = $this->_model->getProductsDiscount($this->_rules->query, true);
 			return $items;
@@ -664,18 +571,26 @@
 			// фильтрую пол
 			$this->setGender($this->_rules->catalogue);
 
+			if(!$this->_rules->query)
+				$this->_rules->query = [];
+
 			if (!empty($this->_gender)) {
 				$title = array_flip($this->_sex);
 				$this->_title = $this->_title . ' - ' . $this->_translate[$title[$this->_gender]];
 
 				$this->_rules->query = array_merge($this->_rules->query, [
-					'sex' => $this->_gender,
+					'sex' 	=> $this->_gender,
 				]);
+				$this->session->set('sex', $this->_gender);
 			}
+			else
+				$this->session->remove('sex');
 
-			$this->_breadcrumbs->add($this->_title);
 
-			$items = $this->_model->getTopProducts($this->_rules->query, 200);
+			$this->_breadcrumbs->add($this->_title, false);
+
+			$this->_limit	=	200;
+			$items = $this->_model->getTopProducts($this->_rules->query, $this->_limit);
 			return $items;
 		}
 
@@ -696,6 +611,8 @@
 
 			// фильтрую пол
 			$this->setGender($this->_rules->catalogue);
+
+			$this->session->remove('sex');
 
 			// 	ищем родителя категории, (уже сброшены, поэтому родитель всегда 0)
 			$parent = Catalogue::findInTree($this->_collection, 'alias', $this->_rules->catalogue[0])[0];
@@ -718,7 +635,6 @@
 
 				$category = Catalogue::findInTree($this->_collection, 'parent_id', $parent['id'], 'sex', $this->_gender)[0];
 			}
-			$this->_breadcrumbs;
 
 			// добавляю в навигацию
 			$this->_breadcrumbs->add($parent['name'], 'catalogue/' . $parent['alias'])

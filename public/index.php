@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Мультимодульная структура загрузчика
  */
@@ -38,6 +39,7 @@ try {
 		return $router;
 	});
 
+
 	// Компонент представлений для вывода шаблонов
 
 	$di->set('view', function() use ($module) {
@@ -54,6 +56,7 @@ try {
 			'path'      => APP_PATH.'/modules/'.$module.'/Module.php',
 		],
 	]);
+
 	// Обработка запроса
 	echo $application->handle()->getContent();
 }

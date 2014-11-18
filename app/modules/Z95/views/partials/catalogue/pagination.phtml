@@ -2,38 +2,65 @@
 	// сколько показано уже
 	$show = ($pagination['current'] > 1) ? $pagination['current']*$pagination['limit'] : $pagination['current'];
 	$for = ($pagination['count'] > $show+$pagination['limit']) ?  ($show+$pagination['limit']) : $pagination['count'];
-?>
-<?php if($this->request->get('limit') == $pagination['count'] || $category['alias'] == 'top'): ?>
+	$maxpages = 3;
+	if($pagination['current'] < $maxpages)
+		$sp = 1;
+	elseif($pagination['current'] >= ($pagination['pages'] - floor($maxpages / 2)))
+		$sp = $pagination['pages'] - $maxpages + 1;
+	elseif($pagination['current'] >= $maxpages)
+		$sp = $pagination['current']  - floor($maxpages/2);
+	$limit = $this->request->get('limit');
+	?>
+<?php if(isset($limit) || $category['alias'] == 'top'): ?>
 	<div class="paging">
 		<div class="info">Показаны все <?=$pagination['count'];?></div>
 	</div>
 <?php else: ?>
 	<div class="paging pages pagination-links" style="border: 0;">
-		<?php $p = 1; for($i = 0; $i < $pagination['pages']; $i++): ?>
-			<?php if ($p == $pagination['current']): // если текущая ?>
-				<div class="link page selected"><?=$pagination['current'];?></div>
-			<?php else:?>
-				<?php if(!empty($query)): ?>
-					<a class="link page isAjax" href="?<?=urldecode(http_build_query(array_merge($query, ['page' => $p]))); ?>"><?= $p;?></a>
-				<?php else: ?>
-					<a class="link page isAjax" href="?<?=urldecode(http_build_query(['page' => $p])); ?>"><?= $p;?></a>
-				<?php endif;?>
-			<?php endif;?>
-			<?php $p++; endfor; ?>
-
-		<?php if($pagination['pages'] == 1 && $pagination['count'] > $pagination['limit']): // выдаю недостающую страницу?>
+		<?php if($pagination['current'] > $maxpages):?>
 			<?php if(!empty($query)): ?>
-				<a class="link page isAjax" href="?<?=urldecode(http_build_query(array_merge($query, ['page' => $p]))); ?>"><?= $p;?></a>
+				<a class="link page isAjax" href="?<?=urldecode(http_build_query(array_merge($query, ['page' => 1]))); ?>">1</a>
 			<?php else: ?>
-				<a class="link page isAjax" href="?<?=urldecode(http_build_query(['page' => $p])); ?>"><?= $p;?></a>
+				<a class="link page isAjax" href="?<?=urldecode(http_build_query(['page' => 1])); ?>">1</a>
 			<?php endif;?>
+			<div class="middle">...</div>
 		<?php endif;?>
+		<?php for($i = $sp; $i <= ($sp + $maxpages -1); $i++): ?>
+			<?php if($i > $pagination['pages'])
+						continue;
+			?>
+				<?php if($pagination['current'] == $i) : ?>
+					<div class="link page selected"><?=$pagination['current'];?></div>
+				<?php else : ?>
+					<?php if(!empty($query)): ?>
+						<a class="link page isAjax" href="?<?=urldecode(http_build_query(array_merge($query, ['page' => $i]))); ?>"><?= $i;?></a>
+					<?php else: ?>
+						<a class="link page isAjax" href="?<?=urldecode(http_build_query(['page' => $i])); ?>"><?= $i;?></a>
+					<?php endif;?>
+				<?php endif; ?>
+			<?php endfor; ?>
+		<!-- Если текущая страница меньше чем последняя - макс. страниц / 2-->
+		<?php if($pagination['current'] < ($pagination['pages'] - floor($maxpages / 2))) : ?>
+			<?php if($pagination['pages'] != $maxpages): ?>
+				<div class="middle">...</div>
+				<?php if(!empty($query)): ?>
+					<a class="link page isAjax" href="?<?=urldecode(http_build_query(array_merge($query, ['page' => $pagination['pages']]))); ?>"><?=$pagination['pages'];?></a>
+				<?php else: ?>
+					<a class="link page isAjax" href="?<?=urldecode(http_build_query(['page' => $pagination['pages']])); ?>"><?=$pagination['pages'];?></a>
+				<?php endif;?>
+			<?php endif; ?>
+		<?php endif; ?>
 	</div>
 	<div style="clear: both;"></div>
 	<div class="paging">
 		<div class="info">Показаны с <?=$show;?> по <?=($for);?> из <?=$pagination['count'];?></div>
 		<div class="link active">
-			<a class="link page isAjax" href="?limit=<?=$pagination['count'];?>">Показать все</a>
+			<?php if(!empty($query)): ?>
+				<a class="link page isAjax" href="?<?=urldecode(http_build_query(array_merge($query, ['limit' => $pagination['count']]))); ?>">Показать все</a>
+			<?php else: ?>
+				<a class="link page isAjax" href="?<?=urldecode('limit='.$pagination['count']);?>">Показать все</a>
+			<?php endif;?>
+
 		</div>
 	</div>
 <?php endif; ?>

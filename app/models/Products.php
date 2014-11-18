@@ -38,7 +38,7 @@ class Products extends \Phalcon\Mvc\Model
 		$_price_id	=	1,
 
 		/**
-		 * Доступные фильтры по умолчанию
+		 * Доступные фильтры для модели по умолчанию
 		 * @var array
 		 */
 		$_filters	=	array(
@@ -71,6 +71,33 @@ class Products extends \Phalcon\Mvc\Model
 
 		if(isset($price_id))
 			$this->_price_id = $price_id;
+	}
+
+	/**
+	 * Установка фильров по умолчанию,
+	 * там где offset и limit - идет пересчет на сдвиг для paginate
+	 * @param array boolean false
+	 * @return null
+	 */
+	private function setFilters($filters)
+	{
+		if(!empty($filters))
+		{
+			if(isset($filters['page']))
+			{
+				if(!isset($filters['limit']))
+					$filters['limit']	=	(int)$this->_filters['limit'];
+
+				if(!isset($filters['offset']))
+					$filters['offset']	=	(int)($filters['limit']*$filters['page']);
+			}
+
+			foreach($filters as $key => $val)
+			{
+				if(isset($this->_filters[$key]))
+					$this->_filters[$key]	=	$val;
+			}
+		}
 	}
 
 	/**
@@ -137,38 +164,11 @@ class Products extends \Phalcon\Mvc\Model
 	}
 
 	/**
-	 * Установка фильров по умолчанию,
-	 * там где offset и limit - идет пересчет на сдвиг для paginate
-	 * @param array boolean false
-	 * @return null
-	 */
-	private function setFilters($filters)
-	{
-		if(!empty($filters))
-		{
-			if(isset($filters['page']))
-			{
-				if(!isset($filters['limit']))
-					$filters['limit']	=	$this->_filters['limit'];
-
-				if(!isset($filters['offset']))
-					$filters['offset']	=	($filters['limit']*$filters['page']);
-			}
-
-			foreach($filters as $key => $val)
-			{
-				if(isset($this->_filters[$key]))
-					$this->_filters[$key]	=	$val;
-			}
-		}
-	}
-
-	/**
 	 * getProductsCategories($condition, $filters, $cache = false) Вывод товаров в категории
 	 * @param      $price_id ID цены
 	 * @param      $category_id родительская категория
 	 * @param null $limit лимит записей
-	 * @return \Phalcon\Paginator\Adapter\QueryBuilder
+	 * @return \\PDO native array
 	 */
 	public function getProductsCategories($condition, $filters, $cache = false)
 	{
@@ -200,7 +200,7 @@ class Products extends \Phalcon\Mvc\Model
 				$sql .= " LEFT JOIN `" . Common::TABLE_PRODUCTS_REL . "` tags ON (rel.product_id = tags.product_id)";
 			}
 
-			$sql .= " WHERE price.id = ".(int)$this->_price_id." &&";
+			$sql .= " WHERE prod.published = 1 && price.id = ".(int)$this->_price_id." &&";
 			if(!empty($condition))
 			{
 				$i = 0;
@@ -241,16 +241,10 @@ class Products extends \Phalcon\Mvc\Model
 				else $sql .= " && brand.id = ".(int)$this->_filters['brands'];
 			}
 
-			// Группировка
-			if(!empty($this->_filters['group']))
-			{
-				$sql = rtrim($sql,'&&');
-				$sql .= " GROUP BY ".$this->_filters['group'];
-			}
-
 			// Сортировка
 			if(!empty($this->_filters['sort']))
 			{
+				$sql = rtrim($sql,'&&');
 				$sort = implode(', ', array_map(function ($v, $k) { return sprintf("%s %s", $k, $v); }, $this->_filters['sort'], array_keys($this->_filters['sort'])));
 				$sql .= " ORDER BY ".$sort;
 			}
@@ -273,13 +267,12 @@ class Products extends \Phalcon\Mvc\Model
 		return $result;
 	}
 
-
 	/**
-	 * getProducts(array $condition = array(), $offset = 0, $limit = 10, array $order = [], $cache = false) Вывод товаров в категории с постраничным выводом
+	 * getProducts($filters, $cache = false) Вывод товаров в категории с постраничным выводом
 	 * @param      $price_id ID цены
 	 * @param      $category_id родительская категория
 	 * @param null $limit лимит записей
-	 * @return \Phalcon\Paginator\Adapter\QueryBuilder
+	 * @return \PDO native array
 	 */
 	public function getProducts($filters, $cache = false)
 	{
@@ -303,7 +296,7 @@ class Products extends \Phalcon\Mvc\Model
 					price.price AS price, price.discount AS discount
 					FROM `".Common::TABLE_PRODUCTS_REL."` rel
 					INNER JOIN `".self::TABLE."` prod ON (prod.id = rel.product_id)
-					INNER JOIN `".Prices::TABLE."` price ON (prod.id = price.product_id && discount > 0)
+					INNER JOIN `".Prices::TABLE."` price ON (prod.id = price.product_id)
 					LEFT JOIN `".Brands::TABLE."` brand ON (brand.id = prod.brand_id)";
 
 			// фильтрация по тегам
@@ -311,7 +304,7 @@ class Products extends \Phalcon\Mvc\Model
 				$sql .= " LEFT JOIN `" . Common::TABLE_PRODUCTS_REL . "` tags ON (rel.product_id = tags.product_id)";
 			}
 
-			$sql .= " WHERE price.id = ".(int)$this->_price_id." &&";
+			$sql .= " WHERE prod.published = 1 && price.id = ".(int)$this->_price_id." &&";
 			if(!empty($condition))
 			{
 				$i = 0;
@@ -412,15 +405,14 @@ class Products extends \Phalcon\Mvc\Model
 		return $result;
 	}
 
-
 	/**
-	 * getProductsDiscount($filters, $cache = false) Вывод товаров для скидок, (оптимальный запрос)
+	 * getNewProducts($filters, $cache = false) Вывод новинок товаров
 	 * @param      $price_id ID цены
 	 * @param      $category_id родительская категория
 	 * @param null $limit лимит записей
-	 * @return \Phalcon\Paginator\Adapter\QueryBuilder
+	 * @return \PDO native array
 	 */
-	public function getProductsDiscount($filters, $cache = false)
+	public function getNewProducts($filters, $cache = false)
 	{
 		// фильтрую полученные фильтры
 		$this->setFilters($filters);
@@ -435,14 +427,14 @@ class Products extends \Phalcon\Mvc\Model
 
 		if($result === null)
 		{
-		    // Выполняем запрос из MySQL
+			// Выполняем запрос из MySQL
 			$sql = "SELECT SQL_CALC_FOUND_ROWS prod.`id`, prod.`filter_size`,
 					prod.`articul` AS articul, prod.`preview` AS preview, prod.name AS name,
 					brand.name AS brand_name, prod.is_new,
 					price.price AS price, price.discount AS discount
 					FROM `".Common::TABLE_PRODUCTS_REL."` rel
-					INNER JOIN `".self::TABLE."` prod ON (prod.id = rel.product_id)
-					INNER JOIN `".Prices::TABLE."` price  ON (prod.id = price.product_id && discount > 0)
+					INNER JOIN `".self::TABLE."` prod ON (prod.id = rel.product_id && prod.is_new = 1)
+					INNER JOIN `".Prices::TABLE."` price ON (prod.id = price.product_id)
 					LEFT JOIN `".Brands::TABLE."` brand ON (brand.id = prod.brand_id)";
 
 			// фильтрация по тегам
@@ -450,7 +442,7 @@ class Products extends \Phalcon\Mvc\Model
 				$sql .= " LEFT JOIN `" . Common::TABLE_PRODUCTS_REL . "` tags ON (rel.product_id = tags.product_id)";
 			}
 
-			$sql .= " WHERE price.id = ".(int)$this->_price_id." &&";
+			$sql .= " WHERE prod.published = 1 && price.id = ".(int)$this->_price_id." &&";
 			if(!empty($condition))
 			{
 				$i = 0;
@@ -480,8 +472,119 @@ class Products extends \Phalcon\Mvc\Model
 			if(!empty($this->_filters['categories']))
 			{
 				$sql = rtrim($sql,'&&');
+				if(is_array($this->_filters['categories']))
+					$sql .= " && rel.category_id IN(".join(',', $this->_filters['categories']).") ";
+				else $sql .= " && rel.category_id = ".(int)$this->_filters['categories'];
+			}
+
+			// фильтрация по тегам
+			if(!empty($this->_filters['tags']))
+			{
+				$sql = rtrim($sql,'&&');
+				$sql .= " && tags.tag_id IN(".join(',', $this->_filters['tags']).") ";
+			}
+
+			// фильтрация по брендам
+			if(!empty($this->_filters['brands']))
+			{
+				$sql = rtrim($sql,'&&');
+				if(is_array($this->_filters['brands']))
+					$sql .= " && brand.id IN(".join(',', $this->_filters['brands']).") ";
+				else $sql .= " && brand.id = ".(int)$this->_filters['brands'];
+			}
+
+			// фильтрация по полу
+
+			if(!empty($this->_filters['sex']))
+			{
+				$sql = rtrim($sql,'&&');
+				if(is_array($this->_filters['sex']))
+					$sql .= " && sex IN(".join(',', $this->_filters['sex']).") ";
+				else $sql .= " && sex = ".(int)$this->_filters['sex'];
+			}
+
+			// фильтрация по проценту скидки
+
+			if(!empty($this->_filters['percent']))
+			{
+				$sql = rtrim($sql,'&&');
+				$sql .= " && percent = ".(int)$this->_filters['percent'];
+			}
+
+			// Группировка
+			if(!empty($this->_filters['group']))
+			{
+				$sql = rtrim($sql,'&&');
+				$sql .= " GROUP BY ".$this->_filters['group'];
+			}
+
+			// Сортировка
+			if(!empty($this->_filters['sort']))
+			{
+				$sort = implode(', ', array_map(function ($v, $k) { return sprintf("%s %s", $k, $v); }, $this->_filters['sort'], array_keys($this->_filters['sort'])));
+				$sql .= " ORDER BY ".$sort;
+			}
+
+			// Смещение и лимит
+			if(!empty($this->_filters['offset']) && !empty($this->_filters['limit']))
+				$sql .= " LIMIT ".(int)$this->_filters['offset'].",  ".(int)$this->_filters['limit'];
+			elseif(isset($this->_filters['limit']) > 0)
+				$sql .= " LIMIT ".(int)$this->_filters['limit'];
+
+			$result = $this->_db->query($sql)->fetchAll();
+
+			$sql = "SELECT FOUND_ROWS() as `count`";
+			$found = $this->_db->query($sql)->fetch();
+			$result['count'] = $found['count'];
+
+			// Сохраняем запрос в кэше
+			if($cache && $this->_cache) $backendCache->save($md5.'.cache', $result);
+		}
+		return $result;
+	}
+
+	/**
+	 * getProductsDiscount($filters, $cache = false) Вывод товаров для скидок, (оптимальный запрос)
+	 * @param      $price_id ID цены
+	 * @param      $category_id родительская категория
+	 * @param null $limit лимит записей
+	 * @return \PDO native array
+	 */
+	public function getProductsDiscount($filters, $cache = false)
+	{
+		// фильтрую полученные фильтры
+		$this->setFilters($filters);
+
+		$result = null;
+
+		if($cache && $this->_cache)
+		{
+			$backendCache = $this->getDI()->get('backendCache');
+			$md5 = md5(self::TABLE.join('',$this->_filters));
+			$result = $backendCache->get($md5.'.cache');
+		}
+
+		if($result === null)
+		{
+		    // Выполняем запрос из MySQL
+			$sql = "SELECT SQL_CALC_FOUND_ROWS prod.`id`, prod.`filter_size`,
+					prod.`articul` AS articul, prod.`preview` AS preview, prod.name AS name,
+					brand.name AS brand_name, prod.is_new,
+					price.price AS price, price.discount AS discount
+					FROM `prices` price
+					INNER JOIN `".self::TABLE."` prod   ON (prod.id = price.product_id && (discount > 0 && price.id = ".(int)$this->_price_id."))
+					LEFT JOIN `brands` brand ON (brand.id = prod.brand_id)";
+
+			// выборка из категорий
+
+			if(!empty($this->_filters['categories']))
+			{
+				$sql = rtrim($sql,'&&');
+				$sql .= " INNER JOIN `products_relationship` rel ON (rel.product_id = prod.id)";
 				$sql .= " && rel.category_id IN(".join(',', $this->_filters['categories']).") ";
 			}
+
+			$sql .="WHERE prod.published = 1";
 
 			// фильтрация по тегам
 			if(!empty($this->_filters['tags']))
@@ -523,13 +626,6 @@ class Products extends \Phalcon\Mvc\Model
 				$sql .= " && is_new = ".(int)$this->_filters['is_new'];
 			}
 
-			// Группировка
-			if(!empty($this->_filters['group']))
-			{
-				$sql = rtrim($sql,'&&');
-				$sql .= " GROUP BY ".$this->_filters['group'];
-			}
-
 			// Сортировка
 			if(!empty($this->_filters['sort']))
 			{
@@ -542,7 +638,6 @@ class Products extends \Phalcon\Mvc\Model
 				$sql .= " LIMIT ".(int)$this->_filters['offset'].",  ".(int)$this->_filters['limit'];
 			elseif(isset($this->_filters['limit']) > 0)
 				$sql .= " LIMIT ".(int)$this->_filters['limit'];
-
 
 			$result = $this->_db->query($sql)->fetchAll();
 
@@ -561,7 +656,7 @@ class Products extends \Phalcon\Mvc\Model
 	 * @param      $price_id ID цены
 	 * @param      $condition условие Where
 	 * @param int $limit лимит записей
-	 * @return \Phalcon\Paginator\Adapter\QueryBuilder
+	 * @return \PDO native array
 	 */
 	public function getTopProducts($filters, $limit = 200, $cache = false)
 	{
@@ -593,7 +688,7 @@ class Products extends \Phalcon\Mvc\Model
 					category.product_id = prod.id && category.category_id IN(".join(',', $this->_filters['categories']).")
 				)";
 
-				$sql .= " WHERE price.id= ".(int)$this->_price_id;
+				$sql .= " WHERE prod.published = 1 && price.id= ".(int)$this->_price_id;
 
 			// фильтрация по полу
 
@@ -713,17 +808,6 @@ class Products extends \Phalcon\Mvc\Model
 			if($cache && $this->_cache) $backendCache->save(self::TABLE.'-'.strtolower(__FUNCTION__).'-'.$shop_price_id.'.cache', $result);
 		}
 		return $result;
-	}
-
-	public function recountBasketItems($item)
-	{
-		$id = key($item);
-		$items = array();
-		foreach($item[$id] as $key => $param){
-			list($size, $count) = explode('_', $item[$id][$key]);
-			$items[$id]['sizes'][$size] = $count;
-		}
-		return $items;
 	}
 
 	public function getBasketItems($basketItems, $shop_price_id)

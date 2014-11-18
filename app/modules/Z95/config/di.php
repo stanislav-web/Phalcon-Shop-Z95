@@ -69,6 +69,14 @@
 
 	});
 
+	// Component Logger. $this->di->get('logger')->log('.....',Logger::ERROR);
+	$di->set('logger', function() {
+		$formatter = new \Phalcon\Logger\Formatter\Line('[%date%][%type%] %message%');
+		$logger = new \Phalcon\Logger\Adapter\File(APP_PATH.'/logs/loader.log');
+		$logger->setFormatter($formatter);
+		return $logger;
+	});
+
 	// Компонент frontendCache для кэширования Frontend (шаблоны, стили, скрипты)
 
 	$di->set('backendCache', function() {

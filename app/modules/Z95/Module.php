@@ -52,10 +52,6 @@ class Z95 implements ModuleDefinitionInterface
 			APP_PATH.'/library/',
 		])
 		->register();
-
-		// подключение профайлера
-		//if(isset($this->_config['profiler']) && $this->_config['profiler'] == true)
-		//	(new \PDW\DebugWidget(\Phalcon\DI::getDefault()));
 	}
 
 	/**

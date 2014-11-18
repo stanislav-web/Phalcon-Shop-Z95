@@ -77,6 +77,7 @@
 				}
 				if(!empty($order)) $sql .= " ORDER BY " . key($order) . " " . $order[key($order)];
 				if(null != $limit) $sql .= " LIMIT " . $limit;
+
 				if(null != $limit && $limit > 1) {
 					$result = $this->_db->query($sql)->fetchAll();
 				}
@@ -113,22 +114,21 @@
 			if($result === null) // Выполняем запрос из MySQL
 			{
 				$sql = "
-						SELECT DISTINCT(shop_rel.category_id) AS id, cat.name AS name, ( SELECT CONCAT('{\"', p.id, '\":', p.images, '}')
-						FROM products p
-						INNER JOIN products_relationship pr ON (pr.product_id = p.id)
-						WHERE pr.category_id = shop_rel.`category_id` ORDER BY rating DESC LIMIT 1 ) AS img,
-						(SELECT alias FROM categories c WHERE c.id = cat.parent_id ) AS parent_alias,
-						cat.alias AS alias, cat.parent_id AS parent_id,
-						shop_rel.sort AS sort FROM category_shop_relationship shop_rel
+						SELECT STRAIGHT_JOIN DISTINCT(shop_rel.category_id) AS id, cat.name AS name, ( SELECT CONCAT('{\"', p.id, '\":', p.images, '}')
+							FROM products p
+							LEFT JOIN products_relationship pr ON (pr.product_id = p.id)
+							WHERE pr.category_id = shop_rel.`category_id` ORDER BY rating DESC LIMIT 1 ) AS img,
+							(SELECT alias FROM categories c WHERE c.id = cat.parent_id ) AS parent_alias,
+								cat.alias AS alias, cat.parent_id AS parent_id,
+								shop_rel.sort AS sort FROM category_shop_relationship shop_rel
 
-						INNER JOIN categories cat ON (shop_rel.category_id = cat.id)
-						INNER JOIN products_relationship prod_rel ON (prod_rel.category_id = cat.id)
-						INNER JOIN products prod ON (prod.id = prod_rel.product_id)
+								INNER JOIN categories cat ON (shop_rel.category_id = cat.id)
+								INNER JOIN products_relationship prod_rel ON (prod_rel.category_id = cat.id)
+								INNER JOIN products prod ON (prod.id = prod_rel.product_id)
 
-						WHERE shop_rel.shop_id = ".$shop_id." && shop_rel.category_parent_id ".$conditional." ".$parent_id."
+							WHERE shop_rel.shop_id = ".$shop_id." && shop_rel.category_parent_id ".$conditional." ".$parent_id."
 						ORDER BY  shop_rel.sort ".$sort;
 
-				//exit($sql);
 				$result = $this->_db->query($sql)->fetchAll();
 
 				// Сохраняем запрос в кэше

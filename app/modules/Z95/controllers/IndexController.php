@@ -47,45 +47,25 @@
 		 */
 		public function indexAction()
 		{
-			// проверка страницы в кэше
+			// Формирую заголовок
 
-			$content = null;
-			if($this->_config->cache->frontend)
-			{
-				$this->view->cache(array(
-					"service" => "viewCache",
-					"key" 		=> $this->cachePage(__FUNCTION__)
-				));
+			$title = $this->_shop['title'];
 
-				$content = $this->view->getCache()->exists($this->cachePage(__FUNCTION__));
-			}
+			// получение баннеров
+			$banners = $this->bannersModel->getBanners($this->_shop['id'], true);
 
-			if($content === null)
-			{
-				// Содержимое контроллера для формирования выдачи
+			// получаю все дочерние категории каталога
+			// Получение подкатегорий выбранного магазина с изображением самого рейтингового товара в каждой категории
 
-				// Формирую заголовок
+			$subCategories = $this->categoriesModel->getCategories($this->_shop['id'], 0, '>', 'ASC', true);
 
-				$title = $this->_shop['title'];
-
-				// получение баннеров
-				$banners = $this->bannersModel->getBanners($this->_shop['id'], true);
-
-				// получаю все дочерние категории каталога
-				// Получение подкатегорий выбранного магазина с изображением самого рейтингового товара в каждой категории
-
-				$subCategories = $this->categoriesModel->getCategories($this->_shop['id'], 0, '>', 'ASC', true);
-
-				// вывожу по умолчанию страницу каталога c вложением subcategories
-				$this->view->setVars([
-					'banners'			=>	$banners,
-					'tree'				=>	Catalogue::categoriesToTree($this->_shopCategories, 0, true),
-					'subcategories'		=>	Catalogue::arrayToAssoc($subCategories, 'id'),
-					'title'				=>	$title,
-				]);
-			}
-			// Сохраняем вывод в кэш
-			if($this->_config->cache->frontend) $this->view->cache(array("key" => $this->cachePage(__FUNCTION__)));
+			// вывожу по умолчанию страницу каталога c вложением subcategories
+			$this->view->setVars([
+				'banners'			=>	$banners,
+				'tree'				=>	Catalogue::categoriesToTree($this->_shopCategories, 0, true),
+				'subcategories'		=>	Catalogue::arrayToAssoc($subCategories, 'id'),
+				'title'				=>	$title,
+			]);
 		}
 
 	/**

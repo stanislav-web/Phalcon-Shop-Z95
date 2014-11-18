@@ -7,19 +7,17 @@
 		<div class="info">Показаны все <?=$count;?></div>
 	</div>
 <?php endif;?>
-<?
-	//$this->partial('partials/catalogue/filters', ['pagination' => $pagination]);
-	//$this->partial('partials/catalogue/sortbar', [
-	//	'pagination' 	=> $pagination,
-	//	'viewTranslate' => $viewTranslate,
-	//]);
-?>
-<!-- Выдача товаров -->
-<div class="CatalogueItems insert-filters">
 
-	<!-- Сайдбар -->
+<!-- Фильтры -->
+<?php $this->partial('partials/catalogue/filters');?>
+<!-- /Фильтры -->
+
+<!-- Выдача товаров -->
+<div class="CatalogueItems insert-filters" id="productsShow">
+
+	<!-- Сайдбар ajax -->
 	<div class="tags-filter Shadow" id="filterSidebar"></div>
-	<!-- /Сайдбар -->
+	<!-- /Сайдбар ajax -->
 
 	<!-- Вывод палитры -->
 	<?php if(isset($items) && !empty($items)): ?>
@@ -77,7 +75,6 @@
 			});
 		}
 
-
 		// обработка ajax для перерисовки выдачи
 
 		$('a.isAjax').on('click', function(e) {
@@ -89,12 +86,12 @@
 			var url =	window.location.pathname +$(this).attr('href');
 
 			$.getJSON(url, function(data) {
-				console.log(data);
-
 				if(data.response.length)
 					$(renderItems).html(data.response);
 					window.history.pushState("","", url);
 				global.hideStatus('common.loading');
+
+				$('html, body').animate({scrollTop:$('#renderItems').position().top+(210)}, 'slow');
 			});
 		});
 	});

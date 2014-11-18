@@ -98,7 +98,19 @@ class JsonController extends ControllerBase
 			else
 			{
 				// Выдача сайд бара для виртуалок, выдаю категории с подсчетом количества по сумме в дочерних категориях
-				$tagsCloud['categories'] = Catalogue::categoriesToTree(Catalogue::arrayToAssoc($this->_shopCategories, 'id'), 0, false, 'count_products');
+
+				$sex = $this->session->get('sex'); // получаю пол
+				if(null != $sex)
+				{
+					$genderCategories = Catalogue::categoriesToTree(
+						Catalogue::arrayToAssoc(
+							Catalogue::findInTree($this->_shopCategories, 'sex', "$sex"), 'id')
+						, 0, false, 'count_products');
+
+					$tagsCloud['categories'] = $genderCategories;
+				}
+					else
+						$tagsCloud['categories'] = Catalogue::categoriesToTree(Catalogue::arrayToAssoc($this->_shopCategories, 'id'), 0, false, 'count_products');
 
 			}
 
