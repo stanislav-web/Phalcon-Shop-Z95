@@ -265,6 +265,22 @@ class Catalogue
 	}
 
 	/**
+	 * recountBasketItems($item) пересчет размера товара
+	 * @param array $item
+	 * @return array
+	 */
+	public static function recountBasketItems($item)
+	{
+		$id = key($item);
+		$items = array();
+		foreach($item[$id] as $key => $param){
+			list($size, $count) = explode('_', $item[$id][$key]);
+			$items[$id]['sizes'][$size] = $count;
+		}
+		return $items;
+	}
+
+	/**
 	 * tagsToTree(array $elements) Теги с размерами превращию в дерево
 	 * @param array $elements
 	 * @return array

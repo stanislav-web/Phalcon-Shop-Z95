@@ -48,7 +48,7 @@ class JsonController extends ControllerBase
 
 		if($this->request->isAjax() == false) {
 		$this->flash->error('The request is not ajax');
-		$this->_isJsonResponse	=	true;
+		$this->_isJsonResponse	=	false;
 		return false;
 	}
 	else	// устанавливаю, что ответ будет в Json
@@ -174,7 +174,43 @@ class JsonController extends ControllerBase
 				$this->response->send();
 			}
 		}
+	}
 
+
+	/**
+	 * orderAction() Отправка заказа на Backend
+	 *
+	 * @access public
+	 * @author Stanislav WEB
+	 * @return json
+	 */
+	public function orderAction()
+	{
+		// выбираю заказы пользователя
+		$basket = (array)$this->session->get('basket');
+		if(isset($basket) && !empty($basket))
+		{
+			if($this->_isJsonResponse)
+			{
+				// Выдать ответ в JSON
+				$this->setJsonResponse();
+
+				// отключаю лишние представления
+				$this->view->disableLevel([
+
+					View::LEVEL_LAYOUT 		=> true,
+					View::LEVEL_MAIN_LAYOUT => true
+				]);
+
+				$this->response->setJsonContent([
+					'request'		=>	$basket,
+				]);
+
+				// отправляю ответ на бекенды
+				// <-- получаю ответ, А ЗАТЕМ ОЧИСТИТЬ КОРЗИНУ (сессию) в случае success
+				$this->response->send();
+			}
+		}
 	}
 
 	/**
