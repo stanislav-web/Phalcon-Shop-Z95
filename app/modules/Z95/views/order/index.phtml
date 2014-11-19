@@ -1,6 +1,12 @@
 <div id="CONTENT">
-
-	<h1>Оформление заказа</h1>		<ul class="Thermo"><li><a href="/">Главная</a></li><li>/&nbsp;Оформление заказа</li></ul><div class="clear"></div><div class="element-order"><div>
+	<h1>Оформление заказа</h1>
+	<ul class="Thermo">
+		<li><a href="/">Главная</a></li>
+		<li>/&nbsp;Оформление заказа</li>
+	</ul>
+	<div class="clear"></div>
+	<div class="element-order">
+		<div>
 			<form onsubmit="return false;" name="order_create" method="post" action="/json/order" id="order_form">
 				<input type="hidden" value="1" name="user[subscriptions][1]">
 				<input type="hidden" value="1" name="user[subscriptions][2]">
@@ -9,43 +15,167 @@
 				<input type="hidden" value="ru" name="lang">
 				<input type="hidden" value="1" name="save">
 				<table class="Form Order">
-					<tbody><tr>
+					<tbody>
+					<tr>
 						<th colspan="2">Контактная информация</th>
 					</tr>
-					<tr><td class="label"><span class="required">ФИО</span></td><td><input type="text" required="" class="wide required" value="" name="user[fio]"></td></tr>
-					<tr><td class="label">Эл. почта</td><td><input type="text" class="wide" value="" name="user[email]"></td></tr>
-					<tr><td colspan="2"><b>Телефоны</b></td></tr>
-					<tr><td class="label"><span class="required">Мобильный</span></td><td><input type="text" class="required" required="" value="" name="user[phones][]"></td></tr>
-					<tr><td class="label">Домашний</td><td><input type="text" value="" name="user[phones][]"></td></tr>
-					<tr><td class="label">Дополнительный</td><td><input type="text" value="" name="user[phones][]"></td></tr>
+					<tr>
+						<td class="label"><span class="required">ФИО</span></td>
+						<td><input type="text" required class="wide required" value="" name="user[fio]"></td>
+					</tr>
+					<tr>
+						<td class="label">Эл.почта</td>
+						<td><input type="text" class="wide" value="" name="user[email]"></td>
+					</tr>
+					<tr>
+						<td colspan="2"><b>Телефоны</b></td>
+					</tr>
+					<tr>
+						<td class="label"><span class="required">Мобильный</span></td>
+						<td><input type="text" class="required" required value="" name="user[phones][]"></td>
+					</tr>
+					<tr>
+						<td class="label">Домашний</td>
+						<td><input type="text" value="" name="user[phones][]"></td>
+					</tr>
+					<tr>
+						<td class="label">Дополнительный</td>
+						<td><input type="text" value="" name="user[phones][]"></td>
+					</tr>
 					<tr>
 						<th colspan="2">Адрес доставки</th>
 					</tr>
 					<tr>
 						<td class="label">Индекс</td>
-						<td><input type="text" size="6" value="" name="user[address][postal_code]"></td></tr>
+						<td><input type="text" size="6" value="" name="user[address][postal_code]"></td>
+					</tr>
 					<tr>
 						<td class="label">Регион</td>
 						<td>
 							<select name="user[address][region]">
 								<option value=""></option>
-								<option value="Москва">Москва</option><option value="Московская область">Московская область</option><option value="Адыгея республика">Адыгея республика</option><option value="Алтай республика">Алтай республика</option><option value="Алтайский край">Алтайский край</option><option value="Амурская область">Амурская область</option><option value="Архангельская область">Архангельская область</option><option value="Астраханская область">Астраханская область</option><option value="Байконур">Байконур</option><option value="Башкортостан республика">Башкортостан республика</option><option value="Белгородская область">Белгородская область</option><option value="Брянская область">Брянская область</option><option value="Бурятия республика">Бурятия республика</option><option value="Владимирская область">Владимирская область</option><option value="Волгоградская область">Волгоградская область</option><option value="Вологодская область">Вологодская область</option><option value="Воронежская область">Воронежская область</option><option value="Дагестан республика">Дагестан республика</option><option value="Еврейская авт. область">Еврейская авт. область</option><option value="Ивановская область">Ивановская область</option><option value="Ингушетия республика">Ингушетия республика</option><option value="Иркутская область">Иркутская область</option><option value="Кабардино-Балкарская республика">Кабардино-Балкарская республика</option><option value="Калининградская область">Калининградская область</option><option value="Калмыкия республика">Калмыкия республика</option><option value="Калужская область">Калужская область</option><option value="Камчатская область">Камчатская область</option><option value="Карачаево-Черкесская республика">Карачаево-Черкесская республика</option><option value="Карелия республика">Карелия республика</option><option value="Кемеровская область">Кемеровская область</option><option value="Кировская область">Кировская область</option><option value="Коми республика">Коми республика</option><option value="Костромская область">Костромская область</option><option value="Краснодарский край">Краснодарский край</option><option value="Красноярский край">Красноярский край</option><option value="Курганская область">Курганская область</option><option value="Курская область">Курская область</option><option value="Ленинградская область">Ленинградская область</option><option value="Липецкая область">Липецкая область</option><option value="Магаданская область">Магаданская область</option><option value="Марий Эл республика">Марий Эл республика</option><option value="Мордовия республика">Мордовия республика</option><option value="Мурманская область">Мурманская область</option><option value="Нижегородская область">Нижегородская область</option><option value="Новгородская область">Новгородская область</option><option value="Новосибирская область">Новосибирская область</option><option value="Омская область">Омская область</option><option value="Оренбургская область">Оренбургская область</option><option value="Орловская область">Орловская область</option><option value="Пензенская область">Пензенская область</option><option value="Пермский край">Пермский край</option><option value="Приморский край">Приморский край</option><option value="Псковская область">Псковская область</option><option value="Казахстан">Казахстан</option><option value="Ростовская область">Ростовская область</option><option value="Рязанская область">Рязанская область</option><option value="Самарская область">Самарская область</option><option value="Санкт-Петербург">Санкт-Петербург</option><option value="Саратовская область">Саратовская область</option><option value="Саха (Якутия) республика">Саха (Якутия) республика</option><option value="Сахалинская область">Сахалинская область</option><option value="Свердловская область">Свердловская область</option><option value="Северная Осетия-Алания республика">Северная Осетия-Алания республика</option><option value="Смоленская область">Смоленская область</option><option value="Ставропольский край">Ставропольский край</option><option value="Тамбовская область">Тамбовская область</option><option value="Татарстан республика">Татарстан республика</option><option value="Тверская область">Тверская область</option><option value="Томская область">Томская область</option><option value="Тульская область">Тульская область</option><option value="Тыва республика">Тыва республика</option><option value="Тюменская область">Тюменская область</option><option value="Удмуртская республика">Удмуртская республика</option><option value="Ульяновская область">Ульяновская область</option><option value="Хабаровский край">Хабаровский край</option><option value="Хакасия республика">Хакасия республика</option><option value="Челябинская область">Челябинская область</option><option value="Чеченская республика">Чеченская республика</option><option value="Читинская область">Читинская область</option><option value="Чувашская республика">Чувашская республика</option><option value="Чукотский авт. окр.">Чукотский авт. окр.</option><option value="Ярославская область">Ярославская область</option><option value="Ямало-Ненецкий АО">Ямало-Ненецкий АО</option><option value="Ханты-Мансийский АО">Ханты-Мансийский АО</option><option value="Республика Татарстан">Республика Татарстан</option><option value="Республика Башкортостан">Республика Башкортостан</option><option value="Республика Марий Эл">Республика Марий Эл</option><option value="Иркусткая область">Иркусткая область</option><option value="АР Крым">АР Крым</option>						</select>
+								<option value="Москва">Москва</option>
+								<option value="Московская область">Московская область</option>
+								<option value="Адыгея республика">Адыгея республика</option>
+								<option value="Алтай республика">Алтай республика</option>
+								<option value="Алтайский край">Алтайский край</option>
+								<option value="Амурская область">Амурская область</option>
+								<option value="Архангельская область">Архангельская область</option>
+								<option value="Астраханская область">Астраханская область</option>
+								<option value="Байконур">Байконур</option>
+								<option value="Башкортостан республика">Башкортостан республика</option>
+								<option value="Белгородская область">Белгородская область</option>
+								<option value="Брянская область">Брянская область</option>
+								<option value="Бурятия республика">Бурятия республика</option>
+								<option value="Владимирская область">Владимирская область</option>
+								<option value="Волгоградская область">Волгоградская область</option>
+								<option value="Вологодская область">Вологодская область</option>
+								<option value="Воронежская область">Воронежская область</option>
+								<option value="Дагестан республика">Дагестан республика</option>
+								<option value="Еврейская авт. область">Еврейская авт. область</option>
+								<option value="Ивановская область">Ивановская область</option>
+								<option value="Ингушетия республика">Ингушетия республика</option>
+								<option value="Иркутская область">Иркутская область</option>
+								<option value="Кабардино-Балкарская республика">Кабардино-Балкарская республика</option>
+								<option value="Калининградская область">Калининградская область</option>
+								<option value="Калмыкия республика">Калмыкия республика</option>
+								<option value="Калужская область">Калужская область</option>
+								<option value="Камчатская область">Камчатская область</option>
+								<option value="Карачаево-Черкесская республика">Карачаево-Черкесская республика</option>
+								<option value="Карелия республика">Карелия республика</option>
+								<option value="Кемеровская область">Кемеровская область</option>
+								<option value="Кировская область">Кировская область</option>
+								<option value="Коми республика">Коми республика</option>
+								<option value="Костромская область">Костромская область</option>
+								<option value="Краснодарский край">Краснодарский край</option>
+								<option value="Красноярский край">Красноярский край</option>
+								<option value="Курганская область">Курганская область</option>
+								<option value="Курская область">Курская область</option>
+								<option value="Ленинградская область">Ленинградская область</option>
+								<option value="Липецкая область">Липецкая область</option>
+								<option value="Магаданская область">Магаданская область</option>
+								<option value="Марий Эл республика">Марий Эл республика</option>
+								<option value="Мордовия республика">Мордовия республика</option>
+								<option value="Мурманская область">Мурманская область</option>
+								<option value="Нижегородская область">Нижегородская область</option>
+								<option value="Новгородская область">Новгородская область</option>
+								<option value="Новосибирская область">Новосибирская область</option>
+								<option value="Омская область">Омская область</option>
+								<option value="Оренбургская область">Оренбургская область</option>
+								<option value="Орловская область">Орловская область</option>
+								<option value="Пензенская область">Пензенская область</option>
+								<option value="Пермский край">Пермский край</option>
+								<option value="Приморский край">Приморский край</option>
+								<option value="Псковская область">Псковская область</option>
+								<option value="Казахстан">Казахстан</option>
+								<option value="Ростовская область">Ростовская область</option>
+								<option value="Рязанская область">Рязанская область</option>
+								<option value="Самарская область">Самарская область</option>
+								<option value="Санкт-Петербург">Санкт-Петербург</option>
+								<option value="Саратовская область">Саратовская область</option>
+								<option value="Саха (Якутия) республика">Саха (Якутия) республика</option>
+								<option value="Сахалинская область">Сахалинская область</option>
+								<option value="Свердловская область">Свердловская область</option>
+								<option value="Северная Осетия-Алания республика">Северная Осетия-Алания республика
+								</option>
+								<option value="Смоленская область">Смоленская область</option>
+								<option value="Ставропольский край">Ставропольский край</option>
+								<option value="Тамбовская область">Тамбовская область</option>
+								<option value="Татарстан республика">Татарстан республика</option>
+								<option value="Тверская область">Тверская область</option>
+								<option value="Томская область">Томская область</option>
+								<option value="Тульская область">Тульская область</option>
+								<option value="Тыва республика">Тыва республика</option>
+								<option value="Тюменская область">Тюменская область</option>
+								<option value="Удмуртская республика">Удмуртская республика</option>
+								<option value="Ульяновская область">Ульяновская область</option>
+								<option value="Хабаровский край">Хабаровский край</option>
+								<option value="Хакасия республика">Хакасия республика</option>
+								<option value="Челябинская область">Челябинская область</option>
+								<option value="Чеченская республика">Чеченская республика</option>
+								<option value="Читинская область">Читинская область</option>
+								<option value="Чувашская республика">Чувашская республика</option>
+								<option value="Чукотский авт. окр.">Чукотский авт. окр.</option>
+								<option value="Ярославская область">Ярославская область</option>
+								<option value="Ямало-Ненецкий АО">Ямало-Ненецкий АО</option>
+								<option value="Ханты-Мансийский АО">Ханты-Мансийский АО</option>
+								<option value="Республика Татарстан">Республика Татарстан</option>
+								<option value="Республика Башкортостан">Республика Башкортостан</option>
+								<option value="Республика Марий Эл">Республика Марий Эл</option>
+								<option value="Иркусткая область">Иркусткая область</option>
+								<option value="АР Крым">АР Крым</option>
+							</select>
 						</td>
 					</tr>
-					<tr><td class="label">Город</td><td><input type="text" class="wide" value="" name="user[address][city]"></td></tr>
-					<tr><td class="label">Адрес</td><td><input type="text" class="wide" value="" name="user[address][address]"></td></tr>
+					<tr>
+						<td class="label">Город</td>
+						<td><input type="text" class="wide" value="" name="user[address][city]"></td>
+					</tr>
+					<tr>
+						<td class="label">Адрес</td>
+						<td><input type="text" class="wide" value="" name="user[address][address]"></td>
+					</tr>
 					<tr>
 						<td><b>Доставка</b></td>
-						<td><select style="width:400px;" name="options[delivery_id]"><option value="31">Бесплатная доставка по Москве и РФ &mdash; 0 руб.</option><option value="20">EMS. Срочная доставка до дверей в любой город России &mdash; 0 руб.</option><option value="23">Доставка Почтой России &mdash; 0 руб.</option></select></td>
+						<td><select style="width:400px;" required name="options[delivery_id]">
+								<option value="31">Бесплатная доставка по Москве и РФ &mdash; 0 руб.</option>
+								<option value="20">EMS. Срочная доставка до дверей в любой город России &mdash; 0 руб.
+								</option>
+								<option value="23">Доставка Почтой России &mdash; 0 руб.</option>
+							</select></td>
 					</tr>
 					<tr>
 						<td><b>Оплата</b></td>
-						<td><select style="width:400px;" name="options[payment_id]"><option value="5">Наличными курьеру</option><option value="6">Оплата через Почту России наложенным платежом</option></select></td>
+						<td><select style="width:400px;" required name="options[payment_id]">
+								<option value="5">Наличными курьеру</option>
+								<option value="6">Оплата через Почту России наложенным платежом</option>
+							</select></td>
 					</tr>
 					<tr>
 						<td>Код купона или кодовое слово</td>
 						<td>
-							<div class="coupon_field2"><input type="text" value="" id="coupon_uniqid" name="coupon_uniqid"></div>
+							<div class="coupon_field2"><input type="text" value="" id="coupon_uniqid"
+															  name="coupon_uniqid"></div>
 							<div class="coupon-check-result"></div>
 						</td>
 					</tr>
@@ -53,41 +183,81 @@
 						<th colspan="2">Комментарий</th>
 					</tr>
 					<tr>
-						<td colspan="2"><textarea placeholder="Комментарий к заказу" class="wide" name="comment"></textarea></td>
+						<td colspan="2"><textarea placeholder="Комментарий к заказу" class="wide"
+												  name="comment"></textarea></td>
 					</tr>
 					<tr>
 						<td></td>
 						<td>
-							<label><input type="checkbox" checked="checked" name="subscribe">Получать СМС о новинках и распродажах</label>
+							<label><input type="checkbox" checked="checked" name="subscribe">Получать СМС о новинках и
+								распродажах</label>
 
 						</td>
 					</tr>
 					<tr>
 						<td align="center" colspan="2">
-							<button onclick="order.send(this.form)" name="save" class="button" type="button">Оформить</button>
+							<button onclick="order.send(this.form)" name="save" class="button" type="button">Оформить
+							</button>
 						</td>
 					</tr>
 
-					</tbody></table>
+					</tbody>
+				</table>
 			</form>
 		</div>
 
 		<script type="text/javascript">
-			&nbsp;var _gaq = _gaq || [];
-			&nbsp;_gaq.push(['_setAccount', 'UA-1844837-1']);
-			&nbsp;_gaq.push(['_setDomainName', 'none']);
-			&nbsp;_gaq.push(['_setAllowLinker', true]);
-			&nbsp;_gaq.push(['_trackPageview']);
+			&
+			nbsp;
+			var _gaq = _gaq || [];
+			&
+			nbsp;
+			_gaq.push(['_setAccount', 'UA-1844837-1']);
+			&
+			nbsp;
+			_gaq.push(['_setDomainName', 'none']);
+			&
+			nbsp;
+			_gaq.push(['_setAllowLinker', true]);
+			&
+			nbsp;
+			_gaq.push(['_trackPageview']);
 
-			&nbsp;(function() {
-				&nbsp; &nbsp;var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-				&nbsp; ga.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'stats.g.doubleclick.net/dc.js';
+			&
+			nbsp;
+			(function () {
+				&
+				nbsp;
+				&
+				nbsp;
+				var ga = document.createElement('script');
+				ga.type = 'text/javascript';
+				ga.async = true;
+				&
+				nbsp;
+				ga.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'stats.g.doubleclick.net/dc.js';
 
-				&nbsp; &nbsp;var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-				&nbsp;})();
+				&
+				nbsp;
+				&
+				nbsp;
+				var s = document.getElementsByTagName('script')[0];
+				s.parentNode.insertBefore(ga, s);
+				&
+				nbsp;
+			})();
 		</script>
 
 
 		<script src="//www.googleadservices.com/pagead/conversion.js" type="text/javascript">
-		</script><iframe width="300" height="13" frameborder="0" scrolling="no" allowtransparency="true" hspace="0" vspace="0" marginheight="0" marginwidth="0" src="http://googleads.g.doubleclick.net/pagead/viewthroughconversion/1057484110/?random=1415360023453&amp;cv=7&amp;fst=1415360023453&amp;num=1&amp;fmt=1&amp;label=ZsEtCJ6RzAUQztqf-AM&amp;guid=ON&amp;u_h=1080&amp;u_w=1920&amp;u_ah=1011&amp;u_aw=1920&amp;u_cd=24&amp;u_his=7&amp;u_tz=120&amp;u_java=true&amp;u_nplug=5&amp;u_nmime=64&amp;data=prodid%3D63833%3Bprice%3D4240%3Bcartvalue%3D4240%3Bpagetype%3Dorder&amp;frm=0&amp;url=http%3A//z95.ru/order/&amp;ref=http%3A//z95.ru/customer/cart/&amp;vis=1" title="Google conversion frame" name="google_conversion_frame">&lt;img height="1" width="1" border="0" alt="" src="http://googleads.g.doubleclick.net/pagead/viewthroughconversion/1057484110/?frame=0&amp;random=1415360023453&amp;cv=7&amp;fst=1415360023453&amp;num=1&amp;fmt=1&amp;label=ZsEtCJ6RzAUQztqf-AM&amp;guid=ON&amp;u_h=1080&amp;u_w=1920&amp;u_ah=1011&amp;u_aw=1920&amp;u_cd=24&amp;u_his=7&amp;u_tz=120&amp;u_java=true&amp;u_nplug=5&amp;u_nmime=64&amp;data=prodid%3D63833%3Bprice%3D4240%3Bcartvalue%3D4240%3Bpagetype%3Dorder&amp;frm=0&amp;url=http%3A//z95.ru/order/&amp;ref=http%3A//z95.ru/customer/cart/&amp;vis=1" /&gt;</iframe>
-		<img width="1" height="1" border="0" src="http://vk.com/rtrg?r=dV3zZqOB6H8ekGbbjxjScanHlmKqpbxN7Lwu06VysXmUQwmw64Kk0JgOWaJcF0LZbAC1eu*ZIKQ5tW3CnudllXGmJl87SHSVFNVJ97f7/7H4TaD0Ve2pQMeeljbo0enFEdblMsh7PQryDP9wgxM1lHVSrutho*bpa3KAUIv1SiI-"></div>	</div>
+		</script>
+		<iframe width="300" height="13" frameborder="0" scrolling="no" allowtransparency="true" hspace="0" vspace="0"
+				marginheight="0" marginwidth="0"
+				src="http://googleads.g.doubleclick.net/pagead/viewthroughconversion/1057484110/?random=1415360023453&amp;cv=7&amp;fst=1415360023453&amp;num=1&amp;fmt=1&amp;label=ZsEtCJ6RzAUQztqf-AM&amp;guid=ON&amp;u_h=1080&amp;u_w=1920&amp;u_ah=1011&amp;u_aw=1920&amp;u_cd=24&amp;u_his=7&amp;u_tz=120&amp;u_java=true&amp;u_nplug=5&amp;u_nmime=64&amp;data=prodid%3D63833%3Bprice%3D4240%3Bcartvalue%3D4240%3Bpagetype%3Dorder&amp;frm=0&amp;url=http%3A//z95.ru/order/&amp;ref=http%3A//z95.ru/customer/cart/&amp;vis=1"
+				title="Google conversion frame" name="google_conversion_frame">&lt;img height="1" width="1" border="0"
+			alt="" src="http://googleads.g.doubleclick.net/pagead/viewthroughconversion/1057484110/?frame=0&amp;random=1415360023453&amp;cv=7&amp;fst=1415360023453&amp;num=1&amp;fmt=1&amp;label=ZsEtCJ6RzAUQztqf-AM&amp;guid=ON&amp;u_h=1080&amp;u_w=1920&amp;u_ah=1011&amp;u_aw=1920&amp;u_cd=24&amp;u_his=7&amp;u_tz=120&amp;u_java=true&amp;u_nplug=5&amp;u_nmime=64&amp;data=prodid%3D63833%3Bprice%3D4240%3Bcartvalue%3D4240%3Bpagetype%3Dorder&amp;frm=0&amp;url=http%3A//z95.ru/order/&amp;ref=http%3A//z95.ru/customer/cart/&amp;vis=1"
+			/&gt;</iframe>
+		<img width="1" height="1" border="0"
+			 src="http://vk.com/rtrg?r=dV3zZqOB6H8ekGbbjxjScanHlmKqpbxN7Lwu06VysXmUQwmw64Kk0JgOWaJcF0LZbAC1eu*ZIKQ5tW3CnudllXGmJl87SHSVFNVJ97f7/7H4TaD0Ve2pQMeeljbo0enFEdblMsh7PQryDP9wgxM1lHVSrutho*bpa3KAUIv1SiI-">
+	</div>
+</div>

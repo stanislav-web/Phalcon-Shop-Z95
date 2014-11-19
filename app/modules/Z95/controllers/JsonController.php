@@ -176,7 +176,6 @@ class JsonController extends ControllerBase
 		}
 	}
 
-
 	/**
 	 * orderAction() Отправка заказа на Backend
 	 *
@@ -186,29 +185,39 @@ class JsonController extends ControllerBase
 	 */
 	public function orderAction()
 	{
-		// выбираю заказы пользователя
-		$basket = (array)$this->session->get('basket');
-		if(isset($basket) && !empty($basket))
+		if($this->request->isPost() == true) // Только для POST запросов
 		{
-			if($this->_isJsonResponse)
+			$order = (array)$this->session->get('basket');
+			if(isset($order) && !empty($order['items']))
 			{
-				// Выдать ответ в JSON
-				$this->setJsonResponse();
+				if($this->_isJsonResponse)
+				{
+					// Выдать ответ в JSON
+					$this->setJsonResponse();
 
-				// отключаю лишние представления
-				$this->view->disableLevel([
+					// отключаю лишние представления
+					$this->view->disableLevel([
+						View::LEVEL_LAYOUT 		=> true,
+						View::LEVEL_MAIN_LAYOUT => true
+					]);
 
-					View::LEVEL_LAYOUT 		=> true,
-					View::LEVEL_MAIN_LAYOUT => true
-				]);
+					// фильтрую только нужные параметры в заказе
+					$items = Catalogue::orderFilterItems($order['items']);
 
-				$this->response->setJsonContent([
-					'request'		=>	$basket,
-				]);
+					//@todo API CALL Here...
 
-				// отправляю ответ на бекенды
-				// <-- получаю ответ, А ЗАТЕМ ОЧИСТИТЬ КОРЗИНУ (сессию) в случае success
-				$this->response->send();
+					$this->response->setJsonContent([
+						'status'		=>	1, // статус ответа возвращает Backend
+						'request'		=>	[
+							'items'		=>	$items,
+							'customer'	=> 	$this->request->getPost()
+						]
+					]);
+
+					// отправляю ответ на бекенды
+					// <-- получаю ответ, А ЗАТЕМ ОЧИСТИТЬ КОРЗИНУ (сессию) в случае success
+					$this->response->send();
+				}
 			}
 		}
 	}

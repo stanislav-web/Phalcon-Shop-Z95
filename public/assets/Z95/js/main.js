@@ -559,16 +559,25 @@ window.matchMedia=window.matchMedia||(function(e,f){var c,a=e.documentElement,b=
             data: $(obj).serialize(),
             success: function(data) {
                 order.currentRequest = null;
-                if (data.status == 1) {
-                    if (data.tracking_id.length) {
+                if(data.status == 1)
+                {
+                    if(data.tracking_id)
+                    {
                         window.location.href = '/customer/orders/'+data.tracking_id;
-                    } else {
+                    }
+                    else
+                    {
                         global.showStatus('order.success', data.message);
                     }
-                } else if (data.status == 2 && order.resend_count < 2) {
+                }
+                else if(data.status == 2 && order.resend_count < 2)
+                {
+
                     order.resend_count++;
                     order.send(order.form, false);
-                } else {
+                }
+                else
+                {
                     global.showStatus('order.error', data.message);
                 }
 

@@ -281,6 +281,25 @@ class Catalogue
 	}
 
 	/**
+	 * orderFilterItems(array $items) Фильтрация купленных вещей на отправку заказа
+	 * @param array $items массив с купленными вещами
+	 * @return array
+	 */
+	public static function orderFilterItems(array $items)
+	{
+		$filter = [];
+		foreach($items as $item)
+		{
+			$filter[]	=	[
+				'product_id' 	=> 	$item['product_id'],
+				'sizes'			=>	$item['sizes'],
+				'total'			=>	sizeof($item['sizes'])
+			];
+		}
+		return $filter;
+	}
+
+	/**
 	 * tagsToTree(array $elements) Теги с размерами превращию в дерево
 	 * @param array $elements
 	 * @return array

@@ -30,7 +30,6 @@ namespace Modules\Z95\Controllers;
 
 class OrderController extends ControllerBase
 {
-
 	/**
 	 * initialize() Инициализирую конструктор
 	 * @access public
@@ -47,7 +46,7 @@ class OrderController extends ControllerBase
 	}
 
 	/**
-	 * indexAction() 
+	 * Страница оформления заказа
 	 */
 	public function indexAction()
 	{

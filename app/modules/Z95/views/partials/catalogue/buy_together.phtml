@@ -5,6 +5,7 @@
 			<b><?=$viewTranslate['BUY_TOGETHER'];?>:</b>
 			<div class="item_list">
 				<?php foreach($buyableItems as $bitem): ?>
+					<?php if($bitem['id'] == $item['product_id']) continue; ?>
 					<?php
 					// decode image
 					$images 	= json_decode($bitem['preview'], true);
