@@ -115,7 +115,7 @@ class Prices extends \Phalcon\Mvc\Model
 			$sql =	"
 				SELECT STRAIGHT_JOIN prod.sex AS sex, COALESCE(percent, '100') AS percent, COUNT(prices.`product_id`) AS `count`
 					FROM ".self::TABLE." prices
-					INNER JOIN ".Products::TABLE." prod ON (prod.id = prices.product_id && prices.id = (int)$price_id)
+					INNER JOIN ".Products::TABLE." prod ON (prod.id = prices.product_id && prices.id = ".(int)$price_id.")
 					WHERE prod.sex IN (".join(',', $sex).") && prices.percent > 0
 					GROUP BY sex, percent ASC WITH ROLLUP;
 			";

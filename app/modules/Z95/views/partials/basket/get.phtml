@@ -17,9 +17,6 @@
 		}
 	}
 ?>
-
-
-
 <h2 class="basket">Сейчас в корзине:</h2>
 <table border="0" cellspacing="0" cellpadding="0" class="small-basket">
 	<tbody>
@@ -27,15 +24,21 @@
 
 			<?php foreach($basket['items'] as $counter => $item) { ?>
 				<tr class="item-row" id="basket_row_<?php echo $item['product_id']; ?>">
-		<td preview_id="57453" class="image">
-			<div style="z-index: 2;" class="basket-preview">
-				<div style="display: none;" id="preview_<?php echo $item['product_id']; ?>" class="basket-preview-big"><img src="http://z95.ru/f/p/150x225/catalogue/<?php echo $item['product_id']; ?>/<?php echo $item['images'][0]; ?>"></div>
-			</div>
-			<div style="z-index: 0;" class="basket-preview">
-				<div class="basket-preview-small"><img src="http://z95.ru/f/p/50x75/catalogue/<?php echo $item['product_id']; ?>/<?php echo $item['images'][0]; ?>"></div>
-			</div>
-		</td>
-		<td preview_id="57453" class="title">
+					<td class="image" preview_id="<?php echo $item['product_id']; ?>">
+
+						<div style="z-index: 2;" class="basket-preview">
+							<div style="display: none;"  class="basket-preview-big" id="preview_<?php echo $item['product_id']; ?>">
+								<img rel="<?php echo $item['product_id']; ?>" src="http://z95.ru/f/p/150x225/catalogue/<?php echo $item['product_id']; ?>/<?php echo $item['images'][0]; ?>">
+							</div>
+						</div>
+						<div style="z-index: 0;" class="basket-preview">
+							<div class="basket-preview-small">
+								<img data-prevs="<?php echo $item['product_id']; ?>" src="http://z95.ru/f/p/50x75/catalogue/<?php echo $item['product_id']; ?>/<?php echo $item['images'][0]; ?>">
+							</div>
+						</div>
+
+					</td>
+		<td preview_id="<?php echo $item['product_id']; ?>" class="title">
 			<div class="counter"><?php echo ++$counter; ?></div>
 
 
@@ -138,6 +141,23 @@
 	$('.small-basket-sizes').find('input[type=text]').each(function(i,v){
 		count = parseInt(count) + parseInt($(v).val());
 
-	})
+	});
 
+	$(document).ready(function(){
+
+		$('tr.item-row td[preview_id]').each(function (i, el) {
+			var $preview_id = $('#preview_'+$(el).attr('preview_id'));
+			$(el).hover(
+				function () {
+					var img = $('img', $preview_id)[0];
+					if (img.complete) {
+						$preview_id.show();
+					}
+				},
+				function () {
+					$preview_id.hide();
+				}
+			)
+		});
+	});
 </script>

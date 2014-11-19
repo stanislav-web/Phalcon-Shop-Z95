@@ -1584,7 +1584,6 @@ var basket = new function() {
         // Р•РЎР›Р� С„РѕСЂРјР° РІС‹Р±РѕСЂР° СЂР°Р·РјРµСЂРѕРІ РЅРµ РїРѕРєР°Р·Р°РЅР°,
         if ($(c).css('display') == 'none') {
 
-            console.log(containerId);
             console.log(items);
             // РўРћ Р•РЎР›Р� СЂР°Р·РјРµСЂ С‚РѕР»СЊРєРѕ 'СѓРЅРёРІРµСЂСЃР°Р»СЊРЅС‹Р№' Рё РЅРµР»СЊР·СЏ Р·Р°РєР°Р·Р°С‚СЊ СЃСЂР°Р·Сѓ РЅРµСЃРєРѕР»СЊРєРѕ С€С‚СѓРє
             if (quantity == 'single' && items.length == 1 && items[0].size == 0) {
@@ -1665,9 +1664,9 @@ var basket = new function() {
 
     this.addToBasket = function(containerId, hideContainer) {
 
-        console.log('sdsdsds');
         var hideContainer = hideContainer || false;				// РЎРєСЂС‹РІР°С‚СЊ С„РѕСЂРјСѓ РІС‹Р±РѕСЂР° СЂР°Р·РјРµСЂРѕРІ?
         var items = this.getItems(containerId);  	// РџСЂРѕРІРµСЂРёРј РїРѕСЃР»РµРґРЅРёРµ РёР·РјРµРЅРµРЅРёСЏ РІ С„РѕСЂРјРµ
+        console.log(items);
 
         if (items.length > 0) {
             var itemsQueryString = [];

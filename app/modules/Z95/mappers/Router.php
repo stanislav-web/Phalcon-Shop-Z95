@@ -50,12 +50,6 @@
 			$_gender = 0,
 
 			/**
-			 * Фильтр. FALSE
-			 * @var array
-			 */
-			$_filter = [],
-
-			/**
 			 * Категории: набор исключений (для виртуальных категорий)
 			 * @var array
 			 */
@@ -305,7 +299,7 @@
 		 * @param array 	$exclude 	исключения: вирт. категории
 		 * @return null
 		 */
-		public function render($model = false, array $shop = [], $rules = false, array $collection = [], array $exclude = [], $json = false)
+		public function render($model = false, $rules = false, array $collection = [], array $exclude = [], $json = false)
 		{
 
 			// устанавливаю параметры магазина
@@ -336,7 +330,6 @@
 			// определяю категорию отображения
 			// сначала проверяю ее в виртуальных, так как их меньше
 
-
 			$intersect = array_intersect($this->_rules->catalogue, array_values(array_flip($this->_exclude)));
 
 			if(isset($this->_exclude[$this->_rules->current]) || !empty($intersect))
@@ -351,12 +344,8 @@
 				if (isset($category['alias']))
 					$items = $this->{'_set' . ucfirst($category['alias'])}();
 			}
-			else
-			{
-				// ОБРАБОТКА КАТЕГОРИЙ
+			else // ОБРАБОТКА КАТЕГОРИЙ
 				$items = $this->_setCatalogue();
-			}
-
 
 			// если есть в массиве счетчик удаляю его
 			if (isset($items['count']))
@@ -488,13 +477,17 @@
 				$this->session->set('sex', $this->_gender);
 			}
 
-			if (!isset($this->_rules->query['sort'])) {
-				$this->_rules->query = array_merge($this->_rules->query, [
-					'sort' => [
-						'date_income' => 'desc',
-					]
-				]);
+			if(!empty($this->_rules->query))
+			{
+				if(!isset($this->_rules->query['sort']))
+					$this->_rules->query = array_merge($this->_rules->query, [
+						'sort' =>	['date_income' => 'desc']
+					]);
 			}
+			else
+				$this->_rules->query['sort']	= ['date_income' => 'desc'];
+
+
 			$this->_breadcrumbs->add($this->_title, true);
 
 			// Устанавливаю заголовок
@@ -531,6 +524,7 @@
 				$this->session->remove('sex');
 
 			if(isset($this->_rules->query['percent'])) $this->_title = $this->_title.' '.$this->_rules->query['percent'].'%';
+
 			if (!isset($this->_rules->query['sort'])) {
 				$this->_rules->query = array_merge($this->_rules->query, [
 					'sort' => [
@@ -540,7 +534,7 @@
 				]);
 			}
 
-			if (!isset($this->_rules->query['percent'])) {
+			if (!isset($this->_rules->query['percent']) && !isset($this->_rules->query['sort'])) {
 				$this->_rules->query['sort'] = [
 					'percent' => 'desc',
 					'rating'  => 'desc',
@@ -586,14 +580,12 @@
 			else
 				$this->session->remove('sex');
 
-
 			$this->_breadcrumbs->add($this->_title, false);
 
 			$this->_limit	=	200;
 			$items = $this->_model->getTopProducts($this->_rules->query, $this->_limit);
 			return $items;
 		}
-
 
 		/**
 		 * _setCatalogue() Обработка выдачи для каталогов
@@ -602,7 +594,6 @@
 		 */
 		private function _setCatalogue()
 		{
-
 			// корректирую мета данные
 			$this->_breadcrumbs->reset();
 			$this->_breadcrumbs
@@ -651,7 +642,7 @@
 			// сохраняю связь чтобы не дергать из MySQL. Записываю параметры текущей категории в сессию
 			// она каждый раз перезаписывается по мере новой загрузки категории, поэтому не стоит волноваться
 			// это будет главный ключ используемый для связи тегов и категорий
-			// {id:31848, parent_id:394, sex:0, name:Браслеты, alias:bracelet, sort:0, description:}
+			// {id:31848, parent_id:394, sex:0, name:Браслеты, alias:bracelet, sort:0}
 			$this->session->set('category', $category);
 
 			// Устанавливаю заголовок

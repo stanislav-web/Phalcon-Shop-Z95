@@ -9,7 +9,9 @@
 <?php endif;?>
 
 <!-- Фильтры -->
-<?php $this->partial('partials/catalogue/filters');?>
+<?php if(!isset($disableSort)):?>
+	<?php $this->partial('partials/catalogue/filters');?>
+<?php endif;?>
 <!-- /Фильтры -->
 
 <!-- Выдача товаров -->
@@ -28,8 +30,11 @@
 					$arraySize = explode(',',$item['filter_size']);
 					uksort($arraySize, "\Helpers\Catalogue::itemCompareSize");
 				}
-				$img = array_values(json_decode($item['preview'], true))[0]; // images json decode
-				$this->partial('partials/catalogue/item_short');		// render small product
+				$img = array_values(json_decode($item['preview'], true)); // images json decode
+				if(!empty($img)) {
+					$img = $img[0];
+					$this->partial('partials/catalogue/item_short');        // render small product
+				}
 			?>
 		<?php endforeach; ?>
 	<?php else: ?>

@@ -31,18 +31,23 @@
 			<?php foreach($basket['items'] as $counter => $item) { ?>
 				<?php $price = ($item['discount']) ?(int)$item['discount'] :(int)$item['price']; ?>
 				<tr class="item-row" id="basket_row_<?php echo $item['product_id']; ?>">
-					<td preview_id="57453" class="image">
+					<td class="image">
+
 						<div style="z-index: 2;" class="basket-preview">
-							<div style="display: none;" id="preview_<?php echo $item['product_id']; ?>" class="basket-preview-big"><img src="http://z95.ru/f/p/150x225/catalogue/<?php echo $item['product_id']; ?>/<?php echo $item['images'][0]; ?>"></div>
+							<div style="display: none;"  class="basket-preview-big">
+								<img data-prevb="<?php echo $item['product_id']; ?>" src="http://z95.ru/f/p/150x225/catalogue/<?php echo $item['product_id']; ?>/<?php echo $item['images'][0]; ?>">
+							</div>
 						</div>
+
 						<div style="z-index: 0;" class="basket-preview">
-							<div class="basket-preview"><img src="http://z95.ru/f/p/50x75/catalogue/<?php echo $item['product_id']; ?>/<?php echo $item['images'][0]; ?>"></div>
+							<div class="basket-preview-small">
+								<img data-prevs="<?php echo $item['product_id']; ?>" src="http://z95.ru/f/p/50x75/catalogue/<?php echo $item['product_id']; ?>/<?php echo $item['images'][0]; ?>">
+							</div>
 						</div>
+
 					</td>
-					<td preview_id="57453" class="title">
+					<td preview_id="<?php echo $item['product_id']; ?>" class="title">
 						<div class="counter"><?php echo ++$counter; ?></div>
-
-
 						<a href="/catalogue/<?php echo $item['articul']; ?>">
 							<span class="capitalize"><?php echo $item['product_name'] ?></span> <?php echo $item['brand']; ?></a><br>
 						(<?php echo $item['articul']; ?>)<br>

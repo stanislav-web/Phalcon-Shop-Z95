@@ -619,6 +619,8 @@ class Products extends \Phalcon\Mvc\Model
 				$sql = rtrim($sql,'&&');
 				$sql .= " && percent = ".(int)$this->_filters['percent'];
 			}
+			else
+				$sql .= " && percent > 0";
 
 			// фильтрация по новизне
 
@@ -743,7 +745,7 @@ class Products extends \Phalcon\Mvc\Model
 					FROM  ".self::TABLE." prod
 					INNER JOIN ".Prices::TABLE." price ON (price.product_id = prod.id)
 					INNER JOIN ".Brands::TABLE." brand ON (brand.id = prod.brand_id)
-					WHERE prod.id IN(".join(',', $ids).") &&  price.id = ".$price_id;
+					WHERE prod.id IN(".join(',', $ids).") &&  price.id = ".(int)$price_id;
 
 			if(null != $limit) $sql .= " LIMIT ".$limit;
 

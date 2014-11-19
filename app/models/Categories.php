@@ -112,7 +112,6 @@
 
 			if($result === null)
 			{
-
 				$sql = "SELECT cat.id, cat.parent_id, sex, cat.name AS name, cat.alias AS alias, shop_rel.sort, COALESCE(COUNT(prod_rel.`product_id`) ,0) AS count_products
 						FROM `".self::REL."` shop_rel
 						INNER JOIN `".self::TABLE."` cat ON (

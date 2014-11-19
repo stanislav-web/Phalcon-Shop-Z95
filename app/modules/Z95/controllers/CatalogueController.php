@@ -280,8 +280,10 @@ class CatalogueController extends ControllerBase
 			'title' 	=> 	$title,
 			'items' 	=> 	(sizeof($favorites) == 1)  ? [$items] : $items,
 			'count'		=>	sizeof($favorites),
-			'favorites'	=>	$favorites,
-			'banners'	=> $this->banners
+			'favorites'	=>	array_flip($favorites),
+			'banners'	=> 	$this->banners,
+			'disableSort'	=>	true,
+			'path'		 =>	$this->requestUri,
 		]);
 
 		$this->view->pick("catalogue/index");
