@@ -14,7 +14,9 @@
 		 * Таблица в базе
 		 * @const
 		 */
-		const TABLE = 'categories';
+		const TABLE = 	'categories';
+		const REL  	=	'category_shop_relationship';
+
 		private
 			/**
 			 * Идентификатор соединения
@@ -90,6 +92,44 @@
 			return $result;
 		}
 
+
+		/**
+		 * Получение категорий с дочерними по конкретному магазину
+		 *
+		 * @param      $shop_id
+		 * @param bool $cache
+		 * @return null
+		 */
+		public function getShopCategories($shop_id, $cache = false)
+		{
+			$result = null;
+			if($cache && $this->_cache)
+			{
+				$_cache = $this->getDI()->get('backendCache');
+				$md5 = md5(strtolower(__FUNCTION__).'-'.$shop_id);
+				$result = $_cache->get($md5.'.cache');
+			}
+
+			if($result === null)
+			{
+
+				$sql = "SELECT cat.id, cat.parent_id, sex, cat.name AS name, cat.alias AS alias, shop_rel.sort, COALESCE(COUNT(prod_rel.`product_id`) ,0) AS count_products
+						FROM `".self::REL."` shop_rel
+						INNER JOIN `".self::TABLE."` cat ON (
+							shop_rel.category_id = cat.id
+						)
+						LEFT JOIN `".Products::REL."` prod_rel  USING(category_id)
+						WHERE shop_rel.shop_id = ".(int)$shop_id."
+						GROUP BY shop_rel.category_id";
+
+				$result = $this->_db->query($sql)->fetchAll();
+
+				// Сохраняем запрос в кэше
+				if($cache && $this->_cache) $_cache->save($md5.'.cache', $result);
+			}
+			return $result;
+		}
+
 		/**
 		 * getCategories($shop_id, $sort, $cache) Получение категорий/подкатегорий выбранного магазина
 		 * с изображением самого рейтингового товара в каждой категории
@@ -106,9 +146,9 @@
 			$result = null;
 			if($cache && $this->_cache)
 			{
-				$backendCache = $this->getDI()->get('backendCache');
+				$_cache = $this->getDI()->get('backendCache');
 				$md5 = md5(self::TABLE.$shop_id.$parent_id.$sort);
-				$result = $backendCache->get($md5.'.cache');
+				$result = $_cache->get($md5.'.cache');
 			}
 
 			if($result === null) // Выполняем запрос из MySQL
@@ -116,23 +156,23 @@
 				$sql = "
 						SELECT STRAIGHT_JOIN DISTINCT(shop_rel.category_id) AS id, cat.name AS name, ( SELECT CONCAT('{\"', p.id, '\":', p.images, '}')
 							FROM products p
-							LEFT JOIN products_relationship pr ON (pr.product_id = p.id)
+							LEFT JOIN `".Products::REL."` pr ON (pr.product_id = p.id)
 							WHERE pr.category_id = shop_rel.`category_id` ORDER BY rating DESC LIMIT 1 ) AS img,
-							(SELECT alias FROM categories c WHERE c.id = cat.parent_id ) AS parent_alias,
+							(SELECT alias FROM `".self::TABLE."` c WHERE c.id = cat.parent_id ) AS parent_alias,
 								cat.alias AS alias, cat.parent_id AS parent_id,
-								shop_rel.sort AS sort FROM category_shop_relationship shop_rel
+								shop_rel.sort AS sort FROM `".self::REL."` shop_rel
 
-								INNER JOIN categories cat ON (shop_rel.category_id = cat.id)
-								INNER JOIN products_relationship prod_rel ON (prod_rel.category_id = cat.id)
-								INNER JOIN products prod ON (prod.id = prod_rel.product_id)
+								INNER JOIN `".self::TABLE."` cat ON (shop_rel.category_id = cat.id)
+								INNER JOIN `".Products::REL."` prod_rel ON (prod_rel.category_id = cat.id)
+								INNER JOIN `".Products::TABLE."` prod ON (prod.id = prod_rel.product_id)
 
-							WHERE shop_rel.shop_id = ".$shop_id." && shop_rel.category_parent_id ".$conditional." ".$parent_id."
+							WHERE shop_rel.shop_id = ".(int)$shop_id." && shop_rel.category_parent_id ".$conditional." ".$parent_id."
 						ORDER BY  shop_rel.sort ".$sort;
 
 				$result = $this->_db->query($sql)->fetchAll();
 
 				// Сохраняем запрос в кэше
-				if($cache && $this->_cache) $backendCache->save($md5.'.cache', $result);
+				if($cache && $this->_cache) $_cache->save($md5.'.cache', $result);
 			}
 			return $result;
 		}

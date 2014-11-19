@@ -60,8 +60,8 @@ class Brands extends \Phalcon\Mvc\Model
 		$result = null;
 
 		if($cache && $this->_cache) {
-			$backendCache = $this->getDI()->get('backendCache');
-			$result = $backendCache->get(self::TABLE.'-'.implode('-', $data).'.cache');
+			$_cache = $this->getDI()->get('backendCache');
+			$result = $_cache->get(self::TABLE.'-'.implode('-', $data).'.cache');
 		}
 
 		if($result === null) {    // Выполняем запрос из MySQL
@@ -90,7 +90,7 @@ class Brands extends \Phalcon\Mvc\Model
 			}
 
 			// Сохраняем запрос в кэше
-			if($cache && $this->_cache) $backendCache->save(self::TABLE.'-'.implode('-', $data).'.cache', $result);
+			if($cache && $this->_cache) $_cache->save(self::TABLE.'-'.implode('-', $data).'.cache', $result);
 		}
 
 		return $result;
@@ -110,17 +110,18 @@ class Brands extends \Phalcon\Mvc\Model
 
 		if($cache && $this->_cache)
 		{
-			$backendCache = $this->getDI()->get('backendCache');
-			$result = $backendCache->get(md5(self::TABLE.$category_id).'.cache');
+			$_cache = $this->getDI()->get('backendCache');
+			$md5 = md5(self::TABLE.$category_id);
+			$result = $_cache->get($md5.'.cache');
 		}
 
 		if($result === null)
 		{
 			// Выполняем запрос из MySQL
 			$sql = "SELECT brand.id, brand.name, COUNT(brand.id) AS count_products
-					FROM brands brand
-					INNER JOIN products prod ON (brand.id = prod.brand_id)
-					INNER JOIN products_relationship rel ON (rel.product_id = prod.id)
+					FROM `".self::TABLE."` brand
+					INNER JOIN `".Products::TABLE."` prod ON (brand.id = prod.brand_id)
+					INNER JOIN `".Products::REL."` rel ON (rel.product_id = prod.id)
 					WHERE rel.category_id = ".$category_id."
 					GROUP BY brand.id
 					ORDER BY count_products DESC, brand.name";
@@ -128,36 +129,39 @@ class Brands extends \Phalcon\Mvc\Model
 			$result = $this->_db->query($sql)->fetchAll();
 
 			// Сохраняем запрос в кэше
-			if($cache && $this->_cache) $backendCache->save(md5(self::TABLE.$category_id).'.cache', $result);
+			if($cache && $this->_cache) $_cache->save($md5.'.cache', $result);
 		}
 		return $result;
 	}
 
 	/**
 	 * Получение списка брендов с количеством позиций в каждом из них
+	 *
+	 * @param  int    $shopID магазин
+	 * @param bool $cache
 	 * @author <filchakov.denis@gmail.com>
 	 * @modify Stanislav WEB
 	 */
-	public function getAllBrands($shopID = 1, $cache = false){
+	public function getAllBrands($shop_id = 1, $cache = false)
+	{
 		$result = null;
-		if($cache && $this->_cache) {
-			$backendCache = $this->getDI()->get('backendCache');
-			$md5 = md5(self::TABLE.$shopID.'-allbrands');
-			$result = $backendCache->get($md5.'.cache');
+		if($cache && $this->_cache)
+		{
+			$_cache = $this->getDI()->get('backendCache');
+			$md5 = md5(self::TABLE.$shop_id.'-allbrands');
+			$result = $_cache->get($md5.'.cache');
 		}
 		if($result === null)
 		{
 			$sql = "SELECT b.id, b.name, COUNT(*) AS `count`
 					FROM brands b
-					INNER JOIN `products` product ON (product.brand_id = b.id)
-					INNER JOIN `prices` price ON (price.product_id = product.id)
-					WHERE price.id = ".$shopID."
+					INNER JOIN `".Products::TABLE."` product ON (product.brand_id = b.id)
+					INNER JOIN `".Prices::TABLE."` price ON (price.product_id = product.id)
+					WHERE price.id = ".(int)$shop_id."
 					GROUP BY b.id ORDER BY name ASC";
 
-			$this->getDI()->get('logger')->log($sql."\r\n",\Phalcon\Logger::INFO);
-
 			$result = $this->_db->query($sql)->fetchAll();
-			if($cache && $this->_cache) $backendCache->save($md5.'.cache', $result);
+			if($cache && $this->_cache) $_cache->save($md5.'.cache', $result);
 		}
 		return $result;
 	}

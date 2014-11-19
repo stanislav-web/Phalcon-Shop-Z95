@@ -58,8 +58,8 @@ class Prices extends \Phalcon\Mvc\Model
 		$result = null;
 
 		if($cache && $this->_cache) {
-			$backendCache = $this->getDI()->get('backendCache');
-			$result = $backendCache->get(self::TABLE.'-'.serialize($data).'.cache');
+			$_cache = $this->getDI()->get('backendCache');
+			$result = $_cache->get(self::TABLE.'-'.serialize($data).'.cache');
 		}
 
 		if($result === null) {    // Выполняем запрос из MySQL
@@ -88,7 +88,7 @@ class Prices extends \Phalcon\Mvc\Model
 			}
 
 			// Сохраняем запрос в кэше
-			if($cache && $this->_cache) $backendCache->save(self::TABLE.'-'.serialize($data).'.cache', $result);
+			if($cache && $this->_cache) $_cache->save(self::TABLE.'-'.serialize($data).'.cache', $result);
 		}
 
 		return $result;
@@ -96,32 +96,34 @@ class Prices extends \Phalcon\Mvc\Model
 
 	/**
 	 * Получение подсчета товаров по скидкам
-	 * @param $product_id
+	 * @param int $price_id идентификатор цены (из магазина)
+	 * @param array $sex нужный пол
+	 * @return array
 	 */
 	public function countProductsBySales($price_id, array $sex = [], $cache = false)
 	{
 		$result = null;
 
 		if ($cache && $this->_cache) {
-			$backendCache = $this->getDI()->get('backendCache');
-			$result = $backendCache->get(self::TABLE.'-'.strtolower(__FUNCTION__).'-'.$price_id.'-'.join('_', $sex).'.cache');
+			$_cache = $this->getDI()->get('backendCache');
+			$md5 = md5(self::TABLE.'-'.strtolower(__FUNCTION__).'-'.$price_id.'-'.join('_', $sex));
+			$result = $_cache->get($md5.'.cache');
 		}
 
-		if($result === null) {    // Выполняем запрос из MySQL
-
-
+		if($result === null)
+		{
 			$sql =	"
-				SELECT STRAIGHT_JOIN products.sex AS sex, COALESCE(percent, '100') AS percent, COUNT(prices.`product_id`) AS `count`
+				SELECT STRAIGHT_JOIN prod.sex AS sex, COALESCE(percent, '100') AS percent, COUNT(prices.`product_id`) AS `count`
 					FROM ".self::TABLE." prices
-					INNER JOIN ".Products::TABLE." products ON (products.id = prices.product_id && prices.id = $price_id)
-					WHERE products.sex IN (".join(',', $sex).") && prices.percent > 0
+					INNER JOIN ".Products::TABLE." prod ON (prod.id = prices.product_id && prices.id = (int)$price_id)
+					WHERE prod.sex IN (".join(',', $sex).") && prices.percent > 0
 					GROUP BY sex, percent ASC WITH ROLLUP;
 			";
 
 			$result = $this->_db->query($sql)->fetchAll();
 
 			// Сохраняем запрос в кэше
-			if ($cache && $this->_cache) $backendCache->save(self::TABLE.'-'.strtolower(__FUNCTION__).'-'.$price_id.'-'.join('_', $sex).'.cache', $result);
+			if ($cache && $this->_cache) $_cache->save($md5.'.cache', $result);
 		}
 		return $result;
 	}

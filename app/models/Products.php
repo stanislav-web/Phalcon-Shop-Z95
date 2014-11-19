@@ -15,7 +15,9 @@ class Products extends \Phalcon\Mvc\Model
 	 * Таблица в базе
 	 * @const
 	 */
-	const TABLE = 'products';
+	const TABLE 	= 	'products';
+	const REL		=	'products_relationship';
+	const BUY_WITH	=	'buy_together';
 
 	private
 
@@ -114,9 +116,9 @@ class Products extends \Phalcon\Mvc\Model
 		$result = null;
 
 		if($cache && $this->_cache) {
-			$backendCache = $this->getDI()->get('backendCache');
+			$_cache = $this->getDI()->get('backendCache');
 			$md5	=	md5(self::TABLE.'-'.implode('-', $data).'-'.$limit);
-			$result = $backendCache->get($md5.'.cache');
+			$result = $_cache->get($md5.'.cache');
 		}
 
 		if($result === null) {    // Выполняем запрос из MySQL
@@ -158,7 +160,7 @@ class Products extends \Phalcon\Mvc\Model
 			}
 
 			// Сохраняем запрос в кэше
-			if($cache && $this->_cache) $backendCache->save($md5.'.cache', $result);
+			if($cache && $this->_cache) $_cache->save($md5.'.cache', $result);
 		}
 		return $result;
 	}
@@ -178,9 +180,9 @@ class Products extends \Phalcon\Mvc\Model
 
 		if($cache && $this->_cache)
 		{
-			$backendCache = $this->getDI()->get('backendCache');
+			$_cache = $this->getDI()->get('backendCache');
 			$md5 = md5(self::TABLE.join('',$this->_filters));
-			$result = $backendCache->get($md5.'.cache');
+			$result = $_cache->get($md5.'.cache');
 		}
 
 		if($result === null)
@@ -190,14 +192,14 @@ class Products extends \Phalcon\Mvc\Model
 					prod.`articul` AS articul, prod.`preview` AS preview, prod.name AS name,
 					brand.name AS brand_name, prod.is_new,
 					price.price AS price, price.discount AS discount
-					FROM `".Common::TABLE_PRODUCTS_REL."` rel
+					FROM `".self::REL."` rel
 					INNER JOIN `".self::TABLE."` prod ON (prod.id = rel.product_id)
 					INNER JOIN `".Prices::TABLE."` price ON (prod.id = price.product_id && discount > 0)
 					LEFT JOIN `".Brands::TABLE."` brand ON (brand.id = prod.brand_id)";
 
 			// фильтрация по тегам
 			if(!empty($this->_filters['tags'])) {
-				$sql .= " LEFT JOIN `" . Common::TABLE_PRODUCTS_REL . "` tags ON (rel.product_id = tags.product_id)";
+				$sql .= " LEFT JOIN `" . self::REL . "` tags ON (rel.product_id = tags.product_id)";
 			}
 
 			$sql .= " WHERE prod.published = 1 && price.id = ".(int)$this->_price_id." &&";
@@ -262,7 +264,7 @@ class Products extends \Phalcon\Mvc\Model
 			$result['count'] = $found['count'];
 
 			// Сохраняем запрос в кэше
-			if($cache && $this->_cache) $backendCache->save($md5.'.cache', $result);
+			if($cache && $this->_cache) $_cache->save($md5.'.cache', $result);
 		}
 		return $result;
 	}
@@ -282,9 +284,9 @@ class Products extends \Phalcon\Mvc\Model
 
 		if($cache && $this->_cache)
 		{
-			$backendCache = $this->getDI()->get('backendCache');
+			$_cache = $this->getDI()->get('backendCache');
 			$md5 = md5(self::TABLE.join('',$this->_filters));
-			$result = $backendCache->get($md5.'.cache');
+			$result = $_cache->get($md5.'.cache');
 		}
 
 		if($result === null)
@@ -294,14 +296,14 @@ class Products extends \Phalcon\Mvc\Model
 					prod.`articul` AS articul, prod.`preview` AS preview, prod.name AS name,
 					brand.name AS brand_name, prod.is_new,
 					price.price AS price, price.discount AS discount
-					FROM `".Common::TABLE_PRODUCTS_REL."` rel
+					FROM `".self::REL."` rel
 					INNER JOIN `".self::TABLE."` prod ON (prod.id = rel.product_id)
 					INNER JOIN `".Prices::TABLE."` price ON (prod.id = price.product_id)
 					LEFT JOIN `".Brands::TABLE."` brand ON (brand.id = prod.brand_id)";
 
 			// фильтрация по тегам
 			if(!empty($this->_filters['tags'])) {
-				$sql .= " LEFT JOIN `" . Common::TABLE_PRODUCTS_REL . "` tags ON (rel.product_id = tags.product_id)";
+				$sql .= " LEFT JOIN `" . self::REL . "` tags ON (rel.product_id = tags.product_id)";
 			}
 
 			$sql .= " WHERE prod.published = 1 && price.id = ".(int)$this->_price_id." &&";
@@ -400,7 +402,7 @@ class Products extends \Phalcon\Mvc\Model
 			$result['count'] = $found['count'];
 
 			// Сохраняем запрос в кэше
-			if($cache && $this->_cache) $backendCache->save($md5.'.cache', $result);
+			if($cache && $this->_cache) $_cache->save($md5.'.cache', $result);
 		}
 		return $result;
 	}
@@ -420,9 +422,9 @@ class Products extends \Phalcon\Mvc\Model
 
 		if($cache && $this->_cache)
 		{
-			$backendCache = $this->getDI()->get('backendCache');
+			$_cache = $this->getDI()->get('backendCache');
 			$md5 = md5(self::TABLE.join('',$this->_filters));
-			$result = $backendCache->get($md5.'.cache');
+			$result = $_cache->get($md5.'.cache');
 		}
 
 		if($result === null)
@@ -432,14 +434,14 @@ class Products extends \Phalcon\Mvc\Model
 					prod.`articul` AS articul, prod.`preview` AS preview, prod.name AS name,
 					brand.name AS brand_name, prod.is_new,
 					price.price AS price, price.discount AS discount
-					FROM `".Common::TABLE_PRODUCTS_REL."` rel
+					FROM `".self::REL."` rel
 					INNER JOIN `".self::TABLE."` prod ON (prod.id = rel.product_id && prod.is_new = 1)
 					INNER JOIN `".Prices::TABLE."` price ON (prod.id = price.product_id)
 					LEFT JOIN `".Brands::TABLE."` brand ON (brand.id = prod.brand_id)";
 
 			// фильтрация по тегам
 			if(!empty($this->_filters['tags'])) {
-				$sql .= " LEFT JOIN `" . Common::TABLE_PRODUCTS_REL . "` tags ON (rel.product_id = tags.product_id)";
+				$sql .= " LEFT JOIN `".self::REL."` tags ON (rel.product_id = tags.product_id)";
 			}
 
 			$sql .= " WHERE prod.published = 1 && price.id = ".(int)$this->_price_id." &&";
@@ -538,7 +540,7 @@ class Products extends \Phalcon\Mvc\Model
 			$result['count'] = $found['count'];
 
 			// Сохраняем запрос в кэше
-			if($cache && $this->_cache) $backendCache->save($md5.'.cache', $result);
+			if($cache && $this->_cache) $_cache->save($md5.'.cache', $result);
 		}
 		return $result;
 	}
@@ -559,9 +561,9 @@ class Products extends \Phalcon\Mvc\Model
 
 		if($cache && $this->_cache)
 		{
-			$backendCache = $this->getDI()->get('backendCache');
+			$_cache = $this->getDI()->get('backendCache');
 			$md5 = md5(self::TABLE.join('',$this->_filters));
-			$result = $backendCache->get($md5.'.cache');
+			$result = $_cache->get($md5.'.cache');
 		}
 
 		if($result === null)
@@ -646,7 +648,7 @@ class Products extends \Phalcon\Mvc\Model
 			$result['count'] = $found['count'];
 
 			// Сохраняем запрос в кэше
-			if($cache && $this->_cache) $backendCache->save($md5.'.cache', $result);
+			if($cache && $this->_cache) $_cache->save($md5.'.cache', $result);
 		}
 		return $result;
 	}
@@ -666,9 +668,9 @@ class Products extends \Phalcon\Mvc\Model
 
 		if($cache && $this->_cache)
 		{
-			$backendCache = $this->getDI()->get('backendCache');
+			$_cache = $this->getDI()->get('backendCache');
 			$md5 = md5(self::TABLE.join('',$filters).$limit);
-			$result = $backendCache->get($md5.'.cache');
+			$result = $_cache->get($md5.'.cache');
 		}
 
 		if($result === null)
@@ -684,7 +686,7 @@ class Products extends \Phalcon\Mvc\Model
 
 			// выборка из категорий
 			if(!empty($this->_filters['categories']))
-				$sql .= " INNER JOIN `" . Common::TABLE_PRODUCTS_REL . "` category ON (
+				$sql .= " INNER JOIN `".self::REL."` category ON (
 					category.product_id = prod.id && category.category_id IN(".join(',', $this->_filters['categories']).")
 				)";
 
@@ -712,7 +714,7 @@ class Products extends \Phalcon\Mvc\Model
 			$result = $this->_db->query($sql)->fetchAll();
 
 			// Сохраняем запрос в кэше
-			if($cache && $this->_cache) $backendCache->save($md5.'.cache', $result);
+			if($cache && $this->_cache) $_cache->save($md5.'.cache', $result);
 		}
 		return $result;
 	}
@@ -730,8 +732,8 @@ class Products extends \Phalcon\Mvc\Model
 
 		if($cache && $this->_cache)
 		{
-			$backendCache = $this->getDI()->get('backendCache');
-			$result = $backendCache->get(md5(self::TABLE.$price_id.join('_',$ids).$limit).'.cache');
+			$_cache = $this->getDI()->get('backendCache');
+			$result = $_cache->get(md5(self::TABLE.$price_id.join('_',$ids).$limit).'.cache');
 		}
 
 		if($result === null)
@@ -748,44 +750,49 @@ class Products extends \Phalcon\Mvc\Model
 			$result = $this->_db->query($sql)->fetchAll();
 
 			// Сохраняем запрос в кэше
-			if($cache && $this->_cache) $backendCache->save(md5(self::TABLE.$price_id.join('_',$ids).$limit).'.cache', $result);
+			if($cache && $this->_cache) $_cache->save(md5(self::TABLE.$price_id.join('_',$ids).$limit).'.cache', $result);
 		}
 		return $result;
 	}
 
+	/**
+	 * getProductCard($articul, $shop_price_id, $cache = false)
+	 * Загрузка карточки товара
+	 *
+	 * @param      $articul
+	 * @param      $shop_price_id
+	 * @param bool $cache
+	 * @author vavas
+	 * @modify Stanislav WEB
+	 * @return null
+	 */
 	public function getProductCard($articul, $shop_price_id, $cache = false)
 	{
-
 		$result = null;
-		if($cache && $this->_cache) {
-			$backendCache = $this->getDI()->get('backendCache');
-			$result = $backendCache->get(self::TABLE.'-'.strtolower(__FUNCTION__).'-'.$shop_price_id.'.cache');
+		if($cache && $this->_cache)
+		{
+			$_cache = $this->getDI()->get('backendCache');
+			$md5 = md5(self::TABLE.'-'.strtolower(__FUNCTION__).$articul);
+			$result = $_cache->get($md5.'.cache');
 		}
-		if($result === null) {
-			$sql = "SELECT 	".self::TABLE.".id AS product_id,  CONCAT(UPPER(SUBSTRING(".self::TABLE.".name, 1, 1)), LOWER(SUBSTRING(".self::TABLE.".name FROM 2))) AS product_name, ".self::TABLE.".articul,
-					".self::TABLE.".tags,
-					".self::TABLE.".rating,
-					".self::TABLE.".images,
-					".self::TABLE.".filter_size,
-					".self::TABLE.".description AS description,"
-					.Brands::TABLE.".name AS brand, ".Brands::TABLE.".alias AS brand_alias, ".Prices::TABLE.".price,"
-					.Common::TABLE_PRODUCTS_REL.".category_id AS category_id,
-					".Prices::TABLE.".discount,
-					".Prices::TABLE.".percent,
-					".self::TABLE.".description AS description, "
-					.Brands::TABLE.".name AS brand, ".Brands::TABLE.".alias AS brand_alias, ".Prices::TABLE.".price
-
-					FROM ".self::TABLE."
-					LEFT JOIN ".Prices::TABLE." ON (".Prices::TABLE.".id = $shop_price_id && ".Prices::TABLE.".product_id = ".self::TABLE.".id)
-					INNER JOIN ".Common::TABLE_PRODUCTS_REL." ON (".self::TABLE.".id = ".Common::TABLE_PRODUCTS_REL.".product_id)".
-
-					"INNER JOIN ".Brands::TABLE." ON (".self::TABLE.".brand_id = ".Brands::TABLE.".id)
-					WHERE ".self::TABLE.".articul = '".$articul."' LIMIT 1";
+		if($result === null)
+		{
+			$sql = "SELECT 	prod.id AS product_id,  CONCAT(UPPER(SUBSTRING(prod.name, 1, 1)), LOWER(SUBSTRING(prod.name FROM 2))) AS product_name,
+						prod.articul, prod.tags, prod.rating, prod.images, prod.filter_size, prod.description AS description,
+						brand.name AS brand, brand.alias AS brand_alias,
+						price.price, price.discount, price.percent,
+						prod_rel.category_id AS category_id
+						FROM ".self::TABLE." prod
+						LEFT JOIN ".Prices::TABLE." price ON (price.id = ".(int)$shop_price_id." && price.product_id = prod.id)
+						INNER JOIN ".self::REL." prod_rel ON (prod.id = prod_rel.product_id)
+						LEFT JOIN ".Brands::TABLE." brand ON (prod.brand_id = brand.id)
+						WHERE prod.articul = ".(int)$articul." LIMIT 1";
 
 			$result = $this->_db->query($sql)->fetch();
-			if($result) {
-				foreach($result as $property => $value) {
-
+			if($result)
+			{
+				foreach($result as $property => $value)
+				{
 					if($property == 'all_tags_name') {
 						$result[$property] = explode(',', $value);
 					}
@@ -801,14 +808,55 @@ class Products extends \Phalcon\Mvc\Model
 					if($property == 'filter_size') {
 						$result[$property] = explode(',', $value);
 					}
-
 				}
 			}
 			// Сохраняем запрос в кэше
-			if($cache && $this->_cache) $backendCache->save(self::TABLE.'-'.strtolower(__FUNCTION__).'-'.$shop_price_id.'.cache', $result);
+			if($cache && $this->_cache) $_cache->save($md5.'.cache', $result);
 		}
 		return $result;
 	}
+
+	/**
+	 *  getRecommend($ids = array(), $limit = 10, $cache = false) Возвращает ТОП 10 рекомендованных товаров
+	 * @param       array ids список id товаров
+	 * @author <filchakov.denis@gmail.com>
+	 * @modify Stanislav WEB
+	 * @param array $ids
+	 * @return array
+	 */
+	public function getRecommend(array $ids, $cache = false)
+	{
+		$result = null;
+
+		if($cache && $this->_cache)
+		{
+			$_cache = $this->getDI()->get('backendCache');
+			$md5 = md5(self::BUY_WITH.'-'.implode('-', $ids));
+			$result = $_cache->get($md5.'.cache');
+		}
+
+		if($result === null)
+		{
+			$sql = "SELECT top_ten
+						FROM `".self::BUY_WITH."`
+						WHERE id";
+
+			if(sizeof($ids) > 1)
+			{
+				$sql .= "IN (".implode(',',$ids).")";
+				$result = $this->_db->query($sql)->fetchAll();
+			}
+			else
+			{
+				$sql .= " = ".array_values($ids)[0];
+				$result = $this->_db->query($sql)->fetch();
+			}
+			// Сохраняем запрос в кэше
+			if($cache && $this->_cache) $_cache->save($md5.'.cache', $result);
+			return $result;
+		}
+	}
+
 
 	public function getBasketItems($basketItems, $shop_price_id)
 	{
@@ -845,28 +893,5 @@ class Products extends \Phalcon\Mvc\Model
 		}
 
 		return $result;
-	}
-
-	/**
-	 * Возвращает ТОП 10 рекомендованных товаров
-	 * @author <filchakov.denis@gmail.com>
-	 * @param array $ids
-	 */
-	public function getRecommend($ids = array(), $limit = 10, $cache = false) {
-
-
-		$result = null;
-
-		if($cache && $this->_cache) {
-			$backendCache = $this->getDI()->get('backendCache');
-			$result = $backendCache->get(BuyTogether::TABLE.'-'.implode('-', $ids).'-'.$limit.'.cache');
-		}
-
-		if($result === null) {
-			$info = $this->_db->query("SELECT top_ten FROM ".BuyTogether::TABLE." WHERE id IN (".implode(',',$ids).')')->fetchAll();
-			// Сохраняем запрос в кэше
-			if($cache && $this->_cache) $backendCache->save(BuyTogether::TABLE.'-'.implode('-', $ids).'-'.$limit.'.cache', $result);
-		}
-
 	}
 }

@@ -61,8 +61,9 @@ class Shops extends \Phalcon\Mvc\Model
 		$result = null;
 
 		if($cache && $this->_cache) {
-			$backendCache = $this->getDI()->get('backendCache');
-			$result = $backendCache->get(self::TABLE.'-'.implode('-', $data).'.cache');
+			$_cache = $this->getDI()->get('backendCache');
+			$md5 = self::TABLE.'-'.implode('-', $data);
+			$result = $_cache->get($md5.'.cache');
 		}
 
 		if($result === null) {    // Выполняем запрос из MySQL
@@ -91,7 +92,7 @@ class Shops extends \Phalcon\Mvc\Model
 			}
 
 			// Сохраняем запрос в кэше
-			if($cache && $this->_cache) $backendCache->save(self::TABLE.'-'.implode('-', $data).'.cache', $result);
+			if($cache && $this->_cache) $_cache->save($md5.'.cache', $result);
 		}
 
 		return $result;

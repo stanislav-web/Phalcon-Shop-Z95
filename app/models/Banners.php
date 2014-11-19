@@ -62,8 +62,8 @@ class Banners extends \Phalcon\Mvc\Model
 		$result = null;
 
 		if($cache && $this->_cache) {
-			$backendCache = $this->getDI()->get('backendCache');
-			$result = $backendCache->get(self::TABLE.'-'.implode('-', $data).'.cache');
+			$_cache = $this->getDI()->get('backendCache');
+			$result = $_cache->get(self::TABLE.'-'.implode('-', $data).'.cache');
 		}
 
 		if($result === null) {    // Выполняем запрос из MySQL
@@ -85,8 +85,6 @@ class Banners extends \Phalcon\Mvc\Model
 
 			if(null != $limit) $sql .= " LIMIT ".$limit;
 
-			$this->getDI()->get('logger')->log($sql."\r\n",\Phalcon\Logger::INFO);
-
 			if(null != $limit && $limit > 1) {
 				$result = $this->_db->query($sql)->fetchAll();
 			} else {
@@ -94,7 +92,7 @@ class Banners extends \Phalcon\Mvc\Model
 			}
 
 			// Сохраняем запрос в кэше
-			if($cache && $this->_cache) $backendCache->save(self::TABLE.'-'.implode('-', $data).'.cache', $result);
+			if($cache && $this->_cache) $_cache->save(self::TABLE.'-'.implode('-', $data).'.cache', $result);
 		}
 
 		return $result;
@@ -104,17 +102,17 @@ class Banners extends \Phalcon\Mvc\Model
 
 		$result = null;
 		if ($cache && $this->_cache) {
-			$backendCache = $this->getDI()->get('backendCache');
-			$result = $backendCache->get(strtolower(__FUNCTION__) . '-'.implode('_', $site_id . self::STATUS__ACTIVE).'.cache');
+			$_cache = $this->getDI()->get('backendCache');
+			$result = $_cache->get(strtolower(__FUNCTION__) . '-'.implode('_', $site_id . self::STATUS__ACTIVE).'.cache');
 		}
 
 		if ($result === null) {
 
-			$sql = "SELECT ".self::TABLE.".id, ".self::TABLE.".site_id, ".self::TABLE.".type,
-					".self::TABLE.".status, ".self::TABLE.".href, ".self::TABLE.".image
-					 FROM ".self::TABLE."
-					 WHERE ".self::TABLE.".site_id = " . $site_id .
-					 " AND ".self::TABLE.".status = " . self::STATUS__ACTIVE;
+			$sql = "SELECT id, site_id, `type`,
+					status, href, image
+					 FROM ".self::TABLE." banner
+					 WHERE site_id = " . (int)$site_id .
+					 " AND status = " . self::STATUS__ACTIVE;
 
 			$result = $this->_db->query($sql)->fetchAll();
 			$banners = array('main' => array(), 'inner' => array());
@@ -127,7 +125,7 @@ class Banners extends \Phalcon\Mvc\Model
 			}
 
 			// Сохраняем запрос в кэше
-			if ($cache && $this->_cache) $backendCache->save(strtolower(__FUNCTION__) . '-' . implode('_', $site_id . self::STATUS__ACTIVE) . '.cache', $result);
+			if ($cache && $this->_cache) $_cache->save(strtolower(__FUNCTION__) . '-' . implode('_', $site_id . self::STATUS__ACTIVE) . '.cache', $result);
 		}
 		return $banners;
 	}

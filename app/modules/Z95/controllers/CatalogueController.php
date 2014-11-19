@@ -190,13 +190,13 @@ class CatalogueController extends ControllerBase
 				$sizes = $this->tagsModel->getSizes($item['product_id'], true);
 
 				// Определение покупаемых товаров
-				$buyModel 	=	(new \Models\BuyTogether())->get(['top_ten'], ['id' => $item['product_id']], [], null, true);
+				$buy 	=	$this->productsModel->getRecommend([$item['product_id']], true);
 
-				if(!empty($buyModel))
+				if(!empty($buy))
 				{
 					// получаю покупаемые с товаром вещи
 
-					$productIds = json_decode($buyModel['top_ten']);
+					$productIds = json_decode($buy['top_ten']);
 
 					$buyItems = $this->productsModel->getProductsForBuy($productIds, $this->_shop['price_id'], 6, true);
 

@@ -11,7 +11,6 @@ use \Helpers\Catalogue,
  *
  * @var $this->productsModel
  * @var $this->tagsModel
- * @var $this->commonModel
  *
  * @var $this->session      вызов сессии
  * @var $this->request      информация об HTTP запросах

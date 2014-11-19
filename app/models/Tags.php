@@ -61,8 +61,8 @@ class Tags extends \Phalcon\Mvc\Model
 		$result = null;
 
 		if ($cache && $this->_cache) {
-			$backendCache = $this->getDI()->get('backendCache');
-			$result = $backendCache->get(self::TABLE . '-' . implode('-', $data) . '.cache');
+			$_cache = $this->getDI()->get('backendCache');
+			$result = $_cache->get(self::TABLE . '-' . implode('-', $data) . '.cache');
 		}
 
 		if ($result === null) {    // Выполняем запрос из MySQL
@@ -86,8 +86,6 @@ class Tags extends \Phalcon\Mvc\Model
 
 			if (null != $limit) $sql .= " LIMIT " . $limit;
 
-			$this->getDI()->get('logger')->log($sql."\r\n",\Phalcon\Logger::INFO);
-
 			if (null == $limit || $limit > 1) {
 				$result = $this->_db->query($sql)->fetchAll();
 			} else {
@@ -95,7 +93,7 @@ class Tags extends \Phalcon\Mvc\Model
 			}
 
 			// Сохраняем запрос в кэше
-			if ($cache && $this->_cache) $backendCache->save(self::TABLE . '-' . implode('-', $data) . '.cache', $result);
+			if ($cache && $this->_cache) $_cache->save(self::TABLE . '-' . implode('-', $data) . '.cache', $result);
 		}
 		return $result;
 	}
@@ -111,9 +109,9 @@ class Tags extends \Phalcon\Mvc\Model
 		$result = null;
 
 		if ($cache && $this->_cache) {
-			$backendCache = $this->getDI()->get('backendCache');
+			$_cache = $this->getDI()->get('backendCache');
 			$md5 = md5(self::TABLE.'-'.strtolower(__FUNCTION__).'-' .$category_id);
-			$result = $backendCache->get($md5.'.cache');
+			$result = $_cache->get($md5.'.cache');
 		}
 
 		if($result === null)
@@ -123,8 +121,8 @@ class Tags extends \Phalcon\Mvc\Model
 			$sql = "(	SELECT tag.id as id, tag.parent_id, tag.name, tag.alias, COUNT(rel_tags.product_id) AS count_products
 						FROM tags tag
 
-						LEFT JOIN 	products_relationship rel_tags ON (tag.id = rel_tags.tag_id)
-						LEFT JOIN 	products_relationship rel_categories USING (product_id)
+						LEFT JOIN 	`".Products::REL."` rel_tags ON (tag.id = rel_tags.tag_id)
+						LEFT JOIN 	`".Products::REL."` rel_categories USING (product_id)
 
 						WHERE rel_categories.category_id = ".$category_id."
 						GROUP BY tag.id
@@ -132,14 +130,14 @@ class Tags extends \Phalcon\Mvc\Model
 					UNION ALL
 					(
 						SELECT tags.id as id, tags.parent_id, tags.name, tags.alias, NULL
-						FROM tags
+						FROM `".self::TABLE."` tags
 						WHERE tags.parent_id = 0
 					) ORDER BY count_products DESC";
 
 			$result = $this->_db->query($sql)->fetchAll();
 
 			// Сохраняем запрос в кэше
-			if ($cache && $this->_cache) $backendCache->save($md5.'.cache', $result);
+			if ($cache && $this->_cache) $_cache->save($md5.'.cache', $result);
 		}
 		return $result;
 	}
@@ -152,21 +150,24 @@ class Tags extends \Phalcon\Mvc\Model
 	{
 		$result = null;
 
-		if ($cache && $this->_cache) {
-			$backendCache = $this->getDI()->get('backendCache');
-			$result = $backendCache->get(self::TABLE.'-'.strtolower(__FUNCTION__).'-' .$product_id.'.cache');
+		if($cache && $this->_cache)
+		{
+			$_cache = $this->getDI()->get('backendCache');
+			$md5 = md5(self::TABLE.'-'.strtolower(__FUNCTION__).'-' .$product_id);
+			$result = $_cache->get($md5.'.cache');
 		}
 
-		if($result === null) {    // Выполняем запрос из MySQL
+		if($result === null)
+		{
 			$sql = "SELECT tag.name
-					FROM ".Common::TABLE_PRODUCTS_REL." rel
+					FROM ".Products::REL." rel
 					INNER JOIN 	".Tags::TABLE." tag ON (rel.tag_id = tag.id && tag.`parent_id` = 1000)
 					WHERE rel.`product_id` = ".$product_id;
 
 			$result = $this->_db->query($sql)->fetchAll();
 
 			// Сохраняем запрос в кэше
-			if ($cache && $this->_cache) $backendCache->save(self::TABLE.'-'.strtolower(__FUNCTION__).'-' .$product_id.'.cache', $result);
+			if ($cache && $this->_cache) $_cache->save($md5.'.cache', $result);
 		}
 		return $result;
 	}

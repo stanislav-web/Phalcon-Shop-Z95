@@ -185,14 +185,13 @@
 
 		// Инициализация моделей (объекты доступны в контроллерах и views)
 
-		if(!$this->commonModel) $this->commonModel      =   new \Models\Common();
-		if(!$this->shopModel) $this->shopModel        =   new \Models\Shops();
-		if(!$this->productsModel) $this->productsModel    =   new \Models\Products();
+		if(!$this->shopModel) 		$this->shopModel        =   new \Models\Shops();
+		if(!$this->productsModel) 	$this->productsModel    =   new \Models\Products();
 		if(!$this->categoriesModel) $this->categoriesModel  =   new \Models\Categories();
-		if(!$this->brandsModel) $this->brandsModel  	=   new \Models\Brands();
-		if(!$this->pricesModel) $this->pricesModel      =   new \Models\Prices();
-		if(!$this->tagsModel) $this->tagsModel      	=   new \Models\Tags();
-		if(!$this->bannersModel) $this->bannersModel     =   new \Models\Banners();
+		if(!$this->brandsModel) 	$this->brandsModel  	=   new \Models\Brands();
+		if(!$this->pricesModel) 	$this->pricesModel      =   new \Models\Prices();
+		if(!$this->tagsModel) 		$this->tagsModel      	=   new \Models\Tags();
+		if(!$this->bannersModel) 	$this->bannersModel     =   new \Models\Banners();
 
 		// Получение параметров текущего магазина
 
@@ -200,7 +199,7 @@
 			$this->_shop = $this->shopModel->get(['code'	=>	$this->router->getModuleName()],[], 1, true);
 
 		// Получение категорий и подкатегорий для текущего магазина
-		$this->_shopCategories = $this->commonModel->getShopCategories($this->_shop['id'], true);
+		$this->_shopCategories = $this->categoriesModel->getShopCategories($this->_shop['id'], true);
 
 		// Инициализация навигации
 
