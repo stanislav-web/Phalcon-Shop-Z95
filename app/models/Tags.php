@@ -124,7 +124,7 @@ class Tags extends \Phalcon\Mvc\Model
 						LEFT JOIN 	`".Products::REL."` rel_tags ON (tag.id = rel_tags.tag_id)
 						LEFT JOIN 	`".Products::REL."` rel_categories USING (product_id)
 
-						WHERE rel_categories.category_id = ".$category_id."
+						WHERE rel_categories.category_id = ".$category_id." && tag.alias != '0'
 						GROUP BY tag.id
 					)
 					UNION ALL

@@ -2,22 +2,21 @@
 	<div id="CATALOGUE_SEARCH_RESULT">
 	</div>
 </div>
-
 <div id="CONTENT" >
 	<div class="clear"></div>
 	<table class="work-info">
 		<tr>
-			<td style="background:url(/assets/Z95/images/z95ru/icons/delivery.png) no-repeat 20px 10px; padding-left: 75px; " onclick="global.go({ url: '/delivery' })">
+			<td style="background:url(/assets/Z95/images/z95ru/icons/delivery.png) no-repeat 20px 10px; padding-left: 75px; " onclick="global.go({ url: '<?=$this->url->get(['for' => 'about-delivery']);?>'})">
 				<h3>Бесплатная доставка</h3>
 				По всей России			</td>
-			<td style="background:url(/assets/Z95/images/z95ru/icons/fitting.png) no-repeat 0px 10px;" onclick="global.go({ url: '/delivery' })">
+			<td style="background:url(/assets/Z95/images/z95ru/icons/fitting.png) no-repeat 0px 10px;" onclick="global.go({ url: '<?=$this->url->get(['for' => 'about-delivery']);?>' })">
 				<h3>Не уверены в размере?</h3>
 				Менеджер придет на помощь
 			</td>
-			<td style="background:url(/assets/Z95/images/z95ru/icons/247.png) no-repeat 0px 10px;" onclick="global.go({ url: '/about' })">
+			<td style="background:url(/assets/Z95/images/z95ru/icons/247.png) no-repeat 0px 10px;" onclick="global.go({ url: '<?=$this->url->get(['for' => 'about']);?>' })">
 				<h3>Отвечаем на звонки 24/7</h3>
 				И по праздникам тоже			</td>
-			<td style="background:url(/assets/Z95/images/z95ru/icons/return.png) no-repeat 0px 10px;" onclick="global.go({ url: '/return' })">
+			<td style="background:url(/assets/Z95/images/z95ru/icons/return.png) no-repeat 0px 10px;" onclick="global.go({ url: '<?=$this->url->get(['for' => 'about-return']);?>' })">
 				<h3>Легкий обмен</h3>
 				В течение 14 суток			</td>
 		</tr>
@@ -28,8 +27,8 @@
 		var teaserSettings = [
 			<?php if(isset($banners['main'])) { ?>
 			<?php foreach($banners['main'] as $banners) { ?>
-			{src: '/f/t/<?php echo $banners['image']; ?>', url: '/catalogue/sale', text: ''},
-			{src: '/f/t/77009b1c703e1d3a2b073aceab4931aa.jpg', url: '/catalogue/sale', text: ''}
+			{src: '/f/t/<?php echo $banners['image']; ?>', url: '<?=$this->url->get(['for' => 'sale']);?>', text: ''},
+			{src: '/f/t/77009b1c703e1d3a2b073aceab4931aa.jpg', url: '<?=$this->url->get(['for' => 'sale']);?>', text: ''}
 			<?php } ?>
 			<?php } ?>
 		];
@@ -49,12 +48,12 @@
 								$images 	= json_decode($subcategories[$sub_category_id]['img'], true);
 								$product_id	=	min(array_keys($images));
 								?>
-								<div class="catalogue-category" onclick="window.location.href= '<?=Helpers\LocationUrls::location('/catalogue/'.$subcategories[$sub_category_id]['parent_alias'].'/'.$subcategories[$sub_category_id]['alias']);?>'">
+								<div class="catalogue-category" onclick="window.location.href= '<?=$this->url->get('catalogue/'.$subcategories[$sub_category_id]['parent_alias'].'/'.$subcategories[$sub_category_id]['alias']);?>'">
 									<div class="leader">
 										<img class="image" src="http://img<?php echo rand(0,9); ?>.z95.ru/f/p/c_0_100_300_400/sep-tilt_shift/600x600/catalogue/<?=$product_id;?>/<?=$images[$product_id][1];?>">
 									</div>
 									<div class="title">
-										<a href="<?=Helpers\LocationUrls::location('/catalogue/'.$subcategories[$sub_category_id]['parent_alias'].'/'.$subcategories[$sub_category_id]['alias']);?>"><?=$subcategories[$sub_category_id]['name'];?></a>
+										<a href="<?=$this->url->get('catalogue/'.$subcategories[$sub_category_id]['parent_alias'].'/'.$subcategories[$sub_category_id]['alias']);?>"><?=$subcategories[$sub_category_id]['name'];?></a>
 										<span class="count"><?=$category['count_products'];?></span>
 									</div>
 								</div>

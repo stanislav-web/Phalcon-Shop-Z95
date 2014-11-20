@@ -16,7 +16,23 @@
 							<tr>
 
 								<td width="25%">
-									<div class="footer-menu-item"><a href="/about">О магазине</a><div class="submenu"><div class="footer-menu-item"><a href="/discounts">Скидки</a></div><div class="footer-menu-item"><a href="/delivery">Доставка</a></div><div class="footer-menu-item"><a href="/return">Возврат</a></div><div class="footer-menu-item"><a href="/opt">Опт</a></div></div></div>
+									<div class="footer-menu-item">
+										<?=$this->tag->linkTo([['for' => 'about'], 'О магазине']); ?>
+										<div class="submenu">
+											<div class="footer-menu-item">
+												<?=$this->tag->linkTo([['for' => 'about-discounts'], 'Скидки']); ?>
+											</div>
+											<div class="footer-menu-item">
+												<?=$this->tag->linkTo([['for' => 'about-delivery'], 'Доставка']); ?>
+											</div>
+											<div class="footer-menu-item">
+												<?=$this->tag->linkTo([['for' => 'about-return'], 'Возврат']); ?>
+											</div>
+											<div class="footer-menu-item">
+												<?=$this->tag->linkTo([['for' => 'about-opt'], 'Опт']); ?>
+											</div>
+										</div>
+									</div>
 								</td>
 								<td width="25%">
 								</td>
@@ -30,7 +46,6 @@
 								</td>
 							</tr>
 						</table>
-
 					</td>
 				</tr>
 			</table>

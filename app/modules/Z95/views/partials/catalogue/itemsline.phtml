@@ -61,6 +61,15 @@
 		var sideBar 	=	document.getElementById('filterSidebar');
 		var renderItems =	document.getElementById('renderItems');
 
+
+		<?php if(isset($isFavorite)): ?>
+		$('img.like_on').on('click', function(e) {
+			e.preventDefault();
+			$(this).closest('div.item').fadeOut();
+		});
+		<?php endif;?>
+
+
 		var exludeSidebar = [
 			'favorites',
 			'brands'
@@ -68,9 +77,7 @@
 			currentPath	=	window.location.pathname.split('/').slice(-1)[0];
 
 		if(!$.inArray(currentPath, exludeSidebar))
-		{
 			$(sideBar).hide();
-		}
 		else
 		{
 			// показую сайдбар

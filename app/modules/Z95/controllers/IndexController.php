@@ -26,6 +26,13 @@
 	 */
 	class IndexController extends ControllerBase
 	{
+
+		/**
+		 * Баннера
+		 * @var bool
+		 */
+		private $banners	=	false;
+
 		/**
 		 * initialize() Инициализирую конструктор
 		 * @access public
@@ -36,6 +43,9 @@
 			// устанавливаю шаблон и загружаю локализацию
 			$this->loadCustomTrans('index');
 			parent::initialize();
+
+			// Получаю баннер для страницы
+			$this->banners = $this->bannersModel->getBanners($this->_shop['id'], true);
 
 			// Заголовок страницы
 			$this->tag->setTitle($this->_shop['title']);
@@ -51,17 +61,13 @@
 
 			$title = $this->_shop['title'];
 
-			// получение баннеров
-			$banners = $this->bannersModel->getBanners($this->_shop['id'], true);
-
-			// получаю все дочерние категории каталога
 			// Получение подкатегорий выбранного магазина с изображением самого рейтингового товара в каждой категории
 
 			$subCategories = $this->categoriesModel->getCategories($this->_shop['id'], 0, '>', 'ASC', true);
 
 			// вывожу по умолчанию страницу каталога c вложением subcategories
 			$this->view->setVars([
-				'banners'			=>	$banners,
+				'banners'			=>	$this->banners,
 				'tree'				=>	Catalogue::categoriesToTree($this->_shopCategories, 0, true),
 				'subcategories'		=>	Catalogue::arrayToAssoc($subCategories, 'id'),
 				'title'				=>	$title,
@@ -90,29 +96,31 @@
 				return $this->dispatcher->forward(['controller' => 'index', 'action' => 'index']);
 	}
 
-	public function aboutAction()
+	/**
+	 * Экшн для вывода статичестких страниц
+	 * @param $page ?page=/about/tratata => /about/tratata
+	 */
+	public function staticAction($page)
 	{
+		// Устанавливаю заголовок
+		$title = $this->_translate[strtoupper($page)];
+		$this->tag->prependTitle($title.' - ');
 
-	}
+		// навигация
+		$this->_breadcrumbs->unsetLast();
 
-	public function discountsAction()
-	{
+		if($page != 'about')
+			$this->_breadcrumbs->add($this->_translate['ABOUT'], 'about/')
+								->add($title, 'about/');
+		else	$this->_breadcrumbs->add($title);
 
-	}
+		$this->view->setVars([
+			'banners'			=>	$this->banners,
+			'title'				=>	$title,
+			'template'			=>	strtolower($page),
+		]);
 
-	public function deliveryAction()
-	{
-
-	}
-
-	public function returnAction()
-	{
-
-	}
-
-	public function optAction()
-	{
-
+		return $this->view->pick("static/index");
 	}
 }
 

@@ -276,14 +276,15 @@ class CatalogueController extends ControllerBase
 		}
 
 		$this->view->setVars([
-			'template'	=>	'itemsline',
-			'title' 	=> 	$title,
-			'items' 	=> 	(sizeof($favorites) == 1)  ? [$items] : $items,
-			'count'		=>	sizeof($favorites),
-			'favorites'	=>	array_flip($favorites),
-			'banners'	=> 	$this->banners,
+			'template'		=>	'itemsline',
+			'title' 		=> 	$title,
+			'items' 		=> 	(sizeof($favorites) == 1)  ? [$items] : $items,
+			'count'			=>	sizeof($favorites),
+			'favorites'		=>	array_flip($favorites),
+			'banners'		=> 	$this->banners,
 			'disableSort'	=>	true,
-			'path'		 =>	$this->requestUri,
+			'isFavorite'	=>	true,
+			'path'		 	=>	$this->requestUri,
 		]);
 
 		$this->view->pick("catalogue/index");

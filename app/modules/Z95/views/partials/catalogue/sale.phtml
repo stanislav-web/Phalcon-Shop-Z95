@@ -10,13 +10,14 @@
 				<div class="discount-tiles">
 					<?php $values = array_reverse($values); foreach($values as $sales): ?>
 						<?php if($sales['percent'] != 100): ?>
-							<a href="<?=\Helpers\LocationUrls::location('/catalogue/sales/'.$genderList[$gender].'?percent='.$sales['percent']); ?>" class="tile" style="opacity: <?=$opacity;?>">
+
+							<a href="<?=$this->url->get('catalogue/sales/'.$genderList[$gender].'?percent='.$sales['percent']);?>" class="tile" style="opacity: <?=$opacity;?>">
 								<div class="value"><?=$sales['percent'];?>%</div>
 								<div class="count">наименований — <span><?=$sales['count'];?></span></div>
 							</a>
 						<?php endif; ?>
 						<? $opacity = sprintf("%f", ($opacity - 0.1)); endforeach; ?>
-					<a href="<?=\Helpers\LocationUrls::location('/catalogue/sales/'.$genderList[$gender]); ?>" class="tile" style="opacity: <?=$opacity;?>">
+					<a href="<?=$this->url->get('catalogue/sales/'.$genderList[$gender]);?>" class="tile" style="opacity: <?=$opacity;?>">
 						<div class="value">Все</div>
 						<div class="count">наименований — <span><?=$values[0]['count'];?></span></div>
 					</a>

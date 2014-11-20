@@ -1,0 +1,68 @@
+<div class="column left-column">
+	<ul class="catalogue-structure">
+		<li>
+			<?=$this->tag->linkTo([['for' => 'about-discounts'], $viewTranslate['DISCOUNTS']]); ?>
+		</li>
+		<li>
+			<?=$this->tag->linkTo([['for' => 'about-delivery'], $viewTranslate['DELIVERY']]); ?>
+		</li>
+		<li>
+			<?=$this->tag->linkTo([['for' => 'about-return'], $viewTranslate['RETURN']]); ?>
+		</li>
+		<li>
+			<?=$this->tag->linkTo([['for' => 'about-useful'], $viewTranslate['USEFUL']]); ?>
+		</li>
+		<li>
+			<?=$this->tag->linkTo([['for' => 'about-opt'], $viewTranslate['OPT']]); ?>
+		</li>
+	</ul>
+</div>
+
+<div class="column main-column">
+	<div class="ITEMS_LIST">
+		<div id="CATALOGUE_SEARCH_RESULT">
+		</div>
+	</div>
+	<?php if(isset($banners['inner']) && !empty($banners['inner'])): ?>
+		<div class="inner_teaser">
+			<a href="<?=$this->url->get(['for' => 'sale']);?>" >
+				<?= $this->tag->image(array('f/t/'.$banners['inner'][0]['image'])); ?>
+			</a>
+		</div>
+	<?endif;?>
+	<div id="CONTENT">
+		<!-- Right sidebar -->
+		<ul class="documents">
+			<li>
+				<?=$this->tag->linkTo([['for' => 'about-discounts'], $viewTranslate['DISCOUNTS']]); ?>
+			</li>
+			<li>
+				<?=$this->tag->linkTo([['for' => 'about-delivery'], $viewTranslate['DELIVERY']]); ?>
+			</li>
+			<li>
+				<?=$this->tag->linkTo([['for' => 'about-return'], $viewTranslate['RETURN']]); ?>
+			</li>
+			<li>
+				<?=$this->tag->linkTo([['for' => 'about-opt'], $viewTranslate['OPT']]); ?>
+			</li>
+		</ul>
+		<!-- /Right sidebar -->
+		<h1><?=$title;?></h1>
+		<?php if(!empty($breadcrumbs)): ?>
+			<!-- Bread Crumbs -->
+			<ul class="Thermo">
+				<?php foreach($breadcrumbs as $crumb): ?>
+					<li>
+						<?=($crumb['active']) ? $crumb['text'] : $this->tag->linkTo($crumb['link'], $crumb['text']).' / '; ?>
+					</li>
+				<?php endforeach; ?>
+			</ul>
+			<!-- Bread Crumbs -->
+		<?endif;?>
+		<div class="clear"></div>
+			<!-- Render content -->
+			<?php if($template) $this->partial('partials/static/'.$template); ?>
+			<!-- /Render content -->
+	</div>
+</div>
+<div class="clear"></div>

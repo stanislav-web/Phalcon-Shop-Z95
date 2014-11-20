@@ -99,7 +99,7 @@
 	<td style="padding:0 10px;">
 	<div onclick="catalogue.hideBigPhoto();" id="bphoto_overlay"></div>
 	<div id="bphoto_div">
-		<img style="z-index: 1100;" onclick="catalogue.hideBigPhoto()" class="close_png" src="/i/d-t.gif">
+		<img style="z-index: 1100;" onclick="catalogue.hideBigPhoto()" class="close_png" src="/assets/<?=$shop['code'];?>/images/d-t.gif">
 		<div style="position:absolute; background: #fff;padding:20px;z-index: 1002;">
 			<h1><?php echo $item['product_name']; ?> <?php echo $item['brand']; ?></h1>
 		</div>
@@ -254,14 +254,13 @@
 			<li>Оплата при получении в любом городе РФ.</li>
 			<li>Доставка заказа за 5 дней!</li>
 			<li>Возможность обмена/возврата после получения!</li></ul>			</div>
-	<!-- <div class="popup"><a href="/about/useful/" target="_blank">Таблица соответствия размеров одежды</a></div> -->
 	<div style="padding-top:20px;" class="social">
 		<div id="vk_like"></div>
 		<script type="text/javascript">
 			//VK.Widgets.Like("vk_like", {type: "mini"});
 		</script>
 	</div>
-	<button onclick="global.go({url:'/catalogue/brands/<?php echo $item['brand_alias']; ?>'});" type="button" class="add-button button" id="add">Все товары <?php echo $item['brand']; ?></button>
+	<!--<button onclick="global.go({url:''});" type="button" class="add-button button" id="add">Все товары <?php echo $item['brand']; ?></button>-->
 </td>
 </tr>
 <!-- Buy together -->

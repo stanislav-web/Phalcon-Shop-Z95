@@ -2,7 +2,7 @@
 <div class="column main-column">
 	<?php if(isset($banners['inner']) && !empty($banners['inner'])): ?>
 		<div class="inner_teaser">
-			<a href="<?=\Helpers\LocationUrls::location('/catalogue/sale'); ?>" >
+			<a href="<?=$this->url->get(['for' => 'sale']);?>" >
 				<?= $this->tag->image(array('f/t/'.$banners['inner'][0]['image'])); ?>
 			</a>
 		</div>

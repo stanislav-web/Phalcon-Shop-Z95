@@ -12,12 +12,12 @@
 					<tr>
 						<td id="leftPart" style="padding: 0px 10px 0px 0px; height: 320px;">
 							<div style="height:275px;">
-								<a href="<?=\Helpers\LocationUrls::location($path.'/'.$item['articul']); ?>">
+								<a href="<?=$this->url->get(ltrim($path, '/').'/'.$item['articul']);?>">
 									<img class="preview" src="http://img<?= rand(0, 9) ?>.z95.ru/f/p/225x275/catalogue/<?= $item['id'] ?>/<?=$img?>">
 								</a>
 							</div>
 							<div class="info">
-								<a href="<?=\Helpers\LocationUrls::location($path.'/'.$item['articul']); ?>">
+								<a href="<?=$this->url->get(ltrim($path, '/').'/'.$item['articul']);?>">
 									<b><?= $item['brand_name'] ?></b>
 									<?= $item['name'] ?> <span class="articul"><?= $item['articul'] ?></span>
 								</a>
@@ -70,7 +70,7 @@
 
 	<div class="photo_hover" onmouseover="catalogue.startSlideShow('slide_show_<?= $item['id'] ?>');"
 		 onmouseout="catalogue.stopSlideShow('slide_show_<?= $item['id'] ?>');">
-		<a href="<?=\Helpers\LocationUrls::location($path.'/'.$item['articul']); ?>">
+		<a href="<?=$this->url->get(ltrim($path, '/').'/'.$item['articul']);?>">
 			<img src="/assets/Z95/images/d-t.gif" style="width:225px; height:275px;">
 		</a>
 	</div>
@@ -81,12 +81,12 @@
 		<?php endif; ?>
 		<ul>
 			<li class="show">
-				<a href="<?=\Helpers\LocationUrls::location($path.'/'.$item['articul']); ?>">
+				<a href="<?=$this->url->get(ltrim($path, '/').'/'.$item['articul']);?>">
 					<img class="preview" src="http://img<?= rand(0, 9) ?>.z95.ru/f/p/225x275/catalogue/<?= $item['id'] ?>/<?=$img?>">
 				</a>
 			</li>
 			<li class="">
-				<a href="<?=\Helpers\LocationUrls::location($path.'/'.$item['articul']); ?>">
+				<a href="<?=$this->url->get(ltrim($path, '/').'/'.$item['articul']);?>">
 					<img class="preview add" src="http://img<?= rand(0, 9) ?>.z95.ru/f/p/225x275/catalogue/<?= $item['id'] ?>/<?= next(json_decode($item['preview'], true)) ?>">
 				</a>
 			</li>
@@ -94,7 +94,7 @@
 	</div>
 
 	<div class="info">
-		<a href="<?=\Helpers\LocationUrls::location($path.'/'.$item['articul']); ?>">
+		<a href="<?=$this->url->get($path.'/'.$item['articul']);?>">
 			<b><?= (isset($item['brand_name'])) ? $item['brand_name'] : ''?></b>
 			<?= $item['name'] ?> <span class="articul"><?= $item['articul'] ?></span>
 		</a>

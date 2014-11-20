@@ -44,6 +44,8 @@ class Breadcrumbs {
 	 *
 	 * @param string $caption заголовок
 	 * @param string $link ссылка
+	 * @access public
+	 * @return this
 	 */
 	public function add($caption, $link)
 	{
@@ -58,10 +60,22 @@ class Breadcrumbs {
 
 	/**
 	 * Сброс цепочки
+	 * @access public
+	 * @return null
 	 */
 	public function reset()
 	{
 		$this->_elements = [];
+	}
+
+	/**
+	 * Удаление последнего элемента из навигации
+	 * @access public
+	 * @return null
+	 */
+	public function unsetLast()
+	{
+		array_pop($this->_elements);
 	}
 
 	/**

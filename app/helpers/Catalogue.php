@@ -1,19 +1,11 @@
 <?php
 namespace Helpers;
-use \Phalcon\Http\Request;
+use \Phalcon\Http\Request,
+	\Phalcon\Mvc\Router;
 
 /**
  * Class Catalogue Помощник для работы с каталогом
- * @example // Разбивка роутинга на деревья
- *
- * 		Catalogue::catalogueNavTree($this->request->getURI(), [
- *			'categories', 'brands', 'tags'
- *		]);
- *
- * @example // Поиск категории в дереве массива
- * 		Catalogue::findInTree($array, 'parent_id, '150)
  */
-
 class Catalogue
 {
 

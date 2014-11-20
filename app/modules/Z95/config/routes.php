@@ -17,21 +17,21 @@
 		'namespace' 	=> 'Modules\\'.$module.'\Controllers\\',
 		'controller'    => 'catalogue',
 		'action'        => 'sale'
-	]);
+	])->setName("sale");
 
 	$router->add("/brands", [
 		'module'    	=>  $module,
 		'namespace' 	=> 'Modules\\'.$module.'\Controllers\\',
 		'controller'    => 'catalogue',
 		'action'        => 'brands',
-	]);
+	])->setName("brands");
 
 	$router->add("/catalogue/favorites", [
 		'module'    	=>  $module,
 		'namespace' 	=> 'Modules\\'.$module.'\Controllers\\',
 		'controller'    => 'catalogue',
 		'action'        => 'favorites',
-	]);
+	])->setName("favorites");
 
 	$router->add("/catalogue/top/:params", [
 		'module'    	=>  $module,
@@ -59,7 +59,7 @@
 		'namespace' 	=> 'Modules\\'.$module.'\Controllers\\',
 		'controller'    => 'cart',
 		'action'        => 'index',
-	]);
+	])->setName("cart");
 
 	$router->add("/catalogue/([a-z_-]+/[0-9]+)|(/[0-9]+)", [
 		'module'    	=>  $module,
@@ -79,42 +79,56 @@
 		'module'    	=>  $module,
 		'namespace' 	=> 'Modules\\'.$module.'\Controllers\\',
 		'controller'    => 'index',
-		'action'        => 'about',
-	]);
+		'action'        => 'static',
+		'param'        	=> 'about',
+	])->setName("about");
 
-	$router->add("/discounts", [
+	$router->add("/about/discounts", [
 		'module'    	=>  $module,
 		'namespace' 	=> 'Modules\\'.$module.'\Controllers\\',
 		'controller'    => 'index',
-		'action'        => 'discounts',
-	]);
+		'action'        => 'static',
+		'param'        	=> 'discounts',
+	])->setName("about-discounts");
 
-	$router->add("/delivery", [
+	$router->add("/about/delivery", [
 		'module'    	=>  $module,
 		'namespace' 	=> 'Modules\\'.$module.'\Controllers\\',
 		'controller'    => 'index',
-		'action'        => 'delivery',
-	]);
+		'action'        => 'static',
+		'param'        	=> 'delivery',
+	])->setName("about-delivery");
 
-	$router->add("/return", [
+	$router->add("/about/return", [
 		'module'    	=>  $module,
 		'namespace' 	=> 'Modules\\'.$module.'\Controllers\\',
 		'controller'    => 'index',
-		'action'        => 'return',
-	]);
+		'action'        => 'static',
+		'param'        	=> 'return',
+	])->setName("about-return");
 
-	$router->add("/opt", [
+	$router->add("/about/opt", [
 		'module'    	=>  $module,
 		'namespace' 	=> 'Modules\\'.$module.'\Controllers\\',
 		'controller'    => 'index',
-		'action'        => 'opt',
-	]);
+		'action'        => 'static',
+		'param'        	=> 'opt',
+	])->setName("about-opt");
+
+	$router->add("/about/useful", [
+		'module'    	=>  $module,
+		'namespace' 	=> 'Modules\\'.$module.'\Controllers\\',
+		'controller'    => 'index',
+		'action'        => 'static',
+		'param'        	=> 'useful',
+	])->setName("about-useful");
+
 	$router->add("/order", [
 		'module'    	=>  $module,
 		'namespace' 	=> 'Modules\\'.$module.'\Controllers\\',
 		'controller'    => 'order',
 		'action'        => 'index',
-	]);
+	])->setName("order");
 
 	$router->add("/customer/cart/:params", [
 		'module'    	=>  $module,
