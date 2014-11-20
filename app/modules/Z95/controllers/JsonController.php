@@ -205,9 +205,29 @@ class JsonController extends ControllerBase
 					// фильтрую только нужные параметры в заказе
 					$items = Catalogue::orderFilterItems($order['items']);
 
-					//@todo API CALL Here...
+					try {
 
-					$this->response->setJsonContent([
+						$response = (new \API\APIClient($this->_shop['token_key']))
+							->setURL('http://b.dev95.ru/api/jsonrpc/')
+							->debug(false)
+							->call(
+								'hotline.get',
+								time() - 36*30*24*60*60,	// начальная дата
+								time(),						// конечная дата
+								'Moscow',					// город
+								40,							// количество строк
+								$this->_shop['id']			// id магазина
+							);
+
+						var_dump($response); exit;
+					}
+					catch(\Phalcon\Exception $e)
+					{
+						echo $e->getMessage();
+					}
+
+
+					 $this->response->setJsonContent([
 						'status'		=>	1, // статус ответа возвращает Backend
 						'request'		=>	[
 							'items'		=>	$items,

@@ -2,7 +2,7 @@
 	// сколько показано уже
 	$show = ($pagination['current'] > 1) ? $pagination['current']*$pagination['limit'] : $pagination['current'];
 	$for = ($pagination['count'] > $show+$pagination['limit']) ?  ($show+$pagination['limit']) : $pagination['count'];
-	$maxpages = 3;
+	$maxpages = 7;
 	if($pagination['current'] < $maxpages)
 		$sp = 1;
 	elseif($pagination['current'] >= ($pagination['pages'] - floor($maxpages / 2)))

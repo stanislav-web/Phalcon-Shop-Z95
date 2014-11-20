@@ -5,6 +5,7 @@
 	$messages = [
 		"MAIN"						=>	"Главная",
 		"TITLE"                     =>  "Каталог",
+		"CART"						=>	'Корзина',
 		"COUNT_PRODUCTS"			=>	"Тут %d товаров",
 		"CATALOGUE"					=>	"Каталог",
 		"CATEGORIES"				=>	"Категории",
