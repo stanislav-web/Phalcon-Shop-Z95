@@ -56,38 +56,9 @@
 	<p class="note">Заверенные копии сертификатов, высылаются только оптовым клиентам, однако могут быть предоставлены для ознакомления розничному клиенту в нашем офисе.</p>
 </div>
 
-<div class="element-feedback">
-	<a name="feedback"></a>
-	<h2>Форма для отправки предложений</h2>
-	<div style="padding:20px 0">Мы читаем все ваши письма и даже иногда спам.</div>
-	<form action="#feedback" method="post" name="Feedback">
-		<table class="Form">
-			<tbody><tr>
-				<td class="label">Ваше имя</td>
-				<td><input type="text" name="user_fio" class="wide"></td>
-			</tr>
-			<tr>
-				<td class="label">Электронная почта</td>
-				<td><input type="text" name="user_email" class="wide"></td>
-			</tr>
-			<tr>
-				<td class="label">Контактный телефон</td>
-				<td><input type="text" name="user_phone" class="wide"></td>
-			</tr>
-			<tr>
-				<td colspan="2">
-					<div class="label">Пожелание или предложение</div>
-					<textarea name="message" class="wide"></textarea>
-				</td>
-			</tr>
-			<tr>
-				<td colspan="2">
-					<input type="submit" value="Отправить" name="send">
-				</td>
-			</tr>
-			</tbody></table>
-	</form>
-</div>
+<!-- Форма обр. связи -->
+<?php $this->partial('partials/static/feedform'); ?>
+<!-- Форма обр. связи -->
 <div class="element-text 2">
 	<div class="description_footer">Уникальная одежда для уникальных людей.<br>
 		Каждый человек старается быть индивидуальным и интересным.

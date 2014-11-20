@@ -13,6 +13,8 @@
 		"SEARCH_FOR"                =>  "Найти...",
 		"UNDER_DEVELOPMENT"         =>  "В разработке...",
 		"OPT"						=>	"Опт",
+		"NEW"						=>	"Новинки",
+		"CART"						=>	"Корзина",
 		"DISCOUNTS"					=>	"Скидки",
 		"RETURN"					=>	"Возврат",
 		"DELIVERY"					=>	"Доставка",

@@ -249,4 +249,15 @@
 			return $md5.'.cache';
 		}
 	}
+
+	/**
+	 * setJsonResponse() Установка режима выдачи ответа в JSON
+	 * @access protected
+	 * @return null
+	 */
+	protected  function setJsonResponse()
+	{
+		$this->view->disable();
+		$this->response->setContentType('application/json', 'UTF-8');
+	}
 }

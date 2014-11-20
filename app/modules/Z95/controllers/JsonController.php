@@ -1,8 +1,8 @@
 <?php
 namespace Modules\Z95\Controllers;
 use \Helpers\Catalogue,
-	\Mappers\Router,
-	\Phalcon\Mvc\View;
+	\Phalcon\Mvc\View,
+	\Mailer;
 
 /**
  * Class JsonController API мост для ajax
@@ -47,12 +47,13 @@ class JsonController extends ControllerBase
 		parent::initialize();
 
 		if($this->request->isAjax() == false) {
-		$this->flash->error('The request is not ajax');
-		$this->_isJsonResponse	=	false;
-		return false;
-	}
-	else	// устанавливаю, что ответ будет в Json
-		$this->_isJsonResponse	=	true;
+
+			$this->_isJsonResponse	=	false;
+			$this->flash->error('The request is not ajax');
+			die;
+		}
+		else	// устанавливаю, что ответ будет в Json
+			$this->_isJsonResponse	=	true;
 
 		// текущий request_uri
 		$this->requestUri	=	$this->session->get('request_uri');
@@ -220,17 +221,85 @@ class JsonController extends ControllerBase
 				}
 			}
 		}
+		else
+			$this->dispatcher->forward([
+				'controller' 	=> 'error',
+				'action'     	=> 'show404',
+			]);
 	}
 
 	/**
-	 * setJsonResponse() Установка режима выдачи ответа в JSON
+	 * feedbackAction() Обработка формы обратной связи
+	 *
 	 * @access public
-	 * @return null
+	 * @author Stanislav WEB
+	 * @return json
 	 */
-	public function setJsonResponse()
+	public function feedbackAction()
 	{
-		$this->view->disable();
-		$this->response->setContentType('application/json', 'UTF-8');
+		$response =	[];
+
+		if($this->request->isPost() == true) // Только для POST запросов
+		{
+			if($this->_isJsonResponse)
+			{
+				// Загружаю локализацию для контроллера
+				$this->loadCustomTrans('json');
+
+				// Выдать ответ в JSON
+				$this->setJsonResponse();
+
+				// отключаю лишние представления
+				$this->view->disableLevel([
+					View::LEVEL_LAYOUT 		=> true,
+					View::LEVEL_MAIN_LAYOUT => true
+				]);
+
+				// работаю с отправкой
+
+				if($this->security->checkToken())
+				{
+					$post = $this->request->getPost();
+					if(!empty($post['user_fio']) && !empty($post['message']))
+					{
+						// подключение Swift Mailer
+						require_once APP_PATH.'/library/Mailer/Swiftmailer/lib/swift_required.php';
+
+						$mailer = new Mailer\Manager((array)$this->_config->mailer);
+						$message = $mailer->createMessage()
+							->to($this->_config->mailer->to->email, $this->_config->mailer->to->name)
+							->subject($this->_translate['FEEDBACK_SUBJECT'])
+							->content($post['message']);
+
+						// отправка
+						$status = $message->send($message);
+
+						if($status)	$response = ['status'	=>	1,
+							'message'	=>	$this->_translate['MESSAGE_SUCCESS'],
+							'console'	=>	sprintf("Sent %d messages\n", $status)
+						];
+						else $response = [ 'status'	=>	0,
+							'message'	=>	$this->_translate['MESSAGE_FAILED']
+						];
+					}
+					else	$response = ['status'	=>	0,
+						'message'	=>	$this->_translate['EMPTY_REQUIRED_FIELDS']
+					];
+				}
+				else
+					$response = ['status'	=>	0,
+						'message'	=>	$this->_translate['FISHING_DETECTED']
+					];
+
+				$this->response->setJsonContent($response);
+				$this->response->send();
+			}
+		}
+		else
+			$this->dispatcher->forward([
+				'controller' 	=> 'error',
+				'action'     	=> 'show404',
+			]);
 	}
 }
 

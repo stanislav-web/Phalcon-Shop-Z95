@@ -65,6 +65,8 @@
 
 			$subCategories = $this->categoriesModel->getCategories($this->_shop['id'], 0, '>', 'ASC', true);
 
+
+			//var_dump($subCategories); exit;
 			// вывожу по умолчанию страницу каталога c вложением subcategories
 			$this->view->setVars([
 				'banners'			=>	$this->banners,
@@ -72,6 +74,7 @@
 				'subcategories'		=>	Catalogue::arrayToAssoc($subCategories, 'id'),
 				'title'				=>	$title,
 			]);
+
 		}
 
 	/**

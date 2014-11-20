@@ -1,5 +1,5 @@
 {
     "require": {
-        "phalcon/incubator": "v1.2.5"
+        "swiftmailer/swiftmailer ": "@stable"
     }
 }

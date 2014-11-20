@@ -1,0 +1,35 @@
+<div class="element-feedback">
+	<div id="feedback"></div>
+	<h2>Форма для отправки предложений</h2>
+	<div style="padding:20px 0">Мы читаем все ваши письма и даже иногда спам.</div>
+	<form action="<?=$this->url->get('json/feedback'); ?>" method="POST" id="feedform" onsubmit="Common.action(this.action, $(this).serialize()); return false;">
+		<input type="hidden" name="<?php echo $this->security->getTokenKey() ?>"
+			   value="<?php echo $this->security->getToken() ?>"/>
+		<table class="Form">
+			<tbody><tr>
+				<td class="label"><b>Ваше имя *<b></td>
+				<td><input type="text" name="user_fio" class="wide" required></td>
+			</tr>
+			<tr>
+				<td class="label">Электронная почта</td>
+				<td><input type="text" name="user_email" class="wide"></td>
+			</tr>
+			<tr>
+				<td class="label">Контактный телефон</td>
+				<td><input type="text" name="user_phone" class="wide"></td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					<div class="label"><b>Пожелание или предложение *</b></div>
+					<textarea name="message" class="wide" required></textarea>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					<input type="submit" value="Отправить" name="send">
+				</td>
+			</tr>
+			</tbody>
+		</table>
+	</form>
+</div>

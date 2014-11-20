@@ -5,6 +5,45 @@
 var Common =   {
 
     /**
+     * switch : function(param) Data view switcher
+     * @param param null string
+     * @return null
+     */
+    action : function(url, params, callbackId) {
+        try {
+
+            global.showStatus('common.loading');
+
+            // send request to server
+            var jqxhr = $.post(url, params)
+
+                // success execution
+
+                .success(function(data) {
+                    if(!callbackId)
+                        global.showStatus('message.success', data.message);
+                    else
+                    {
+                        var el = document.getElementById(callbackId);
+                        el.innerHTML = data.message;
+                    }
+                    global.hideStatus('common.loading');
+                })
+
+                // error execution
+
+                .error(function(jqXHR, textStatus) {
+                    global.alert('Ошибка выполнения Ajax запроса: '+textStatus);
+                    global.hideStatus('common.loading');
+                })
+        }
+        catch(error) {
+            global.alert('Возникла ошибка '+error);
+        }
+    },
+
+
+    /**
      * redirect : function(param) Filter redirect
      * @param param string
      * @return null

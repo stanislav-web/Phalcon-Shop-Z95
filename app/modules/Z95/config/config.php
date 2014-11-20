@@ -3,6 +3,22 @@
 	 * Конфигурация Z95 Модуля
 	 */
 	$config =  [
+
+		// Конфигурация отправки почты
+
+		'mailer' => [
+			'driver' 	 => 'mail',
+			//'sendmail' 	 => '/usr/sbin/sendmail -t -i -f stanislavw@gmail.com',
+			'from'		 => [
+				'email' => 'shopFrom@z95.com',
+				'name'	=> 'Z95 Shop'
+			],
+			'to'	=>	[
+				'email' => 'shopTo@z95.com',
+				'name'	=> 'Z95 Shop'
+			]
+		],
+
 		'profiler'	        => true,		// Включение отладки
 		'cache'	  =>    [   // Кэширование
 			'frontend'                  =>  false,

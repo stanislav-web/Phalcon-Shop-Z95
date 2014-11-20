@@ -23,7 +23,11 @@
 
 			</div>
 
-			<div class="phone" style="white-space:nowrap;"><span>+7 495</span>664-23-85<br><span style="font-size: 0.6em; white-space: nowrap;">круглосуточно, без выходных</span></div>					<div class="helper">
+			<div class="phone" style="white-space:nowrap;">
+				<span>+7 495</span>664-23-85<br>
+				<span style="font-size: 0.6em; white-space: nowrap;">круглосуточно, без выходных</span>
+			</div>
+			<div class="helper">
 				<div class="item">
 					<?=$this->tag->linkTo([['for' => 'about'], 'О магазине']); ?>
 				</div>
@@ -33,7 +37,7 @@
 
 				<div class="sale">
 					<div class="item">
-						<?=$this->tag->linkTo('catalogue/sale', 'Распродажа'); ?>
+						<?=$this->tag->linkTo([['for' => 'sale'], $viewTranslate['SALE']]); ?>
 					</div><br>
 					<div class="percent">
 						<div class="item">
@@ -48,11 +52,15 @@
 					</div>
 				</div>
 
-				<div class="item new"><a href="/catalogue/new">Новинки</a></div>
+				<div class="item new">
+					<?=$this->tag->linkTo('catalogue/new', $viewTranslate['NEW']); ?>
+				</div>
 			</div>
 			<div class="top-cart">
 				<div class="cart" onclick="basket.get_small_basket()"><img src="/assets/<?php echo $shop['code']; ?>/images/z95ru/icon-cart.png" /></div>
-				<h3><a href="/customer/cart">Корзина</a></h3>
+				<h3>
+					<?=$this->tag->linkTo('customer/cart', $viewTranslate['CART']); ?>
+				</h3>
 				<span id="BASKET_INFO">
 					<div class="basket-mini">
 						<?php if(!empty($minicart)): ?>

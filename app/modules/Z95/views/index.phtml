@@ -12,8 +12,10 @@
 	<?php
 		echo $this->tag->javascriptInclude('assets/' . $shop['code'] . '/js/jquery-1.11.0.min.js');
 		echo $this->tag->javascriptInclude('assets/' . $shop['code'] . '/js/main.js');
-	?>
 
+		//@add by Stanislav WEB
+		echo $this->tag->javascriptInclude('assets/common.js');
+	?>
 
 	<script type="text/javascript" language="javascript" >
 		var beforeload = (new Date()).getTime();
@@ -89,6 +91,12 @@
 <div class="status password success" onclick="global.hideStatus('password.success');">
 	<div class="message">
 		<div class="title">Пароль отправлен</div>
+		<span class="body"></span>
+	</div>
+</div>
+<div class="status message success" onclick="global.hideStatus('message.success');">
+	<div class="message">
+		<div class="title">Отправка</div>
 		<span class="body"></span>
 	</div>
 </div>
