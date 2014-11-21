@@ -9,7 +9,7 @@ $(function() {
 		menu			=	$('div.header-menu'),
 		sections		=	$('.header-menu-item.category'),
 		links			=	$('div.header-menu a'),
-		activeLink 		= 	$('div.header-menu a[href="'+path+'"]'),
+		activeLink 		= 	$('div.header-menu a.selected[href="'+path+'"]'),
 		parentSection 	= 	activeLink.closest('.header-menu-item.category');
 
 		// обновляю избранное

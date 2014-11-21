@@ -124,7 +124,7 @@ class Products extends \Phalcon\Mvc\Model
 		if($result === null) {    // Выполняем запрос из MySQL
 
 			if(!empty($fields))
-				$sql = "SELECT " . rtrim(implode(", ",$fields), ", ") . "
+				$sql = "SELECT prod.id AS id, " . rtrim(implode(", ",$fields), ", ") . "
 					FROM " . self::TABLE." prod";
 			else
 				$sql = "SELECT " . self::TABLE. ".*
@@ -859,8 +859,11 @@ class Products extends \Phalcon\Mvc\Model
 		}
 	}
 
-
-	public function getBasketItems($basketItems, $shop_price_id)
+	/**
+	 * @param $ids
+	 * @return mixed
+	 */
+	public function getBasketItems($basketItems)
 	{
 
 		if($basketItems == '' || null === $basketItems) {
@@ -873,12 +876,12 @@ class Products extends \Phalcon\Mvc\Model
 					".Prices::TABLE.".discount, ".Prices::TABLE.".percent
 
 					FROM ".self::TABLE."
-					INNER JOIN ".Prices::TABLE." ON (".Prices::TABLE.".id = $shop_price_id && ".Prices::TABLE.".product_id = ".self::TABLE.".id)
+					INNER JOIN ".Prices::TABLE." ON (".Prices::TABLE.".id = ".(int)$this->_price_id." && ".Prices::TABLE.".product_id = ".self::TABLE.".id)
 					INNER JOIN ".Brands::TABLE." ON (".self::TABLE.".brand_id = ".Brands::TABLE.".id)
-					WHERE product_id IN ($ids) ";
+					WHERE product_id IN (".$ids.") ";
 
 		$result = $this->_db->query($sql)->fetchAll();
-	
+
 		if(!empty($result)) {
 			//добавляем к вещам информацию о размерах и кол-ве
 			$total = 0;
@@ -893,7 +896,6 @@ class Products extends \Phalcon\Mvc\Model
 				$result[$key]['images'] = json_decode($item['images'], true);
 			}
 		}
-
 		return $result;
 	}
 }

@@ -44,6 +44,8 @@ class ErrorController extends ControllerBase
 	 */
 	public function show404Action()
 	{
+		$this->session->destroy();
+
 		$this->tag->setTitle($this->_translate['NOT_FOUND']);
 		$this->response->setStatusCode(404, 'Not Found');
 	}

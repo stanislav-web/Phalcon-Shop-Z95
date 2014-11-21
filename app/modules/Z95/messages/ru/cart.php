@@ -4,5 +4,4 @@
  */
 $messages = [
 	"TITLE"                     =>  "Корзина",
-	"COUNT_PRODUCTS"			=>	"Тут %d товаров",
 ];

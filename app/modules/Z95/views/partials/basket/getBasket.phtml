@@ -10,10 +10,13 @@
 	$totalCount = 0;
 	$totalSum = 0;
 	foreach($basket['items'] as $counter => $item) {
-		foreach($item['sizes'] as $size => $count) {
-			$totalCount = $totalCount + $count;
-			$totalSum = $totalSum + $count*(intval($item['discount']));
+		if(isset($item['sizes']))
+		{
+			foreach($item['sizes'] as $size => $count) {
+				$totalCount = $totalCount + $count;
+				$totalSum = $totalSum + $count*(intval($item['discount']));
 
+			}
 		}
 	}
 	?>
@@ -58,10 +61,8 @@
 							<table align="right" class="basket-basket-sizes">
 								<tbody>
 								<?php foreach($item['sizes'] as $size => $count) { ?>
-
 									<tr>
-										<td width="50" class="number size">
-											<?php echo $size; ?>
+										<td width="50" class="number size"><?=($size != '0') ? $size: ''; ?>
 										</td>
 										<td width="115" class="input">
 											<button onclick="var ov = $(this).next().val(); var nv = Math.max(0, parseInt(ov)-1); if (nv &lt; ov) { $(this).next().val(nv); basket.recount('<?php echo $item['product_id']; ?>', '<?php echo $size; ?>', $(this).next().val(), 'basket'); }" class="button sign">−</button>

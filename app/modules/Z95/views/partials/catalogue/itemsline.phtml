@@ -23,6 +23,11 @@
 
 	<!-- Вывод палитры -->
 	<?php if(isset($items) && !empty($items)): ?>
+
+		<?php
+			// скидки на вещи в магазине исходя из суммы покупок
+			$shopDiscounts = \Helpers\Catalogue::getMaxDiscount($shop['discounts'], $minicart);
+		?>
 		<?php foreach($items as $item): ?>
 			<?php
 				if(isset($item['filter_size']) && $item['filter_size'])

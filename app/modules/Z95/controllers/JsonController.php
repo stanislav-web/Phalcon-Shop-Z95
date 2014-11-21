@@ -48,9 +48,9 @@ class JsonController extends ControllerBase
 
 		if($this->request->isAjax() == false) {
 
-			$this->_isJsonResponse	=	false;
-			$this->flash->error('The request is not ajax');
-			die;
+			$this->_isJsonResponse	=	true;
+			//$this->flash->error('The request is not ajax');
+			//die;
 		}
 		else	// устанавливаю, что ответ будет в Json
 			$this->_isJsonResponse	=	true;
@@ -113,6 +113,21 @@ class JsonController extends ControllerBase
 						$tagsCloud['categories'] = Catalogue::categoriesToTree(Catalogue::arrayToAssoc($this->_shopCategories, 'id'), 0, false, 'count_products');
 
 			}
+			// сортировка внутри сайд бара между секциями.. по количеству товаров внутри
+
+			if(isset($tagsCloud['categories']) && !empty($tagsCloud['categories']))
+				$tagsCloud['categories']['count'] 	= Catalogue::arraySum($tagsCloud['categories'], 'count_products');
+
+			if(isset($tagsCloud['tags']) && !empty($tagsCloud['tags']))
+				$tagsCloud['tags']['count'] 		= Catalogue::arraySum($tagsCloud['tags'], 'count_products');
+
+			if(isset($tagsCloud['brands']) && !empty($tagsCloud['brands']))
+				$tagsCloud['brands']['count'] 		= Catalogue::arraySum($tagsCloud['brands'], 'count_products');
+
+			if(isset($tagsCloud['sizes']) && !empty($tagsCloud['sizes']))
+				$tagsCloud['sizes']['count'] 		= Catalogue::arraySum($tagsCloud['sizes'], 'count_products');
+
+			$tagsCloud = Catalogue::arraySort($tagsCloud, 'count', true, true);
 
 			$this->response->setJsonContent([
 				'response'	=>	$this->view->getRender('partials/json', 'tags', [
@@ -126,6 +141,8 @@ class JsonController extends ControllerBase
 			$this->response->send();
 		}
 	}
+
+
 
 	/**
 	 * favoritesAction() Экшн для коллекции добавления в избранное по ajax
@@ -209,7 +226,7 @@ class JsonController extends ControllerBase
 
 						$response = (new \API\APIClient($this->_shop['token_key']))
 							->setURL('http://b.dev95.ru/api/jsonrpc/')
-							->debug(false)
+							->debug(true)
 							->call(
 								'hotline.get',
 								time() - 36*30*24*60*60,	// начальная дата

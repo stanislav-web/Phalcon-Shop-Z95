@@ -133,7 +133,6 @@ class Tags extends \Phalcon\Mvc\Model
 						FROM `".self::TABLE."` tags
 						WHERE tags.parent_id = 0
 					) ORDER BY count_products DESC";
-
 			$result = $this->_db->query($sql)->fetchAll();
 
 			// Сохраняем запрос в кэше

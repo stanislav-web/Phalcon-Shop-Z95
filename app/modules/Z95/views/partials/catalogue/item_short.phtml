@@ -1,8 +1,12 @@
 <div class="item">
 	<div style="z-index: 2; position: relative;">
 		<div style="display: none;" id="sizes_<?= $item['id'] ?>" class="sizes_win"
-			 cat_id="<?= $item['id'] ?>" price="<?= $item['discount'] ?>" quantity="single"
-			 layout_mode="right">
+			 cat_id="<?= $item['id'] ?>"
+			 price="<?= $item['discount'] ?>"
+			 quantity="single"
+			 layout_mode="right"
+			 max_count="1"
+			 sizes="<?=(!isset($arraySize)) ? 0 : sizeof($arraySize); ?>">
 
 			<img onclick="$('#sizes_<?= $item['id'] ?>').fadeOut();" class="close_png" src="/assets/Z95/images/d-t.gif">
 			<!-- Форма покупки -->
@@ -24,33 +28,33 @@
 							</div>
 						</td>
 						<td id="rightPart" style="padding: 0px 10px 0px 0px;" part="">
-							<div class="warning hidden" id="warning" onclick="$(this).fadeOut();"></div>
-							<span>Выберите размер:</span>
-							<br clear="all">
-
 							<?php if(isset($arraySize) && $arraySize != ''): ?>
-							<div class="small-sizes">
-								<?php foreach($arraySize as $size): ?>
-									<div class="size">
-										<label>
-											<input type="checkbox"
-											   onclick="basket.getItems('sizes_<?= $item['id'] ?>')"
-											   value="<?=$size;?>"
-											   max_count="1" basket_count="0"><br>
-											<?=$size;?>
-										</label>
-									</div>
-								<?php endforeach; ?>
-								<br clear="all"><br>
+								<div class="warning hidden" id="warning" onclick="$(this).fadeOut();"></div>
+								<span>Выберите размер:</span>
+								<br clear="all">
 
-								<div class="left">
-									<label>
-										<input onclick="basket.getItems('sizes_<?= $item['id'] ?>')"
-											   type="checkbox" value="?"
-											   style="float: left; margin-right: 5px;">
-										Не уверен в размере — <br>хочу обсудить с менеджером</label>
+								<div class="small-sizes">
+									<?php foreach($arraySize as $size): ?>
+										<div class="size">
+											<label>
+												<input type="checkbox"
+											   	onclick="basket.getItems('sizes_<?= $item['id'] ?>')"
+											   	value="<?=$size;?>"
+											   	max_count="1" basket_count="0"><br>
+												<?=$size;?>
+											</label>
+										</div>
+									<?php endforeach; ?>
+									<br clear="all"><br>
+
+									<div class="left">
+										<label>
+											<input onclick="basket.getItems('sizes_<?= $item['id'] ?>')"
+											   	type="checkbox" value="?"
+											   	style="float: left; margin-right: 5px;">
+											Не уверен в размере — <br>хочу обсудить с менеджером</label>
+									</div>
 								</div>
-							</div>
 							<?php endif; ?>
 							<br clear="all">
 							<div class="add-button">
@@ -118,17 +122,25 @@
 				<span class="sign"><?=$shop['currency_symbol'];?></span>
 			</div>
 			<?endif;?>
-			<?php //if(!empty($arraySize)):?>
+
+			<?php if(!empty($shopDiscounts)):?>
+				<div class="discount-sign"><b>***</b><i><?=round($item['discount'] - $item['discount'] * $shopDiscounts[key($shopDiscounts)] / 100);?></i></div>
+				<div class="discount-detail">
+					<?printf($viewTranslate['DISCOUNT_SHOP'], $shopDiscounts[key($shopDiscounts)], key($shopDiscounts), $shop['currency_symbol']);?>
+				</div>
+			<?php endif;?>
+
+			<?php if(!empty($arraySize)):?>
+			<div id="sizes_button_<?= $item['id'] ?>" class="sizes-button"
+				onclick="basket.beforeAddToBasket('sizes_<?= $item['id'] ?>');">
+				&nbsp;
+			</div>
+			<?php else: ?>
 				<div id="sizes_button_<?= $item['id'] ?>" class="sizes-button"
-					 onclick="basket.beforeAddToBasket('sizes_<?= $item['id'] ?>');">
+					 onclick="basket.addToBasketSingle(<?= $item['id'] ?>);">
 					&nbsp;
 				</div>
-			<?php //else:?>
-				<!--<div id="sizes_button_<?= $item['id'] ?>" class="sizes-button" quantity="single" cat_id="<?= $item['id'] ?>" price="<?=($item['discount'] == $item['price']) ? $item['price'] : $item['discount'];?>"
-					 onclick="basket.addToBasket(<?= $item['id'] ?>, false);">
-					&nbsp;
-				</div>-->
-			<?php //endif;?>
+			<?php endif;?>
 			<img alt="Понравилось" id="fav_icon_<?= $item['id'] ?>"
 				 onclick="catalogue.addFavorites(<?= $item['id'] ?>, this)" src="/assets/<?=$shop['code'];?>/images/d-t.gif"
 				 class="<?=(isset($favorites[$item['id']])) ? 'like_on' : 'like_off' ?>">

@@ -255,7 +255,7 @@
 		 * @param array $items
 		 * @return \Mappers\Router
 		 */
-		public function setItems(array $items)
+		public function setItems(array $items = [])
 		{
 			$this->_items = $items;
 			return $this;
@@ -369,6 +369,11 @@
 			$this->session->set('request_uri', $this->_rules->path);
 
 			// задаю шаблон для вывода результата выдачи
+			if($items === null)
+				return $this->response->redirect([
+					'for'			=>	'show404',
+				]);
+
 			$this->setItems($items); //->setTemplate('itemsline');
 
 			// Устанавливаю мета данные
@@ -445,8 +450,10 @@
 			$items = $this->_model->getProducts($this->_rules->query, true);
 
 			if(!empty($items)) {
-				$this->_breadcrumbs->add($items[0]['brand_name'], true);
-				$this->_title = $items[0]['brand_name'];
+				if(isset($items[0])) {
+					$this->_breadcrumbs->add($items[0]['brand_name'], true);
+					$this->_title = $items[0]['brand_name'];
+				}
 			}
 			return $items;
 		}
@@ -608,44 +615,47 @@
 			// 	ищем родителя категории, (уже сброшены, поэтому родитель всегда 0)
 			$parent = Catalogue::findInTree($this->_collection, 'alias', $this->_rules->catalogue[0])[0];
 
-
 			// поиск по полу и алиасу в массиве
 			if($this->_gender > 0) // поиск с полом
-				$category = Catalogue::findInTree($this->_collection, 'alias', $this->_rules->catalogue[1], 'sex', $this->_gender)[0];
+				$category = @Catalogue::findInTree($this->_collection, 'alias', $this->_rules->catalogue[1], 'sex', $this->_gender)[0];
 			else
-				$category = Catalogue::findInTree($this->_collection, 'alias', $this->_rules->catalogue[1])[0];
+				$category = @Catalogue::findInTree($this->_collection, 'alias', $this->_rules->catalogue[1])[0];
 
-			// непутевая ситуация... если нам выдало,
-			// что категория для выборки товара у нас называется как пол человека, мы должны теперь найти ее parent_id
-			// и узнать реальную картину, снова поискать в дереве и пересобрать
+			if($category != null)
+			{
+				// непутевая ситуация... если нам выдало,
+				// что категория для выборки товара у нас называется как пол человека, мы должны теперь найти ее parent_id
+				// и узнать реальную картину, снова поискать в дереве и пересобрать
 
-			if ($this->getGender($this->_rules->catalogue[1])) {
-				// узнаем ID родителя
-				$parent = Catalogue::findInTree($this->_collection, 'alias', $this->_rules->catalogue[0])[0];
-				// пол нам известен, id родителя тоже... теперь найдем id реальной категории и вперед на поиск
+				if ($this->getGender($this->_rules->catalogue[1])) {
+					// узнаем ID родителя
+					$parent = Catalogue::findInTree($this->_collection, 'alias', $this->_rules->catalogue[0])[0];
+					// пол нам известен, id родителя тоже... теперь найдем id реальной категории и вперед на поиск
 
-				$category = Catalogue::findInTree($this->_collection, 'parent_id', $parent['id'], 'sex', $this->_gender)[0];
+					$category = Catalogue::findInTree($this->_collection, 'parent_id', $parent['id'], 'sex', $this->_gender)[0];
+				}
+
+				// добавляю в навигацию
+				$this->_breadcrumbs->add($parent['name'], 'catalogue/' . $parent['alias'])
+					->add($category['name'], 'catalogue/' . $category['alias']);
+
+
+				$items = $this->_model->getProductsCategories([
+						'rel.category_id  	= ' => $category['id'],
+						'prod.sex = '          => ($this->_gender > 0) ? $this->_gender : false,
+					],
+					$this->_rules->query, true);
+
+				$this->_title	=	$category['name'];
+
+				// сохраняю связь чтобы не дергать из MySQL. Записываю параметры текущей категории в сессию
+				// она каждый раз перезаписывается по мере новой загрузки категории, поэтому не стоит волноваться
+				// это будет главный ключ используемый для связи тегов и категорий
+				// {id:31848, parent_id:394, sex:0, name:Браслеты, alias:bracelet, sort:0}
+				$this->session->set('category', $category);
+
+				// Устанавливаю заголовок
+				return $items;
 			}
-
-			// добавляю в навигацию
-			$this->_breadcrumbs->add($parent['name'], 'catalogue/' . $parent['alias'])
-								->add($category['name'], 'catalogue/' . $category['alias']);
-
-			$items = $this->_model->getProductsCategories([
-					'rel.category_id  	= ' => $category['id'],
-					'prod.sex = '             => ($this->_gender > 0) ? $this->_gender : false,
-				],
-				$this->_rules->query, true);
-
-			$this->_title	=	$category['name'];
-
-			// сохраняю связь чтобы не дергать из MySQL. Записываю параметры текущей категории в сессию
-			// она каждый раз перезаписывается по мере новой загрузки категории, поэтому не стоит волноваться
-			// это будет главный ключ используемый для связи тегов и категорий
-			// {id:31848, parent_id:394, sex:0, name:Браслеты, alias:bracelet, sort:0}
-			$this->session->set('category', $category);
-
-			// Устанавливаю заголовок
-			return $items;
 		}
 	}

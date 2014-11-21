@@ -181,19 +181,23 @@ class Catalogue
 	 * @param $array исх. массив
 	 * @param $key ключ по которому сортировать
 	 * @param $desc обратный порядок?
+	 * @param boolean $keepkey сохранить ключи
 	 * @return mixed
 	 */
-	public static function arraySort($array, $key, $desc = false)
+	public static function arraySort($array, $key, $desc = false, $keepkey = false)
 	{
 
 		$ascending = function($a, $b) use ($key) {
-			if ($a[$key] == $b[$key]) {
-				return 0;
+			if(isset($a[$key]) && isset($b[$key]))
+			{
+				if ($a[$key] == $b[$key]) {
+					return 0;
+				}
+				return ($a[$key] < $b[$key]) ? -1 : 1;
 			}
-			return ($a[$key] < $b[$key]) ? -1 : 1;
 		};
-		usort($array, $ascending);
-
+		if(!$keepkey) usort($array, $ascending);
+		else uasort($array, $ascending);
 		if($desc) $array = array_reverse($array, true);
 		return $array;
 	}
@@ -237,23 +241,80 @@ class Catalogue
 	 * @param array $basket['items']
 	 * @return array
 	 */
-	public static function basketMini($basket = [])
+	public static function basketMini($basket = [], $discounts = false)
 	{
-		$cart = [
-			'total' =>	0,
-			'sum' 	=>	0
-		];
+		$totalCount = 0;
+		$totalSum = 0;
+		$discountSum = 0;
 
-		if(!empty($basket))
-		{
-			foreach($basket as $item => $val)
+		foreach($basket as $counter => $item) {
+			if(isset($item['sizes']))
 			{
-				$countSizes = (isset($basket[$item]['sizes'])) ? sizeof($basket[$item]['sizes']) : 0;
-				$cart['total']	+= (isset($val['sizes']) && !empty($val['sizes']))  ? sizeof($val['sizes']) : 0;
-				$cart['sum']	+= ((isset($val['discount']))  ? $val['discount'] : 0) * $countSizes;
+				foreach($item['sizes'] as $size => $count) {
+					$totalCount = $totalCount + $count;
+					$totalSum = $totalSum + $count*(intval($item['discount']));
+				}
 			}
 		}
-		return $cart;
+
+		if($discounts)
+			$discountSum = self::getMaxDiscount($discounts, ['sum' => $totalSum]);
+
+		return [
+			'total'	 	=>	$totalCount,
+			'sum' 		=>	$totalSum,
+			'discount'	=>	$discountSum
+		];
+	}
+
+	/**
+	 * Получение следующего уровня скиди на товар
+	 * в зависимости от суммы покупок в корзине
+	 *
+	 * @param mixed $discounts набор скидок магазина
+	 * @param int $total сумма покупок в корзине
+	 */
+	public static function getMaxDiscount($discounts, $total)
+	{
+		$total = (isset($total['sum'])) ? $total['sum'] : 0;
+
+		$result = [];
+		$date = strtotime(date('Y-m-d'));
+		if(!is_array($discounts))
+			$discounts = json_decode($discounts, true);
+
+		if((isset($discounts['sum']) && !empty($discounts['sum'])) && !empty($total))
+		{
+			$discount = array_flip($discounts['sum']);
+			foreach($discount as $percent => $sum)
+			{
+				if($sum > $total)
+				{
+					$result = [$sum => $percent];
+					break;
+				}
+			}
+
+			if(isset($discounts['period']['start']) && isset($discounts['period']['end']))
+			{
+				// расчет в промежуток времени
+
+				$start = strtotime($discounts['period']['start']);
+				$end = strtotime($discounts['period']['end']);
+				if($date > $start && $date < $end)
+				{
+					return $result;
+				}
+				else	// дата прошла , но она еще стоит в настройках.. значит скидки закончились
+					return [];
+			}
+			else
+			{
+				// действует как постоянная скидка от суммы
+				return $result;
+			}
+		}
+		return [];
 	}
 
 	/**
@@ -441,22 +502,28 @@ class Catalogue
 		);
 	}
 
-	public static function arraySumm(array $array, $field)
+	/**
+	 * arraySum(array $array, $property) Суммирует значения в массиве по определенному полю
+	 * @param array $array instance of array
+	 * @param  string $property sum field
+	 * @access static
+	 * @return int
+	 */
+	public static function arraySum(array $array, $property)
 	{
-		$totals = array();
-
-		foreach($array AS $el)
-		{
-			if (!isset($totals[$bank['name']]))
-				$totals[$bank['name']] = 0;
-
-			$totals[$bank['name']] += $bank['amount'];
+		$total = 0;
+		foreach ($array as $key => $value) {
+			if (is_array($value)) {
+				$total += self::arraySum($value, $property);
+			}
+			else if ($key == $property) {
+				$total += $value;
+			}
 		}
+		return $total;
 	}
 
-
-
-/**
+	/**
 	 * itemCompareSize($a,$b) helps callback to compare item size
 	 * @var string $itemSizeField
 	 * return array

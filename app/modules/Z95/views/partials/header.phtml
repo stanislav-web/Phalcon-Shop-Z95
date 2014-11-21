@@ -65,6 +65,7 @@
 					<div class="basket-mini">
 						<?php if(!empty($minicart)): ?>
 							<?=\Helpers\Catalogue::declOfNum($minicart['total'], ['вещь','вещи','вещей']);?>  на <?=$minicart['sum'];?> <?=$shop['currency_symbol']; ?>
+
 						<?php endif; ?>
 					</div>
 				</span>

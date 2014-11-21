@@ -56,10 +56,7 @@
 
 			$this->view->setVars(array('basket' => $this->session->get('basket'),
 									   'discounts' => json_decode($this->_shop['discounts'], true)
-									));
-
-
-
+			));
 		}
 
 
@@ -138,7 +135,7 @@
 
 								$newItems = $this->save($item);
 
-								$this->basket['items'][] = current($this->productsModel->getBasketItems($newItems, $this->_shop['price_id']));
+								$this->basket['items'][] = current($this->productsModel->getBasketItems($newItems));
 
 								break;
 							}
@@ -147,13 +144,13 @@
 					} else {
 
 						$newItems = $this->save($item);
-						$this->basket['items'][] = current($this->productsModel->getBasketItems($newItems, $this->_shop['price_id']));
+						$this->basket['items'][] = current($this->productsModel->getBasketItems($newItems));
 					}
 
 				} else {
 
 					$newItems = $this->save($item);
-					$this->basket['items'][] = current($this->productsModel->getBasketItems($newItems, $this->_shop['price_id']));
+					$this->basket['items'][] = current($this->productsModel->getBasketItems($newItems));
 				}
 
 				/** Формируем идентификатор обработанного размера позиции для передачи js-бибиотеку */
@@ -182,17 +179,18 @@
 			if($mode != 'small') {
 				ob_start($this->view->partial('partials/basket/getBasket', array('basket' => $this->session->get('basket'),
 																				 'discounts' => json_decode($this->_shop['discounts'], true)
-																			)));
+				)));
 				ob_end_flush();
 			} else {
 				ob_start($this->view->partial('partials/basket/get', array('basket' => $this->session->get('basket'),
 																		   'discounts' => json_decode($this->_shop['discounts'], true)
-						)));
+				)));
 				ob_end_flush();
 			}
 
 			//@upd Stanislav WEB чтобы работал ajax в minicart
 			$mini	=	Catalogue::basketMini($this->basket['items']);
+			$discounts = json_decode($this->_shop['discounts'], true);
 			//Set the content of the response
 
 			return $this->response->setContent(json_encode(
@@ -203,6 +201,7 @@
 					  'selected'	=>	$selected,
 					  'id' 			=> 	isset($id) ? $id : 0,
 					  'total'		=> 	$mini['total'],
+					  //'discount'	=> 	$mini['sum'] - ($mini['total']*$discounts['sum'][$mini['total']]/100),
 					  'basket_info'	=>	(isset($mini['total']) && $mini['total'] > 0) ?Catalogue::declOfNum($mini['total'], ['вещь','вещи','вещей']).' на '.$mini['sum'].' '.$this->_shop['currency_symbol']: '',
 					  'basket' 		=> 	ob_get_contents(),
 				)));
@@ -248,7 +247,6 @@
 							$items[$product_id]['sizes'] = $product['sizes'];
 						}
 						//добавляем к вещи только размер и кол-во
-
 						foreach($basket_items[$product_id] as $key => $param){
 							list($size, $count) = explode('_', $basket_items[$product_id][$key]);
 							if($count > 0) {
@@ -285,4 +283,3 @@
 			return $result;
 		}
 	}
-

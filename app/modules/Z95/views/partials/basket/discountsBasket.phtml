@@ -1,7 +1,7 @@
 <?php if(isset($discounts['count']))  { ?>
 	<?php if($totalCount > 0 && $totalCount < 5) { ?>
 		<tr>
-			<td>Скидка <?php echo $discounts['count'][$totalCount] ?>% (<a target="_blank" href="/discounts/">подробнее о скидках</a>)</td>
+			<td>Скидка <?php echo $discounts['count'][$totalCount] ?>% (<?=$this->tag->linkTo([['for' => 'about-discounts'], $viewTranslate['ABOUT_DISCOUNTS'], 'target' => '_blank']);?>)</td>
 			<td class="number discount"><?php echo ($total*$discounts['count'][$totalCount]/100); ?> <?php echo $shop['currency_symbol'] ?></td>
 		</tr>
 		<tr>
@@ -11,7 +11,7 @@
 	<?php } ?>
 	<?php if($totalCount >= 5) { ?>
 		<tr>
-			<td>Скидка <?php echo end($discounts['count']); ?>% (<a target="_blank" href="/discounts/">подробнее о скидках</a>)</td>
+			<td>Скидка <?php echo end($discounts['count']); ?>% (<?=$this->tag->linkTo([['for' => 'about-discounts'], $viewTranslate['ABOUT_DISCOUNTS'], 'target' => '_blank']);?>)</td>
 			<td class="number discount"><?php echo ($total*end($discounts['count'])/100); ?> <?php echo $shop['currency_symbol'] ?></td>
 		</tr>
 		<tr>
@@ -20,20 +20,8 @@
 		</tr>
 	<?php } ?>
 <?php } else if(isset($discounts['sum'])) { ?>
-<!--	--><?php //$flip = array_flip($discounts['sum']);  ?>
-<!--	--><?php //var_dump($flip);
-//	die; ?>
-<!--	--><?php //foreach($flip as $sum => $percent) { ?>
-<!--		--><?php //var_dump($flip);
-//		die; ?>
-<!--		--><?php //if($totalSum >= key(prev($discounts['sum'])) && $totalSum <= next($discounts['sum'])) { ?>
-<!--			--><?php //var_dump($percent);
-//			die; ?>
-<!--		--><?php //} ?>
-<!--	--><?php //} ?>
-
 	<tr>
-		<td>Скидка <?php echo end($discounts['sum']); ?>% (<a target="_blank" href="/discounts/">подробнее о скидках</a>)</td>
+		<td>Скидка <?php echo end($discounts['sum']); ?>% (<?=$this->tag->linkTo([['for' => 'about-discounts'], $viewTranslate['ABOUT_DISCOUNTS'], 'target' => '_blank']);?>)</td>
 		<td class="number discount"><?php echo ($total*end($discounts['sum'])/100); ?> <?php echo $shop['currency_symbol'] ?></td>
 	</tr>
 	<tr>

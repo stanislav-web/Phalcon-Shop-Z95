@@ -1465,7 +1465,6 @@ var basket = new function() {
     this.getItems = function(containerId) {
         var c = $('#'+containerId)[0]; 	// РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРј РєРѕРЅС‚РµРєСЃС‚ РґР»СЏ РїРѕРёСЃРєР° РІСЃРµС… СЌР»РµРјРµРЅС‚РѕРІ
         var items = []; 					// РњР°СЃСЃРёРІ РїРѕР·РёС†РёР№ СЂР°Р·РЅС‹С… СЂР°Р·РјРµСЂРѕРІ
-
         this.items = null;
 
         var quantity	= $(c).attr('quantity');	// Р’РѕР·РјРѕР¶РЅРѕСЃС‚СЊ Р·Р°РєР°Р·Р° РѕРґРЅРѕР№/РЅРµСЃРєРѕР»СЊРєРёС… С€С‚СѓРє РѕРґРЅРѕРіРѕ СЂР°Р·РјРµСЂР° РґРѕР»Р¶РЅР° Р±С‹С‚СЊ СѓСЃС‚Р°РЅРѕРІР»РµРЅР° РІ Р°С‚СЂРёР±СѓС‚Рµ quantity РєРѕРЅС‚РµР№РЅРµСЂР°
@@ -1492,13 +1491,13 @@ var basket = new function() {
                         if (total_count > 10) {
                             el.checked = false;
                             $('#warning',c)
-                                .html("РќРµР»СЊР·СЏ РґРѕР±Р°РІРёС‚СЊ РІ РєРѕСЂР·РёРЅСѓ Р±РѕР»РµРµ 10 РІРµС‰РµР№ РѕРґРЅРѕРіРѕ СЂР°Р·РјРµСЂР°")
+                                .html("Превышено количество добавляемого товара")
                                 .fadeIn();
                             setTimeout("$('#warning').hide()", 5000);
                         } else if (total_count > max_count) {
                             el.checked = false;
                             $('#warning',c)
-                                .html("Р—Р°РєР°Р·Р°РЅРЅРѕРµ Р’Р°РјРё РєРѕР»РёС‡РµСЃС‚РІРѕ РїСЂРµРІС‹С€Р°РµС‚ РёРјРµСЋС‰РµРµСЃСЏ РЅР° СЃРєР»Р°РґРµ.<br/>Р”РѕСЃС‚СѓРїРЅРѕ: <b>"+max_count+"</b>")
+                                .html("Вы не можете добавить больше вещей. Лимит: <b>"+max_count+"</b>")
                                 .fadeIn();
                             setTimeout("$('#warning').hide()", 5000);
                         }
@@ -1577,7 +1576,6 @@ var basket = new function() {
             );
 
         }
-
         // Р Р°Р·СЂРµС€РёС‚СЊ/Р·Р°РїСЂРµС‚РёС‚СЊ СЌР»РµРјРµРЅС‚-РєРЅРѕРїРєСѓ РґРѕР±Р°РІР»РµРЅРёСЏ РІ РєРѕСЂР·РёРЅСѓ
         $('#add',c).attr({'disabled' : (items.length == 0)});
 
@@ -1589,18 +1587,19 @@ var basket = new function() {
         var c 			= $('#'+containerId)[0];
         var quantity	= $(c).attr('quantity');	// Р’РѕР·РјРѕР¶РЅРѕСЃС‚СЊ Р·Р°РєР°Р·Р° РѕРґРЅРѕР№/РЅРµСЃРєРѕР»СЊРєРёС… С€С‚СѓРє РѕРґРЅРѕРіРѕ СЂР°Р·РјРµСЂР° РґРѕР»Р¶РЅР° Р±С‹С‚СЊ СѓСЃС‚Р°РЅРѕРІР»РµРЅР° РІ Р°С‚СЂРёР±СѓС‚Рµ quantity РєРѕРЅС‚РµР№РЅРµСЂР°
         var items = this.getItems(containerId);
+        var sizes = $(c).attr('sizes');
 
         // Р•РЎР›Р� С„РѕСЂРјР° РІС‹Р±РѕСЂР° СЂР°Р·РјРµСЂРѕРІ РЅРµ РїРѕРєР°Р·Р°РЅР°,
         if ($(c).css('display') == 'none') {
 
-            console.log(items);
             // РўРћ Р•РЎР›Р� СЂР°Р·РјРµСЂ С‚РѕР»СЊРєРѕ 'СѓРЅРёРІРµСЂСЃР°Р»СЊРЅС‹Р№' Рё РЅРµР»СЊР·СЏ Р·Р°РєР°Р·Р°С‚СЊ СЃСЂР°Р·Сѓ РЅРµСЃРєРѕР»СЊРєРѕ С€С‚СѓРє
-            if (quantity == 'single' && items.length == 1 && items[0].size == 0) {
+            if (quantity == 'single' && sizes == 0) {
                 // РўРћ СЃСЂР°Р·Сѓ РґРѕР±Р°РІР»СЏРµРј РїРѕР·РёС†РёСЋ СЌС‚РѕРіРѕ СЂР°Р·РјРµСЂР° РІ РєРѕСЂР·РёРЅСѓ, РЅРµ РїРѕРєР°Р·С‹РІР°СЏ С„РѕСЂРјСѓ
                 this.addToBasket(containerId);
             } else {
                 // Р�РќРђР§Р• РїРѕРєР°Р·С‹РІР°РµРј С„РѕСЂРјСѓ РІС‹Р±РѕСЂР° СЂР°Р·РјРµСЂРѕРІ (Рё РєРѕР»РёС‡РµСЃС‚РІ, РµСЃР»Рё quantity = 'multiple')
                 //$(c).show();
+
                 this.showSizesForm(containerId);
                 $('#SMALL_BASKET').hide();
             }
@@ -1671,16 +1670,32 @@ var basket = new function() {
         this.currentFormId = null;
     };
 
-    this.addToBasket = function(containerId, hideContainer) {
+    /**
+     * Добавление вещи без размера
+     * @param product_id
+     * @author Stanislav WEB
+     */
+    this.addToBasketSingle = function(product_id)
+    {
+        var items = [];
+       items.push({
+            'el'    :   type = 'input',
+            'id'    :   ""+product_id+"",
+            'size'  :   "0",
+            'count' :   1
+        });
+        this.addToBasket(false, true, items);
+    }
 
-        var hideContainer = hideContainer || false;				// РЎРєСЂС‹РІР°С‚СЊ С„РѕСЂРјСѓ РІС‹Р±РѕСЂР° СЂР°Р·РјРµСЂРѕРІ?
-        var items = this.getItems(containerId);  	// РџСЂРѕРІРµСЂРёРј РїРѕСЃР»РµРґРЅРёРµ РёР·РјРµРЅРµРЅРёСЏ РІ С„РѕСЂРјРµ
-        console.log(items);
+    this.addToBasket = function(containerId, hideContainer, items) {
+
+        var hideContainer = hideContainer || false;				        // РЎРєСЂС‹РІР°С‚СЊ С„РѕСЂРјСѓ РІС‹Р±РѕСЂР° СЂР°Р·РјРµСЂРѕРІ?
+        var items = (!items) ? this.getItems(containerId) : items;  	// РџСЂРѕРІРµСЂРёРј РїРѕСЃР»РµРґРЅРёРµ РёР·РјРµРЅРµРЅРёСЏ РІ С„РѕСЂРјРµ
 
         if (items.length > 0) {
+
             var itemsQueryString = [];
             var c = $('#'+containerId)[0];
-
             for (i in items) {
                 itemsQueryString.push('item['+items[i].id+'][]='+items[i].size+'_'+encodeURIComponent(items[i].count));
 
@@ -1690,8 +1705,6 @@ var basket = new function() {
                     //$('#basket_count_'+items[i].size, c).html(items[i].count > 0 ? items[i].count : '&mdash;');
                 }
             }
-
-
 
             if (itemsQueryString.length) {
                 this.hash = Math.random();
@@ -1715,7 +1728,7 @@ var basket = new function() {
             }
 
             $('#'+containerId+' .sizes').removeClass('empty');
-        } else {
+        } else { console.log('FAIL');
             $('#'+containerId+' .sizes').addClass('empty');
         }
     };
@@ -2006,7 +2019,7 @@ get_client_info.prototype = {
 chat.prototype = {
     _address : 'http://z95.grif.dev95.ru:4000',
     _cookie : {
-        name : '__chat',
+        name : '__chat'
     },
     _observers : {
         onconnect:      null,
@@ -2055,7 +2068,6 @@ chat.prototype = {
      switch(msg.event){
      case 'delivered':
      var d = new Date(msg.time);
-     console.log('dfgbdfgbbhdbfg');
      $('<div class="mess_1"><span>'+d.toLocaleString()+'</span>'+msg.data+'</div>').appendTo($('.messages_area'));
      break;
      case 'message':

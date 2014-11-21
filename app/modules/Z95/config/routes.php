@@ -130,12 +130,19 @@
 		'action'        => 'index',
 	])->setName("order");
 
-	$router->add("/customer/cart/:params", [
+	$router->add("/customer/cart", [
 		'module'    	=>  $module,
 		'namespace' 	=> 'Modules\\'.$module.'\Controllers\\',
 		'controller'    => 'basket',
 		'action'        => 'index',
 	]);
+
+	$router->add("/error/show404", [
+		'module'    	=>  $module,
+		'namespace' 	=> 'Modules\\'.$module.'\Controllers\\',
+		'controller'    => 'error',
+		'action'        => 'show404',
+	])->setName("show404");
 
 	// Удаление косых в конце
 	$router->removeExtraSlashes(true);

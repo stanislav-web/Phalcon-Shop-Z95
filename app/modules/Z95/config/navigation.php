@@ -118,7 +118,7 @@
 							],
 							[
 								'name'       => 'Обувь',
-								'url'        => '/catalogue/shoes/women',
+								'url'        => '/catalogue/shoes/woman',
 								'controller' => 'catalogue',
 								'action'     => 'index',
 							],
@@ -141,12 +141,6 @@
 							[
 								'name'       => 'Женские очки',
 								'url'        => '/catalogue/glasses/glasses-women',
-								'controller' => 'catalogue',
-								'action'     => 'index',
-							],
-							[
-								'name'       => 'Мужские очки',
-								'url'        => '/catalogue/glasses/glasses-man',
 								'controller' => 'catalogue',
 								'action'     => 'index',
 							],
@@ -707,7 +701,7 @@
 
 							[
 								'name'       => 'Женская обувь',
-								'url'        => '/catalogue/shoes/women',
+								'url'        => '/catalogue/shoes/woman',
 								'controller' => 'catalogue',
 								'action'     => 'index',
 							],
