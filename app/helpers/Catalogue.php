@@ -1,14 +1,15 @@
 <?php
 namespace Helpers;
 use \Phalcon\Http\Request,
-	\Phalcon\Mvc\Router;
+	\Phalcon\Mvc\Router,
+	Phalcon\Tag;
 
 /**
  * Class Catalogue Помощник для работы с каталогом
  *  @package Phalcon
  * @subpackage Helpers
  */
-class Catalogue
+class Catalogue extends  Tag
 {
 
 	/**
@@ -284,6 +285,34 @@ class Catalogue
 		}
 		return $word;
 	}
+
+	/**
+	 * Сравнение цен в корзине с актуальной и послежующее обновление
+	 * @param array $freshPrices
+	 * @param array $existsPrices
+	 * @return array
+	 */
+	public static function comparePrice(array $freshPrices, array $existsPrices)
+	{
+		$freshPrices = self::arrayToAssoc($freshPrices, 'product_id');
+
+		foreach($freshPrices as $product_id => $values)
+		{
+			if(isset($existsPrices[$product_id]))
+			{
+				if($values['price'] != $existsPrices[$product_id]['price'] ||
+					$values['discount'] != $existsPrices[$product_id]['discount'])
+				{
+					$existsPrices[$product_id]['price']		=	$values['price'];
+					$existsPrices[$product_id]['discount']	=	$values['discount'];
+					$session = \Phalcon\DI::getDefault()->get('session');
+					$session->set('price_notify', 1);
+				}
+			}
+		}
+		return array_values($existsPrices);
+	}
+
 
 	/**
 	 * recountBasket(array $cart = [], $discounts = false) пересчет товаров в корзине с учетом скидок

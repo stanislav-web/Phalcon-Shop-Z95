@@ -4,10 +4,18 @@
 	<?=$viewTranslate['VISIT_CATALOGUE'];?> <?=$this->tag->linkTo([['for' => 'catalogue'], $viewTranslate['CATALOGUE']]); ?>
 </div>
 <?php return; endif; ?>
-
+<?php if($this->session->has('price_notify')): ?>
+	<div class="helper">
+		<div class="item new" style="padding: 10px;font-weight: 600">
+			<?=$viewTranslate['PRICE_UPDATE'];?>
+		</div>
+	</div>
+	<?php $this->session->remove('price_notify'); ?>
+<?endif;?>
 <!-- Информатор скидок -->
 <?php $this->view->partial('partials/basket/discounts_hover', ['discounts' => (isset($informer['discounts'])) ? $informer['discounts']: []]); ?>
 <!-- /Информатор скидок -->
+
 <table class="basket-basket">
 	<tbody>
 	<?php foreach($items as $counter => $item): ?>
@@ -37,6 +45,7 @@
 				(<?php echo $item['articul']; ?>)<br>
 			</td>
 			<!-- /Счетчик -->
+
 			<!-- Разбор размеров и количества -->
 			<?php if(isset($item['sizes']) && !empty($item['sizes'])): ?>
 			<td class="sizes">

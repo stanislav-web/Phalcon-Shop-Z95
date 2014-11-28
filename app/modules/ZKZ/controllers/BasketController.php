@@ -65,7 +65,15 @@
 
 			// передаю подсчитанные товары + скидки магазина в view
 			if(!empty($basket['items']))
-				$items = Catalogue::recountBasket($basket, $this->_shop['discounts']);
+			{
+				//@modify организовую пересчет цен. получаю текущие product_id
+
+				$calcItems = Catalogue::arrayToAssoc($basket['items'], 'product_id');
+				$freshPrices  = $this->pricesModel->get(['product_id', 'price', 'discount'], ['product_id' => array_keys($calcItems), 'id' => $this->_shop['price_id']]);
+				$basket['items'] = Catalogue::comparePrice($freshPrices, $calcItems);
+				$this->session->set('basket', $basket);
+				$items	=	Catalogue::recountBasket($basket, $this->_shop['discounts']);
+			}
 			else $items	=	$basket;
 
 			$this->session->set('informer', $items['informer']);
@@ -190,12 +198,22 @@
 			else
 				$this->basket['items'] = $this->session->get('basket');
 
+
 			if(isset($this->basket) && !empty($this->basket['items']))
 			{
 				if(isset($this->basket['items']['items']))	$this->basket['items']	=	$this->basket['items']['items'];
 
-				$mini	=	Catalogue::recountBasket($this->basket, $this->_shop['discounts']);
-				$this->basket['items']	=	$mini['items'];
+				//@modify организовую пересчет цен. получаю текущие product_id
+				//////
+				if(!empty($this->basket['items']))
+				{
+					$calcItems = Catalogue::arrayToAssoc($this->basket['items'], 'product_id');
+					$freshPrices  = $this->pricesModel->get(['product_id', 'price', 'discount'], ['product_id' => array_keys($calcItems), 'id' => $this->_shop['price_id']]);
+					$this->basket['items'] = Catalogue::comparePrice($freshPrices, $calcItems);
+					$mini	=	Catalogue::recountBasket($this->basket, $this->_shop['discounts']);
+					$this->basket['items']	=	$mini['items'];
+				}
+				//////
 			}
 			else
 				$this->session->remove('informer');

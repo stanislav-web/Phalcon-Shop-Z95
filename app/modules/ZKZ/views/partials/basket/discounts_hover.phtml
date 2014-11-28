@@ -1,4 +1,9 @@
-<?php if((isset($discounts['current']) && isset($discounts['next']))&& ($discounts['current'] > 0 || $discounts['next'] > 0)): // расчет цены исходя из скидок магазина ?>
+<?php if(isset($discounts['current']) && !isset($discounts['next'])):?>
+<div class="Hint">
+	<h4><?=$viewTranslate['SALES_REMEMBER'];?>:</h4>
+	<?printf($viewTranslate['DISCOUNT_SHOP_MAX'], $discounts['current']);?>
+</div>
+<?php elseif((isset($discounts['current']) && isset($discounts['next'])) && ($discounts['current'] > 0 || $discounts['next'] > 0)): // расчет цены исходя из скидок магазина ?>
 	<div class="Hint">
 	<h4><?=$viewTranslate['SALES_REMEMBER'];?>:</h4>
 		<?php if(!isset($discounts['next'])): // если скидка максимальная ?>

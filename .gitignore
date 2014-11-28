@@ -1,6 +1,5 @@
 # Created by .gitignore support plugin (hsz.mobi)
 atlassian-ide-plugin.xml
-phalcon-devtools
 .phalcon
 .idea
 PORT.sql

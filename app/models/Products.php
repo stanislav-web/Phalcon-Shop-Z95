@@ -1,6 +1,5 @@
 <?php
 namespace Models;
-use Helpers\Catalogue;
 
 /**
  * Class Products Модель для `products`
