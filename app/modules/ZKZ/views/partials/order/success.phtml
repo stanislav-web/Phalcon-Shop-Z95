@@ -1,0 +1,7 @@
+<div class="element-order">
+	<div class="message">
+		<?php
+			$url = 'http://'.$this->request->getServer('HTTP_HOST').$this->url->get(['for' => 'order-tracking', 'tracking_id' => $tracking_id]); // tracking url
+			printf($viewTranslate['ORDER_SUCCESS_MESSAGE'], $url, $url);?>
+	</div>
+</div>

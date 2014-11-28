@@ -1,5 +1,6 @@
 <?php
 namespace Models;
+use Helpers\Catalogue;
 
 /**
  * Class Products Модель для `products`
@@ -866,9 +867,9 @@ class Products extends \Phalcon\Mvc\Model
 	public function getBasketItems($basketItems)
 	{
 
-		if($basketItems == '' || null === $basketItems) {
+		if($basketItems == '' || null === $basketItems)
 			return;
-		}
+
 		$ids = implode(',', array_keys($basketItems));
 
 		$sql = "SELECT 	".self::TABLE.".id AS product_id,  ".self::TABLE.".name AS product_name, ".self::TABLE.".articul, ".self::TABLE.".images,
@@ -882,16 +883,15 @@ class Products extends \Phalcon\Mvc\Model
 
 		$result = $this->_db->query($sql)->fetchAll();
 
-		if(!empty($result)) {
+		if(!empty($result))
+		{
 			//добавляем к вещам информацию о размерах и кол-ве
-			$total = 0;
-			foreach($result as $key => $item) {
-				if(isset($basketItems[$item['product_id']])) {
+			foreach($result as $key => $item)
+			{
+				if(isset($basketItems[$item['product_id']]))
+				{
 					$result[$key]['sizes'] = $basketItems[$item['product_id']]['sizes'];
-					//считаем общее кол-во вещи одного артикула
-					$total = array_sum($basketItems[$item['product_id']]['sizes']);
 				}
-				$result[$key]['total'] = $total;
 				//парсим картинки
 				$result[$key]['images'] = json_decode($item['images'], true);
 			}

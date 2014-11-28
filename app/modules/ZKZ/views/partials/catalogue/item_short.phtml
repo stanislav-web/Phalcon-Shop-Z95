@@ -1,0 +1,164 @@
+<div class="item">
+	<div style="z-index: 2; position: relative;">
+		<div style="display: none;" id="sizes_<?= $item['id'] ?>" class="sizes_win"
+			 cat_id="<?= $item['id'] ?>"
+			 price="<?= $item['discount'] ?>"
+			 quantity="single"
+			 layout_mode="right"
+			 max_count="1"
+			 sizes="<?=(!isset($arraySize)) ? 0 : sizeof($arraySize); ?>">
+
+			<img onclick="$('#sizes_<?= $item['id'] ?>').fadeOut();" class="close_png" src="/assets/<?=$shop['code'];?>/images/d-t.gif">
+			<!-- Форма покупки -->
+			<form autocomplete="off">
+				<table>
+					<tbody>
+					<tr>
+						<td id="leftPart" style="padding: 0px 10px 0px 0px; height: 320px;">
+							<div style="height:275px;">
+								<a href="<?=$this->url->get(ltrim($path, '/').'/'.$item['articul']);?>">
+									<img class="preview" src="http://img<?= rand(0, 9) ?>.z95.ru/f/p/225x275/catalogue/<?= $item['id'] ?>/<?=$img?>">
+								</a>
+							</div>
+							<div class="info">
+								<a href="<?=$this->url->get(ltrim($path, '/').'/'.$item['articul']);?>">
+									<b><?= $item['brand_name'] ?></b>
+									<?= $item['name'] ?> <span class="articul"><?= $item['articul'] ?></span>
+								</a>
+							</div>
+						</td>
+						<td id="rightPart" style="padding: 0px 10px 0px 0px;" part="">
+							<?php if(isset($arraySize) && $arraySize != ''): ?>
+								<div class="warning hidden" id="warning" onclick="$(this).fadeOut();"></div>
+								<span>Выберите размер:</span>
+								<br clear="all">
+
+								<div class="small-sizes">
+									<?php foreach($arraySize as $size): ?>
+										<?php $check = (isset($buyes[$item['id']][$size])) ? ['l' => 'title="'.$viewTranslate["SIZE_EXIST"].'"', 'd' => 'disabled="true" checked="true"'] : ['l' => '', 'd' => '']; ?>
+										<div class="size">
+											<label <?=$check['l'];?>>
+												<input type="checkbox" <?=$check['d'];?>
+											   	onclick="basket.getItems('sizes_<?= $item['id'] ?>')"
+											   	value="<?=$size;?>"
+											   	max_count="1" basket_count="0"><br>
+												<?=$size;?>
+											</label>
+										</div>
+									<?php endforeach; ?>
+									<br clear="all"><br>
+
+									<div class="left">
+										<label>
+											<input onclick="basket.getItems('sizes_<?= $item['id'] ?>')"
+											   	type="checkbox" value="?"
+												<?=(isset($buyes[$item['id']]['?'])) ? ' disabled="true" checked="true"' : ''; ?>
+												style="float: left; margin-right: 5px;">
+											Не уверен в размере — <br>хочу обсудить с менеджером</label>
+									</div>
+								</div>
+							<?php endif; ?>
+							<br clear="all">
+							<div class="add-button">
+								<button id="add" class="button" type="button" disabled="true"
+										onclick="basket.addToBasket('sizes_<?= $item['id'] ?>', true);">
+									Добавить в корзину
+								</button>
+							</div>
+						</td>
+					</tr>
+					</tbody>
+				</table>
+			</form>
+			<!-- /Форма покупки -->
+		</div>
+	</div>
+
+	<div class="photo_hover" onmouseover="catalogue.startSlideShow('slide_show_<?= $item['id'] ?>');"
+		 onmouseout="catalogue.stopSlideShow('slide_show_<?= $item['id'] ?>');">
+		<a href="<?=$this->url->get(ltrim($path, '/').'/'.$item['articul']);?>">
+			<img src="/assets/<?=$shop['code'];?>/images/d-t.gif" style="width:225px; height:275px;">
+		</a>
+	</div>
+
+	<div style="z-index: 0; position: relative; width:225px; height:275px;" id="slide_show_<?= $item['id'] ?>">
+		<?php if(isset($item['is_new']) && $item['is_new'] == 1): ?>
+			<img src="/assets/<?=$shop['code'];?>/images/new_flag.png" class="new_flag">
+		<?php endif; ?>
+		<ul>
+			<li class="show">
+				<a href="<?=$this->url->get(ltrim($path, '/').'/'.$item['articul']);?>">
+					<img class="preview" src="http://img<?= rand(0, 9) ?>.z95.ru/f/p/225x275/catalogue/<?= $item['id'] ?>/<?=$img?>">
+				</a>
+			</li>
+			<li class="">
+				<a href="<?=$this->url->get(ltrim($path, '/').'/'.$item['articul']);?>">
+					<img class="preview add" src="http://img<?= rand(0, 9) ?>.z95.ru/f/p/225x275/catalogue/<?= $item['id'] ?>/<?= next(json_decode($item['preview'], true)) ?>">
+				</a>
+			</li>
+		</ul>
+	</div>
+
+	<div class="info">
+		<a href="<?=$this->url->get($path.'/'.$item['articul']);?>">
+			<b><?= (isset($item['brand_name'])) ? $item['brand_name'] : ''?></b>
+			<?= $item['name'] ?> <span class="articul"><?= $item['articul'] ?></span>
+		</a>
+		<?php if(isset($arraySize) && !empty($arraySize)): ?>
+		<div class="sizes">
+			<span style="color:gray">Размеры:</span> <span class="size-letters">
+				<?php echo implode('/', $arraySize); ?>
+			</span>
+		</div>
+		<?php endif; ?>
+
+		<div class="price">
+			<?php if($item['discount'] == $item['price']): ?>
+			<div style="white-space: nowrap">
+				&nbsp; <?=number_format($item['discount'], 0, '.', ' '); ?> &nbsp;
+				<span class="sign"><?=$shop['currency_symbol'];?></span>
+			</div>
+			<?php else :?>
+			<div>
+				<s style="white-space: nowrap"><?=number_format($item['price'], 0, '.', ' ');?></s>&nbsp;<?=number_format($item['discount'], 0, '.', ' ');?>&nbsp;
+				<span class="sign"><?=$shop['currency_symbol'];?></span>
+			</div>
+			<?endif;?>
+			<?php if(isset($shopDiscounts) && ($shopDiscounts['current'] > 0 || (isset($shopDiscounts['next']) &&  $shopDiscounts['next'] > 0))): // расчет цены исходя из скидок магазина ?>
+				<?php if(!isset($shopDiscounts['next'])): ?>
+					<div class="discount-sign">
+						<b>***</b><i><?=round($item['discount'] - ($item['discount'] * $shopDiscounts['current']) / 100);?></i>
+					</div>
+					<div class="discount-detail">
+						<?printf($viewTranslate['DISCOUNT_SHOP_MAX'], $shopDiscounts['current']);?>
+					</div>
+				<?php else: ?>
+					<div class="discount-sign"><b>***</b><i><?=round($item['discount'] - ($item['discount'] * $shopDiscounts['next']) / 100);?></i></div>
+					<div class="discount-detail">
+						<?php if($shopDiscounts['type'] == 'count'): ?>
+							<?printf($viewTranslate['DISCOUNT_SHOP_COUNT'], $shopDiscounts['next'], $shopDiscounts['board'][$shopDiscounts['next']]);?>
+						<?php else: ?>
+							<?printf($viewTranslate['DISCOUNT_SHOP_SUM'], $shopDiscounts['next'], $shopDiscounts['board'][$shopDiscounts['next']], $shop['currency_symbol']);?>
+						<?php endif; ?>
+					</div>
+				<?php endif; ?>
+			<?php endif;?>
+
+			<?php $bCount = (isset($buyes[$item['id']])) ? sizeof($buyes[$item['id']]) : false; ?>
+			<?php if(!empty($arraySize)):?>
+			<div id="sizes_button_<?= $item['id'] ?>" class="sizes-button<?=(isset($bCount)) ? ' on' : '';?>"
+				onclick="basket.beforeAddToBasket('sizes_<?= $item['id'] ?>');">
+				<?=(isset($bCount)) ? $bCount : '&nbsp;';?>
+			</div>
+			<?php else: ?>
+				<div id="sizes_button_<?= $item['id'] ?>" class="sizes-button<?=(isset($bCount)) ? ' on' : '';?>"
+					 onclick="basket.addToBasketSingle(<?= $item['id'] ?>);">
+					<?=(isset($bCount)) ? $bCount : '&nbsp;';?>
+				</div>
+			<?php endif;?>
+			<img alt="Понравилось" id="fav_icon_<?= $item['id'] ?>"
+				 onclick="catalogue.addFavorites(<?= $item['id'] ?>, this)" src="/assets/<?=$shop['code'];?>/images/d-t.gif"
+				 class="<?=(isset($favorites[$item['id']])) ? 'like_on' : 'like_off' ?>">
+		</div>
+	</div>
+</div>

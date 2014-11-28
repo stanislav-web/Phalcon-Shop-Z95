@@ -154,24 +154,22 @@
 			{
 				$sql = "
 						SELECT
-	STRAIGHT_JOIN DISTINCT(shop_rel.category_id) AS id, cat.name AS name,
-	(
-		SELECT CONCAT('{\"', p.id, '\":', p.preview, '}')
-		FROM products p
-		INNER JOIN `products_relationship` pr ON (pr.product_id = p.id)
-		WHERE pr.category_id = shop_rel.`category_id` ORDER BY rating DESC LIMIT 1
-	) AS img,
-	(
-		SELECT alias FROM `categories` c WHERE c.id = cat.parent_id
-	) AS parent_alias, cat.alias AS alias, cat.parent_id AS parent_id, shop_rel.sort AS sort
-	FROM `category_shop_relationship` shop_rel
-	INNER JOIN `categories` cat ON (shop_rel.category_id = cat.id)
-	INNER JOIN `products_relationship` prod_rel ON (prod_rel.category_id = cat.id)
-	INNER JOIN `products` prod ON (prod.id = prod_rel.product_id)
-	WHERE shop_rel.shop_id = 1	ORDER BY shop_rel.sort ASC";
+							STRAIGHT_JOIN DISTINCT(shop_rel.category_id) AS id, cat.name AS name,
+							(
+								SELECT CONCAT('{\"', p.id, '\":', p.preview, '}')
+								FROM products p
+								INNER JOIN `products_relationship` pr ON (pr.product_id = p.id)
+								WHERE pr.category_id = shop_rel.`category_id` ORDER BY rating DESC LIMIT 1
+							) AS img,
+							(
+								SELECT alias FROM `categories` c WHERE c.id = cat.parent_id
+							) AS parent_alias, cat.alias AS alias, cat.parent_id AS parent_id, shop_rel.sort AS sort
+							FROM `category_shop_relationship` shop_rel
+							INNER JOIN `categories` cat ON (shop_rel.category_id = cat.id)
+							INNER JOIN `products_relationship` prod_rel ON (prod_rel.category_id = cat.id)
+							INNER JOIN `products` prod ON (prod.id = prod_rel.product_id)
+							WHERE shop_rel.shop_id = ".(int)$shop_id."	ORDER BY shop_rel.sort ASC";
 
-
-				//print_r($sql) ; exit;
 				$result = $this->_db->query($sql)->fetchAll();
 
 				// Сохраняем запрос в кэше

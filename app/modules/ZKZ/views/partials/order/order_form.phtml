@@ -1,0 +1,220 @@
+<?php echo $this->tag->javascriptInclude('assets/store.min.js'); // key => value storage?>
+<form name="order_create" id="order_create" method="POST" action="<?=$this->url->get(['for' => 'order-request']);?>" id="order_form">
+	<input type="hidden" name="<?php echo $this->security->getTokenKey() ?>" value="<?php echo $this->security->getToken() ?>"/>
+	<table class="Form Order">
+		<tbody>
+		<tr>
+			<th colspan="2"><?=$viewTranslate['CONTACTS']; ?></th>
+		</tr>
+
+		<!-- ФИО -->
+		<tr>
+			<td><b><?=$viewTranslate['FIO']; ?> *</b></td>
+			<td><?=$form->render("user[fio]", ['placeholder' => $viewTranslate['FIO_PLACEHOLDER'], 'value' => (!empty($order_form['user']['fio'])) ? $order_form['user']['fio'] : '']); ?></td>
+		</tr>
+		<!-- /ФИО -->
+
+		<!-- Email -->
+		<tr>
+			<td class="label"><?=$viewTranslate['EMAIL']; ?></td>
+			<td><?=$form->render("user[email]", ['placeholder' => $viewTranslate['EMAIL_PLACEHOLDER'], 'value' => (!empty($order_form['user']['email'])) ? $order_form['user']['email'] : '']); ?></td>
+		</tr>
+		<!-- /Email -->
+
+		<!-- Телефоны -->
+		<tr>
+			<td colspan="2"><b><?=$viewTranslate['PHONES']; ?></b></td>
+		</tr>
+
+		<tr>
+			<td><b><?=$viewTranslate['MOBILE']; ?> *</b></td>
+			<td><?=$form->render("user[phones][0]", ['value' => (!empty($order_form['user']['phones'][0])) ? $order_form['user']['phones'][0] : '']); ?></td>
+		</tr>
+		<tr>
+			<td class="label"><?=$viewTranslate['HOMES']; ?></td>
+			<td><?=$form->render("user[phones][1]", ['value' => (!empty($order_form['user']['phones'][1])) ? $order_form['user']['phones'][1] : '']); ?></td>
+		</tr>
+		<tr>
+			<td class="label"><?=$viewTranslate['ADDITIONAL']; ?></td>
+			<td><?=$form->render("user[phones][2]", ['value' => (!empty($order_form['user']['phones'][2])) ? $order_form['user']['phones'][2] : '']); ?></td>
+		</tr>
+		<!-- /Телефоны -->
+
+		<tr>
+			<th colspan="2"><?=$viewTranslate['DELIVERY_ADRESS']; ?></th>
+		</tr>
+
+		<!-- Индекс -->
+		<tr>
+			<td class="label"><?=$viewTranslate['POSTAL']; ?></td>
+			<td><?=$form->render("user[address][postal_code]", ['value' => (!empty($order_form['user']['address']['postal_code'])) ? $order_form['user']['address']['postal_code'] : '']); ?></td>
+		</tr>
+		<!-- Индекс -->
+
+		<!-- Регион -->
+		<tr>
+			<td><b><?=$viewTranslate['REGION']; ?></b> *</td>
+			<td><?=$form->render("user[address][region]", ['required' => 'true']); ?></td>
+		</tr>
+		<!-- /Регион -->
+
+		<!-- Город -->
+		<tr>
+			<td class="label"><?=$viewTranslate['CITY']; ?></td>
+			<td><?=$form->render("user[address][city]", ['value' => (!empty($order_form['user']['address']['city'])) ? $order_form['user']['address']['city'] : '']); ?></td>
+		</tr>
+		<!-- /Город -->
+
+		<!-- Адрес -->
+		<tr>
+			<td class="label"><?=$viewTranslate['ADDRESS']; ?></td>
+			<td><?=$form->render("user[address][address]", ['value' => (!empty($order_form['user']['address']['address'])) ? $order_form['user']['address']['address'] : '']); ?></td>
+		</tr>
+		<!-- /Адрес -->
+
+		<!-- Доставка -->
+		<tr>
+			<td><b><?=$viewTranslate['DELIVERY']; ?> *</b></td>
+			<td><?=$form->render("options[delivery_id]", ['required' => 'true', 'style' => 'width:400px']); ?></td>
+		</tr>
+		<!-- /Доставка -->
+
+		<!-- Оплата -->
+		<tr>
+			<td><b><?=$viewTranslate['PAYMENT']; ?> *</b></td>
+			<td><?=$form->render("options[payment_id]", ['required' => 'true', 'style' => 'width:400px']); ?></td>
+		</tr>
+		<!-- /Оплата -->
+
+		<!-- Купон -->
+		<tr>
+			<td><?=$viewTranslate['COUPON']; ?></td>
+			<td>
+				<div class="coupon_field2">
+					<?=$form->render("coupon_uniqid", ['value' => (!empty($order_form['coupon_uniqid'])) ? $order_form['coupon_uniqid'] : '']); ?>
+				</div>
+				<div class="coupon-check-result"></div>
+			</td>
+		</tr>
+		<!-- /Купон -->
+
+		<!-- Комментарий -->
+		<tr>
+			<th colspan="2"><?=$viewTranslate['COMMENT']; ?></th>
+		</tr>
+		<tr>
+			<td colspan="2"><?=$form->render("comment", ['placeholder' => $viewTranslate['COMMENT_PLACEHOLDER'], 'value' => (!empty($order_form['comment'])) ? $order_form['comment'] : '']); ?></td>
+		</tr>
+		<!-- /Комментарий -->
+
+		<!-- Уведомления -->
+		<tr>
+			<td></td>
+			<td>
+				<label>
+					<?=$form->render("subscribe", ['value' => $shop['subscribe_id']]); ?> <?=$viewTranslate['GET_SMS_NOTIFY']; ?>
+				</label>
+			</td>
+		</tr>
+		<!-- /Уведомления -->
+
+		<!-- Отправка -->
+		<tr>
+			<td align="center" colspan="2"><?=$form->render("save", ['value' => $viewTranslate['CHECKOUT']]); ?></td>
+		</tr>
+		<!-- /Отправка -->
+		</tbody>
+	</table>
+</form>
+<script type="text/javascript">
+	$(document).ready(function() {
+
+		if(!store.enabled) {
+			console.log('Local storage is not supported by your browser. Please disable "Private Mode", or upgrade to a modern browser.')
+			return;
+		}
+		else
+		{
+			var user = $.parseJSON(store.get('order_form'));
+
+			if(user != null)
+			{
+				$('form#order_create input[type=text], form#order_create input[type=email], form#order_create textarea').each(function(index){
+					var input = $(this);
+					var	attr = input.attr('name');
+					$.each(user, function( index, value ) {
+
+						if(typeof attr !== typeof undefined && attr !== false) {
+							if(attr === index)
+								input.val(value);
+						}
+					});
+				});
+			}
+		}
+	});
+
+	/**
+	 * Сериализация объекта для записи в хранилище
+	 * @returns {{object}}
+	 */
+	$.fn.serializeObject = function()
+	{
+		var o = {};
+		var a = this.serializeArray();
+		$.each(a, function() {
+			if (o[this.name] !== undefined) {
+				if (!o[this.name].push) {
+					o[this.name] = [o[this.name]];
+				}
+				o[this.name].push(this.value || '');
+			} else {
+				o[this.name] = this.value || '';
+			}
+		});
+		return o;
+	};
+
+	$(document).on('submit','form#order_create',function(e) {
+
+		e.preventDefault();
+		obj   = $(this);
+		var dataObject  = obj.serialize();
+		global.showStatus('loading');
+
+		// записываю данные формы в локальное хранилище
+		store.set('order_form', JSON.stringify(obj.serializeObject()));
+
+		$.ajax({
+			type: 'POST',
+			url: obj.attr('action'),
+			data: dataObject,
+			success: function(data) {
+
+				if(data.status == 1)
+				{
+					if(data.tracking_id)
+					{
+						global.showStatus('order.success', data.message);
+						window.location.href = '/customer/orders/'+data.tracking_id+'?success=1';
+						return false;
+					}
+					else
+					{
+						global.showStatus('order.success', data.message);
+					}
+				}
+				else
+				{
+					global.showStatus('order.error', data.message);
+				}
+
+			},
+			dataType: 'json',
+			timeout: 20000,
+			error: function(jqXHR, textStatus, errorThrown) {
+				global.showAjaxErrorStatus(textStatus);
+			}
+		});
+	});
+</script>

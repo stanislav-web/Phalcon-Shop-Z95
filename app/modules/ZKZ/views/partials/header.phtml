@@ -1,0 +1,60 @@
+<table class="page_container" height="100%">
+	<tr class="header" style="height:60px;">
+		<td style="padding-top:40px;">
+			<div class="logo">
+				<a href="/"><img src="/assets/<?php echo $shop['code']; ?>/images/d-t.gif" /></a>
+			</div>
+
+			<div class="phone" style="white-space:nowrap;">
+				<span>+7 495</span>664-23-85<br>
+				<span style="font-size: 0.6em; white-space: nowrap;">круглосуточно, без выходных</span>
+			</div>
+			<div class="helper">
+				<div class="item">
+					<?=$this->tag->linkTo([['for' => 'about'], 'О магазине']); ?>
+				</div>
+				<div class="item">
+					<?=$this->tag->linkTo([['for' => 'brands'], 'Бренды']); ?>
+				</div>
+
+				<div class="sale">
+					<div class="item">
+						<?=$this->tag->linkTo([['for' => 'sale'], $viewTranslate['SALE']]); ?>
+					</div><br>
+					<div class="percent">
+						<div class="item">
+							<?=$this->tag->linkTo('catalogue/sales?percent=20', '20<span>%</span>'); ?>
+						</div>
+						<div class="item">
+							<?=$this->tag->linkTo('catalogue/sales?percent=50', '50<span>%</span>'); ?>
+						</div>
+						<div class="item">
+							<?=$this->tag->linkTo('catalogue/sales?percent=70', '70<span>%</span>'); ?>
+						</div>
+					</div>
+				</div>
+
+				<div class="item new">
+					<?=$this->tag->linkTo('catalogue/new', $viewTranslate['NEW']); ?>
+				</div>
+			</div>
+			<div class="top-cart">
+				<div class="cart" onclick="basket.get_small_basket()"><img src="/assets/<?php echo $shop['code']; ?>/images/z95ru/icon-cart.png" /></div>
+				<h3>
+					<?=$this->tag->linkTo('customer/cart', $viewTranslate['CART']); ?>
+				</h3>
+				<span id="BASKET_INFO" class="basket-mini">
+					<?php if(!empty($minicart)): ?>
+						<?=\Helpers\Catalogue::declOfNum($minicart['count'], ['вещь', 'вещи', 'вещей'], true);?>  на <?=number_format($minicart['sum'], 0, '.', ' ');?> <?=$shop['currency_symbol']; ?>
+					<?php endif; ?>
+				</span>
+				<div class="number discount">
+					<?php if(isset($minicart['discounts']['current']) && $minicart['discounts']['current'] > 0):?>
+						с учетом скидки <?=number_format($minicart['sum'] - ($minicart['sum']*$minicart['discounts']['current'])/100, 0, '.', ' '); ?> <?php echo $shop['currency_symbol'] ?>
+					<?php endif;?>
+				</div>
+			</div>
+		</td>
+	</tr>
+	<tr style="min-height: 600px;">
+		<td>

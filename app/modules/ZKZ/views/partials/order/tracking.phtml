@@ -1,0 +1,221 @@
+<div class="customer-block order">
+	<div class="content Shadow">
+		<?php if(!isset($customer) || empty($customer['order'])): ?>
+			<h3><?=$viewTranslate['EMPTY_ORDER'];?></h3>
+		<?php else: ?>
+		<!-- Шапка с номером заказа и адресами -->
+		<h3>
+			<b class="link"><?=$customer['user_fio'];?></b> (<?=$customer['user_email'];?>)
+			<div class="date" style="float: right; font-size: 0.9em; color: #777777;">
+				<?=($customer['order']['order_date']);?>
+			</div>
+		</h3>
+		<div style="display: inline-block; width: 200px; padding: 0 5px 20px;">
+			<b><?=$viewTranslate['PHONES'];?>:</b><br>
+			<?php if(!empty($customer['phones'])): ?>
+				<?=implode(',<br>', array_keys(\Helpers\Catalogue::arrayToAssoc($customer['phones'], 'formatted')))?>
+			<?php endif; ?>
+		</div>
+		<div style="vertical-align: top; display: inline-block; width: 350px; padding: 0 5px 20px;">
+			<b><?=$viewTranslate['ADDRESSES'];?>:</b><br>
+			<?=\Helpers\Catalogue::replaceInArray(['kz', 'ua', 'ru'], $countries, $customer['order']['order_address']['string']); ?>
+		</div>
+		<div style="vertical-align: top; display: inline-block; width: 350px; padding: 0 5px 20px;">
+			<b><?=$viewTranslate['DELIVERIES'];?>:</b><br>
+			<?=(!empty($customer['order']['delivery']['service'])) ? $customer['order']['delivery']['service'] : $viewTranslate['FREE_DELIVERY']?>
+		</div>
+		<!-- /Шапка с номером заказа и адресами -->
+
+		<!-- Не известные покупки -->
+		<?php if(!empty($order['undefined_items'])): ?>
+			<h3><?=$viewTranslate['UNDEFINED_ITEMS'];?></h3>
+			<table class="basket-basket" cellspacing="0" border="0" cellpadding="0">
+				<?php  $i = 1; foreach($order['undefined_items'] as $item_id => $item): ?>
+					<?php
+						list($id, $size) = explode('.', $item_id);
+
+						$photos = $item['preview'];
+
+						$img_folder = '/f/catalogue/'.$id.'/';
+						$photo = img($img_folder.$photos[0]);
+						$preview = img($img_folder.$photos[0], '50x75');
+						?>
+						<tr class="item-row">
+							<td class="image" preview_id="<?=$id?>">
+								<div class="basket-preview" style="z-index: 2;">
+									<div class="basket-preview-big" id="preview_<?=$id?>" style="display: none;"><img src="<?=$photo?>"></div>
+								</div>
+								<div class="basket-preview" style="z-index: 0;">
+									<div class="basket-preview-small"><img src="<?=$preview?>"></div>
+								</div>
+							</td>
+							<td class="title" preview_id="<?=$id?>">
+								<div class="counter"><?=$i++?></div>
+								<a href="/catalogue/<?=$item['articul']?>" >
+									<span class="capitalize"><?=($item['cat_title'])?></span> <?=$item['brand']?>
+								</a><br/>
+								(<?=$item['articul']?>)<br>
+
+							</td>
+							<td class="sizes">
+								<table class="<?=$mode?>-basket-sizes" align="right">
+									<tr>
+										<td width="50" class="number size">
+											<?
+												$display_size = ($size == '0') ? '&nbsp;' : $size;
+												echo (strpos($size, '?') !== false ? '<div class="question_size">'.$display_size.'</div>' : $display_size);
+												if( isset($item['question_size']))
+													echo '<div class="question_size">?</div>';
+											?>
+
+										</td>
+										<td width="30" class="number"><?=$item['count']?> x</td>
+										<td width="45" class="number"><?=$item['price']?></td>
+										<td width="10" class="number">=</td>
+										<td width="70" class="number recount"><?=$item['count']*$item['price']?> <?=$currency?></td>
+										<td width="20" align="right">
+
+										</td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+					<?php endforeach; ?>
+			</table>
+		<?php endif; ?>
+		<!-- /Не известные покупки -->
+
+		<!-- Просмотр заказов -->
+		<h3><?=$viewTranslate['YOUR_ORDER'];?></h3>
+		<table class="basket-basket" cellspacing="0" border="0" cellpadding="0">
+			<?php $i = 1; ?>
+			<?php foreach($customer['order']['docs']['invoice_items'] as $item_id => $item): ?>
+				<?php list($id, $size) = explode('.', $item_id); ?>
+				<tr class="item-row">
+					<!-- Превью -->
+					<td class="image " preview_id="<?=$id; ?>">
+						<div style="z-index: 2;" class="basket-preview">
+							<div style="display: none;"  class="basket-preview-big" id="preview_<?=$id; ?>">
+								<img rel="<?=$id; ?>" src="http://z95.ru/f/p/150x225/catalogue/<?=$id; ?>/<?=$item['preview'][0]; ?>">
+							</div>
+						</div>
+						<div style="z-index: 0;" class="basket-preview">
+							<div class="basket-preview-small">
+								<img data-prevs="<?=$id; ?>" src="http://z95.ru/f/p/50x75/catalogue/<?=$id; ?>/<?=$item['preview'][0]; ?>">
+							</div>
+						</div>
+					</td>
+					<!-- /Превью -->
+
+					<!-- Счетчик и название -->
+					<td class="title" preview_id="<?=$id?>">
+						<div class="counter"><?=$i++?></div>
+						<a href="<?=$this->url->get('catalogue/'.$item['articul']);?>" target="_blank">
+							<span class="capitalize"><?=$item['cat_title']?></span>
+							<? if( isset($item['brand'])) echo ' '.$item['brand']; ?>
+						</a><br/>
+						(<?=$item['articul']?>)<br>
+					</td>
+					<!-- /Счетчик и название -->
+
+					<!-- Размеры с ценами -->
+					<td class="sizes">
+						<table class="basket-basket-sizes" align="right">
+							<tr>
+								<td width="50" class="number size">
+									<?php
+										$display_size = ($size == '0') ? '&nbsp;' : $size;
+										echo(strpos($size, '?') !== false ? '<div class="question_size">'.$display_size.'</div>' : $display_size);
+										if(isset($item['question_size']))
+											echo '<div class="question_size">?</div>';
+									?>
+								</td>
+								<td width="30" class="number"><?=$item['count']?> x</td>
+								<td width="45" class="number"><?=$item['price']?></td>
+								<td width="10" class="number">=</td>
+								<td width="70" class="number recount"><?=($item['count']*$item['price']);?> <?=$shop['currency']?></td>
+								<td width="20" align="right">
+								</td>
+							</tr>
+						</table>
+					</td>
+					<!-- /Размеры с ценами -->
+				</tr>
+			<?php endforeach; ?>
+				<tr>
+					<td colspan="4" class="total">
+						<table class="total" align="right">
+							<tr>
+								<td><?=$viewTranslate['ORDER_ALL_TITLE'];?></td>
+								<td class="number">
+									<?=$customer['order']['docs']['subtotal']?> <?=$shop['currency']?>
+								</td>
+							</tr>
+							<?php if($customer['order']['discount']['total'] > 0): ?>
+								<?php if($customer['order']['discount']['order_discount'] > 0): ?>
+								<tr>
+									<td><?=$viewTranslate['DISCOUNT'];?> <?=$customer['order']['discount']['percent']?>% (<?=$this->tag->linkTo([['for' => 'about-discounts'], $viewTranslate['ABOUT_DISCOUNTS'], 'target' => '_blank']);?>)</td>
+									<td class="number discount">&minus;<?=$customer['order']['discount']['order_discount']?> <?=$shop['currency']?></td>
+								</tr>
+								<?php endif;?>
+								<?php if(!empty($customer['order']['discount']['coupon'])): ?>
+									<tr class="total">
+										<td>
+											<?=$viewTranslate['DISCOUNT_BY_COUPON'];?>
+										</td>
+										<td class="number discount">
+											&minus;<?=$customer['order']['discount']['coupon_discount']?> <?=$shop['currency']?>
+										</td>
+									</tr>
+								<?php endif; ?>
+								<tr>
+									<td>
+										<?=$viewTranslate['WITH_DISCOUNT'];?>
+									</td>
+									<td class="number">
+										<?=($customer['order']['docs']['subtotal'] - $customer['order']['discount']['total'])?> <?=$shop['currency']?>
+									</td>
+								</tr>
+							<?php endif;?>
+						<tr>
+							<td><?=$viewTranslate['DELIVERIES'];?></td>
+							<td class="number">
+								<?=$customer['order']['delivery_price']?> <?=$shop['currency']?>
+							</td>
+						</tr>
+						<tr>
+							<td><?=$viewTranslate['FINAL'];?></td>
+							<td class="number">
+								<?=$customer['order']['docs']['subtotal'] - $customer['order']['discount']['total'] + $customer['order']['delivery_price']?> <?=$shop['currency']?>
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>
+<script type="text/javascript">
+	$(function() {
+		window.history.pushState("", "", getPathFromUrl(document.URL));
+	});
+
+	function getPathFromUrl(url) {
+		return url.split("?")[0];
+	}
+	$('.basket-basket td[preview_id]').each(function (i, el) {
+		var $preview_id = $('#preview_'+$(el).attr('preview_id'));
+		$(el).hover(
+			function () {
+				var img = $('img', $preview_id)[0];
+				if (img.complete) {
+					$preview_id.show();
+				}
+			},
+			function () {
+				$preview_id.hide();
+			}
+		)
+	});
+</script>
+<?php endif; ?>

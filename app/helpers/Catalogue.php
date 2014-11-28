@@ -5,6 +5,8 @@ use \Phalcon\Http\Request,
 
 /**
  * Class Catalogue Помощник для работы с каталогом
+ *  @package Phalcon
+ * @subpackage Helpers
  */
 class Catalogue
 {
@@ -230,100 +232,128 @@ class Catalogue
 	 * @param array $titles
 	 * @return string
 	 */
-	public static function declOfNum($number, array $titles) {
+	public static function declOfNum($number, array $titles, $hidenum = false) {
+
 		$cases = array (2, 0, 1, 1, 1, 2);
-		return $number . ' ' . $titles[($number % 100 > 4 && $number % 100 < 20) ? 2 : $cases[min($number % 10, 5)] ] . ' ';
+		if($hidenum === false)
+			return ' ' . $titles[($number % 100 > 4 && $number % 100 < 20) ? 2 : $cases[min($number % 10, 5)] ] . ' ';
+		else
+			return $number . ' ' . $titles[($number % 100 > 4 && $number % 100 < 20) ? 2 : $cases[min($number % 10, 5)] ] . ' ';
+	}
+
+	public static function wordEnding($number, $word, $group_id = false)
+	{
+		$letters = array('р'=>2, 'ь'=>3, 'я'=>1, 'з'=>4, 'л'=>5, 'н'=>'6', 'е'=>'7', 'у'=>'8');
+		$group	= array(
+			1 => array('я', 'и', 'й'),
+			2 => array('р', 'ра', 'ров'),
+			3 => array('ь', 'и', 'ей'),
+			4 => array('з', 'за', 'зов'),
+			5 => array('л', 'ло', 'ло'),
+			6 => array('н', 'но', 'но'),
+			7 => array('е', 'я', 'й'),
+			8 => array('у', 'и', ''),
+
+			9 => array('л', 'ла', 'лов'),
+		);
+
+		$ending = mb_substr($word, -1, 1);
+		if ($group_id === false) {
+			$letter_group = ( isset($letters[$ending]) ) ? $letters[$ending] : 0;
+			$group_id = ( isset($group[$letter_group]) ) ? $group[$letter_group] : 0;
+		} else {
+			$group_id = ( isset($group[$group_id]) ) ? $group[$group_id] : 0;
+		}
+		if ($group_id != 0) {
+			$word = mb_substr($word, 0, (mb_strlen($word) -1) );
+			$two_last_digits = substr($number, -2, 2);
+			if ($two_last_digits > 10 and $two_last_digits < 20) {
+				$ending = $group_id[2];
+			} else {
+
+				$one_last_digit = substr($number, -1, 1);
+				if( $one_last_digit == 1) {
+					$ending = $group_id[0];
+				} else if ($one_last_digit > 1 and $one_last_digit < 5) {
+					$ending = $group_id[1];
+				} else {
+					$ending = $group_id[2];
+				}
+			}
+			$word .= $ending;
+		}
+		return $word;
 	}
 
 	/**
-	 * basketMini(array $basket) подсчет в мини корзине
+	 * recountBasket(array $cart = [], $discounts = false) пересчет товаров в корзине с учетом скидок
 	 *
-	 * @param array $basket['items']
+	 * @param array $cart содержимое корзины
+	 * @param mixed $discounts    (json, array) > shops.discounts
 	 * @return array
 	 */
-	public static function basketMini($basket = [], $discounts = false)
+	public static function recountBasket(array $cart = [], $discounts = false)
 	{
-		$totalCount = 0;
-		$totalSum = 0;
-		$discountSum = 0;
-
-		foreach($basket as $counter => $item) {
-			if(isset($item['sizes']))
-			{
-				foreach($item['sizes'] as $size => $count) {
-					$totalCount = $totalCount + $count;
-					$totalSum = $totalSum + $count*(intval($item['discount']));
-				}
-			}
-		}
-
-		if($discounts)
-			$discountSum = self::getMaxDiscount($discounts, ['sum' => $totalSum]);
-
-		return [
-			'total'	 	=>	$totalCount,
-			'sum' 		=>	$totalSum,
-			'discount'	=>	$discountSum
-		];
-	}
-
-	/**
-	 * Получение следующего уровня скиди на товар
-	 * в зависимости от суммы покупок в корзине
-	 *
-	 * @param mixed $discounts набор скидок магазина
-	 * @param int $total сумма покупок в корзине
-	 */
-	public static function getMaxDiscount($discounts, $total)
-	{
-		$total = (isset($total['sum'])) ? $total['sum'] : 0;
-
-		$result = [];
-		$date = strtotime(date('Y-m-d'));
-		if(!is_array($discounts))
-			$discounts = json_decode($discounts, true);
-
-		if((isset($discounts['sum']) && !empty($discounts['sum'])) && !empty($total))
+		if(!empty($cart))
 		{
-			$discount = array_flip($discounts['sum']);
-			foreach($discount as $percent => $sum)
+			foreach($cart['items'] as $i => $item)
 			{
-				if($sum > $total)
+				if(!empty($item['sizes']))
 				{
-					$result = [$sum => $percent];
-					break;
+					foreach($item['sizes'] as $size => $count)
+					{
+						if($size !== '?')
+						{
+							@$cart['items'][$i]['count']	+= 	(int)$count;
+							@$cart['items'][$i]['sum']	+= 	(int)(!empty($item['discount'])) ? ($item['discount']*$count) : ($item['price']*$count);
+						}
+					}
 				}
+
+				// подсчет общего количества
+				@$cart['informer']['count']		+=	@$cart['items'][$i]['count'];
+				@$cart['informer']['sum']		+=	@$cart['items'][$i]['sum'];
+
+				// преобразование фотографии
+				if(!empty($cart['items'][$i]['images']) && !is_array($cart['items'][$i]['images']))
+					$cart['items'][$i]['images']	=	json_decode($cart['items'][$i]['images'], true);
 			}
 
-			if(isset($discounts['period']['start']) && isset($discounts['period']['end']))
-			{
-				// расчет в промежуток времени
-
-				$start = strtotime($discounts['period']['start']);
-				$end = strtotime($discounts['period']['end']);
-				if($date > $start && $date < $end)
-				{
-					return $result;
-				}
-				else	// дата прошла , но она еще стоит в настройках.. значит скидки закончились
-					return [];
-			}
-			else
-			{
-				// действует как постоянная скидка от суммы
-				return $result;
-			}
+			if($discounts) // смотрим скидку
+				$cart['informer']['discounts'] = self::getMaxDiscount($discounts, $cart['informer']);
 		}
-		return [];
+		return ($cart) ? $cart : [];
 	}
 
 	/**
-	 * recountBasketItems($item) пересчет размера товара
+	 * getBasketSizes(array $items) получение размеров купленных товаров
+	 * для выдачи в каталоге. В дальнейшем сравнивается с размерами и помечает их как добавленные
+	 *
+	 * @param array $item
+	 * @return array | null
+	 */
+	public static function getBasketSizes(array $items)
+	{
+		if(!empty($items))
+		{
+			$items = Catalogue::arrayToAssoc($items, 'product_id');
+			foreach($items as $id => $content)
+			{
+				$items[$id]	=	$content['sizes'];
+			}
+			return $items;
+		}
+		return false;
+	}
+
+	/**
+	 * recountBasketSizes($item) пересчет размера товара
 	 * @param array $item
 	 * @return array
 	 */
-	public static function recountBasketItems($item)
+	public static function recountBasketSizes($item)
 	{
+
 		$id = key($item);
 		$items = array();
 		foreach($item[$id] as $key => $param){
@@ -331,6 +361,141 @@ class Catalogue
 			$items[$id]['sizes'][$size] = $count;
 		}
 		return $items;
+	}
+
+	/**
+	 * Получение следующего уровня скиди на товар
+	 * в зависимости от суммы покупок в корзине
+	 *
+	 * @param json $discounts набор скидок магазина
+	 * @param array $cart параметры корзины
+	 * @return array $result
+	 */
+	public static function getMaxDiscount($discounts, array $cart)
+	{
+		$result = [
+			'current'	=>	0,
+			'next'		=>	0,
+		];
+
+		$cart	=	[
+			'sum' 	=> (isset($cart['sum'])) 	? $cart['sum'] : 0,
+			'count' => (isset($cart['count'])) 	? $cart['count'] : 0,
+		];
+
+		$date = strtotime(date('Y-m-d'));
+		if(!is_array($discounts))
+			$discounts = json_decode($discounts, true);
+
+		// проверяю скидку по количеству товара
+		if(isset($discounts['count']) && $discounts['count'] !='')
+		{
+
+			$d = array_flip($discounts['count']);
+
+			$previous = 0;
+			foreach($d as $percent => $count)
+			{
+				if($count >= $cart['count'])
+					$result['count']['current']	= $previous;
+
+				if($count > $cart['count'])
+				{
+					$result['count']['next']	=	$percent;
+					break;
+				}
+				else // значит максимальная скидка по количеству уже есть
+					$result['count']	=	[
+						'current'	=>	array_pop(array_flip($d)),
+						'next'		=>	array_pop(array_flip($d))
+					];
+				$previous	=	$percent;
+			}
+		}
+
+		// проверяю скидку по сумме товара
+		if(isset($discounts['sum']) && $discounts['sum'] !='')
+		{
+
+			$d = array_flip($discounts['sum']);
+
+			$previous = 0;
+			foreach($d as $percent => $count)
+			{
+				if($count >= $cart['sum'])
+					$result['sum']['current']	= $previous;
+				if($count > $cart['sum'])
+				{
+					$result['sum']['next']	=	$percent;
+					break;
+				}
+				else // значит максимальная скидка по сумме уже есть
+					$result['sum']	=	[
+						'current'	=>	array_pop(array_flip($d)),
+						'next'		=>	array_pop(array_flip($d))
+					];
+				$previous	=	$percent;
+			}
+		}
+
+		// проверяю приоритеты скидок и даю выгодную в зависимости от расчета суммы покупок и количества
+		if(!isset($result['sum']))
+		{
+			$result['current']	=	(isset($result['count']['current'])) ? $result['count']['current'] : 0;
+			$result['next']		=	(isset($result['count']['next'])) ? $result['count']['next'] : 0;
+			$result['type']		=	'count';
+			$result['board']	=	(isset($discounts['count'])) ? array_flip($discounts['count']) : [];
+		}
+		elseif(!isset($result['count']))
+		{
+			$result['current']	=	(isset($result['sum']['current'])) ? $result['sum']['current'] : 0;
+			$result['next']		=	(isset($result['sum']['next'])) ? $result['sum']['next'] : 0;
+			$result['type']		=	'sum';
+			$result['board']	=	(isset($discounts['sum'])) ? array_flip($discounts['sum']) : [];
+		}
+		else
+		{
+			if($result['count']['current'] > $result['sum']['current'])
+				$result['current']	=	$result['count']['current'];
+			else
+				$result['current']	=	$result['sum']['current'];
+
+			if($result['count']['next'] > $result['sum']['next'])
+			{
+				$result['next']		=	$result['count']['next'];
+				$result['type']		=	'count';
+				$result['board']	=	array_flip($discounts['count']);
+			}
+			else
+			{
+				$result['next']	=	$result['sum']['next'];
+				$result['type']	=	'sum';
+				$result['board']	=	array_flip($discounts['sum']);
+			}
+		}
+		unset($result['count'], $result['sum']);
+		// если это максимальная скидка, то удаляю следующий уровень
+		if($result['current'] == $result['next'])
+			unset($result['next']);
+
+		// проверяю дату действия
+
+		if(isset($discounts['period']['start']) && isset($discounts['period']['end']))
+		{
+			// расчет в промежуток времени
+
+			$start = strtotime($discounts['period']['start']);
+			$end = strtotime($discounts['period']['end']);
+			if($date > $start && $date < $end)
+				return $result;
+			else	// дата прошла , но она еще стоит в настройках.. значит скидки закончились
+				return [
+					'current'	=>	0,
+					'next'		=>	0,
+				];
+		}
+		else // действует как постоянная скидка от суммы
+			return $result;
 	}
 
 	/**
@@ -343,11 +508,17 @@ class Catalogue
 		$filter = [];
 		foreach($items as $item)
 		{
-			$filter[]	=	[
-				'product_id' 	=> 	$item['product_id'],
-				'sizes'			=>	$item['sizes'],
-				'total'			=>	sizeof($item['sizes'])
-			];
+			if(!empty($item['sizes']))
+			{
+				foreach($item['sizes'] as $size => $count)
+				{
+					$filter[]	=	[
+						'cat_id'	=>	$item['product_id'],
+						'size'		=>	$size,
+						'count'		=>	$count,
+					];
+				}
+			}
 		}
 		return $filter;
 	}
@@ -397,6 +568,81 @@ class Catalogue
 		$output = array();
 		foreach ($array as $key=>$val) $output[$val[$field]][] = $val;
 		return $output;
+	}
+
+	public static function wordDeclension($word, $case = 4)
+	{
+		$replace = array(
+			4 => array(
+				'/^(.+)(а)$/' => '$1у',
+				'/^(.+)(я|ю)$/' => '$1ю',
+				'/^(.+)(ая)$/' => '$1ую',
+			)
+		);
+
+		if(isset($replace[$case]))
+		{
+			foreach ($replace[$case] as $pattern => $replacement)
+			{
+				if(preg_match($pattern, $word))
+				{
+					$word = preg_replace($pattern, $replacement, $word);
+					break;
+				}
+			}
+		}
+		return $word;
+	}
+
+	/**
+	 * Поиск и замена в массиве
+	 * @param array $find
+	 * @param array $replace
+	 * @param string $string
+	 * @access static
+	 * @return string
+	 */
+	public static function replaceInArray(array $find, array $replace, $string)
+	{
+		foreach($find as $v)
+		{
+			if(isset($replace[$v]))
+				return str_replace($v, $replace[$v], $string);
+		}
+		return $string;
+	}
+
+	/**
+	 * Convert multidimensional array to key => pair array
+	 * @param $obj
+	 * @access static
+	 * @return array
+	 */
+	public static function arrayToPair(array $array)
+	{
+		$result = [];
+		if(!empty($array))
+		{
+			foreach($array as $values)
+			{
+				$values = array_values($values);
+				$result[$values[0]]	=	$values[1];
+			}
+		}
+		return $result;
+	}
+
+	/**
+	 * Парсинг QUERY_STRING в массив
+	 *
+	 * @param string $string QUERY_STRING
+	 * @return array
+	 */
+	public static function queryToArray($string)
+	{
+		$array = [];
+		parse_str($string, $array);
+		return $array;
 	}
 
 	/**
@@ -472,34 +718,40 @@ class Catalogue
 		{
 			// Removing unusable measures and collect usable
 			foreach($measure as $k => $v) {
-				if(!empty($v)) {
+
+				if(!empty($v) || $v !='0') {
+
 					// collect usable data
 					$values[$k][$size] = $v;
 				}
 			}
 		}
 
-		$sizeRange  = array_keys(reset($values));
+		if(!empty($values))
+		{
+			$sizeRange  = array_keys(reset($values));
+			// add range between first and last elements
 
-		// add range between first and last elements
+			$f = reset($sizeRange);
+			$l = end($sizeRange);
 
-		$f = reset($sizeRange);
-		$l = end($sizeRange);
+			if(isset($f) && isset($l))
+				array_unshift($sizeRange, $f.' - '.$l);
 
-		if(isset($f) && isset($l))
-			array_unshift($sizeRange, $f.' - '.$l);
+			// overwritten with the value range in size
+			foreach($values as $k => $v) {
+				$f = reset($v);
+				$l = end($v);
+				self::arrayUnshiftAssoc($values[$k], reset($sizeRange), $f.' - '.$l);
+			}
 
-		// overwritten with the value range in size
-		foreach($values as $k => $v) {
-			$f = reset($v);
-			$l = end($v);
-			self::arrayUnshiftAssoc($values[$k], reset($sizeRange), $f.' - '.$l);
+			return array(
+				'values'        =>  array_reverse($values),
+				'sizes'         =>  $sizeRange,
+			);
 		}
+		else return [];
 
-		return array(
-			'values'        =>  array_reverse($values),
-			'sizes'         =>  $sizeRange,
-		);
 	}
 
 	/**
@@ -560,7 +812,7 @@ class Catalogue
 	/**
 	 * catalogueDimensionsImages($category_id)  Возвращает изображение с примеркой по категории
 	 * @param int $category_id
-	 * @see app/modules/Z95/views/partials/catalogue/measured_sizes.phtml
+	 * @see app/modules/ZKZ/views/partials/catalogue/measured_sizes.phtml
 	 * @access static
 	 * @return array
 	 */
@@ -595,7 +847,7 @@ class Catalogue
 	/**
 	 * dimensionsImages($category_id) также учавствует в формировании изображения для примерки
 	 * @param string $image
-	 * @see app/modules/Z95/views/partials/catalogue/measured_sizes.phtml
+	 * @see app/modules/ZKZ/views/partials/catalogue/measured_sizes.phtml
 	 * @access static
 	 * @return mixed
 	 */

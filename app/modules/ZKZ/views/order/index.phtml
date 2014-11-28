@@ -1,0 +1,32 @@
+<div class="column main-column">
+	<?php if(isset($banners['inner']) && !empty($banners['inner'])): ?>
+		<div class="inner_teaser">
+			<a href="<?=$this->url->get(['for' => 'sale']);?>" >
+				<?= $this->tag->image(array('f/t/'.$banners['inner'][0]['image'])); ?>
+			</a>
+		</div>
+	<?endif;?>
+	<div id="CONTENT">
+		<h1><?=$title;?></h1>
+		<?php if(!empty($breadcrumbs)): ?>
+			<!-- Bread Crumbs -->
+			<ul class="Thermo">
+				<?php foreach($breadcrumbs as $crumb): ?>
+					<li>
+						<?=($crumb['active']) ? $crumb['text'] : $this->tag->linkTo($crumb['link'], $crumb['text']).' / '; ?>
+					</li>
+				<?php endforeach; ?>
+			</ul>
+			<!-- Bread Crumbs -->
+		<?php endif; ?>
+
+		<div class="clear"></div>
+		<div class="element-order">
+			<div>
+				<!-- Рендер -->
+				<?php $this->view->partial('partials/order/'.$template); ?>
+				<!-- Рендер -->
+			</div>
+		</div>
+	</div>
+</div>

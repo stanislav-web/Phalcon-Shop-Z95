@@ -1,10 +1,6 @@
 # Created by .gitignore support plugin (hsz.mobi)
-app/cache
-logs/
 atlassian-ide-plugin.xml
 phalcon-devtools
 .phalcon
-.htaccess
 .idea
-app/modules/Z95/config/config.php
 PORT.sql

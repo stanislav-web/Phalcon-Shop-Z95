@@ -137,18 +137,18 @@ class Brands extends \Phalcon\Mvc\Model
 	/**
 	 * Получение списка брендов с количеством позиций в каждом из них
 	 *
-	 * @param  int    $shopID магазин
+	 * @param  int    $price_id магазин
 	 * @param bool $cache
 	 * @author <filchakov.denis@gmail.com>
 	 * @modify Stanislav WEB
 	 */
-	public function getAllBrands($shop_id = 1, $cache = false)
+	public function getAllBrands($price_id = 1, $cache = false)
 	{
 		$result = null;
 		if($cache && $this->_cache)
 		{
 			$_cache = $this->getDI()->get('backendCache');
-			$md5 = md5(self::TABLE.$shop_id.'-allbrands');
+			$md5 = md5(self::TABLE.$price_id.'-allbrands');
 			$result = $_cache->get($md5.'.cache');
 		}
 		if($result === null)
@@ -157,7 +157,7 @@ class Brands extends \Phalcon\Mvc\Model
 					FROM brands b
 					INNER JOIN `".Products::TABLE."` product ON (product.brand_id = b.id)
 					INNER JOIN `".Prices::TABLE."` price ON (price.product_id = product.id)
-					WHERE price.id = ".(int)$shop_id."
+					WHERE price.id = ".(int)$price_id."
 					GROUP BY b.id ORDER BY name ASC";
 
 			$result = $this->_db->query($sql)->fetchAll();
