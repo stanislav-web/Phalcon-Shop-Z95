@@ -1,5 +1,5 @@
 
-"use strict";
+//"use strict";
 /**
  * /**
  * cart.js API Для работы корзины
@@ -8,6 +8,10 @@
  * @type {{config: {dataType: string, method: string, timeout: number, async: boolean, cache: boolean, delay: number, limitmax: number, sameitems: number}, response: boolean, lookupId: boolean, get: Function, add: Function, addBefore: Function, delete: Function, recount: Function, sendRequest: Function, processRequest: Function, getResponseError: Function, getMessage: Function, hideMessage: Function, isNumber: Function, onItem: Function, isValid: Function}}
  */
 var Cart = {
+
+    debug   :   true,
+
+    hash    :   false,
 
     /**
      * Настройки клиента Cart
@@ -19,12 +23,10 @@ var Cart = {
         timeout     : 10000,    // тайм аут ожидания ответа от сервера
         async       : true,     // асинхронный режим
         cache       : false,    // кеширование результата
-        delay       : 1000,     // задержка в мил.с при обновлении корзины
-        limitmax    : 10,       // лимит вещей в корзине (тоже что и $config->cart->limitMax)
-        sameitems   : 5,        // лимит вещей одного наименования в корзине (тоже что и $config->cart->limitOne)
+        delay       : 100,     // задержка в мил.с при обновлении корзины
 
         // Настройки Server Side контроллера
-
+        
         action      :   {
             set     :   '/customer/cart/set',
             get     :   '/customer/cart/get',
@@ -43,6 +45,284 @@ var Cart = {
      * @var int timeoutId
      */
     lookupId : false,
+
+    /**
+     * getMessage: function(message, element) Окно с информацией
+     * @param string message собщение
+     * @example
+     *      this.getMessage({title : 'Ошибка', body : 'Переданны не верные данные при добавлении', class : 'error'});
+     *      this.getMessage({title : 'Супер', body : 'Добавлен товар', class : 'success'});
+     *      this.getMessage({message : 'Вы забыли выбрать размер', class : 'empty'}, object.find('.sizes'))
+     *      this.getMessage(); // Секундочку....
+     * @param jQuery object объект в котором выводиться сообщение
+     * @return null
+     */
+    getMessage: function(message, element) {
+
+
+        if(!element)    // по умолчанию
+            var element = $('#cartNotify');
+
+        // если переданно обьектом
+        if(message instanceof Object) {
+
+            if(message.message)
+            {
+                element.addClass(message.class);
+                element.find('.message').html(message.message);
+                return;
+            }
+            else
+            {
+                element.addClass('active '+message.class).css({'zIndex' : 9999999});
+                element.find('.message > .title').html(message.title);
+                element.find('.message > .body').html(message.body);
+                return;
+            }
+        }
+        else
+        {
+            if(!message)
+                message =   'Секундочку...';
+
+            element.addClass('active loading').find('.message').html(message);
+        }
+    },
+
+    /**
+     * clearMessage: function(object, className) Закрытие указанного окна
+     * @param jquery object объект с окном
+     * @param string className имя класса для удаления
+     * @example
+     *      this.clearMessage($('#cartNotify'), 'active loading');
+     * @param jQuery object объект в котором выводиться сообщение
+     * @throw new Error exception
+     * @return null
+     */
+    clearMessage: function(object, className) {
+
+        try
+        {
+            if(object instanceof jQuery)
+                object.removeClass(className);
+            else
+                throw new Error("Только для объектов jQuery");
+        }
+        catch(e) {
+            this.getMessage({title : 'Ошибка', body : 'Переданны не верные данные при добавлении: '+ e.name +' : '+ e.message, class : 'error'});
+            return false;
+        }
+    },
+
+    /**
+     * sendRequest: function(uri, params) Отправка данных на сервер
+     * @param string uri
+     * @param string query
+     * @return object Ajax ready state
+     */
+    sendRequest: function (uri, params) {
+
+        return $.ajax({
+            url         : uri,
+            data        : params,
+            type        : Cart.config.method,
+            dataType    : Cart.config.dataType,
+            timeout     : Cart.config.timeout,
+            async       : Cart.config.async,
+            cache       : Cart.config.cache
+        });
+    },
+
+    /**
+     * processRequest: function(response) Обработчик ответов сервера
+     * @param jQuery object response
+     * @return mixed
+     */
+    processRequest: function (response) {
+
+        if(response)
+        {
+            if(response.status && response.status === 200)
+            {
+                if(response.responseText.length > 0)
+                {
+                    try
+                    {
+                        var json = JSON.parse(response.responseText);
+                    }
+                    catch(e)
+                    {
+                        this.getResponseError(response, $('#cartNotify'));
+                        return false;
+                    }
+                    var string = '<ul>';
+                    if(json.hasOwnProperty('errors'))
+                    {
+                        for(var i = 0; i<json.errors.length; i++)
+                        {
+                            string += '<li>'+json.errors[i]+'</li>';
+                        }
+                        string += '</ul>';
+                        this.getMessage(string, $('#cartNotify'));
+                    }
+                    else
+                    {
+                        // ошибок сервера нет, парсим контейнер ответа
+                        if(this.debug) console.info('Корректный ответ сервера', json.message);
+
+                        // тут ошибка пользователя
+                        if(json.message)
+                            return this.getMessage(json.message);
+
+                        return json;
+                    }
+                }
+                else
+                    this.getResponseError(response, $('#cart-errors'));
+            }
+        }
+    },
+
+    /**
+     * getResponseError: function(response, element) Обработчки ошибок сервера
+     * @param jQuery object response
+     * @param jQuery object element
+     * @return null
+     */
+    getResponseError: function(response, element) {
+        if (typeof response == 'string' || response instanceof String)
+            var message = response;
+        else
+        {
+            var message = '';
+
+            switch(response.statusText) {
+                case 'timeout':
+                    message = 'The request timed out.';
+                    break;
+                case 'notmodified':
+                    message = 'The request was not modified but was not retrieved from the cache.';
+                    break;
+                case 'parsererror':
+                    message = 'XML/Json format is bad.';
+                    break;
+                default:
+                    message = 'HTTP Error (' + response.status + ' ' + response.statusText + ')';
+            }
+        }
+
+        // throwing error message
+        this.getMessage(message, element);
+    },
+
+    /**
+     * addBefore: function(object) Проверка перед отправкой на сервер
+     * используется для валидации параметров при добавлении
+     *
+     * @var jQuery object
+     * @throw new Error exception
+     * @return serialized to array object
+     */
+    addBefore : function(object)
+    {
+        if(this.debug) console.info('Форма:', object);
+
+        try
+        {
+            if(object instanceof jQuery)
+            {
+                var data        =   object.serializeArray(),
+                    quantity    =   '',
+                    sizes       =   [];
+
+                if(this.debug) console.info('Подготовленные данные:', data);
+
+                for(i in data)
+                {
+                    if(data[i].name.indexOf("size") == 0)
+                        sizes.push(data[i].value);
+                    if(data[i].name == 'quantity' && data[i].value == 'multiple')
+                        quantity    =   data[i].value;
+                }
+
+                // ошибка, если не выбран размер у товара где есть выбор размеров
+                if(quantity === 'multiple' && sizes.length < 1)
+                    this.getMessage({message : 'Вы забыли выбрать размер', class : 'empty'}, object.find('.sizes'));
+                else
+                {
+                    this.clearMessage(object.find('.sizes'), 'empty');
+
+                    // создаю запрос на сервер
+                    this.set(object);
+                }
+            }
+            else
+                throw new Error("Только для объектов jQuery");
+        }
+        catch(e) {
+            this.getMessage({title : 'Ошибка', body : 'Переданны не верные данные при добавлении: '+ e.name +' : '+ e.message, class : 'error'});
+            return false;
+        }
+    },
+
+    /**
+     * set: function(item) Добавление в корзину
+     * @var string itemParams Cart container (product)
+     * @return html
+     */
+    set: function(item) {
+
+        try {
+
+            // параметры передачи
+
+            var then    =   this;
+
+            if(this.debug) console.info('Отправка на сервер:', item.serialize());
+
+            then.hash   =   Math.floor((Math.random() * 100000000000) + 1);
+            then.response = Cart.sendRequest(
+                then.config.action.set+'?hash='+then.hash,
+                item.serialize()
+            );
+
+
+            // получаю ответ от сервера
+            $(document).ajaxStop($.proxy(function() {
+
+                var response = then.response,
+                    data = then.processRequest(response);
+
+                if(then.hash == data.hash)
+                {
+                    if(then.debug) console.info('Получен ответ:', data);
+                    $('#'+data.mode).html(data.cart).show();
+
+                    global.positionate($('#'+data.mode)[0]);
+                }
+
+                delete(data);
+                delete(response);
+                delete(this.response);
+
+            }, this));
+        }
+        catch(e) {
+            this.getMessage({title : 'Ошибка', body : 'Переданны не верные данные при добавлении: '+ e.name +' : '+ e.message, class : 'error'});
+            return false;
+        }
+    },
+
+
+
+
+
+
+
+
+
+
+
 
     /**
      * get: function() Load cart templates with recalculation
@@ -81,48 +361,18 @@ var Cart = {
         }, this));
     },
 
-    /**
-     * add: function(itemParams) Adding to cart
-     * @var string itemParams Cart container (product)
-     * @return html
-     */
-    set: function(itemParams) {
-        if(itemParams.length > 0) {
-// Set -> request to server
-            var requestData = {
-                'hash' : Math.floor((Math.random() * 100000000000) + 1),
-                'params' : decodeURI(itemParams)
-            };
-            this.response = Cart.sendRequest(
-                '/ajax/customer/cart/add/',
-                requestData
-            );
-// Get <- response from server
-            $(document).ajaxStop($.proxy(function() {
-// place code to be executed on completion of last outstanding ajax call here
-                var response = this.response,
-                    data = Cart.processRequest(response);
-// if isset valid data from pre process result
-                if(data)
-                {
-// insert the result in places then clear response
-                    for(var key in data.content)
-                    {
-                        $('#'+key).html(data.content[key]).show();
-                    }
-                    delete(data);
-                    delete(response);
-                    delete(this.response);
-                }
-            }, this));
-        }
-    },
+
+
+
+
+
+
     /**
      * addBefore: function(item_id) Show preview to Cart
      * @var string item_id Cart container (item_id)
      * @return html
      */
-    addBefore: function(itemParams) {
+    addBefore2: function(itemParams) {
         if(itemParams.length > 0) {
 // Set -> request to server
             var requestData = {
@@ -303,132 +553,12 @@ var Cart = {
         }
         return false;
     },
-    /**
-     * sendRequest: function(uri, params) Ajax request -> response action
-     * @param string uri
-     * @param string query
-     * @return object Ajax ready state
-     */
-    sendRequest: function (uri, params) {
-// configure ajax request
-        return $.ajax({
-            url : uri,
-            data : params,
-            type : Cart.config.method,
-            dataType : Cart.config.dataType,
-            timeout : Cart.config.timeout,
-            async : Cart.config.async,
-            cache : Cart.config.cache,
-            beforeSend: function (jqXHR, settings) {
-// Handle the beforeSend event
-                Cart.getMessage('Секундочку ...');
-            },
-            complete: function (jqXHR, textStatus) {
-// Handle the complete event
-                Cart.hideMessage();
-            }
-        });
-    },
-    /**
-     * processRequest: function(response) Process ajax response result
-     * @param jQuery object response
-     * @return mixed
-     */
-    processRequest: function (response) {
-        if(response.status && response.status === 200)
-        {
-// alow connection
-            if(response.responseText.length > 0)
-            {
-                try
-                {
-                    var json = JSON.parse(response.responseText);
-                }
-                catch(e)
-                {
-                    this.getResponseError(response, $('#cart-errors'));
-                    return false;
-                }
-                var string = '<ul>';
-                if(json.hasOwnProperty('errors'))
-                {
-// detecting Cart errors, do the terminate process
-                    for(var i = 0; i<json.errors.length; i++)
-                    {
-                        string += '<li>'+json.errors[i]+'</li>';
-                    }
-                    string += '</ul>';
-// throwing error to #cart-errors
-                    this.getMessage(string, $('#cart-errors'));
-                }
-                else
-                {
-// return data to the callable function back
-                    return json;
-                }
-            }
-            else
-            {
-                this.getResponseError(response, $('#cart-errors'));
-            }
-        }
-    },
-    /**
-     * getResponseError: function(response, element) Ajax response error switcher
-     * @param jQuery object response
-     * @param jQuery object element
-     * @return null
-     */
-    getResponseError: function(response, element) {
-        var message = '<ul>';
-        message += '<li><b>There was an error with the AJAX request:</b></li>';
-        switch (response.statusText) {
-            case 'timeout':
-                message += '<li>The request timed out.</li>';
-                break;
-            case 'notmodified':
-                message += '<li>The request was not modified but was not retrieved from the cache.</li>';
-                break;
-            case 'parsererror':
-                message += '<li>XML/Json format is bad.</li>';
-                break;
-            default:
-                message += '<li>HTTP Error (' + response.status + ' ' + response.statusText + ').</li>';
-        }
-        message += '</ul>';
-// throwing error message
-        this.getMessage(message, element);
-    },
-    /**
-     * getMessage: function(message, element) Show status message
-     * @param string message message string
-     * @param jQuery object element
-     * @return null
-     */
-    getMessage: function(message, element) {
-        if(!element) {
-// loading message as default
-            var element = $('#cart-loader');
-        }
-        if(message !== "undefined") {
-            element.addClass('active').find('.message').html(message).css({'zIndex' : 9999999});
-        }
-        else {
-            element.addClass('active').find('.message').html('Секундочку ...');
-        }
-    },
-    /**
-     * hideMessage: function(params) Hide message
-     * @param jquery object element
-     * @return null
-     */
-    hideMessage: function (element) {
-        if(!element) {
-// loading message as default
-            var element = $('#cart-loader');
-        }
-        element.removeClass('active').find('.message').html('');
-    },
+
+
+
+
+
+
     /**
      * isNumber: function(obj, event) Check number value (input number as ex.)
      * @param window.event object event

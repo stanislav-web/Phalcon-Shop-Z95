@@ -37,22 +37,18 @@
 <body onload="global.init();">
 
 <div style="position: absolute; z-index: 10000; width: 400px; height: 400px; background-color: #dadada; display: none;">
-
 	<div class="messages_area"></div>
 	<hr>
 	<input id="sendText" type="text" value="" style="display: none">
 	<hr>
 	<input id="send" type="submit" value="Send" style="display: none">
-
 </div>
 
 <!-- Блоки окон и сообщений -->
 <div class="basket-container">
-	<div class="Shadow" id="SMALL_BASKET">
-		<div onclick="$('#SMALL_BASKET').hide(); $('#_SMALL_BASKET').html('');" class="close"></div>
-		<div id="_SMALL_BASKET"></div>
-	</div>
+	<div class="Shadow" id="small-cart"></div>
 </div>
+
 <div class="status common loading"><div class="message">Секундочку...</div></div>
 <div class="status timeout" onclick="global.hideStatus('timeout');">
 	<div class="message">

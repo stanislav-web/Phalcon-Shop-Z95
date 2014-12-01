@@ -125,19 +125,25 @@
 
 	$di->set('db', function() {
 
-		return new \Phalcon\Db\Adapter\Pdo\Mysql([
-			"host"      => 	$this->_config['database']['host'],
-			"username"  => 	$this->_config['database']['username'],
-			"password"  => 	$this->_config['database']['password'],
-			"dbname"    => 	$this->_config['database']['dbname'],
-			"persistent"    => 	$this->_config['database']['persistent'],
-			"options" => array(
-				PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'UTF8'",
-				PDO::ATTR_CASE 		=> PDO::CASE_LOWER,
-				PDO::ATTR_ERRMODE	=> PDO::ERRMODE_EXCEPTION,
-				PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
-			)
-		]);
+	try {
+			$connect =  new \Phalcon\Db\Adapter\Pdo\Mysql([
+				"host"      => 	$this->_config['database']['host'],
+				"username"  => 	$this->_config['database']['username'],
+				"password"  => 	$this->_config['database']['password'],
+				"dbname"    => 	$this->_config['database']['dbname'],
+				"persistent"    => 	$this->_config['database']['persistent'],
+				"options" => array(
+					PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'UTF8'",
+					PDO::ATTR_CASE 		=> PDO::CASE_LOWER,
+					PDO::ATTR_ERRMODE	=> PDO::ERRMODE_EXCEPTION,	// PDO::ERRMODE_EXCEPTION
+					PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+				)
+			]);
+		}
+		catch (PDOException $e) {
+			throw new Exception('Could not connect to database');
+		}
+		return $connect;
 	});
 
 	// Компонент Session. Стартую сессию

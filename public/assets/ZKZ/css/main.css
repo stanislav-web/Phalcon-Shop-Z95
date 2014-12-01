@@ -2271,7 +2271,7 @@ blockquote {
 .Hint div {
     line-height: 2em;
 }
-#SMALL_BASKET {
+#small-cart {
     background: none repeat scroll 0 0 white;
     color: #001240;
     display: none;
@@ -2281,16 +2281,16 @@ blockquote {
     position: absolute;
     z-index: 1600;
 }
-#SMALL_BASKET h2 {
+#small-cart h2 {
     border-bottom: 0.2em solid #d5d5d5;
     color: #000000;
     margin: 0 0 0.5em;
     padding-bottom: 0.5em;
 }
-#SMALL_BASKET a {
+#small-cart a {
     color: #000000;
 }
-#SMALL_BASKET .close, .measured_sizes .close, .tags-filter .close {
+#small-cart .close, .measured_sizes .close, .tags-filter .close {
     background: url("/assets/ZKZ/images/z95ru/close_btn.png") no-repeat scroll center center rgba(0, 0, 0, 0);
     box-sizing: border-box;
     cursor: pointer;

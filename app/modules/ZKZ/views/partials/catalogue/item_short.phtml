@@ -32,7 +32,6 @@
 								<div class="warning hidden" id="warning" onclick="$(this).fadeOut();"></div>
 								<span>Выберите размер:</span>
 								<br clear="all">
-
 								<div class="small-sizes">
 									<?php foreach($arraySize as $size): ?>
 										<?php $check = (isset($buyes[$item['id']][$size])) ? ['l' => 'title="'.$viewTranslate["SIZE_EXIST"].'"', 'd' => 'disabled="true" checked="true"'] : ['l' => '', 'd' => '']; ?>

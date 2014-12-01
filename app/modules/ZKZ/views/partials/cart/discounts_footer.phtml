@@ -1,0 +1,9 @@
+<?php if(isset($informer['discounts']['type'])):?>
+	<tr>
+		<td><?=$viewTranslate['DISCOUNT'];?> <?=$informer['discounts']['current'];?>% (<?=$this->tag->linkTo([['for' => 'about-discounts'], $viewTranslate['ABOUT_DISCOUNTS'], 'target' => '_blank']);?>)</td>
+	</tr>
+	<tr>
+		<td><?=$viewTranslate['WITH_DISCOUNT'];?></td>
+		<td class="number discount"><?=($informer['sum'] - ($informer['sum']*$informer['discounts']['current'])/100); ?> <?php echo $shop['currency_symbol'] ?></td>
+	</tr>
+<?php endif; ?>

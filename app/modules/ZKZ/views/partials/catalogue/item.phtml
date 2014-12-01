@@ -30,60 +30,6 @@
 	<div id="CATALOGUE_SEARCH_RESULT">
 	</div>
 </div>
-<!-- Load scripts -->
-<script type="text/javascript">
-	var sonar_product = {
-		identifier: '<?=$item['product_id'];?>'  // уникальный id товара
-	};
-
-</script>
-<script type="text/javascript">
-	(function() {
-		var s   = document.createElement('script');
-		var x   = document.getElementsByTagName('script')[0];
-		s.type  = 'text/javascript';
-		s.async = true;
-		s.src   = ('https:'==document.location.protocol?'https://':'http://')
-		+ 'eu-sonar.sociomantic.com/js/2010-07-01/adpan/z95-ru';
-		x.parentNode.insertBefore( s, x );
-	})();
-</script>
-<!-- GRM -->
-<script type="text/javascript">
-	var google_tag_params = {
-		prodid: '<?php echo $item['product_id']; ?>',
-		price: <?php echo $item['price']; ?>,
-		pvalue: <?php echo $item['price']; ?>,
-		pname: '<?php echo $item['product_name']; ?> <?php echo $item['brand']; ?>',
-		pcat: '<?php echo $item['product_name']; ?>',
-		pagetype : 'product'
-	};
-</script>
-<script type="text/javascript">
-	(function(d,w){
-		var n=d.getElementsByTagName("script")[0],
-			s=d.createElement("script"),
-			f=function(){n.parentNode.insertBefore(s,n);};
-		s.type="text/javascript";
-		s.async=true;
-		s.src="http://track.recreativ.ru/trck.php?shop=99&amp;ttl=DD&amp;offer=88658&amp;rnd="+Math.floor(Math.random()*999);
-		if(window.opera=="[object Opera]"){d.addEventListener("DOMContentLoaded", f, false);}
-		else{f();}
-	})(document,window);
-</script>
-
-<!-- Mail.ru -->
-<img alt="" style="width:0;height:0;position:absolute;" src="http://ad.mail.ru/w522.gif?shop=83&amp;offer=88658&amp;rnd=87275071">
-<!--<script src="http://t.trafmag.com/tracking.js" type="text/javascript"></script>-->
-<script language="javascript">
-	var odinkod = {
-		"type": "product",
-		"product_id":"<?php echo $item['product_id']; ?>"
-	};
-	var gcb = Math.round(Math.random() * 100000);
-</script>
-<!-- /Load scripts -->
-
 <table class="catalogue-item-details">
 	<tbody>
 	<tr>
@@ -217,40 +163,11 @@
 			<?php endif; ?>
 
 			<br clear="all">
-
-			<div quantity="single" price="<?php echo $item['price']; ?>" cat_id="<?php echo $item['product_id']; ?>" class="sizes_win" id="sizes_<?php echo $item['product_id']; ?>">
-				<form autocomplete="off">
-					<div onclick="$(this).fadeOut();" id="warning" class="warning hidden"></div>
-					<div class="sizes">
-						<div class="message">Вы забыли выбрать размер</div>
-						<?php if(null !== $item['filter_size']) { ?>
-							<?php foreach($item['filter_size'] as $size) { ?>
-								<?php $check = (isset($buyes[$item['product_id']][$size])) ? ['l' => 'title="'.$viewTranslate["SIZE_EXIST"].'"', 'd' => 'disabled="true" checked="true"'] : ['l' => '', 'd' => '']; ?>
-
-								<label  <?=$check['l'];?>>
-									<span>
-										<div class="size-chooser"> <?php echo $size; ?> </div>
-										<input <?=$check['d'];?> type="checkbox" basket_count="0" max_count="4" value="<?php echo $size; ?>" onclick="basket.getItems('sizes_<?php echo $item['product_id']; ?>')">
-									</span>
-								</label>
-							<?php } ?>
-						<?php } ?>
-						<div style="clear:both"></div>
-						<label class="size-undefined">
-							<div class="size-chooser">
-								<input type="checkbox" value="?"
-										<?=(isset($buyes[$item['product_id']]['?'])) ? ' disabled="true" checked="true"' : ''; ?>
-									   onclick="basket.getItems('sizes_<?php echo $item['product_id']; ?>')" basket_count="0">
-								Не уверен в размере &mdash; хочу обсудить с менеджером							</div>
-						</label>
-					</div>
-					<div style="clear:both"></div>
-					<div onclick="basket.addToBasket('sizes_<?php echo $item['product_id']; ?>');" class="add-button">
-						Добавить в корзину					</div>
-				</form>
+			<div class="sizes_win">
+				<!-- Добавление в корзину -->
+				<?php $this->partial('partials/catalogue/item_add'); ?>
+				<!-- Добавление в корзину  -->
 			</div>
-
-			<!--**************************************************************************************************************************-->
 
 			<div class="delivery_info">
 				<h3>Доставка</h3><ul class="service_info">

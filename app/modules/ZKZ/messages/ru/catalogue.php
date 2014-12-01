@@ -92,6 +92,7 @@
 		"BUY_TOGETHER"			=>	'Покупают вместе',
 		"NEW_CATEGORY"						=>  "Новинки",
 		"DISCOUNT"						=>	"Скидка",
+		"ADD_TO_CART"			=>	"Добавить в корзину",
 
 		"ALL_BRANDS"				=>  "Бренды",
 		"SORT_BY" => "Сортировка по",

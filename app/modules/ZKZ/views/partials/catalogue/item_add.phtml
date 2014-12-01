@@ -1,0 +1,45 @@
+<form autocomplete="off">
+	<input type="hidden" name="product_id" value="<?=$item['product_id']; ?>">
+	<input type="hidden" name="mode" value="small-cart">
+	<div onclick="$(this).fadeOut();" id="warning" class="warning hidden"></div>
+	<div class="sizes">
+		<div class="message"></div>
+		<?php if(null !== $item['filter_size']): ?>
+			<?php foreach($item['filter_size'] as $size): ?>
+				<?php $check = (isset($buyes[$item['product_id']][$size])) ? ['l' => 'title="'.$viewTranslate["SIZE_EXIST"].'"', 'd' => 'disabled="true" checked="true"'] : ['l' => '', 'd' => '']; ?>
+				<label  <?=$check['l'];?>>
+					<span>
+						<div class="size-chooser"> <?=$size; ?> </div>
+						<input <?=$check['d'];?> name="size[<?=$size; ?>]" type="checkbox" value="1">
+					</span>
+				</label>
+			<?php endforeach; ?>
+			<input type="hidden" name="quantity" value="multiple">
+		<?php else: ?>
+			<input type="hidden" name="quantity" value="single">
+		<?php endif;?>
+		<div style="clear:both"></div>
+		<label class="size-undefined">
+			<div class="size-chooser">
+				<input type="checkbox" name="size[?]" value="1" <?=(isset($buyes[$item['product_id']]['?'])) ? ' disabled="true" checked="true"' : ''; ?>>
+				Не уверен в размере &mdash; хочу обсудить с менеджером
+			</div>
+		</label>
+	</div>
+
+	<div style="clear:both"></div>
+	<div onclick="Cart.addBefore($(this).closest('form'));" class="add-button">
+		<?=$viewTranslate["ADD_TO_CART"];?>
+	</div>
+</form>
+
+<div id="cartNotify" class="status message" onclick="global.hideStatus('message');">
+	<div class="message">
+		<div class="title">
+			<!-- title -->
+		</div>
+		<span class="body">
+			<!-- message -->
+		</span>
+	</div>
+</div>

@@ -54,13 +54,6 @@
 		'action'        => 'categories'
 	])->setName("catalogue");
 
-	$router->add("/cart", [
-		'module'    	=>  $module,
-		'namespace' 	=> 'Modules\\'.$module.'\Controllers\\',
-		'controller'    => 'cart',
-		'action'        => 'index',
-	])->setName("cart");
-
 	$router->add("/catalogue/([a-z_-]+/[0-9]+)|(/[0-9]+)", [
 		'module'    	=>  $module,
 		'namespace' 	=> 'Modules\\'.$module.'\Controllers\\',
@@ -144,20 +137,18 @@
 		'action'        => 'request',
 	])->setName("order-request");
 
-
-	/**$router->add("/order/:params", [
-		'module'    	=>  $module,
-		'namespace' 	=> 'Modules\\'.$module.'\Controllers\\',
-		'controller'    => 'order',
-		'action'        => 'tracking',
-		"params"    	=> 1,
-	])->setName("order-tracking");
-	*/
 	$router->add("/customer/cart", [
 		'module'    	=>  $module,
 		'namespace' 	=> 'Modules\\'.$module.'\Controllers\\',
-		'controller'    => 'basket',
+		'controller'    => 'cart',
 		'action'        => 'index',
+	]);
+
+	$router->addPost("/customer/cart/:action", [
+		'module'    	=>  $module,
+		'namespace' 	=> 'Modules\\'.$module.'\Controllers\\',
+		'controller'    => 'cart',
+		'action'        => 1,
 	]);
 
 	$router->add("/error/show404", [
