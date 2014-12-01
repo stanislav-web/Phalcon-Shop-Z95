@@ -50,9 +50,4 @@
 			'mappersDir'     => APP_PATH.'/modules/'.self::MODULE.'/mappers',
 			'baseUri'        => '/',
 		],
-
-		'cart'	=>	[
-			'limitMax'		=>	10,
-			'limitOne'		=>	5
-		]
 	];
