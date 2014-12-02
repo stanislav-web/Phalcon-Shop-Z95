@@ -113,6 +113,7 @@ class Products extends \Phalcon\Mvc\Model
 	 */
 	public function get(array $fields = [], array $data, $order = [], $limit = null, $cache = false)
 	{
+
 		$result = null;
 
 		if($cache && $this->_cache) {
@@ -127,7 +128,7 @@ class Products extends \Phalcon\Mvc\Model
 				$sql = "SELECT prod.id AS id, " . rtrim(implode(", ",$fields), ", ") . "
 					FROM " . self::TABLE." prod";
 			else
-				$sql = "SELECT " . self::TABLE. ".*
+				$sql = "SELECT prod.*
 					FROM " . self::TABLE." prod";
 
 			$sql .= " INNER JOIN `".Prices::TABLE."` price ON (prod.id = price.product_id)
@@ -153,9 +154,10 @@ class Products extends \Phalcon\Mvc\Model
 
 			if(null != $limit) $sql .= " LIMIT ".$limit;
 
-			if(null != $limit && $limit > 1) {
+			if(($limit && $limit > 1) || !isset($limit)) {
 				$result = $this->_db->query($sql)->fetchAll();
-			} else {
+			} elseif($limit == 1) {
+
 				$result = $this->_db->query($sql)->fetch();
 			}
 
@@ -857,44 +859,5 @@ class Products extends \Phalcon\Mvc\Model
 			if($cache && $this->_cache) $_cache->save($md5.'.cache', $result);
 			return $result;
 		}
-	}
-
-	/**
-	 * @param $ids
-	 * @return mixed
-	 */
-	public function getBasketItems($basketItems)
-	{
-
-		if($basketItems == '' || null === $basketItems)
-			return;
-
-		$ids = implode(',', array_keys($basketItems));
-
-		$sql = "SELECT 	".self::TABLE.".id AS product_id,  ".self::TABLE.".name AS product_name, ".self::TABLE.".articul, ".self::TABLE.".images,
-					".Brands::TABLE.".name AS brand, ".Brands::TABLE.".alias AS brand_alias, ".Prices::TABLE.".price,
-					".Prices::TABLE.".discount, ".Prices::TABLE.".percent
-
-					FROM ".self::TABLE."
-					INNER JOIN ".Prices::TABLE." ON (".Prices::TABLE.".id = ".(int)$this->_price_id." && ".Prices::TABLE.".product_id = ".self::TABLE.".id)
-					INNER JOIN ".Brands::TABLE." ON (".self::TABLE.".brand_id = ".Brands::TABLE.".id)
-					WHERE product_id IN (".$ids.") ";
-
-		$result = $this->_db->query($sql)->fetchAll();
-
-		if(!empty($result))
-		{
-			//добавляем к вещам информацию о размерах и кол-ве
-			foreach($result as $key => $item)
-			{
-				if(isset($basketItems[$item['product_id']]))
-				{
-					$result[$key]['sizes'] = $basketItems[$item['product_id']]['sizes'];
-				}
-				//парсим картинки
-				$result[$key]['images'] = json_decode($item['images'], true);
-			}
-		}
-		return $result;
 	}
 }

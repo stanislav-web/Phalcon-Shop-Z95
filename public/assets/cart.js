@@ -168,10 +168,8 @@ var Cart = {
                     else
                     {
                         // ошибок сервера нет, парсим контейнер ответа
-                        if(this.debug) console.info('Корректный ответ сервера', json.message);
 
-                        // тут ошибка пользователя
-                        if(json.message)
+                        if(json.message) // тут ошибка пользователя
                             return this.getMessage(json.message);
 
                         return json;
@@ -273,96 +271,52 @@ var Cart = {
     set: function(item) {
 
         try {
-
             // параметры передачи
 
             var then    =   this;
 
-            if(this.debug) console.info('Отправка на сервер:', item.serialize());
+            if(item) {
+                if(this.debug) console.info('Отправка на сервер:', decodeURIComponent(item.serialize()));
+                var data  =   item.serialize();
+            }
+            else
+            {
+                if(this.debug) console.info('Чтение корзины');
+                var data    =   {mode : 'small-cart', 'action' : 'read'};
+            }
 
             then.hash   =   Math.floor((Math.random() * 100000000000) + 1);
             then.response = Cart.sendRequest(
                 then.config.action.set+'?hash='+then.hash,
-                item.serialize()
+                data
             );
 
-
             // получаю ответ от сервера
-            $(document).ajaxStop($.proxy(function() {
+            return $(document).ajaxStop($.proxy(function() {
 
                 var response = then.response,
                     data = then.processRequest(response);
 
-                if(then.hash == data.hash)
-                {
-                    if(then.debug) console.info('Получен ответ:', data);
-                    $('#'+data.mode).html(data.cart).show();
+                if(data.hasOwnProperty('hash') == true)
+                    if(then.hash == data.hash)
+                    {
+                        if(then.debug) console.info('Получен ответ:', data);
+                        $('#'+data.mode).html(data.cart).show();
 
-                    global.positionate($('#'+data.mode)[0]);
-                }
+                        global.positionate($('#'+data.mode)[0]);
+                    }
 
                 delete(data);
                 delete(response);
                 delete(this.response);
 
-            }, this));
+            }, then));
         }
         catch(e) {
             this.getMessage({title : 'Ошибка', body : 'Переданны не верные данные при добавлении: '+ e.name +' : '+ e.message, class : 'error'});
             return false;
         }
     },
-
-
-
-
-
-
-
-
-
-
-
-
-    /**
-     * get: function() Load cart templates with recalculation
-     * @return null
-     */
-    get: function() {
-// Set -> request to server
-        var requestData = {
-            'hash' : Math.floor((Math.random() * 100000000000) + 1)
-        };
-        this.response = Cart.sendRequest(
-            '/ajax/customer/cart/get/',
-            requestData
-        );
-// Get <- response from server
-        $(document).ajaxStop($.proxy(function() {
-// place code to be executed on completion of last outstanding ajax call here
-            if(this.response)
-            {
-// if isset the response from ajax
-                var response = this.response,
-                    data = Cart.processRequest(response);
-// if isset valid data from pre process result
-                if(data)
-                {
-// insert the result in places then clear response
-                    for(var key in data.content)
-                    {
-                        $('#'+key).html(data.content[key]).show();
-                    }
-                    delete(data);
-                    delete(response);
-                    delete(this.response);
-                }
-            }
-        }, this));
-    },
-
-
-
 
 
 
@@ -578,23 +532,7 @@ var Cart = {
         }
         return true;
     },
-    /**
-     * onItem : function(obj) show item position under event
-     * @param obj jQuery object
-     * return null
-     */
-    onItem : function(obj) {
-        var previewObj = obj.attr('class'),
-            previewRel = obj.attr('rel'),
-            rows = $('[data-row]');
-// remove before all selected classes
-        $('.'+previewObj).removeClass('click selected');
-// check relation tr row for display this by preview
-        rows.css("display", "none");
-        rows.filter("[data-row='"+previewRel+"']").css("display", "table-row");
-// add after one selected
-        obj.addClass('click selected');
-    },
+
     /**
      * isValid : function(obj) Checking the number of updates for Multiple add
      * @param obj jQuery object

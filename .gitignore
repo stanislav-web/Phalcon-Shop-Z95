@@ -3,3 +3,4 @@ atlassian-ide-plugin.xml
 .phalcon
 .idea
 PORT.sql
+app/modules/ZKZ/config/config.php

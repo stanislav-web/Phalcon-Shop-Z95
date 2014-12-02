@@ -1806,7 +1806,7 @@ var basket = new function() {
         $('.small-basket .item-row').hide();
         $('.item-row').eq(i).show();
     };
-};;
+};
 
 get_client_info = function(){
     this.browser = this.searchString(this.dataBrowser) || "An unknown browser";

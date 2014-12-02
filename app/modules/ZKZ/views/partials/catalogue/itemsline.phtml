@@ -30,9 +30,9 @@
 		{
 			// получаю скидки магазина на вещи
 
-			$shopDiscounts = \Helpers\Catalogue::getMaxDiscount($shop['discounts'], $minicart);
+			$shopDiscounts = \Helpers\Cart::getMaxDiscount($shop['discounts'], $minicart);
 			if(!empty($minicart) && $minicart['count'] > 0)
-				$buyes	=	\Helpers\Catalogue::getBasketSizes($basket);
+				$buyes	=	\Helpers\Cart::getBasketSizes($basket);
 		}
 		?>
 		<?php foreach($items as $item): ?>

@@ -1,18 +1,284 @@
 <div onclick="$('#small-cart').hide(); $(this).next().html('');" class="close"></div>
 <div class="cart-content">
-	Контент корзины<br>
-	Контент корзины<br>
-	Контент корзины<br>
-	Контент корзины<br>
-	Контент корзины<br>
-	Контент корзины<br>
-	Контент корзины<br>
-	Контент корзины<br>
-	Контент корзины<br>
-	Контент корзины<br>
-	Контент корзины<br>
-	Контент корзины<br>
-	Контент корзины<br>
-	Контент корзины<br>
-	Контент корзины<br>
+	<?php if(!isset($items) || empty($items)):?>
+		<h2 class="basket">
+			<?=$viewTranslate['CART_EMPTY'];?>
+		</h2>
+		<div style="padding: 10 0 20 0;">
+			<?=$viewTranslate['VISIT_CATALOGUE'];?> <?=$this->tag->linkTo([['for' => 'catalogue'], $viewTranslate['CATALOGUE']]); ?>
+		</div>
+	<?php else: ?>
+		<?php //var_dump($items); ?>
+		<!-- Заголовок -->
+		<h2 class="basket">
+			<?=$viewTranslate[strtoupper($meta['action'])];?>
+		</h2>
+		<!-- Заголовок -->
+
+		<!-- Информатор скидок -->
+			<?php $this->view->partial('partials/basket/discounts_hover', ['discounts' => $meta['shop_discounts']]); ?>
+		<!-- /Информатор скидок -->
+
+		<!-- Вещи в корзине -->
+		<?php if(sizeof($items) <= 4):?>
+			<table class="small-basket">
+			<tbody>
+				<?php $counter = 0; foreach($items as $product_id => $item): ?>
+				<?php $item['price'] = (!empty($item['discount'])) ? $item['discount'] : $item['price']; ?>
+				<tr class="item-row" id="basket_row_<?=$product_id; ?>">
+
+				<!-- Превью -->
+				<td class="image" preview_id="<?=$product_id; ?>">
+					<div style="z-index: 2;" class="basket-preview">
+						<div style="display: none;"  class="basket-preview-big" id="preview_<?=$product_id; ?>">
+							<img rel="<?=$product_id; ?>" src="http://z95.ru/f/p/150x225/catalogue/<?=$product_id; ?>/<?=$item['images'][0]; ?>">
+						</div>
+					</div>
+					<div style="z-index: 0;" class="basket-preview">
+						<div class="basket-preview-small">
+							<img data-prevs="<?=$product_id; ?>" src="http://z95.ru/f/p/50x75/catalogue/<?=$product_id; ?>/<?=$item['images'][0]; ?>">
+						</div>
+					</div>
+				</td>
+				<!-- /Превью -->
+
+				<!-- Счетчик -->
+				<td preview_id="<?=$product_id; ?>" class="title">
+					<div class="counter"><?=++$counter; ?></div>
+					<a href="<?=$this->url->get('catalogue/'.$item['articul']);?>">
+						<span class="capitalize"><?=$item['name'] ?></span> <?=$item['brand_name']; ?></a><br>
+					(<?php echo $item['articul']; ?>)<br>
+				</td>
+				<!-- /Счетчик -->
+
+				<!-- Разбор размеров и количества -->
+				<?php if(isset($item['size']) && !empty($item['size'])): ?>
+					<td class="sizes">
+						<table align="right" class="small-basket-sizes">
+							<tbody>
+							<?php  foreach($item['size'] as $size => $count): ?>
+								<tr>
+									<td width="50" class="number size">
+										<?php if($size === '?'): ?>
+											<div class="question_size">?</div>
+										<?php elseif($size === 0): ?>
+										<?php else: ?>
+											<?=$size; ?>
+										<?php endif;?>
+									</td>
+									<td width="115" class="input">
+										<button onclick="var ov = $(this).next().val(); var nv = Math.max(0, parseInt(ov)-1); if (nv &lt; ov) { $(this).next().val(nv); basket.recount('<?=$product_id; ?>', '<?php echo $size; ?>', $(this).next().val(), 'small'); }" class="button sign">−</button>
+										<input type="text" onchange="basket.recount('<?=$product_id; ?>', '<?php echo $size; ?>', this.value, 'basket')" onkeyup="basket.recount('<?=$product_id; ?>', '<?php echo $size; ?>', this.value, 'small')" value="<?php echo $count; ?>" id="<?=$product_id; ?>_<?php echo $size; ?>" size="2">
+										<button onclick="var ov = $(this).prev().val(); var nv = Math.min(10, parseInt(ov)+1); if (nv &gt; ov) { $(this).prev().val(nv); basket.recount('<?=$product_id; ?>', '<?php echo $size; ?>', $(this).prev().val(), 'small'); }" class="button sign">+</button>
+										<div style="position:relative;"></div>
+									</td>
+									<td width="10" class="number">x</td>
+									<td width="45" class="number"><?=number_format($item['price'], 0, '.', ' ');?></td>
+									<td width="10" class="number">=</td>
+									<td width="70" class="number recount"><?=number_format(($item['price']* $count), 0, '.', ' '); ?> <?php echo $shop['currency_symbol']; ?></td>
+									<td width="20" align="right">
+										<button onclick="basket.recount('<?=$product_id; ?>', '<?php echo $size ?>', 0, 'small', 0)" class="button delete sign" title="удалить">x</button>
+									</td>
+								</tr>
+							<?php endforeach; ?>
+							</tbody>
+						</table>
+					</td>
+				<?php endif;?>
+				<!-- /Разбор размеров и количества -->
+			</tr>
+			<?php endforeach; ?>
+			<tr>
+				<td class="total" colspan="4">
+					<table align="right" class="total">
+						<tbody>
+							<tr>
+								<td><?=$viewTranslate['BUY_ALL'];?></td>
+								<td class="number"><?=number_format($meta['sum'], 0, '.', ' '); ?> <?php echo $shop['currency_symbol']; ?></td>
+							</tr>
+
+							<!-- Информатор скидок -->
+							<?php $this->view->partial('partials/basket/discounts_footer', ['discounts' => $meta]); ?>
+							<!-- /Информатор скидок -->
+
+							<tr>
+								<td><?=$viewTranslate['DELIVERY_FREE'];?></td>
+								<td class="number"></td>
+							</tr>
+						</tbody>
+					</table>
+				</td>
+			</tr>
+			<tr>
+				<td align="center" style="padding-top:30px;" colspan="4">
+					<button onclick="$('#small-cart').hide(); $(this).next().html('');" class="button"><?=$viewTranslate['CONTINUE_SHOPPING'];?></button>
+					<button onclick="window.location.href='/customer/cart'" class="button"><?=$viewTranslate['GET_BASKET'];?></button>
+				</td>
+			</tr>
+			</tbody>
+		</table>
+		<?php else:?>
+			<table class="small-basket">
+			<tbody>
+			<?php $counter = 0; foreach($items as $product_id => $item): ?>
+				<?php $item['price'] = (!empty($item['discount'])) ? $item['discount'] : $item['price']; ?>
+				<tr class="item-row" id="basket_row_<?=$product_id; ?>" style="<?=($counter > 0) ? 'display:none': ''?>">
+
+					<!-- Превью -->
+					<td class="image" preview_id="<?=$product_id; ?>">
+						<div style="z-index: 2;" class="basket-preview">
+							<div style="display: none;"  class="basket-preview-big" id="preview_<?=$product_id; ?>">
+								<img rel="<?=$product_id; ?>" src="http://z95.ru/f/p/150x225/catalogue/<?=$product_id; ?>/<?=$item['images'][0]; ?>">
+							</div>
+						</div>
+						<div style="z-index: 0;" class="basket-preview">
+							<div class="basket-preview-small">
+								<img data-prevs="<?=$product_id; ?>" src="http://z95.ru/f/p/50x75/catalogue/<?=$product_id; ?>/<?=$item['images'][0]; ?>">
+							</div>
+						</div>
+					</td>
+					<!-- /Превью -->
+
+					<!-- Счетчик -->
+					<td preview_id="<?=$product_id; ?>" class="title">
+						<div class="counter"><?=++$counter; ?></div>
+						<a href="<?=$this->url->get('catalogue/'.$item['articul']);?>">
+							<span class="capitalize"><?=$item['name'] ?></span> <?=$item['brand_name']; ?></a><br>
+						(<?php echo $item['articul']; ?>)<br>
+					</td>
+					<!-- /Счетчик -->
+
+					<!-- Разбор размеров и количества -->
+					<?php if(isset($item['size']) && !empty($item['size'])): ?>
+						<td class="sizes">
+							<table align="right" class="small-basket-sizes">
+								<tbody>
+								<?php  foreach($item['size'] as $size => $count): ?>
+									<tr>
+										<td width="50" class="number size">
+											<?php if($size === '?'): ?>
+												<div class="question_size">?</div>
+											<?php elseif($size === 0): ?>
+											<?php else: ?>
+												<?=$size; ?>
+											<?php endif;?>
+										</td>
+										<td width="115" class="input">
+											<button onclick="var ov = $(this).next().val(); var nv = Math.max(0, parseInt(ov)-1); if (nv &lt; ov) { $(this).next().val(nv); basket.recount('<?=$product_id; ?>', '<?php echo $size; ?>', $(this).next().val(), 'small'); }" class="button sign">−</button>
+											<input type="text" onchange="basket.recount('<?=$product_id; ?>', '<?php echo $size; ?>', this.value, 'basket')" onkeyup="basket.recount('<?=$product_id; ?>', '<?php echo $size; ?>', this.value, 'small')" value="<?php echo $count; ?>" id="<?=$product_id; ?>_<?php echo $size; ?>" size="2">
+											<button onclick="var ov = $(this).prev().val(); var nv = Math.min(10, parseInt(ov)+1); if (nv &gt; ov) { $(this).prev().val(nv); basket.recount('<?=$product_id; ?>', '<?php echo $size; ?>', $(this).prev().val(), 'small'); }" class="button sign">+</button>
+											<div style="position:relative;"></div>
+										</td>
+										<td width="10" class="number">x</td>
+										<td width="45" class="number"><?=number_format($item['price'], 0, '.', ' ');?></td>
+										<td width="10" class="number">=</td>
+										<td width="70" class="number recount"><?=number_format(($item['price']* $count), 0, '.', ' '); ?> <?php echo $shop['currency_symbol']; ?></td>
+										<td width="20" align="right">
+											<button onclick="basket.recount('<?=$product_id; ?>', '<?php echo $size ?>', 0, 'small', 0)" class="button delete sign" title="удалить">x</button>
+										</td>
+									</tr>
+								<?php endforeach; ?>
+								</tbody>
+							</table>
+						</td>
+					<?php endif;?>
+					<!-- /Разбор размеров и количества -->
+				</tr>
+			<?php endforeach; ?>
+
+			<!-- Листинг вещей в баре -->
+			<tr>
+				<td colspan="4">
+					<div class="item_list">
+						<?php $c = 0; $n= 0; foreach($items as $product_id => $itemFoot): ?>
+							<div class="small_item">
+								<div class="small-basket-row-number" style=""><?=++$c; ?></div>
+								<div class="preview" onclick="cartItem.small_item_click(<?=$n;?>);" onmouseover="cartItem.small_item_hover(<?=$n;?>);">
+									<img data-prevs="<?=$itemFoot['product_id']; ?>" src="http://z95.ru/f/p/50x75/catalogue/<?=$itemFoot['product_id']; ?>/<?=$itemFoot['images'][0]; ?>">
+								</div>
+							</div>
+						<?php $n++; endforeach; ?>
+					</div>
+				</td>
+			</tr>
+			<!-- Листинг вещей в баре -->
+
+			<tr>
+				<td class="total" colspan="4">
+					<table align="right" class="total">
+						<tbody>
+						<tr>
+							<td><?=$viewTranslate['BUY_ALL'];?></td>
+							<td class="number"><?=number_format($meta['sum'], 0, '.', ' '); ?> <?php echo $shop['currency_symbol']; ?></td>
+						</tr>
+
+						<!-- Информатор скидок -->
+						<?php $this->view->partial('partials/basket/discounts_footer', ['discounts' => $meta]); ?>
+						<!-- /Информатор скидок -->
+
+						<tr>
+							<td><?=$viewTranslate['DELIVERY_FREE'];?></td>
+							<td class="number"></td>
+						</tr>
+						</tbody>
+					</table>
+				</td>
+			</tr>
+			<tr>
+				<td align="center" style="padding-top:30px;" colspan="4">
+					<button onclick="$('#small-cart').hide(); $(this).next().html('');" class="button"><?=$viewTranslate['CONTINUE_SHOPPING'];?></button>
+					<button onclick="window.location.href='/customer/cart'" class="button"><?=$viewTranslate['GET_BASKET'];?></button>
+				</td>
+			</tr>
+			</tbody>
+		</table>
+		<?php endif;?>
+		<!-- Вещи в корзине -->
+
+		<script type="text/javascript">
+
+			var cartItem = new function () {
+				this.small_item_click = function(i) {
+					var $clicked = $('.small-basket div.small_item .preview.click');
+					if (!$clicked.length) {
+						$('.small-basket div.small_item .preview').eq(i).addClass('click');
+					} else {
+						$('.small-basket div.small_item .preview').eq(i).addClass('click');
+						$clicked.removeClass('click');
+					}
+					this.small_item_select(i);
+				};
+
+				this.small_item_hover = function(i) {
+					if (!$('.small-basket div.small_item .preview.click').length) {
+						this.small_item_select(i);
+					}
+				};
+
+				this.small_item_select = function(i) {
+					$('.small-basket div.small_item .preview').removeClass('selected');
+					$('.small-basket div.small_item .preview').eq(i).addClass('selected');
+					$('.small-basket .item-row').hide();
+					$('.item-row').eq(i).show();
+				};
+			};
+
+			$('.small-basket td[preview_id]').each(function (i, el) {
+				var $preview_id = $('#preview_'+$(el).attr('preview_id'));
+				$(el).hover(
+					function () {
+						var img = $('img', $preview_id)[0];
+						if (img.complete) {
+							$preview_id.show();
+						}
+					},
+					function () {
+						$preview_id.hide();
+					}
+				)
+			});
+		</script>
+	<?php endif; ?>
 </div>
+
+
