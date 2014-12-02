@@ -1782,30 +1782,6 @@ var basket = new function() {
         }
         return true;
     };
-
-    this.small_item_click = function(i) {
-        var $clicked = $('.small-basket div.small_item .preview.click');
-        if (!$clicked.length) {
-            $('.small-basket div.small_item .preview').eq(i).addClass('click');
-        } else {
-            $('.small-basket div.small_item .preview').eq(i).addClass('click');
-            $clicked.removeClass('click');
-        }
-        this.small_item_select(i);
-    };
-
-    this.small_item_hover = function(i) {
-        if (!$('.small-basket div.small_item .preview.click').length) {
-            this.small_item_select(i);
-        }
-    };
-
-    this.small_item_select = function(i) {
-        $('.small-basket div.small_item .preview').removeClass('selected');
-        $('.small-basket div.small_item .preview').eq(i).addClass('selected');
-        $('.small-basket .item-row').hide();
-        $('.item-row').eq(i).show();
-    };
 };
 
 get_client_info = function(){
