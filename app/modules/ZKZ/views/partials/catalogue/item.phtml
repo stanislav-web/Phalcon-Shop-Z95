@@ -7,18 +7,8 @@
 			или <a onclick="$('#CATALOGUE_SEARCH')[0].focus(); return false;" href="#">изменить</a> условия поиска
 		</p>
 	</div>
-	<?php return; endif; ?>
-<?php
-	// скидки на вещи в магазине исходя из суммы покупок
-	if((isset($minicart) && !empty($minicart)) || !empty($shop['discounts']))
-	{
-		// получаю скидки магазина на вещи
+<?php return; endif; ?>
 
-		$shopDiscounts = \Helpers\Cart::getMaxDiscount($shop['discounts'], $minicart);
-		if(!empty($minicart) && $minicart['count'] > 0)
-			$buyes	=	\Helpers\Cart::getBasketSizes($basket);
-	}
-?>
 <div class="go-container prev" style="margin-left: 175px; display: block;" title="Предыдущая фотография">
 	<div class="button"></div>
 </div>
@@ -96,39 +86,38 @@
 			<div class="item_info">
 			</div>
 
+			<!-- Цены -->
 			<div class="prices">
-
 				<div class="price">
-					Цена:
-					<br>
-			<span class="price">
-				<?php if($item['discount'] !== null || !empty($item['discount'])) { ?>
-					<s><?php echo (int)$item['price']; ?></s>
-					<?php echo (int)$item['discount']; ?>
-				<?php } else { ?>
-					<?php echo (int)$item['price']; ?>
-				<?php } ?>
-			</span>
-					<?php echo $shop['currency_symbol']; ?>
+					Цена:<br>
+					<span class="price">
+						<?php if($item['discount'] !== null || !empty($item['discount'])): ?>
+							<s><?=number_format($item['price'], 0, '.', ' '); ?></s>
+							<?=number_format($item['discount'], 0, '.', ' '); ?>
+						<?php else: ?>
+							<?=number_format($item['price'], 0, '.', ' '); ?>
+						<?php endif; ?>
+					</span>
+					<?=$shop['currency_symbol'];?>
 				</div>
-
-				<?php if(isset($shopDiscounts) && ($shopDiscounts['current'] > 0 || (isset($shopDiscounts['next']) &&  $shopDiscounts['next'] > 0))): // расчет цены исходя из скидок магазина ?>
-					<?php if(!isset($shopDiscounts['next'])): ?>
+				<?php if(isset($minicart['meta']) && ($minicart['meta']['shop_discounts']['current'] > 0 || (isset($minicart['meta']['shop_discounts']['next']) &&  $minicart['meta']['shop_discounts']['next'] > 0))): // расчет цены исходя из скидок магазина ?>
+					<?php if(!isset($minicart['meta']['shop_discounts']['next'])): ?>
 						<div class="price discount_price">
-							<?printf($viewTranslate['ITEM_DISCOUNT_MAX'], $shopDiscounts['current']);?>
+							<?printf($viewTranslate['ITEM_DISCOUNT_MAX'], $minicart['meta']['shop_discounts']['current']);?>
 						</div>
 					<?php else: ?>
 						<div class="price discount_price">
-							<?php if($shopDiscounts['type'] == 'count'): ?>
-								<?printf($viewTranslate['ITEM_DISCOUNT_COUNT'], $shopDiscounts['next'], $shopDiscounts['board'][$shopDiscounts['next']]);?>
+							<?php if($minicart['meta']['shop_discounts']['type'] == 'count'): ?>
+								<?printf($viewTranslate['ITEM_DISCOUNT_COUNT'], $minicart['meta']['shop_discounts']['next'], $minicart['meta']['shop_discounts']['board'][$minicart['meta']['shop_discounts']['next']]);?>
 							<?php else: ?>
-								<?printf($viewTranslate['ITEM_DISCOUNT_SUM'], $shopDiscounts['next'], $shopDiscounts['board'][$shopDiscounts['next']], $shop['currency_symbol']);?>
+								<?printf($viewTranslate['ITEM_DISCOUNT_SUM'], $minicart['meta']['shop_discounts']['next'], $minicart['meta']['shop_discounts']['board'][$minicart['meta']['shop_discounts']['next']], $shop['currency_symbol']);?>
 							<?php endif; ?>
-							<span class="price"><?=round($item['discount'] - ($item['discount'] * $shopDiscounts['next']) / 100);?></span> <?=$shop['currency_symbol'];?>
+							<span class="price"><?=round($item['discount'] - ($item['discount'] * $minicart['meta']['shop_discounts']['next']) / 100);?></span> <?=$shop['currency_symbol'];?>
 						</div>
 					<?php endif; ?>
 				<?php endif;?>
 			</div>
+			<!-- /Цены -->
 
 			<?php if (isset($item['tags'])): ?>
 				<?php if (isset($item['tags']['made_in']) && $item['tags']['made_in'] != 'Китай'): ?>
@@ -165,21 +154,14 @@
 			<br clear="all">
 			<div class="sizes_win">
 				<!-- Добавление в корзину -->
-				<?php $this->partial('partials/catalogue/item_add'); ?>
-				<!-- Добавление в корзину  -->
+				<?php $this->partial('partials/catalogue/item_add', ['minicart' => $minicart]); ?>
+				<!-- /Добавление в корзину  -->
 			</div>
 
-			<div class="delivery_info">
-				<h3>Доставка</h3><ul class="service_info">
-					<li>Оплата при получении в любом городе РФ.</li>
-					<li>Доставка заказа за 5 дней!</li>
-					<li>Возможность обмена/возврата после получения!</li></ul>			</div>
-			<div style="padding-top:20px;" class="social">
-				<div id="vk_like"></div>
-				<script type="text/javascript">
-					//VK.Widgets.Like("vk_like", {type: "mini"});
-				</script>
-			</div>
+			<!-- Сервисы доставки  -->
+				<?php $this->partial('partials/catalogue/delivery', ['delivery' => $delivery]); ?>
+			<!-- Сервисы доставки  -->
+
 			<!--<button onclick="global.go({url:''});" type="button" class="add-button button" id="add">Все товары <?php echo $item['brand']; ?></button>-->
 		</td>
 	</tr>
@@ -230,17 +212,6 @@
 			$('#img_main').trigger('load');
 		}
 		$('#zz_button').show();
-
-		/*
-		 $.ajax({
-		 url:'http://img2.z95.ru/f/p/1000x1400/catalogue/59831/bIMG_3167.jpg',
-		 type:'HEAD',
-		 success:
-		 function(){
-		 $('#zz_button').show();
-		 }
-		 });
-		 */
 	});
 </script>
 

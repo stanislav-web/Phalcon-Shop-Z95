@@ -38,13 +38,6 @@ class CartController extends ControllerBase
 	private
 
 		/**
-		 * @var string
-		 * @see $this->setStatus(string $status);
-		 * @access private
-		 */
-		$_status		=	null,
-
-		/**
 		 * Будет ли ответ в json ?
 		 * Только для ajax  вызовов
 		 * @var bool
@@ -82,13 +75,18 @@ class CartController extends ControllerBase
 		{
 			// обычная загрузка корзины
 			$this->tag->setTitle($this->_shop['title']);
+
+			// Получаю баннер для страницы
+			$banner = $this->bannersModel->getBanners($this->_shop['id'], true);
+
+			// ну и баннер на каждой странице ))
+			$this->view->setVar('banner', $banner);
 			$this->_isJsonResponse = false;
 		}
 	}
 
 	/**
-	 * initialize() Инициализация конструктора
-	 *
+	 * Выдача в главной корзине
 	 * @access public
 	 * @return null
 	 */
@@ -105,10 +103,17 @@ class CartController extends ControllerBase
 		$this->_breadcrumbs
 			->add($this->_translate['MAIN'], '/')
 			->add($title, $this->request->getURI());
+
+		if($this->session->has('cart') && !empty($this->session->get('cart')['items']))
+			$this->view->setVars($this->session->get('cart'));
+		else
+			$this->session->remove('cart');
+
+		$this->view->setVar('title', $title);
 	}
 
 	/**
-	 * Добавление обновление корзины
+	 * Добавление обновление, перекалькуляция корзины
 	 */
 	public function setAction()
 	{
@@ -120,22 +125,23 @@ class CartController extends ControllerBase
 
 			if(isset($postData['mode']) && $this->request->has('hash'))
 			{
+				if($postData['action'] != 'read')
+				{
+					// проверка переполнения корзины
+					if(Cart::overflowItems(@$sessionData['items'], $this->_config->limitMax))
+						return $this->json(['message' => $this->setMessage('Превышен лимит добавления. Не более '.$this->_config->limitMax)]);
 
-				// проверка переполнения корзины
-				if(Cart::overflowItems(@$sessionData['items'], $this->_config->limitMax))
-					return $this->json(['message' => $this->setMessage('Превышен лимит добавления. Не более '.$this->_config->limitMax)]);
-
-				// проверка лимита на размеры в корзине
-				if(Cart::overflowSizes(@$sessionData['items'], $this->_config->limitOne))
-					return $this->json(['message' => $this->setMessage('Превышен лимит добавления размера. Не более '.$this->_config->limitOne.' размеров для этой вещи')]);
-
+					// проверка лимита на размеры в корзине
+					if(Cart::overflowSizes(@$sessionData['items'], $this->_config->limitOne))
+						return $this->json(['message' => $this->setMessage('Превышен лимит добавления размера. Не более '.$this->_config->limitOne.' размеров для этой вещи')]);
+				}
 
 				// получаю вещи со свежими ценами (существующие всегда перезаписываются)
 				if(isset($sessionData['items']) || isset($postData['product_id']))
 					$dbData = $this->productsModel->get(
-						['prod.id as product_id', 'prod.name', 'prod.articul', 'prod.images', 'price.price', 'price.discount', 'brand.name as brand_name',
+						['prod.id as product_id', 'prod.name', 'prod.articul', 'prod.images', 'prod.filter_size', 'price.price', 'price.discount', 'brand.name as brand_name',
 						'brand.alias as brand_alias', 'price.price', 'price.discount', 'price.percent'],
-						['product_id' => Cart::pushItem($sessionData['items'], @$postData['product_id']), 'price.id' => $this->_shop['price_id']]
+						['product_id' => Cart::pushItem(@$sessionData['items'], @$postData['product_id']), 'price.id' => $this->_shop['price_id']]
 					);
 				else $dbData	=	[];
 
@@ -148,7 +154,10 @@ class CartController extends ControllerBase
 					$cart['meta']['action']	=	$this->request->getPost('action');
 
 				// ну и перезаписываю данные сессии
-				$this->session->set('cart', $cart);
+				if(!empty($cart['items']))
+					$this->session->set('cart', $cart);
+				else
+					$this->session->remove('cart');
 			}
 			else
 				return $this->json(['message' => $this->setMessage('Переданы не верные данные')]);
@@ -156,6 +165,7 @@ class CartController extends ControllerBase
 			$this->json([
 				'hash'		=>	$this->request->getQuery('hash'),
 				'mode'		=>	$this->request->getPost('mode'),
+				'minicart'	=>	$this->session->get('cart')['meta']
 			], $this->request->getPost('mode'));
 		}
 	}
@@ -167,6 +177,7 @@ class CartController extends ControllerBase
 	public function setConfig(\Phalcon\Config $config)
 	{
 		$this->_config	=	$config->cart;
+		$this->view->setVar('config', $this->_config);
 	}
 
 	/**
@@ -188,6 +199,7 @@ class CartController extends ControllerBase
 	/**
 	 * access public Парсер array to json
 	 * @param array $content
+	 * @param array template
 	 */
 	public function json(array $content, $template = null)
 	{

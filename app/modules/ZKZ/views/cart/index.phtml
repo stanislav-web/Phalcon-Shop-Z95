@@ -1,3 +1,39 @@
 <!-- Корзина покупок -->
-Коризна
+<div class="column main-column">
+	<?php if(isset($banner['inner']) && !empty($banner['inner'])): ?>
+		<div class="inner_teaser">
+			<a href="<?=$this->url->get(['for' => 'sale']);?>" >
+				<?= $this->tag->image(array('f/t/'.$banner['inner'][0]['image'])); ?>
+			</a>
+		</div>
+	<?endif;?>
+	<div id="CONTENT">
+		<h1><?=$title;?></h1>
+		<?php if(!empty($breadcrumbs)): ?>
+			<!-- Bread Crumbs -->
+			<ul class="Thermo">
+				<?php foreach($breadcrumbs as $crumb): ?>
+					<li>
+						<?=($crumb['active']) ? $crumb['text'] : $this->tag->linkTo($crumb['link'], $crumb['text']).' / '; ?>
+					</li>
+				<?php endforeach; ?>
+			</ul>
+			<!-- Bread Crumbs -->
+		<?php endif; ?>
+		<div class="clear"></div>
+		<div class="_cart" id="SHOPPING_CART">
+			<div class="hr"></div>
+			<?php if(isset($items) && !empty($items)): ?>
+				<!-- Выдача в корзине -->
+				<?php $this->view->partial('partials/cart/big-cart'); ?>
+				<!-- /Выдача в корзине -->
+			<?php else: ?>
+				<h2 class="basket"><?=$viewTranslate['CART_EMPTY'];?></h2>
+				<div style="padding: 10 0 20 0;">
+					<?=$viewTranslate['VISIT_CATALOGUE'];?> <?=$this->tag->linkTo([['for' => 'catalogue'], $viewTranslate['CATALOGUE']]); ?>
+				</div>
+			<?php endif; ?>
+		</div>
+	</div>
+</div>
 <!-- Корзина покупок -->

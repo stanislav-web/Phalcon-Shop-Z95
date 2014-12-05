@@ -1,0 +1,25 @@
+<div class="top-cart">
+	<div class="cart" onclick="Cart.set()">
+		<img src="/assets/<?php echo $shop['code']; ?>/images/z95ru/icon-cart.png" />
+	</div>
+	<h3>
+		<?=$this->tag->linkTo('customer/cart', $viewTranslate['CART']); ?>
+	</h3>
+
+	<span id="mini-cart" class="basket-mini <?=(empty($minicart)) ? 'hidden' : '';?>">
+		<span rel="total">
+			<?=!(empty($minicart['meta']['total'])) ? \Helpers\Catalogue::declOfNum($minicart['meta']['total'], ['вещь', 'вещи', 'вещей'], true): ''?>
+		</span> на
+		<span rel="sum">
+			<?=(!empty($minicart['meta']['sum'])) ? number_format($minicart['meta']['sum'], 0, '.', ' ') : '';?>
+		</span> <?=$shop['currency_symbol']; ?>
+		<?php if($minicart['meta']['shop_discounts']['current'] > 0): ?>
+		<div class="number discount">
+			с учетом скидки
+			<span rel="discount_sum">
+				<?=(!empty($minicart['meta']['shop_discounts']['discount_sum'])) ? number_format($minicart['meta']['shop_discounts']['discount_sum'], 0, '.', ' ') : '';?>
+			</span> <?php echo $shop['currency_symbol'] ?>
+		</div>
+		<?php endif;?>
+	</span>
+</div>

@@ -1,38 +1,54 @@
-<form autocomplete="off">
+<form autocomplete="off" data-send="<?= $item['product_id'] ?>">
 	<input type="hidden" name="product_id" value="<?=$item['product_id']; ?>">
 	<input type="hidden" name="mode" value="small-cart">
 	<input type="hidden" name="action" value="item_added">
 	<div onclick="$(this).fadeOut();" id="warning" class="warning hidden"></div>
 	<div class="sizes">
 		<div class="message"></div>
-		<?php if(null !== $item['filter_size']): ?>
-			<?php foreach($item['filter_size'] as $size): ?>
-				<?php $check = (isset($buyes[$item['product_id']][$size])) ? ['l' => 'title="'.$viewTranslate["SIZE_EXIST"].'"', 'd' => 'disabled="true" checked="true"'] : ['l' => '', 'd' => '']; ?>
-				<label  <?=$check['l'];?>>
+		<?php $add = $sizes; if(array_key_exists(0, $sizes));
+			unset($sizes[0]); ?>
+		<?php if(!empty($sizes)): ?>
+			<?php foreach($sizes as $size => $count): ?>
+				<?php $check = (\Helpers\Cart::isSizeHere($minicart, $item['product_id'], $size) || $count < 1) ? ['l' => 'title="'.$viewTranslate["SIZE_EXIST"].'"', 'd' => 'disabled="true" checked="true"'] : ['l' => '', 'd' => '']; ?>
+				<label <?=$check['l'];?>>
 					<span>
 						<div class="size-chooser"> <?=$size; ?> </div>
-						<input <?=$check['d'];?> name="size[<?=$size; ?>]" type="checkbox" value="1">
+						<input <?=$check['d'];?> id="s<?=$item['product_id'];?>" name="size[<?=$size; ?>]" type="checkbox" value="1">
 					</span>
 				</label>
 			<?php endforeach; ?>
 			<input type="hidden" name="quantity" value="multiple">
+			<div style="clear:both"></div>
+			<label class="size-undefined">
+				<div class="size-chooser">
+					<input type="checkbox" name="size[?]" id="s<?=$item['product_id'];?>" value="1" <?=(\Helpers\Cart::isSizeHere($minicart, $item['product_id'], '?')) ? ' disabled="true" checked="true"' : ''; ?>>
+					Не уверен в размере &mdash; хочу обсудить с менеджером
+				</div>
+			</label>
 		<?php else: ?>
+			<?php $check = (\Helpers\Cart::isSizeHere($minicart, $item['product_id'], '0')) ? ['l' => 'title="'.$viewTranslate["SIZE_EXIST"].'"', 'd' => 'disabled="true" checked="true"'] : ['l' => '', 'd' => '']; ?>
 			<input type="hidden" name="quantity" value="single">
+			<input type="hidden" <?=$check['d'];?> name="size[0]" id="s<?=$item['product_id'];?>" type="checkbox" value="1">
 		<?php endif;?>
-		<div style="clear:both"></div>
-		<label class="size-undefined">
-			<div class="size-chooser">
-				<input type="checkbox" name="size[?]" value="1" <?=(isset($buyes[$item['product_id']]['?'])) ? ' disabled="true" checked="true"' : ''; ?>>
-				Не уверен в размере &mdash; хочу обсудить с менеджером
-			</div>
-		</label>
 	</div>
 
 	<div style="clear:both"></div>
-	<div onclick="Cart.addBefore($(this).closest('form'));" class="add-button">
-		<?=$viewTranslate["ADD_TO_CART"];?>
-	</div>
+	<?php if(isset($add[0]) && $add[0] < 1):?>
+	<strong><?=$viewTranslate["NOT_IN_STORE"];?></strong>
+	<?php else:?>
+		<div onclick="Cart.addBefore($(this).closest('form'));" class="add-button">
+			<?=$viewTranslate["ADD_TO_CART"];?>
+		</div>
+	<?php endif;?>
 </form>
+
+<!-- Избранное -->
+<div id="fav_icon_<?= $item['product_id'] ?>"
+	 onclick="catalogue.addFavorites(<?= $item['product_id'] ?>, this)" src="/assets/<?=$shop['code'];?>/images/d-t.gif"
+	 class="<?=(isset($favorites[$item['product_id']])) ? 'like_on' : 'like_off' ?>">
+	<span id="fav_text_<?=$item['product_id'];?>"><?=(isset($favorites[$item['product_id']])) ? 'Больше не нравится' : 'Понравилось'; ?></span>
+</div>
+<!-- /Избранное -->
 
 <div id="cartNotify" class="status message" onclick="global.hideStatus('message');">
 	<div class="message">

@@ -1154,12 +1154,14 @@ window.matchMedia=window.matchMedia||(function(e,f){var c,a=e.documentElement,b=
         if (cat_id) {
             $.get('/json/favorites/?item='+cat_id, '',
                 function(data) {
+                    console.log(data);
                         if (data.status == 0) {
                             $('#fav_icon_'+data.id).attr('class', 'like_off');
-                            $('#fav_text_'+data.id).html('Больше не нравится');
+                            $('#fav_text_'+data.id).html('Понравилось');
                         } else if (data.status == 1) {
                             $('#fav_icon_'+data.id).attr('class', 'like_on');
-                            $('#fav_text_'+data.id).html('Понравилось');
+                            $('#fav_text_'+data.id).html('Больше не нравится');
+
                         }
                         $('#FavoritesCount').html(data.count);
                 },
@@ -1805,7 +1807,7 @@ get_client_info.prototype = {
             var dataString = data[i].string;
             var dataProp = data[i].prop;
             this.versionSearchString = data[i].versionSearch || data[i].identity;
-            if (dataString)
+            if(dataString)
             {
                 if (dataString.indexOf(data[i].subString) != -1)
                     return data[i].identity;

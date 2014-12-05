@@ -8,7 +8,6 @@
 			<?=$viewTranslate['VISIT_CATALOGUE'];?> <?=$this->tag->linkTo([['for' => 'catalogue'], $viewTranslate['CATALOGUE']]); ?>
 		</div>
 	<?php else: ?>
-		<?php //var_dump($items); ?>
 		<!-- Заголовок -->
 		<h2 class="basket">
 			<?=$viewTranslate[strtoupper($meta['action'])];?>
@@ -16,7 +15,7 @@
 		<!-- Заголовок -->
 
 		<!-- Информатор скидок -->
-			<?php $this->view->partial('partials/basket/discounts_hover', ['discounts' => $meta['shop_discounts']]); ?>
+			<?php $this->view->partial('partials/cart/discounts_hover', ['discounts' => $meta['shop_discounts']]); ?>
 		<!-- /Информатор скидок -->
 
 		<!-- Вещи в корзине -->
@@ -54,6 +53,11 @@
 				<!-- Разбор размеров и количества -->
 				<?php if(isset($item['size']) && !empty($item['size'])): ?>
 					<td class="sizes">
+						<form autocomplete="off" data-send="<?= $item['product_id'] ?>">
+						<input type="hidden" name="product_id" value="<?=$product_id; ?>">
+						<input type="hidden" name="mode" value="small-cart">
+						<input type="hidden" name="action" value="item_update">
+						<input type="hidden" name="quantity" value="single">
 						<table align="right" class="small-basket-sizes">
 							<tbody>
 							<?php  foreach($item['size'] as $size => $count): ?>
@@ -67,22 +71,34 @@
 										<?php endif;?>
 									</td>
 									<td width="115" class="input">
-										<button onclick="var ov = $(this).next().val(); var nv = Math.max(0, parseInt(ov)-1); if (nv &lt; ov) { $(this).next().val(nv); basket.recount('<?=$product_id; ?>', '<?php echo $size; ?>', $(this).next().val(), 'small'); }" class="button sign">−</button>
-										<input type="text" onchange="basket.recount('<?=$product_id; ?>', '<?php echo $size; ?>', this.value, 'basket')" onkeyup="basket.recount('<?=$product_id; ?>', '<?php echo $size; ?>', this.value, 'small')" value="<?php echo $count; ?>" id="<?=$product_id; ?>_<?php echo $size; ?>" size="2">
-										<button onclick="var ov = $(this).prev().val(); var nv = Math.min(10, parseInt(ov)+1); if (nv &gt; ov) { $(this).prev().val(nv); basket.recount('<?=$product_id; ?>', '<?php echo $size; ?>', $(this).prev().val(), 'small'); }" class="button sign">+</button>
-										<div style="position:relative;"></div>
+										<button onclick="var ov = $(this).next().val(); var nv = Math.max(0, parseInt(ov)-1); if (nv < ov) { $(this).next().val(nv); }  return Cart.isValid(event, $(this).next());" class="button sign">−</button>
+										<input type="text"
+											   maxlength="2"
+											   size="2"
+											   name="size[<?=$size;?>]"
+											   data-limitone="<?=$config->limitOne;?>"
+											   data-limitmax="<?=$config->limitMax;?>"
+											   data-cart="<?=$meta['total'];?>"
+											   data-storage="<?=@json_decode($item['filter_size'], true)[$size];?>"
+											   onkeypress="return Cart.isNumber(event);"
+											   onkeyup="return Cart.isValid(event, $(this));"
+											   class="itemsRange"
+											   value="<?php echo $count; ?>">
+										<button onclick="var ov = $(this).prev().val(); var nv = Math.min(<?=$config->limitOne;?>, parseInt(ov)+1); if (nv > ov) { $(this).prev().val(nv); } return Cart.isValid(event, $(this).prev());" class="button sign">+</button>
+										<div onclick="$(this).fadeOut();" class="cart-bubble bubble-top hidden"></div>
 									</td>
 									<td width="10" class="number">x</td>
 									<td width="45" class="number"><?=number_format($item['price'], 0, '.', ' ');?></td>
 									<td width="10" class="number">=</td>
 									<td width="70" class="number recount"><?=number_format(($item['price']* $count), 0, '.', ' '); ?> <?php echo $shop['currency_symbol']; ?></td>
 									<td width="20" align="right">
-										<button onclick="basket.recount('<?=$product_id; ?>', '<?php echo $size ?>', 0, 'small', 0)" class="button delete sign" title="удалить">x</button>
+										<button onclick='Cart.remove({"product_id" : "<?=$product_id; ?>", "mode" : "small-cart", "action" : "read", "quantity" : "single", "size[<?=$size;?>]" : "0"}); return false;' class="button delete sign" title="удалить">x</button>
 									</td>
 								</tr>
 							<?php endforeach; ?>
 							</tbody>
 						</table>
+						</form>
 					</td>
 				<?php endif;?>
 				<!-- /Разбор размеров и количества -->
@@ -98,7 +114,7 @@
 							</tr>
 
 							<!-- Информатор скидок -->
-							<?php $this->view->partial('partials/basket/discounts_footer', ['discounts' => $meta]); ?>
+							<?php $this->view->partial('partials/cart/discounts_footer', ['discounts' => $meta]); ?>
 							<!-- /Информатор скидок -->
 
 							<tr>
@@ -151,6 +167,11 @@
 					<!-- Разбор размеров и количества -->
 					<?php if(isset($item['size']) && !empty($item['size'])): ?>
 						<td class="sizes">
+							<form autocomplete="off" data-send="<?= $item['product_id'] ?>">
+							<input type="hidden" name="product_id" value="<?=$product_id; ?>">
+							<input type="hidden" name="mode" value="small-cart">
+							<input type="hidden" name="action" value="item_update">
+							<input type="hidden" name="quantity" value="single">
 							<table align="right" class="small-basket-sizes">
 								<tbody>
 								<?php  foreach($item['size'] as $size => $count): ?>
@@ -164,22 +185,34 @@
 											<?php endif;?>
 										</td>
 										<td width="115" class="input">
-											<button onclick="var ov = $(this).next().val(); var nv = Math.max(0, parseInt(ov)-1); if (nv &lt; ov) { $(this).next().val(nv); basket.recount('<?=$product_id; ?>', '<?php echo $size; ?>', $(this).next().val(), 'small'); }" class="button sign">−</button>
-											<input type="text" onchange="basket.recount('<?=$product_id; ?>', '<?php echo $size; ?>', this.value, 'basket')" onkeyup="basket.recount('<?=$product_id; ?>', '<?php echo $size; ?>', this.value, 'small')" value="<?php echo $count; ?>" id="<?=$product_id; ?>_<?php echo $size; ?>" size="2">
-											<button onclick="var ov = $(this).prev().val(); var nv = Math.min(10, parseInt(ov)+1); if (nv &gt; ov) { $(this).prev().val(nv); basket.recount('<?=$product_id; ?>', '<?php echo $size; ?>', $(this).prev().val(), 'small'); }" class="button sign">+</button>
-											<div style="position:relative;"></div>
+											<button onclick="var ov = $(this).next().val(); var nv = Math.max(0, parseInt(ov)-1); if (nv < ov) { $(this).next().val(nv); }  return Cart.isValid(event, $(this).next());" class="button sign">−</button>
+											<input type="text"
+												   maxlength="2"
+												   size="2"
+												   name="size[<?=$size;?>]"
+												   data-limitone="<?=$config->limitOne;?>"
+												   data-limitmax="<?=$config->limitMax;?>"
+												   data-cart="<?=$meta['total'];?>"
+												   data-storage="<?=@json_decode($item['filter_size'], true)[$size];?>"
+												   onkeypress="return Cart.isNumber(event);"
+												   onkeyup="return Cart.isValid(event, $(this));"
+												   class="itemsRange"
+												   value="<?php echo $count; ?>">
+											<button onclick="var ov = $(this).prev().val(); var nv = Math.min(<?=$config->limitOne;?>, parseInt(ov)+1); if (nv > ov) { $(this).prev().val(nv); } return Cart.isValid(event, $(this).prev());" class="button sign">+</button>
+											<div onclick="$(this).fadeOut();" class="cart-bubble bubble-top hidden"></div>
 										</td>
 										<td width="10" class="number">x</td>
 										<td width="45" class="number"><?=number_format($item['price'], 0, '.', ' ');?></td>
 										<td width="10" class="number">=</td>
 										<td width="70" class="number recount"><?=number_format(($item['price']* $count), 0, '.', ' '); ?> <?php echo $shop['currency_symbol']; ?></td>
 										<td width="20" align="right">
-											<button onclick="basket.recount('<?=$product_id; ?>', '<?php echo $size ?>', 0, 'small', 0)" class="button delete sign" title="удалить">x</button>
+											<button onclick='Cart.remove({"product_id" : "<?=$product_id; ?>", "mode" : "small-cart", "action" : "read", "quantity" : "single", "size[<?=$size;?>]" : "0"}); return false;' class="button delete sign" title="удалить">x</button>
 										</td>
 									</tr>
 								<?php endforeach; ?>
 								</tbody>
 							</table>
+							</form>
 						</td>
 					<?php endif;?>
 					<!-- /Разбор размеров и количества -->
@@ -213,7 +246,7 @@
 						</tr>
 
 						<!-- Информатор скидок -->
-						<?php $this->view->partial('partials/basket/discounts_footer', ['discounts' => $meta]); ?>
+						<?php $this->view->partial('partials/cart/discounts_footer', ['discounts' => $meta]); ?>
 						<!-- /Информатор скидок -->
 
 						<tr>

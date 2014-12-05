@@ -2234,12 +2234,11 @@ blockquote {
 .capitalize:first-letter {
     text-transform: uppercase;
 }
-#SHOPPING_CART {
+#big.cart {
     padding: 0;
     position: relative;
 }
-#BASKET_INFO {
-}
+
 .Basket {
     width: 100%;
 }
@@ -2287,7 +2286,7 @@ blockquote {
     margin: 0 0 0.5em;
     padding-bottom: 0.5em;
 }
-#small-cart a {
+#small-cart a, #big-cart a {
     color: #000000;
 }
 #small-cart .close, .measured_sizes .close, .tags-filter .close {
@@ -2858,7 +2857,7 @@ input.search_field:focus {
 .bubble-top {
     margin-top: 20px;
 }
-.bubble:after, .bubble:before {
+.bubble:after, .bubble:before, .cart-bubble:after, .cart-bubble:before {
     border: medium solid transparent;
     bottom: 100%;
     content: " ";
@@ -2866,17 +2865,26 @@ input.search_field:focus {
     position: absolute;
     width: 0;
 }
-.bubble:after {
+.bubble:after, .cart-bubble:after {
     border-bottom-color: #ffffff;
     border-width: 10px;
     left: 50%;
     margin-left: -10px;
 }
-.bubble:before {
+.bubble:before, .cart-bubble:before {
     border-bottom-color: #d7d7d7;
     border-width: 11px;
     left: 50%;
     margin-left: -11px;
+}
+
+.cart-bubble {
+    background: none repeat scroll 0 0 #ffffff;
+    border: 1px solid #d7d7d7;
+    padding: 10px 20px;
+    position: absolute;
+    width: 290px;
+    z-index: 500;
 }
 .bubble-left:after, .bubble-left:before {
     border: medium solid transparent;

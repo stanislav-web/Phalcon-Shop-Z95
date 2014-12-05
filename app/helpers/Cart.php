@@ -27,6 +27,7 @@
 			'brand_alias',
 			'category_alias',
 			'percent',
+			'filter_size',
 			'size',
 		];
 
@@ -68,7 +69,7 @@
 		{
 			if(!empty($items))
 			{
-				if(sizeof($items) >= $itemsLimit)
+				if(sizeof($items) > $itemsLimit)
 					return true;
 			}
 			return false;
@@ -93,7 +94,7 @@
 						foreach($properties['size'] as $size => $count)
 						{
 							// корзина переполнена размерами
-							if($count >= $sizeLimit)
+							if($count > $sizeLimit)
 								return true;
 						}
 					}
@@ -145,41 +146,57 @@
 			else
 				return ['meta'	=>	['total' => 0, 'sum' => 0]];
 
-			// считаю сумму покупок по скидке товара `discount`
-
 			if(isset($result['items']) && !empty($result['items']))
 			{
+				// считаю сумму покупок по скидке товара `discount`
+
 				foreach($result['items'] as $product_id => $properties)
 				{
-					if(!empty($properties['size']))
+					// проверка ключа со строгой типизацией, так как размер есть и нулевой, поэтому привожу результат к строке
+					$key = (string)array_search("0", $result['items'][$product_id]['size'], true);
+
+					if($key != '')
+						unset($result['items'][$product_id]['size'][$key]);
+
+					// проверяю, есть ли ключи (размеры) внутри [size]
+
+					if(sizeof(array_keys($result['items'][$product_id]['size'])) > 0)
+					{
 						$result['items'][$product_id]['meta']	=  call_user_func(function() use ($properties) {
 
-								$total	=	0;
+							$total	=	0;
+							$price	=	0;
 
-								if(!empty($properties['size']))
-									foreach($properties['size'] as $size => $count)
-										if($size !='?') $total	+=	$count;
+							if($properties['size'] != '')
+							{
+								foreach($properties['size'] as $size => $count)
+									if($size !=='?') $total	+=	$count;
 
 								$price 	=	(!empty($properties['discount'])) ? $properties['discount'] : $properties['price'];
-
-								return ['total' => $total, 'sum' => $total*$price];
+							}
+							return ['total' => $total, 'sum' => $total*$price];
 						});
+					}
+					else  // уничтожаю товар так как в нем нет размеров
+						unset($result['items'][$product_id]);
 				}
 
 				// подсчитываю общую мета информацию по корзине, (сколько в сумме и по сколько)
+				if(!empty($result['items']))
+				{
+					$result['meta']	=	call_user_func(function() use ($result) {
 
-				$result['meta']	=	call_user_func(function() use ($result) {
+						$total	=	0;
+						$sum	=	0;
 
-					$total	=	0;
-					$sum	=	0;
-
-					foreach($result['items'] as $product_id => $properties)
-						if(!empty($properties['meta'])) {
-							$total	+=	$properties['meta']['total'];
-							$sum	+=	$properties['meta']['sum'];
-						}
-					return ['total' => $total, 'sum' => $sum];
-				});
+						foreach($result['items'] as $product_id => $properties)
+							if(!empty($properties['meta'])) {
+								$total	+=	$properties['meta']['total'];
+								$sum	+=	$properties['meta']['sum'];
+							}
+						return ['total' => $total, 'sum' => $sum];
+					});
+				}
 			}
 			return $result;
 		}
@@ -300,6 +317,10 @@
 			if($result['current'] == $result['next'])
 				unset($result['next']);
 
+			// получаю полну сумму со скидкой
+			if(isset($result['type']))
+				$result['discount_sum']	=	($meta['sum']  - ($meta['sum'] * $result['current'])/100);
+
 			// проверяю дату действия
 
 			if(isset($discounts['period']['start']) && isset($discounts['period']['end']))
@@ -321,23 +342,32 @@
 		}
 
 		/**
-		 * getBasketSizes(array $items) получение размеров купленных товаров
-		 * для выдачи в каталоге. В дальнейшем сравнивается с размерами и помечает их как добавленные
+		 * isSizeHere(array $cart = [], $product_id, $size) Проверка товара с размером на присутствие в корзине
 		 *
-		 * @param array $item
-		 * @return array | null
+		 * @param array $cart	товары в корзине (из сессии)
+		 * @param       $product_id сравниваемый товар
+		 * @param       $size сравниваемый размер
+		 * @return bool
 		 */
-		public static function getBasketSizes(array $items)
+		public static function isSizeHere(array $cart = [], $product_id, $size)
 		{
-			if(!empty($items))
-			{
-				$items = Catalogue::arrayToAssoc($items, 'product_id');
-				foreach($items as $id => $content)
-				{
-					$items[$id]	=	$content['sizes'];
-				}
-				return $items;
-			}
+			if(isset($cart['items']) && !empty($cart['items']))
+				if(isset($cart['items'][$product_id]['size'][$size]))
+				return true;
 			return false;
+		}
+
+		/**
+		 * isSizeHere(array $cart = [], $product_id, $size) Проверка товара с размером на присутствие в корзине
+		 *
+		 * @param array $cart	товары в корзине (из сессии)
+		 * @param int  $product_id проверяемый товар
+		 * @return int
+		 */
+		public static function countBoughtSizes($cart, $product_id)
+		{
+			if(isset($cart['items'][$product_id]['size']))
+				return array_sum($cart['items'][$product_id]['size']);
+			else return 0;
 		}
 	}

@@ -296,9 +296,9 @@ class Catalogue extends  Tag
 		$filter = [];
 		foreach($items as $item)
 		{
-			if(!empty($item['sizes']))
+			if(!empty($item['size']))
 			{
-				foreach($item['sizes'] as $size => $count)
+				foreach($item['size'] as $size => $count)
 				{
 					$filter[]	=	[
 						'cat_id'	=>	$item['product_id'],

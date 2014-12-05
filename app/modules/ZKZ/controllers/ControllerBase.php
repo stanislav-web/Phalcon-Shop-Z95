@@ -25,6 +25,20 @@
 
 	class ControllerBase extends \Phalcon\Mvc\Controller
 	{
+	public
+
+		/**
+		 * Определение моделей
+		 * @var bool | Instance objects
+		 */
+		$shopModel          =   false,
+		$commonModel        =   false,
+		$categoriesModel    =   false,
+		$brandsModel    	=   false,
+		$productsModel      =   false,
+		$pricesModel        =   false,
+		$tagsModel			=	false,
+		$bannersModel		=	false;
 		protected
 
 			/**
@@ -75,20 +89,25 @@
 		 */
 		$_breadcrumbs = null;
 
-	public
+	/**
+	 * loadCustomTrans() Загружаю перевод для конкретного контроллера
+	 * @access public
+	 * @return null
+	 */
+	public function loadCustomTrans($transFile)
+	{
+		$translationPath = $this->_getTransPath();
+		$messages = [];
+		require $translationPath.'/'.$transFile.'.php';
 
-		/**
-		 * Определение моделей
-		 * @var bool | Instance objects
-		 */
-		$shopModel          =   false,
-		$commonModel        =   false,
-		$categoriesModel    =   false,
-		$brandsModel    	=   false,
-		$productsModel      =   false,
-		$pricesModel        =   false,
-		$tagsModel			=	false,
-		$bannersModel		=	false;
+		//Return a translation object
+		$this->_translate = new \Phalcon\Translate\Adapter\NativeArray([
+			"content" => $messages
+		]);
+
+		// $viewTranslate - переводы во views
+		$this->view->setVar("viewTranslate", $this->_translate);
+	}
 
 	/**
 	 * _getTransPath() Получаю путь у языковом файлу
@@ -126,46 +145,6 @@
 			if(file_exists($translationPath.$this->_lang))
 				return $translationPath.$this->_lang;
 		}
-	}
-
-	/**
-	 * loadMainTrans() Загружаю перевод для layout шаблонов
-	 * @access public
-	 * @return null
-	 */
-	public function loadMainTrans()
-	{
-		$translationPath = $this->_getTransPath();
-
-		$messages = [];
-		require $translationPath."/layout.php";
-
-		$mainTranslate = new \Phalcon\Translate\Adapter\NativeArray([
-			"content" => $messages
-		]);
-
-		// $layoutTranslate переводы в layout шаблонов
-		$this->view->setVar("layoutTranslate", $mainTranslate);
-	}
-
-	/**
-	 * loadCustomTrans() Загружаю перевод для конкретного контроллера
-	 * @access public
-	 * @return null
-	 */
-	public function loadCustomTrans($transFile)
-	{
-		$translationPath = $this->_getTransPath();
-		$messages = [];
-		require $translationPath.'/'.$transFile.'.php';
-
-		//Return a translation object
-		$this->_translate = new \Phalcon\Translate\Adapter\NativeArray([
-			"content" => $messages
-		]);
-
-		// $viewTranslate - переводы во views
-		$this->view->setVar("viewTranslate", $this->_translate);
 	}
 
 	/**
@@ -207,7 +186,9 @@
 		$this->_breadcrumbs = $this->di->get('breadcrumbs');
 
 		// проверка корзины
-		$minicart = $this->session->get('informer');
+		$minicart = $this->session->get('cart');
+
+		//$this->session->remove('cart');
 
 		// проверка refer
 		if(!$this->session->has('ref'))
@@ -219,7 +200,7 @@
 		$this->session->set('price_id', $this->_shop['price_id']);
 
 		$this->view->setVars([
-			'minicart'		=>	(isset($minicart) && $minicart['count'] > 0) ? $minicart : [],		// информация по мини корзине
+			'minicart'		=>	(isset($minicart['meta']) && $minicart['meta']['total'] > 0) ? $minicart : [],		// информация по мини корзине
 			'language'	    =>	$this->_lang,       // текущий язык
 			'languages'	    =>	$this->_languages,  // все доступные языки
 			'shop' 		    => 	$this->_shop,       // параметры магазина
@@ -227,6 +208,25 @@
 		]);
 	}
 
+	/**
+	 * loadMainTrans() Загружаю перевод для layout шаблонов
+	 * @access public
+	 * @return null
+	 */
+	public function loadMainTrans()
+	{
+		$translationPath = $this->_getTransPath();
+
+		$messages = [];
+		require $translationPath."/layout.php";
+
+		$mainTranslate = new \Phalcon\Translate\Adapter\NativeArray([
+			"content" => $messages
+		]);
+
+		// $layoutTranslate переводы в layout шаблонов
+		$this->view->setVar("layoutTranslate", $mainTranslate);
+	}
 
 	/**
 	 * Событие после выполнения всего роута

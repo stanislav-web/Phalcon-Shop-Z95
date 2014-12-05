@@ -2,6 +2,7 @@
 namespace Modules\ZKZ\Controllers;
 use \Helpers\Catalogue,
 	\Mappers\Router;
+use Models\ShopsDeliveries;
 
 /**
  * Class CatalogueController Каталог (Карточка товара, вывод из категорий)
@@ -78,9 +79,6 @@ class CatalogueController extends ControllerBase
 		$this->banners = $this->bannersModel->getBanners($this->_shop['id'], true);
 
 		// получаю содержимое корзины, чтобы отмечать товары и размеры, что они в корзине
-		$basket = $this->session->get('basket');
-		if(!empty($basket['items']))
-			$this->view->setVar('basket', $basket['items']);
 	}
 
 	/**
@@ -189,9 +187,6 @@ class CatalogueController extends ControllerBase
 					->add($title, $this->request->getURI());
 			}
 
-			// Получаю размеры
-			$sizes = $this->tagsModel->getSizes($item['product_id'], true);
-
 			// Определение покупаемых товаров
 			$buy 	=	$this->productsModel->getRecommend([$item['product_id']], true);
 
@@ -212,12 +207,19 @@ class CatalogueController extends ControllerBase
 				$this->view->setVar('buyableItems', $buyItems);
 			}
 
+			// сервисы доставки для вывода под кнопку добавления в корзину
+			$deliveryServices	=	(new ShopsDeliveries())->get(['title'], ['id' => explode(",", $this->_shop['delivery_ids'])], ['sort' => 'ASC'], 25);
+
+			(isset($item['filter_size']) && !empty($item['filter_size'])) ? uksort($item['filter_size'], "\Helpers\Catalogue::itemCompareSize"): null;
+
 			$this->view->setVars([
 				'template'	=>	'item',
+				'favorites'  => $this->session->get('favorites'),
 				'item' 		=>  $item,
-				'sizes' 	=>  $sizes,
+				'sizes' 	=>  $item['filter_size'],
 				'title' 	=>  $title,
-				"discounts"	=>	(!empty($this->_shop['discounts'])) ? json_decode($this->_shop['discounts'], true) : ''
+				'delivery'	=>	($deliveryServices) ? $deliveryServices : [],
+				'discounts'	=>	(!empty($this->_shop['discounts'])) ? json_decode($this->_shop['discounts'], true) : ''
 			]);
 		}
 		$this->view->setVar("categories" , Catalogue::categoriesToTree($this->_shopCategories));

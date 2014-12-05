@@ -1,6 +1,6 @@
 <?php
 namespace Models;
-
+use Phalcon\Db\Column;
 /**
  * Class Products Модель для `products`
  *
@@ -810,7 +810,8 @@ class Products extends \Phalcon\Mvc\Model
 						$result[$property] = json_decode($value, true);
 					}
 					if($property == 'filter_size') {
-						$result[$property] = explode(',', $value);
+						if(!empty($value))
+							$result[$property] = json_decode($value, true);
 					}
 				}
 			}

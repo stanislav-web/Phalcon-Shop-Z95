@@ -24,22 +24,18 @@
 	<!-- Вывод палитры -->
 	<?php if(isset($items) && !empty($items)): ?>
 		<?php
-
-		// скидки на вещи в магазине исходя из суммы покупок
-		if((isset($minicart) && !empty($minicart)) || !empty($shop['discounts']))
-		{
-			// получаю скидки магазина на вещи
-
-			$shopDiscounts = \Helpers\Cart::getMaxDiscount($shop['discounts'], $minicart);
-			if(!empty($minicart) && $minicart['count'] > 0)
-				$buyes	=	\Helpers\Cart::getBasketSizes($basket);
-		}
+		// проверка скидок магазина
+		if(isset($minicart['meta']['shop_discounts']) && $minicart['meta']['shop_discounts']['next'] > 0)
+			$shopDiscounts	=	$minicart['meta']['shop_discounts'];
+		else
+			$shopDiscounts	=	\Helpers\Cart::getMaxDiscount($shop['discounts'], []);
 		?>
 		<?php foreach($items as $item): ?>
 			<?php
 				if(isset($item['filter_size']) && $item['filter_size'])
 				{
-					$arraySize = explode(',',$item['filter_size']);
+					$arraySize = json_decode($item['filter_size'], true);
+
 					uksort($arraySize, "\Helpers\Catalogue::itemCompareSize");
 				}
 				$img = array_values(json_decode($item['preview'], true)); // images json decode
@@ -120,3 +116,13 @@
 		});
 	});
 </script>
+<div id="cartNotify" class="status message" onclick="global.hideStatus('message');">
+	<div class="message">
+		<div class="title">
+			<!-- title -->
+		</div>
+		<span class="body">
+			<!-- message -->
+		</span>
+	</div>
+</div>

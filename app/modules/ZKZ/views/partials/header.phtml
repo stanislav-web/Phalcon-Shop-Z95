@@ -38,22 +38,11 @@
 					<?=$this->tag->linkTo('catalogue/new', $viewTranslate['NEW']); ?>
 				</div>
 			</div>
-			<div class="top-cart">
-				<div class="cart" onclick="Cart.set()"><img src="/assets/<?php echo $shop['code']; ?>/images/z95ru/icon-cart.png" /></div>
-				<h3>
-					<?=$this->tag->linkTo('customer/cart', $viewTranslate['CART']); ?>
-				</h3>
-				<span id="BASKET_INFO" class="basket-mini">
-					<?php if(!empty($minicart)): ?>
-						<?=\Helpers\Catalogue::declOfNum($minicart['count'], ['вещь', 'вещи', 'вещей'], true);?>  на <?=number_format($minicart['sum'], 0, '.', ' ');?> <?=$shop['currency_symbol']; ?>
-					<?php endif; ?>
-				</span>
-				<div class="number discount">
-					<?php if(isset($minicart['discounts']['current']) && $minicart['discounts']['current'] > 0):?>
-						с учетом скидки <?=number_format($minicart['sum'] - ($minicart['sum']*$minicart['discounts']['current'])/100, 0, '.', ' '); ?> <?php echo $shop['currency_symbol'] ?>
-					<?php endif;?>
-				</div>
-			</div>
+
+			<!-- Мини корзина -->
+			<?php $this->view->partial('partials/cart/mini-cart', ['minicart' => $minicart]); ?>
+			<!-- /Мини корзина -->
+
 		</td>
 	</tr>
 	<tr style="min-height: 600px;">

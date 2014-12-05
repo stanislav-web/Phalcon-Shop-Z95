@@ -106,7 +106,7 @@ class OrderController extends ControllerBase
 
 		$this->view->setVar('title',$title);
 
-		if(!$this->session->has('basket'))	// если сессия с корзиной пуста
+		if(!$this->session->has('cart'))	// если сессия с корзиной пуста
 			$this->view->setVars(['template' => 'empty']);
 		else
 								// если корзина еще не очищена, загружаю форму заказа
@@ -223,7 +223,7 @@ class OrderController extends ControllerBase
 	{
 		if($this->request->isPost() == true) // Только для POST запросов
 		{
-			$request = (array)$this->session->get('basket');
+			$request = $this->session->get('cart');
 			if(isset($request) && !empty($request['items']))
 			{
 				if($this->_isJsonResponse && $this->security->checkToken())
@@ -251,8 +251,7 @@ class OrderController extends ControllerBase
 
 						if(!empty($response['result']))
 						{
-							$this->session->remove('basket');
-							$this->session->remove('informer');
+							$this->session->remove('cart');
 
 							$response['result']['status']		=	1;
 							$response['result']['message']		=	$this->_translate['ORDER_SUCCESS'];
