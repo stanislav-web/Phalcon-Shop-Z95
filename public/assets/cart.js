@@ -9,7 +9,7 @@
  */
 var Cart = {
 
-    debug   :   true,
+    debug   :   false,
 
     hash    :   false,
 
