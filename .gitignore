@@ -4,3 +4,4 @@ atlassian-ide-plugin.xml
 .idea
 PORT.sql
 app/modules/ZKZ/config/config.php
+app/config/db.php

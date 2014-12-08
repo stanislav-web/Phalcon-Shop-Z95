@@ -19,7 +19,7 @@
 			]
 		],
 
-		'profiler'	        => true,		// Включение отладки
+		'profiler'	        => false,		// Включение отладки
 		'cache'	  =>    [   // Кэширование
 			'frontend'                  =>  false,
 			'cache_frontend_lifetime'   =>  300,        // Время сохранения в сек.
