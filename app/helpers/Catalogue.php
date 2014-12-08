@@ -88,8 +88,8 @@ class Catalogue extends  Tag
 	}
 
 	/**
-	 * findInTree($array, $key, $value) Поиск массивов в дереве по ключ=>значение
-	 * @param array object $array исходный массив
+	 * findInTree($array, $key, $value) Поиск массива в дереве по ключ=>значение
+	 * @param array $array исходный массив
 	 * @param string $key ключ
 	 * @param string $value значение
 	 * @access static
@@ -120,7 +120,7 @@ class Catalogue extends  Tag
 	}
 
 	/**
-	 * findInTree($array, $key, $value) Исключение из массивов по ключ=>значение
+	 * excludeFromTree($array, $key, $value) Исключение из массивов по ключ=>значение
 	 * @param array object $array исходный массив
 	 * @param string $key ключ
 	 * @param string $value значение
@@ -184,12 +184,11 @@ class Catalogue extends  Tag
 	 * @param $array исх. массив
 	 * @param $key ключ по которому сортировать
 	 * @param $desc обратный порядок?
-	 * @param boolean $keepkey сохранить ключи
-	 * @return mixed
+	 * @param boolean $keepkey сохранить ключи?
+	 * @return array
 	 */
 	public static function arraySort($array, $key, $desc = false, $keepkey = false)
 	{
-
 		$ascending = function($a, $b) use ($key) {
 			if(isset($a[$key]) && isset($b[$key]))
 			{

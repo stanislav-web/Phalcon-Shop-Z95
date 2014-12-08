@@ -100,7 +100,7 @@
 					</span>
 					<?=$shop['currency_symbol'];?>
 				</div>
-				<?php if(isset($minicart['meta']) && ($minicart['meta']['shop_discounts']['current'] > 0 || (isset($minicart['meta']['shop_discounts']['next']) &&  $minicart['meta']['shop_discounts']['next'] > 0))): // расчет цены исходя из скидок магазина ?>
+				<?php if(isset($minicart['meta']['shop_discounts']) && ($minicart['meta']['shop_discounts']['current'] > 0 || (isset($minicart['meta']['shop_discounts']['next']) &&  $minicart['meta']['shop_discounts']['next'] > 0))): // расчет цены исходя из скидок магазина ?>
 					<?php if(!isset($minicart['meta']['shop_discounts']['next'])): ?>
 						<div class="price discount_price">
 							<?printf($viewTranslate['ITEM_DISCOUNT_MAX'], $minicart['meta']['shop_discounts']['current']);?>

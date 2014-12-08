@@ -45,7 +45,7 @@ var Common =   {
 
     /**
      * redirect : function(param) Filter redirect
-     * @param param string
+     * @param string param
      * @return null
      */
     redirect : function(param) {

@@ -1,7 +1,7 @@
 <?php if(isset($items)): ?>
 	<div id="big-cart" class="cart-content element-cart">
 		<!-- Информатор скидок -->
-		<?php $this->view->partial('partials/cart/discounts_hover', ['discounts' => $meta['shop_discounts']]); ?>
+		<?php $this->view->partial('partials/cart/discounts_hover', ['discounts' => (isset($meta['shop_discounts'])) ? $meta['shop_discounts'] : []]); ?>
 		<!-- /Информатор скидок -->
 
 		<!-- Вещи в корзине -->

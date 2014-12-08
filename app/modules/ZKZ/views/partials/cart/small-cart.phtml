@@ -15,7 +15,7 @@
 		<!-- Заголовок -->
 
 		<!-- Информатор скидок -->
-			<?php $this->view->partial('partials/cart/discounts_hover', ['discounts' => $meta['shop_discounts']]); ?>
+			<?php $this->view->partial('partials/cart/discounts_hover', ['discounts' => (isset($meta['shop_discounts'])) ? $meta['shop_discounts'] : []]); ?>
 		<!-- /Информатор скидок -->
 
 		<!-- Вещи в корзине -->

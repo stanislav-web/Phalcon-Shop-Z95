@@ -118,7 +118,7 @@
 			<?endif;?>
 			<!-- Скидки магазина -->
 			<?php if(isset($shopDiscounts)): // расчет цены исходя из скидок магазина ?>
-				<?php if(!isset($shopDiscounts['next']) && isset($shopDiscounts['current'])): ?>
+				<?php if(!isset($shopDiscounts['next']) && isset($shopDiscounts['current']) && $shopDiscounts['current'] > 0): ?>
 					<div class="discount-sign">
 						<b>***</b><i><?=number_format($item['discount'] - ($item['discount'] * $shopDiscounts['current']) / 100, 0, '.', ' ');?></i>
 					</div>

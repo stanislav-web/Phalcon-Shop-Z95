@@ -281,6 +281,9 @@ var Cart = {
      * @return html
      */
     set: function(item, checked) {
+
+        global.showStatus('common.loading');
+
         try {
             // параметры передачи
 
@@ -350,7 +353,7 @@ var Cart = {
                                     if(this.debug) console.info('Чтение миникорзины:', data.minicart);
                                     $('span[rel=total]').html(then.declOfNum(data.minicart.total, ['вещь', 'вещи', 'вещей']));
                                     if(data.minicart.sum > 0) $('span[rel=sum]').html(then.numberFormat(data.minicart.sum));
-                                    if(data.minicart.shop_discounts.discount_sum > 0) $('span[rel=discount_sum]').html(then.numberFormat(data.minicart.shop_discounts.discount_sum));
+                                    if(data.minicart.shop_discounts > 0) $('span[rel=discount_sum]').html(then.numberFormat(data.minicart.shop_discounts.discount_sum));
                                 }
                             }
                             else
@@ -372,9 +375,13 @@ var Cart = {
 
                     if(typeof(then.response) !== "undefined" && then.response !== null )
                         delete(then.response);
+
+                    global.hideStatus('common.loading');
+
                 }
                 catch(e) {
                     this.getMessage({title : 'Ошибка', body : 'Получены не валидные данные '+ e.name +' : '+ e.message, class : 'error'});
+                    global.hideStatus('common.loading');
                     return false;
                 }
             }, then));
@@ -382,6 +389,7 @@ var Cart = {
         }
         catch(e) {
             this.getMessage({title : 'Ошибка', body : 'Переданны не верные данные при добавлении: '+ e.name +' : '+ e.message, class : 'error'});
+            global.hideStatus('common.loading');
             return false;
         }
     },

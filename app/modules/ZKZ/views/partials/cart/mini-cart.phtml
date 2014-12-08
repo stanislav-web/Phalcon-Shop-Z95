@@ -13,13 +13,16 @@
 		<span rel="sum">
 			<?=(!empty($minicart['meta']['sum'])) ? number_format($minicart['meta']['sum'], 0, '.', ' ') : '';?>
 		</span> <?=$shop['currency_symbol']; ?>
-		<?php if($minicart['meta']['shop_discounts']['current'] > 0): ?>
 		<div class="number discount">
+			<?php if(isset($minicart['meta']['shop_discounts'])):?>
 			с учетом скидки
+			<?php endif;?>
 			<span rel="discount_sum">
 				<?=(!empty($minicart['meta']['shop_discounts']['discount_sum'])) ? number_format($minicart['meta']['shop_discounts']['discount_sum'], 0, '.', ' ') : '';?>
-			</span> <?php echo $shop['currency_symbol'] ?>
+			</span>
+			<?php if(isset($minicart['meta']['shop_discounts'])):?>
+				<?php echo $shop['currency_symbol'] ?>
+			<?php endif;?>
 		</div>
-		<?php endif;?>
 	</span>
 </div>
