@@ -1,8 +1,7 @@
 <?php
 namespace Modules\ZKZ\Controllers;
 use \Phalcon\Mvc\View,
-	Helpers\Cart,
-	Helpers\Catalogue;
+	Helpers\Cart;
 
 /**
  * Class CartController Корзина

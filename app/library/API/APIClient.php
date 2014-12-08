@@ -75,6 +75,17 @@ class APIClient {
 	}
 
 	/**
+	 * setToken($token) Token key
+	 * @param $url
+	 * @return $this
+	 */
+	public function setToken($token)
+	{
+		$this->token	=	$token;
+		return $this;
+	}
+
+	/**
 	 * debug(boolean $debug) enable Debug ?
 	 * @param boolean $debug
 	 * @return $this

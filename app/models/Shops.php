@@ -16,7 +16,6 @@ class Shops extends \Phalcon\Mvc\Model
 	 * @const
 	 */
 	const TABLE = 'shops';
-	const SHOP_DISCOUNTS_TABLE = 'shop_discounts';
 
 	private
 
@@ -42,7 +41,10 @@ class Shops extends \Phalcon\Mvc\Model
 			$this->_db = $this->getReadConnection();
 
 		if(!$this->_cache)
-			$this->_cache = $this->getDI()->get('config')->cache->backend;
+		{
+			if(isset($this->getDI()->get('config')->cache))
+				$this->_cache = $this->getDI()->get('config')->cache->backend;
+		}
 
 		return $this->_db;
 	}
