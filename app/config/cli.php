@@ -3,9 +3,11 @@ $config = new Phalcon\Config([
 
 	'sync'	=>	[
 		'token'	=>	'435c4d614fcdcf443f433f2469920f35',
-		'url'	=>	'http://b.maggadda.dev95.ru/api/jsonrpc/',
-		'delay'	=>	9000,
-		'limit'	=>	1000,
+		'url'	=>	'http://b.stanislavw.dev95.ru/api/jsonrpc/',
+		'delay'	=>	60,
+		'limit'	=>	500,
+		'decode'=>	0,
+		'adapter'	=>	'serialize', // json_encode, serialize
 	],
 
 	// Коннект к Backend
@@ -18,3 +20,5 @@ $config = new Phalcon\Config([
 		'persistent'  => false
 	]
 ]);
+
+	$service = new Phalcon\DI\Service('request', 'Phalcon\Http\Request');

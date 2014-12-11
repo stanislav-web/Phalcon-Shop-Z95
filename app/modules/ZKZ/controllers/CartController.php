@@ -139,7 +139,7 @@ class CartController extends ControllerBase
 				if(isset($sessionData['items']) || isset($postData['product_id']))
 					$dbData = $this->productsModel->get(
 						['prod.id as product_id', 'prod.name', 'prod.articul', 'prod.images', 'prod.filter_size', 'price.price', 'price.discount', 'brand.name as brand_name',
-						'brand.alias as brand_alias', 'price.price', 'price.discount', 'price.percent'],
+						'price.price', 'price.discount', 'price.percent'],
 						['product_id' => Cart::pushItem(@$sessionData['items'], @$postData['product_id']), 'price.id' => $this->_shop['price_id']]
 					);
 				else $dbData	=	[];

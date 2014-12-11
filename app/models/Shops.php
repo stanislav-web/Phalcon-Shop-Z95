@@ -17,6 +17,14 @@ class Shops extends \Phalcon\Mvc\Model
 	 */
 	const TABLE = 'shops';
 
+	/**
+	 * Эта модель отображается на таблицу sample_cars
+	 */
+	public function getSource()
+	{
+		return self::TABLE;
+	}
+
 	private
 
 		/**

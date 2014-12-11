@@ -29,4 +29,9 @@ class Cli extends  Tag
 		}
 		return chr(27) . "$out" . "$string" . chr(27) . "[0m\r\n";
 	}
+
+	public static function bold($string)
+	{
+		return "\033[1m".$string."\033[0m";
+	}
 }

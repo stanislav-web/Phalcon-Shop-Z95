@@ -164,7 +164,7 @@ class CatalogueController extends ControllerBase
 		$item = $this->productsModel->getProductCard($articul, $this->_shop['price_id'], true);
 
 		// передача подходящих размеров для этого товара
-		if($item)
+		if($item && !empty($item))
 		{
 			// создание заголовка
 			$title = $item['product_name'].' '.$item['brand'];

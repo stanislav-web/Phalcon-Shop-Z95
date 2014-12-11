@@ -783,14 +783,14 @@ class Products extends \Phalcon\Mvc\Model
 		{
 			$sql = "SELECT 	prod.id AS product_id,  CONCAT(UPPER(SUBSTRING(prod.name, 1, 1)), LOWER(SUBSTRING(prod.name FROM 2))) AS product_name,
 						prod.articul, prod.tags, prod.rating, prod.images, prod.filter_size, prod.description AS description,
-						brand.name AS brand, brand.alias AS brand_alias,
+						brand.name AS brand,
 						price.price, price.discount, price.percent,
 						prod_rel.category_id AS category_id
 						FROM ".self::TABLE." prod
 						LEFT JOIN ".Prices::TABLE." price ON (price.id = ".(int)$shop_price_id." && price.product_id = prod.id)
 						INNER JOIN ".self::REL." prod_rel ON (prod.id = prod_rel.product_id)
 						LEFT JOIN ".Brands::TABLE." brand ON (prod.brand_id = brand.id)
-						WHERE prod.articul = ".(int)$articul." LIMIT 1";
+						WHERE prod.articul = ".(int)$articul." && prod.published = 1 LIMIT 1";
 
 			$result = $this->_db->query($sql)->fetch();
 			if($result)
