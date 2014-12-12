@@ -41,9 +41,8 @@ class CatalogueTask extends \Phalcon\CLI\Task
 				->setURL($this->_config->url);
 
 			if($this->_api) {
-				echo Cli::bold(Cli::colorize('API connected success', 'SUCCESS'));
-				echo Cli::bold(Cli::colorize("Adapter: ".$this->_config->adapter, 'WARNING'));
-				echo "\n";
+				echo Cli::colorize(Cli::bold("[SUCCESS] API connected"), 'SUCCESS');
+				echo Cli::colorize(Cli::bold("[INFO] Adapter ".$this->_config->adapter)."\n", 'WARNING');
 			}
 
 			// get another action
@@ -53,7 +52,7 @@ class CatalogueTask extends \Phalcon\CLI\Task
 			]);
 		}
 		catch(Phalcon\Exception $e) {
-			echo Cli::colorize($e->getMessage(), 'FAILURE');
+			echo Cli::colorize("[FAIL] ".$e->getMessage(), 'FAILURE');
 		}
 	}
 
@@ -83,7 +82,7 @@ class CatalogueTask extends \Phalcon\CLI\Task
 				'products_relationship'	=> 	1,
 				'decode'		=> 	$this->_config->decode,
 				'adapter'		=> 	$this->_config->adapter,
-				'limit'			=>	$this->_config->limit,
+				//'limit'			=>	$this->_config->limit,
 			]);
 
 			// fixed end queries time
@@ -91,10 +90,9 @@ class CatalogueTask extends \Phalcon\CLI\Task
 
 			if(!empty($this->_response['result']))
 			{
-				echo Cli::colorize('Received a response from the '.Cli::bold(parse_url($this->_config->url, PHP_URL_HOST).
-						sprintf("\nTime: %f sec.", (($time[1] + $time[0])-$this->_start))."\nSize length: ".(memory_get_usage()/1024)." kb.
-					"), 'SUCCESS');
-				echo "\n";
+				echo Cli::colorize("[INFO] Received a response from the ".parse_url($this->_config->url, PHP_URL_HOST).
+					sprintf("\n[INFO] Time: %f sec.", (($time[1] + $time[0])-$this->_start))."\n[INFO] Size length: ".(memory_get_usage()/1024)." kb.\n"
+					, 'WARNING');
 
 				// get another action
 				$this->console->handle([
@@ -104,7 +102,8 @@ class CatalogueTask extends \Phalcon\CLI\Task
 			}
 			else
 			{
-				echo Cli::colorize('Items not found', 'FAILURE');
+				echo Cli::colorize(Cli::bold("[INFO] Items not found"), 'WARNING');
+
 				// get another action
 				$this->console->handle([
 					'task' 		=> 'catalogue',
@@ -113,7 +112,7 @@ class CatalogueTask extends \Phalcon\CLI\Task
 			}
 		}
 		catch(Phalcon\Exception $e) {
-			echo Cli::colorize($e->getMessage(), 'FAILURE');
+			echo Cli::colorize("[FAIL] ".$e->getMessage(), 'FAILURE');
 		}
 	}
 
@@ -150,7 +149,7 @@ class CatalogueTask extends \Phalcon\CLI\Task
 					$this->_db->commit();
 				}
 				else
-					echo Cli::colorize('Nothing to update', 'NOTE');
+					echo Cli::colorize(Cli::bold("[INFO] Nothing to update"), 'WARNING');
 
 				// get another action
 				$this->console->handle([
@@ -158,15 +157,15 @@ class CatalogueTask extends \Phalcon\CLI\Task
 					'action' 	=> 'finish'
 				]);
 			}
-			catch(\Exception $e)
+			catch(Phalcon\Exception $e)
 			{
 				$this->_db->rollback();
 
 				// update synx time
 				$this->_db->execute("UPDATE `system` SET `value` =	'".time()."' WHERE `key` = 'last_synx'");
 
-				echo Cli::colorize('All update was rollback', 'WARNING');
-				echo Cli::colorize($e->getMessage(), 'FAILURE');
+				echo Cli::colorize(Cli::bold("[INFO] All updates was rollback by transaction"), 'WARNING');
+				echo Cli::colorize("[FAIL] ".$e->getMessage(), 'FAILURE');
 				return false;
 			}
 		}
@@ -174,8 +173,7 @@ class CatalogueTask extends \Phalcon\CLI\Task
 
 			// update synx time
 			$this->_db->execute("UPDATE `system` SET `value` =	'".time()."' WHERE `key` = 'last_synx'");
-
-			echo Cli::colorize($e->getMessage(), 'FAILURE');
+			echo Cli::colorize("[FAIL] ".$e->getMessage(), 'FAILURE');
 		}
 	}
 
@@ -194,7 +192,7 @@ class CatalogueTask extends \Phalcon\CLI\Task
 		{
 			$sql	=	"INSERT INTO ".$table." (".implode(', ',array_keys($value)).") VALUES (".implode(", ",
 
-					array_map(function($v) {
+						array_map(function($v) {
 							return $this->_db->escapeString($v);
 						},
 						array_values($value)
@@ -205,16 +203,18 @@ class CatalogueTask extends \Phalcon\CLI\Task
 
 			$sql = rtrim($sql, ',');
 
-			$this->_db->execute(trim($sql));
+			$status = $this->_db->execute(trim($sql));
+
+			if($status)
+				++$success;
 
 			if($this->_db->lastInsertId() > 0)
 				++$inserted;
 
-			++$success;
-
 			unset($sql);
 		}
-		echo Cli::bold(Cli::colorize("Completed ".$success." row(s) from ".sizeof($this->_response[$table])." row(s) in `".$table."`\nInserts: ".$inserted." row(s)\nUpdates: ".($success-$inserted)." row(s)", 'SUCCESS'));
+
+		echo Cli::colorize(Cli::bold("[SUCCESS] Completed ".$success." row(s) from ".sizeof($this->_response[$table])." row(s) in `".$table."`\n[SUCCESS] Inserts: ".$inserted." row(s)\n[SUCCESS] Updates: ".($success-$inserted)." row(s)"), 'SUCCESS');
 		unset($table, $fields);
 	}
 
@@ -229,6 +229,6 @@ class CatalogueTask extends \Phalcon\CLI\Task
 
 		// fixed end queries time
 		$time = explode(" ", microtime());
-		echo Cli::colorize(sprintf("Final size length: ".(memory_get_usage()/1024)." kb. \nTime elapsed: %f sec.", (($time[1] + $time[0])-$this->_start)), 'WARNING');
+		echo Cli::colorize(sprintf("\n[INFO] Final size length: ".(memory_get_usage()/1024)." kb. \n[INFO] Time elapsed: %f sec.", (($time[1] + $time[0])-$this->_start)), 'WARNING');
 	}
 }

@@ -6,7 +6,7 @@ $config = new Phalcon\Config([
 		'url'	=>	'http://b.stanislavw.dev95.ru/api/jsonrpc/',
 		'delay'	=>	60,
 		'limit'	=>	500,
-		'decode'=>	0,
+		'decode'=>	1,
 		'adapter'	=>	'serialize', // json_encode, serialize
 	],
 

@@ -1,6 +1,6 @@
 ####Phalcon Z95.ru (Z95.com.ua, Z95.kz) Shop
 =======
-
+[![Code Climate](https://codeclimate.com/github/stanislav-web/Phalcon/badges/gpa.svg)](https://codeclimate.com/github/stanislav-web/Phalcon) [![Test Coverage](https://codeclimate.com/github/stanislav-web/Phalcon/badges/coverage.svg)](https://codeclimate.com/github/stanislav-web/Phalcon)
 Рефакторинг корзины закончен.
 Идет разработка синхронизации с Backend  интерфейсом и обновлением позиций
 
