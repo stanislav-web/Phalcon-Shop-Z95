@@ -1,6 +1,7 @@
 ####Phalcon Z95.ru (Z95.com.ua, Z95.kz) Shop
+[![Codacy Badge](https://www.codacy.com/project/badge/0de281474c6049aab9df132a36d9da1f)](https://www.codacy.com/public/stanisov/Phalcon)
 =======
-[![Code Climate](https://codeclimate.com/github/stanislav-web/Phalcon/badges/gpa.svg)](https://codeclimate.com/github/stanislav-web/Phalcon) [![Test Coverage](https://codeclimate.com/github/stanislav-web/Phalcon/badges/coverage.svg)](https://codeclimate.com/github/stanislav-web/Phalcon)
+
 Рефакторинг корзины закончен.
 Идет разработка синхронизации с Backend  интерфейсом и обновлением позиций
 
