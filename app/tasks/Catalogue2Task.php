@@ -78,6 +78,7 @@
 					'limit'			=>	$this->_config->limit,
 				]);
 
+				var_dump('Response ', $this->_response);
 				// fixed end queries time
 				$time = explode(" ", microtime());
 

@@ -136,7 +136,7 @@ class Products extends \Phalcon\Mvc\Model
 
 			if(!empty($data))
 			{
-				$sql .= " WHERE";
+				$sql .= " WHERE prod.published = 1 AND ";
 				$i = 0;
 				foreach($data as $key => $value)
 				{
@@ -747,7 +747,7 @@ class Products extends \Phalcon\Mvc\Model
 					FROM  ".self::TABLE." prod
 					INNER JOIN ".Prices::TABLE." price ON (price.product_id = prod.id)
 					INNER JOIN ".Brands::TABLE." brand ON (brand.id = prod.brand_id)
-					WHERE prod.id IN(".join(',', $ids).") &&  price.id = ".(int)$price_id;
+					WHERE prod.id IN(".join(',', $ids).") && prod.published = 1 &&  price.id = ".(int)$price_id;
 
 			if(null != $limit) $sql .= " LIMIT ".$limit;
 

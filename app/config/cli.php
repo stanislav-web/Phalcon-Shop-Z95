@@ -6,8 +6,9 @@ $config = new Phalcon\Config([
 		'url'	=>	'http://b.stanislavw.dev95.ru/api/jsonrpc/',
 		'delay'	=>	60,
 		'limit'	=>	500,
-		'decode'=>	1,
+		'decode'=>	0,	// base64
 		'adapter'	=>	'serialize', // json_encode, serialize
+		'checkonly'	=>	0, // just check
 	],
 
 	// Коннект к Backend
@@ -20,5 +21,3 @@ $config = new Phalcon\Config([
 		'persistent'  => false
 	]
 ]);
-
-	$service = new Phalcon\DI\Service('request', 'Phalcon\Http\Request');

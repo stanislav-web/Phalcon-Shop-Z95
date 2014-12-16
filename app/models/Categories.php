@@ -158,7 +158,6 @@
 							INNER JOIN ".Common::TABLE_PRODUCTS_REL." pr ON (pr.product_id = p.id)
 							WHERE pr.category_id = shop_rel.`category_id` ORDER BY rating DESC LIMIT 1
 						) AS img,
-
 						(
 							SELECT alias FROM ".Categories::TABLE." c
 							WHERE c.id = cat.parent_id
@@ -173,7 +172,6 @@
 						WHERE shop_rel.shop_id = ".$shop_id." && shop_rel.category_parent_id ".$conditional." ".$parent_id."
 						GROUP BY id
 						ORDER BY shop_rel.category_parent_id, shop_rel.sort";
-
 
 				$result = $this->_db->query($sql)->fetchAll();
 

@@ -82,7 +82,7 @@ class CatalogueTask extends \Phalcon\CLI\Task
 				'products_relationship'	=> 	1,
 				'decode'		=> 	$this->_config->decode,
 				'adapter'		=> 	$this->_config->adapter,
-				//'limit'			=>	$this->_config->limit,
+				'limit'			=>	$this->_config->limit,
 			]);
 
 			// fixed end queries time
@@ -95,10 +95,16 @@ class CatalogueTask extends \Phalcon\CLI\Task
 					, 'WARNING');
 
 				// get another action
-				$this->console->handle([
-					'task' 		=> 'catalogue',
-					'action' 	=> 'prepare'
-				]);
+				if($this->_config->checkonly === 1)
+					$this->console->handle([
+						'task' 		=> 'catalogue',
+						'action' 	=> 'finish'
+					]);
+				else
+					$this->console->handle([
+						'task' 		=> 'catalogue',
+						'action' 	=> 'prepare'
+					]);
 			}
 			else
 			{
@@ -226,9 +232,11 @@ class CatalogueTask extends \Phalcon\CLI\Task
 	{
 		// update synx time
 		$this->_db->execute("UPDATE `system` SET `value` =	'".time()."' WHERE `key` = 'last_synx'");
+		$count = (is_array($this->_response)) ?
+			count($this->_response, COUNT_RECURSIVE) : 0;
 
 		// fixed end queries time
 		$time = explode(" ", microtime());
-		echo Cli::colorize(sprintf("\n[INFO] Final size length: ".(memory_get_usage()/1024)." kb. \n[INFO] Time elapsed: %f sec.", (($time[1] + $time[0])-$this->_start)), 'WARNING');
+		echo Cli::colorize(sprintf("\n[INFO] Array elements: ".$count."\n[INFO] Final size length: ".(memory_get_usage()/1024)." kb. \n[INFO] Time elapsed: %f sec.", (($time[1] + $time[0])-$this->_start)), 'WARNING');
 	}
 }

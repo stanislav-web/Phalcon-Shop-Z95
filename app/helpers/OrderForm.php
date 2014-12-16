@@ -32,6 +32,7 @@
 			// инициализация сущностей
 			$this->setEntity($this);
 
+            $regionDef  = $this->request->getServer('HTTP_GEOIP_REGION');
 
 			$this->_regions		=	$this->getRegionsService($options['country']);
 
@@ -91,7 +92,8 @@
 			// Загрузка регионов в select
 
 			$defaultRegion = (isset($options['select']['user']['address']['region']))
-				? $options['select']['user']['address']['region'] : key($this->_regions);
+				? $options['select']['user']['address']['region'] :
+                (($regionDef === 'None') ? key($this->_regions) : $regionDef);
 
 			$this->add((new Element\Select("user[address][region]", $this->_regions))
 				->setDefault($defaultRegion));
@@ -155,7 +157,7 @@
 		 */
 		private function getRegionsService($region_id)
 		{
-			$regionServices = (new ShopsRegions())->get(['region AS id', 'region'], ['country_code' => $region_id], null, 90);
+            $regionServices = (new ShopsRegions())->get(['region AS id', 'region'], ['country_code' => $region_id], null, 90);
 			$data = Catalogue::arrayToPair($regionServices);
 			return (!empty($data)) ? $data : [];
 		}

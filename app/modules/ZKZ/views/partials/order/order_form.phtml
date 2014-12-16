@@ -1,4 +1,6 @@
-<?php echo $this->tag->javascriptInclude('assets/store.min.js'); // key => value storage?>
+<?php echo $this->tag->javascriptInclude('assets/store.min.js'); // key => value storage
+$cityDef = $this->request->getServer('HTTP_GEOIP_CITY');
+?>
 <form name="order_create" id="order_create" method="POST" action="<?=$this->url->get(['for' => 'order-request']);?>" id="order_form">
 	<input type="hidden" name="<?php echo $this->security->getTokenKey() ?>" value="<?php echo $this->security->getToken() ?>"/>
 	<table class="Form Order">
@@ -61,7 +63,7 @@
 		<!-- Город -->
 		<tr>
 			<td class="label"><?=$viewTranslate['CITY']; ?></td>
-			<td><?=$form->render("user[address][city]", ['value' => (!empty($order_form['user']['address']['city'])) ? $order_form['user']['address']['city'] : '']); ?></td>
+			<td><?=$form->render("user[address][city]", ['value' => (!empty($order_form['user']['address']['city'])) ? (($cityDef != 'None') ? $cityDef : $order_form['user']['address']['city']) : '']); ?></td>
 		</tr>
 		<!-- /Город -->
 

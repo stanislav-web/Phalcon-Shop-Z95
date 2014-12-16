@@ -291,19 +291,21 @@ class JsonController extends ControllerBase
 
 				// собираю параметры запроса
 				$months	=	1;
-
+                $cityDef = $this->request->getServer('HTTP_GEOIP_CITY');
+                if($cityDef === 'None')
+                    $cityDef    =   $this->_shop['capital_city'];
 				$request	=	[
 					'start'		=>	time() - $months*30*24*60*60,			//	начальная дата (1  мес. ранее)
 					'end'		=>	time(),							//	текущая дата
-					//@TODO сделать определение города пользователя, пока поставил столицу
-					'city'		=>	$this->_shop['capital_city'],	//	город для которого смотрим заказы
+					'city'		=>	$cityDef,	//	город для которого смотрим заказы
 					'lines'		=>	20,								//	количество строк
 					'shop_id'	=>	$this->_shop['id']				//	id магазина
 				];
 
 				//@response -->
 				$response = (new \API\APIClient($this->_shop['token_key']))
-					->setURL('http://b.dev95.ru/api/jsonrpc/')
+					->setURL('http://b.stanislavw.dev95.ru/api/jsonrpc/')
+                    ->debug(true)
 					->call('hotline.get', $request['start'], $request['end'],$request['city'],$request['lines'],$request['shop_id']);
 
 				// обработка ответа

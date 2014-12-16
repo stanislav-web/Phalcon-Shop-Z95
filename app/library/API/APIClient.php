@@ -162,6 +162,7 @@ class APIClient {
 		));
 
 		$context  = stream_context_create($opts);
+
 		if($fp = fopen($this->url, 'r', false, $context))
 		{
 			$response = '';
@@ -171,6 +172,7 @@ class APIClient {
 			if($this->debug) $this->debug.= "***** Server response *****\n".$response."\n***** End of server response *****\n\n";
 			$debug = $response;
 			$response = json_decode($response,true);
+
 		}
 		else
 			throw new \Phalcon\Exception('Unable to connect to '.$this->url);
