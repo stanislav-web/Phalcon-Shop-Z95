@@ -34,7 +34,7 @@ tools:
     php_analyzer:
         enabled: true
         filter:
-            excluded_paths: [build/*, phpunit/*, vendor/*]
+            excluded_paths: [build/*, phpunit/*, vendor/*, app/library/*, app/config/*, app/logs/*]
         extensions:
             - php
     sensiolabs_security_checker: true
@@ -46,7 +46,7 @@ tools:
             - php
         command: phpcs
         filter:
-           excluded_paths: [build/*, phpunit/*, vendor/*]
+           excluded_paths: [build/*, phpunit/*, vendor/*, app/library/*, app/config/*, app/logs/*]
     php_cs_fixer:
         enabled: true
         extensions:
