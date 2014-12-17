@@ -1,5 +1,5 @@
 ####Phalcon Z95.ru (Z95.com.ua, Z95.kz) Shop
-[![Codacy Badge](https://www.codacy.com/project/badge/0de281474c6049aab9df132a36d9da1f)](https://www.codacy.com/public/stanisov/Phalcon)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/stanislav-web/Phalcon/badges/quality-score.png?b=Test)](https://scrutinizer-ci.com/g/stanislav-web/Phalcon/?branch=Test) [![Build Status](https://scrutinizer-ci.com/g/stanislav-web/Phalcon/badges/build.png?b=Test)](https://scrutinizer-ci.com/g/stanislav-web/Phalcon/build-status/Test)
 =======
 
 Рефакторинг корзины закончен.
