@@ -1,0 +1,31 @@
+{
+    "name": "stanislav-web/phalcon-searcher",
+    "description": "Z95 Shop based on Phalcon PHP framework",
+    "type": "project",
+    "status": "maintained",
+    "keywords" : [
+        "Z95",
+        "Z95 Shop",
+        "Z95 clothes shop"
+    ],
+    "support": {
+        "issues": "https://github.com/stanislav-web/Phalcon/issues"
+    },
+    "minimum-stability": "dev",
+    "homepage" : "https://github.com/stanislav-web/Phalcon",
+    "license" : "MIT",
+    "authors" : [{
+        "name": "Stanislav WEB",
+        "email": "stanisov@gmail.com",
+        "homepage": "http://reds.com",
+        "role": "Developer"
+    }],
+
+    "require" : {
+        "php" : ">=5.3"
+    },
+
+    "autoload": {
+        "classmap": ["app/"]
+    }
+}
