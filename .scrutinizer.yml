@@ -16,8 +16,9 @@ build:
             - php -m | grep -i Phalcon
 
 filter:
-    paths: [app/*]
-    excluded_paths: [build/*, phpunit/*, vendor/*, app/library/*]
+    excluded_paths: [build/*, phpunit/*, vendor/*, app/library/*, app/config/*, app/logs/*]
+    paths: [app/helpers/*, app/modules/*, app/models/*, app/tasks/*]
+
 tools:
     php_sim: true
     php_pdepend:

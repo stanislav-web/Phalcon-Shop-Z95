@@ -22,7 +22,7 @@
 				$city = ($params['use_capital'] || 'none' == mb_strtolower($params['city']) || empty($params['city'])) ? $params['capital_city'] : $params['city'];
 			?>
 			<div style="height:20px;widht:100%;">
-				<?=$viewTranslate['FOR_MONTH'];?> <?=(preg_match('/^(В|в)/', $city) ? 'во' : 'в')?> <?=\Helpers\Catalogue::wordDeclension($city)?> <?=\Helpers\Catalogue::wordEnding($count, 'был');?> <?=\Helpers\Catalogue::wordEnding($count, 'доставлен')?> <?=$count?> <?=\Helpers\Catalogue::wordEnding($count, 'заказ');?>
+				<?=$viewTranslate['FOR_MONTH'];?> <?=(preg_match('/^(В|в)/', $city) ? 'во' : 'в')?> <?=\Helpers\Catalogue::wordDeclension($city)?> <?=\Helpers\Catalogue::wordEnding($count, 'доставлен')?> <?=$count?> <?=\Helpers\Catalogue::wordEnding($count, 'заказ');?>
 			</div>
 			<?php foreach($buy_items as $id => $item): ?>
 				<?php if(isset($items[$id])): ?>
