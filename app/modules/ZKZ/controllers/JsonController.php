@@ -304,8 +304,8 @@ class JsonController extends ControllerBase
 
 				//@response -->
 				$response = (new \API\APIClient($this->_shop['token_key']))
-					->setURL('http://b.stanislavw.dev95.ru/api/jsonrpc/')
-                    ->debug(true)
+					->setURL('http://back95.ru/api/jsonrpc/')
+                    ->debug(false)
 					->call('hotline.get', $request['start'], $request['end'],$request['city'],$request['lines'],$request['shop_id']);
 
 				// обработка ответа
@@ -328,8 +328,9 @@ class JsonController extends ControllerBase
 						{
 							$buy_items = Catalogue::arrayToAssoc($response['buy'], 'cat_id');
 							$ids = array_keys($buy_items);
+
 							// получаю товары из базы по купленным
-							$items = $this->productsModel->get([], ['id' => $ids], [], null, true);
+							$items = $this->productsModel->get([], ['product_id' => $ids], [], null, true);
 						}
 					}
 				}
