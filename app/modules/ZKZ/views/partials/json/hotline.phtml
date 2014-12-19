@@ -27,17 +27,19 @@
 			<?php foreach($buy_items as $id => $item): ?>
 				<?php if(isset($items[$id])): ?>
 					<?php
-					$href = '/catalogue'.( isset($categories['array'][$items[$id]['cat_parent']]) ? $categories['array'][$items[$id]['cat_parent']]['url'] : '').'/';
 					$item['user_city'] = ('none' == mb_strtolower($item['user_city']) ? $params['capital_city'] : $item['user_city']);
 					?>
 					<div style="height:20px;widht:100%;">
 						<?=$viewTranslate['BUYED_NOW'];?>:
-						<a href="<?=$href.$items[$id]['articul'].'/'?>"><?=$items[$id]['cat_title'].' '.$items[$id]['brand']?></a>
+						<a href="<?='/catalogue/'.$items[$id]['articul']?>"><?=$items[$id]['name'].' '.$items[$id]['brand_name']?></a>
 						(<?=$items[$id]['articul']?>)
-						<?php if(isset($categories['array'][$items[$id]['cat_parent']])): ?>
-							(<a href="<?=$href?>"><?=lang($categories['array'][$items[$id]['cat_parent']]['title'])?></a>)
+
+						<?php if(isset($categories[$id])): ?>
+							(<a href="/catalogue/<?=$categories[$id]['parent_alias']?>/<?=$categories[$id]['category_alias']?>">
+                                <?=$categories[$id]['category_name']?>
+							</a>)
 						<?php endif;?>
-						<?=$viewTranslate['FOR'];?> <?=$item['price']?> <?=$shop['currency']?>
+						<?=$viewTranslate['FOR'];?> <?=number_format($item['price'], 0, '.', ' ')?> <?=$shop['currency_symbol']?>
 						<?=(strlen($item['user_city']) > 0 ? '(<span style="text-transform: capitalize;">'.trim(preg_replace('/^(г|Г|пгт|c|C)(\.|\s)/', '', $item['user_city'])).'</span>)' : '')?>
 					</div>
 				<? endif; ?>

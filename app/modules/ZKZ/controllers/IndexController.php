@@ -63,10 +63,8 @@
 
 			// Получение подкатегорий выбранного магазина с изображением самого рейтингового товара в каждой категории
 
-			$subCategories = $this->categoriesModel->getCategories($this->_shop['id'], 0, '>', 'ASC', true);
+			$subCategories = $this->categoriesModel->getCategories($this->_shop['id'], '', 'ASC', true);
 
-
-			//var_dump($subCategories); exit;
 			// вывожу по умолчанию страницу каталога c вложением subcategories
 			$this->view->setVars([
 				'banners'			=>	$this->banners,

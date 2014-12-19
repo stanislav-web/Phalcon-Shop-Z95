@@ -50,7 +50,7 @@
 								?>
 								<div class="catalogue-category" onclick="window.location.href= '<?=$this->url->get('catalogue/'.$subcategories[$sub_category_id]['parent_alias'].'/'.$subcategories[$sub_category_id]['alias']);?>'">
 									<div class="leader">
-										<img class="image" src="http://img<?php echo rand(0,9); ?>.z95.ru/f/p/c_0_100_300_400/sep-tilt_shift/600x600/catalogue/<?=$product_id;?>/<?=str_replace(['-s2','-s'], '', $images[$product_id][1]);?>">
+										<img class="image" src="http://img<?php echo rand(0,9); ?>.z95.ru/f/p/c_0_100_300_400/sep-tilt_shift/600x600/catalogue/<?=$product_id;?>/<?=str_replace(['-s2','-s'], '', $images[$product_id][0]);?>">
 									</div>
 									<div class="title">
 										<a href="<?=$this->url->get('catalogue/'.$subcategories[$sub_category_id]['parent_alias'].'/'.$subcategories[$sub_category_id]['alias']);?>"><?=$subcategories[$sub_category_id]['name'];?></a>

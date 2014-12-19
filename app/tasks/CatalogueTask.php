@@ -75,14 +75,16 @@ class CatalogueTask extends \Phalcon\CLI\Task
 				'last_update' 	=> 	(empty($system['value'])) ?
 										date("Y-m-d H:i:s", time()-$this->_config->delay) :
 										date("Y-m-d H:i:s", $system['value']-$this->_config->delay),
-				'products' 		=> 	1,
-				'prices' 		=> 	1,
-				'categories' 	=> 	1,
-				'brands' 		=> 	1,
-				'products_relationship'	=> 	1,
+                //'brands' 		=> 	1,
+                //'products' 	=> 	1,
+                //'products_relationship'	=> 	1,
+                //'prices' 	    => 	1,
+                'shops' 		=> 	1,
+                //'categories' 	=> 	1,
+                //'category_shop_relationship' 	=> 	1,
 				'decode'		=> 	$this->_config->decode,
 				'adapter'		=> 	$this->_config->adapter,
-				'limit'			=>	$this->_config->limit,
+				'limit'			=>	(isset($this->_config->limit)) ? $this->_config->limit : null,
 			]);
 
 			// fixed end queries time
@@ -136,7 +138,9 @@ class CatalogueTask extends \Phalcon\CLI\Task
 			if(isset($this->_config->adapter) && $this->_config->adapter == 'json_encode')
 				$this->_response	=	json_decode($this->_response['result'], true);
 			else
-				$this->_response	=	unserialize($this->_response['result']);
+            {
+               $this->_response	=	unserialize($this->_response['result']);
+            }
 
 			try
 			{
@@ -193,34 +197,38 @@ class CatalogueTask extends \Phalcon\CLI\Task
 	 */
 	public function update($table, $fields)
 	{
-		$success = 0; $inserted = 0;
+		$success = 0;
 		foreach($fields as $value)
 		{
 			$sql	=	"INSERT INTO ".$table." (".implode(', ',array_keys($value)).") VALUES (".implode(", ",
 
 						array_map(function($v) {
-							return $this->_db->escapeString($v);
+                                if($v != 'NULL')
+                                    $v = $this->_db->escapeString($v);
+							return $v;
 						},
 						array_values($value)
 					))
 				.") ON DUPLICATE KEY UPDATE ";
 			foreach($value as $k => $v)
-				$sql .="`$k` = ".$this->_db->escapeString($v).",";
+            {
+                if($v != 'NULL')
+                    $v  = $this->_db->escapeString($v);
+                $sql .="`$k` = ".$v.",";
+            }
 
-			$sql = rtrim($sql, ',');
+			$sql = trim(rtrim($sql, ','));
 
-			$status = $this->_db->execute(trim($sql));
+            //print "\r\n".$sql."\r\n"; exit;
+			$status = $this->_db->execute($sql);
 
 			if($status)
 				++$success;
 
-			if($this->_db->lastInsertId() > 0)
-				++$inserted;
-
-			unset($sql);
+            unset($sql);
 		}
 
-		echo Cli::colorize(Cli::bold("[SUCCESS] Completed ".$success." row(s) from ".sizeof($this->_response[$table])." row(s) in `".$table."`\n[SUCCESS] Inserts: ".$inserted." row(s)\n[SUCCESS] Updates: ".($success-$inserted)." row(s)"), 'SUCCESS');
+		echo Cli::colorize(Cli::bold("[SUCCESS] Completed ".$success." row(s) from ".sizeof($this->_response[$table])." row(s) in `".$table."`"), 'SUCCESS');
 		unset($table, $fields);
 	}
 
@@ -232,11 +240,9 @@ class CatalogueTask extends \Phalcon\CLI\Task
 	{
 		// update synx time
 		$this->_db->execute("UPDATE `system` SET `value` =	'".time()."' WHERE `key` = 'last_synx'");
-		$count = (is_array($this->_response)) ?
-			count($this->_response, COUNT_RECURSIVE) : 0;
 
 		// fixed end queries time
 		$time = explode(" ", microtime());
-		echo Cli::colorize(sprintf("\n[INFO] Array elements: ".$count."\n[INFO] Final size length: ".(memory_get_usage()/1024)." kb. \n[INFO] Time elapsed: %f sec.", (($time[1] + $time[0])-$this->_start)), 'WARNING');
+		echo Cli::colorize(sprintf("\n[INFO] Final size length: ".(memory_get_usage()/1024)." kb. \n[INFO] Time elapsed: %f sec.", (($time[1] + $time[0])-$this->_start)), 'WARNING');
 	}
 }

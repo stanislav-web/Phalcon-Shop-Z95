@@ -1,6 +1,7 @@
 <?php
 namespace Models;
-use Phalcon\Db\Column;
+use Phalcon\Mvc\Model;
+
 /**
  * Class Products Модель для `products`
  *
@@ -245,6 +246,10 @@ class Products extends \Phalcon\Mvc\Model
 				else $sql .= " && brand.id = ".(int)$this->_filters['brands'];
 			}
 
+            // Группировка
+            $sql = rtrim($sql,'&&');
+            $sql .= " GROUP BY ".$this->_filters['group'];
+
 			// Сортировка
 			if(!empty($this->_filters['sort']))
 			{
@@ -258,6 +263,7 @@ class Products extends \Phalcon\Mvc\Model
 				$sql .= " LIMIT ".(int)$this->_filters['offset'].",  ".(int)$this->_filters['limit'];
 			elseif(isset($this->_filters['limit']) > 0)
 				$sql .= " LIMIT ".(int)$this->_filters['limit'];
+
 
 			$result = $this->_db->query($sql)->fetchAll();
 
@@ -396,7 +402,6 @@ class Products extends \Phalcon\Mvc\Model
 				$sql .= " LIMIT ".(int)$this->_filters['offset'].",  ".(int)$this->_filters['limit'];
 			elseif(isset($this->_filters['limit']) > 0)
 				$sql .= " LIMIT ".(int)$this->_filters['limit'];
-
 			$result = $this->_db->query($sql)->fetchAll();
 
 			$sql = "SELECT FOUND_ROWS() as `count`";
@@ -836,7 +841,7 @@ class Products extends \Phalcon\Mvc\Model
 		if($cache && $this->_cache)
 		{
 			$_cache = $this->getDI()->get('backendCache');
-			$md5 = md5(self::BUY_WITH.'-'.implode('-', $ids));
+			$md5 = md5(Model::BUY_WITH.'-'.implode('-', $ids));
 			$result = $_cache->get($md5.'.cache');
 		}
 
@@ -849,16 +854,57 @@ class Products extends \Phalcon\Mvc\Model
 			if(sizeof($ids) > 1)
 			{
 				$sql .= "IN (".implode(',',$ids).")";
-				$result = $this->_db->query($sql)->fetchAll();
-			}
+                $result = $this->_db->query($sql)->fetchAll();
+            }
 			else
 			{
-				$sql .= " = ".array_values($ids)[0];
-				$result = $this->_db->query($sql)->fetch();
+                $sql .= " = ".array_values($ids)[0];
+                $result = $this->_db->query($sql)->fetch();
 			}
 			// Сохраняем запрос в кэше
 			if($cache && $this->_cache) $_cache->save($md5.'.cache', $result);
 			return $result;
 		}
 	}
+
+    /**
+     * Получить категорию товара
+     * @param  array $ids
+     * @return array
+     */
+    public function getProductCategory(array $ids, $cache = false)
+    {
+        $result = null;
+
+        if($cache && $this->_cache)
+        {
+            $_cache = $this->getDI()->get('backendCache');
+            $md5 = md5(self::REL.'-'.implode('-', $ids));
+            $result = $_cache->get($md5.'.cache');
+        }
+
+        if($result === null)
+        {
+            $sql = "SELECT rel.product_id, rel.category_id, cat.alias as category_alias, cat.name as category_name, catp.alias as parent_alias, catp.name as parent_name
+						FROM `".self::REL."` rel
+						INNER JOIN `".Categories::TABLE."` cat ON (cat.id = rel.category_id)
+						LEFT JOIN `".Categories::TABLE."` catp ON (catp.id = cat.parent_id)
+						WHERE rel.product_id ";
+
+            if(sizeof($ids) > 1)
+            {
+                $sql .= "IN (".implode(',',$ids).")";
+                $result = $this->_db->query($sql)->fetchAll();
+            }
+            else
+            {
+                $sql .= " = ".array_values($ids)[0];
+                $result = $this->_db->query($sql)->fetch();
+            }
+
+            // Сохраняем запрос в кэше
+            if($cache && $this->_cache) $_cache->save($md5.'.cache', $result);
+            return $result;
+        }
+    }
 }

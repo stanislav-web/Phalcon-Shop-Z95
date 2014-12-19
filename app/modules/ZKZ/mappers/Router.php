@@ -639,7 +639,6 @@
 				$this->_breadcrumbs->add($parent['name'], 'catalogue/' . $parent['alias'])
 					->add($category['name'], 'catalogue/' . $category['alias']);
 
-
 				$items = $this->_model->getProductsCategories([
 						'rel.category_id  	= ' => $category['id'],
 						'prod.sex = '          => ($this->_gender > 0) ? $this->_gender : false,

@@ -25,7 +25,7 @@
 	<?php if(isset($items) && !empty($items)): ?>
 		<?php
 		// проверка скидок магазина
-		if(isset($minicart['meta']['shop_discounts']) && $minicart['meta']['shop_discounts']['next'] > 0)
+		if(isset($minicart['meta']['shop_discounts']) && isset($minicart['meta']['shop_discounts']['next']) > 0)
 			$shopDiscounts	=	$minicart['meta']['shop_discounts'];
 		else
 			$shopDiscounts	=	\Helpers\Cart::getMaxDiscount($shop['discounts'], []);

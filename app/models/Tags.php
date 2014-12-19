@@ -123,8 +123,9 @@ class Tags extends \Phalcon\Mvc\Model
 
 						LEFT JOIN 	`".Products::REL."` rel_tags ON (tag.id = rel_tags.tag_id)
 						LEFT JOIN 	`".Products::REL."` rel_categories USING (product_id)
+						LEFT JOIN   `".Products::TABLE."` prod ON (rel_tags.`product_id` = prod.id)
 
-						WHERE rel_categories.category_id = ".$category_id." && tag.alias != '0'
+						WHERE rel_categories.category_id = ".$category_id." && tag.alias != '0' && prod.published = 1
 						GROUP BY tag.id
 					)
 					UNION ALL
@@ -133,35 +134,6 @@ class Tags extends \Phalcon\Mvc\Model
 						FROM `".self::TABLE."` tags
 						WHERE tags.parent_id = 0
 					) ORDER BY count_products DESC";
-			$result = $this->_db->query($sql)->fetchAll();
-
-			// Сохраняем запрос в кэше
-			if ($cache && $this->_cache) $_cache->save($md5.'.cache', $result);
-		}
-		return $result;
-	}
-
-	/**
-	 * Получение всех размеров товара по Id
-	 * @param $product_id
-	 */
-	public function getSizes($product_id, $cache = false)
-	{
-		$result = null;
-
-		if($cache && $this->_cache)
-		{
-			$_cache = $this->getDI()->get('backendCache');
-			$md5 = md5(self::TABLE.'-'.strtolower(__FUNCTION__).'-' .$product_id);
-			$result = $_cache->get($md5.'.cache');
-		}
-
-		if($result === null)
-		{
-			$sql = "SELECT tag.name
-					FROM ".Products::REL." rel
-					INNER JOIN 	".Tags::TABLE." tag ON (rel.tag_id = tag.id && tag.`parent_id` = 1000)
-					WHERE rel.`product_id` = ".$product_id;
 
 			$result = $this->_db->query($sql)->fetchAll();
 
@@ -170,5 +142,4 @@ class Tags extends \Phalcon\Mvc\Model
 		}
 		return $result;
 	}
-
 }

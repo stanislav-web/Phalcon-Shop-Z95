@@ -112,14 +112,19 @@
 
 			if($result === null)
 			{
-				$sql = "SELECT cat.id, cat.parent_id, sex, cat.name AS name, cat.alias AS alias, shop_rel.sort, COALESCE(COUNT(prod_rel.`product_id`) ,0) AS count_products
-						FROM `".self::REL."` shop_rel
-						INNER JOIN `".self::TABLE."` cat ON (
-							shop_rel.category_id = cat.id
-						)
-						LEFT JOIN `".Products::REL."` prod_rel  USING(category_id)
-						WHERE shop_rel.shop_id = ".(int)$shop_id."
-						GROUP BY shop_rel.category_id";
+
+                $sql = "
+                        SELECT STRAIGHT_JOIN cat.id, cat.name, cat.parent_id, cat.sex, cat.alias, shop.sort,
+	                      (
+		                    SELECT COALESCE(COUNT(`product_id`) , 0)
+		                      FROM products prod
+		                      INNER JOIN products_relationship pr ON (pr.product_id = prod.id)
+		                      WHERE cat.id = pr.category_id  && prod.published = 1
+	                      ) AS count_products
+
+	                    FROM categories cat
+	                    LEFT JOIN `category_shop_relationship` shop ON ( shop.category_id = cat.id)
+	                    WHERE shop.`shop_id` = ".(int)$shop_id;
 
 				$result = $this->_db->query($sql)->fetchAll();
 
@@ -140,13 +145,13 @@
 		 * @param $cache
 		 * @return array
 		 */
-		public function getCategories($shop_id, $parent_id , $conditional, $sort, $cache)
+		public function getCategories($shop_id, $conditional, $sort, $cache)
 		{
 			$result = null;
 			if($cache && $this->_cache)
 			{
 				$_cache = $this->getDI()->get('backendCache');
-				$md5 = md5(self::TABLE.$shop_id.$parent_id.$sort);
+				$md5 = md5(self::TABLE.$shop_id.$conditional.$sort);
 				$result = $_cache->get($md5.'.cache');
 			}
 
@@ -154,23 +159,25 @@
 			{
 				$sql =	"SELECT STRAIGHT_JOIN shop_rel.category_id AS id, cat.name AS name,
 						(
-							SELECT CONCAT('{\"', p.id, '\":', p.preview, '}') FROM ".Products::TABLE." p
-							INNER JOIN ".Common::TABLE_PRODUCTS_REL." pr ON (pr.product_id = p.id)
-							WHERE pr.category_id = shop_rel.`category_id` ORDER BY rating DESC LIMIT 1
+							SELECT CONCAT('{\"', p.id, '\":', p.preview, '}')
+									FROM products p
+		                            LEFT JOIN products_relationship pr ON (pr.product_id = p.id)
+		                            WHERE pr.category_id = cat.`id` && p.published = 1
+		                    ORDER BY p.rating DESC LIMIT 1
 						) AS img,
 						(
 							SELECT alias FROM ".Categories::TABLE." c
 							WHERE c.id = cat.parent_id
 						) AS parent_alias, cat.alias AS alias,
 
-						COUNT(prod_rel.product_id) AS count_prod
+						COUNT(prod_rel.product_id) AS count_products
 						FROM ".Common::TABLE_CAT_SHOP_REL." shop_rel
-						INNER JOIN ".self::TABLE." cat ON (shop_rel.category_id = cat.id)
-						INNER JOIN ".Common::TABLE_PRODUCTS_REL." prod_rel ON (prod_rel.category_id = cat.id)
-						INNER JOIN ".Products::TABLE." prod ON (prod.id = prod_rel.product_id)
+						LEFT JOIN ".self::TABLE." cat ON (shop_rel.category_id = cat.id)
+						LEFT JOIN ".Common::TABLE_PRODUCTS_REL." prod_rel ON (prod_rel.category_id = cat.id)
+						LEFT JOIN ".Products::TABLE." prod ON (prod.id = prod_rel.product_id)
 
-						WHERE shop_rel.shop_id = ".$shop_id." && shop_rel.category_parent_id ".$conditional." ".$parent_id."
-						GROUP BY id
+						WHERE shop_rel.shop_id = ".$shop_id." ".$conditional." && prod.published = 1
+						GROUP BY cat.id
 						ORDER BY shop_rel.category_parent_id, shop_rel.sort";
 
 				$result = $this->_db->query($sql)->fetchAll();

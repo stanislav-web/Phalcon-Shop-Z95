@@ -313,7 +313,7 @@ class JsonController extends ControllerBase
 				{
 					$response = $response['result'];
 					// Если город не определили или если заказов для города нет — выводим заказы для столицы (Астана, Киев, Москва....).
-					if(empty($request['city']) || $response['orders_count'] == 0)
+					if(empty($request['city']) || @$response['orders_count'] == 0)
 					{
 						$request['city']	=	$this->_shop['capital_city']; // а вот сдесь уже выбираю столицу, если по городу не нашли
 						$use_capital = true;
@@ -330,8 +330,18 @@ class JsonController extends ControllerBase
 							$ids = array_keys($buy_items);
 
 							// получаю товары из базы по купленным
-							$items = $this->productsModel->get([], ['product_id' => $ids], [], null, true);
-						}
+							$items = $this->productsModel->get(['prod.id as product_id', 'prod.name', 'prod.articul', 'prod.images', 'prod.filter_size', 'price.price', 'price.discount', 'brand.name as brand_name',
+                                'price.price', 'price.discount', 'price.percent'], ['product_id' => $ids], [], null, true);
+
+                            if(!empty($items)) $items = Catalogue::arrayToAssoc($items, 'product_id');
+
+
+                            // получаю информацию о категориях товаров с покупками
+                            $categories = $this->productsModel->getProductCategory(array_keys($items));
+
+                            if(!empty($categories))
+                                $categories = Catalogue::arrayToAssoc($this->productsModel->getProductCategory(array_keys($items)), 'product_id');
+                        }
 					}
 				}
 
@@ -342,7 +352,7 @@ class JsonController extends ControllerBase
 						'orders_count'	=>	(isset($response['orders_count'])) ? $response['orders_count'] : 0,
 						'items'			=>	(isset($items)) ? $items : [],
 						'buy_items'		=>	(isset($buy_items)) ? $buy_items : [],
-						'categories'	=>	$this->_shopCategories,
+						'categories'	=>	$categories,
 						'params' => [
 							'city'			=>	$request['city'],								// запрошеный город
 							'use_capital'	=>	(isset($use_capital)) ? $use_capital : false,	// столица ?

@@ -451,6 +451,7 @@ class CatalogueController extends ControllerBase
   	 */
 	public function subcategoriesAction()
 	{
+
 		// Формирую заголовок
 		if(!empty($this->currentCategory))
 		{
@@ -463,7 +464,9 @@ class CatalogueController extends ControllerBase
 			// получаю все дочерние категории раздела
 			// Получение подкатегорий выбранного магазина с изображением самого рейтингового товара в каждой категории
 
-			$subCategories = $this->categoriesModel->getCategories($this->_shop['id'], $this->currentCategory['id'], '=', 'ASC', true);
+			$subCategories = $this->categoriesModel->getCategories($this->_shop['id'],
+                '&& shop_rel.category_parent_id = '.$this->currentCategory['id'],
+            'ASC', true);
 
 			// вывожу по умолчанию страницу каталога c вложением subcategories
 			$this->view->setVars([

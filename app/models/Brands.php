@@ -122,7 +122,7 @@ class Brands extends \Phalcon\Mvc\Model
 					FROM `".self::TABLE."` brand
 					INNER JOIN `".Products::TABLE."` prod ON (brand.id = prod.brand_id)
 					INNER JOIN `".Products::REL."` rel ON (rel.product_id = prod.id)
-					WHERE rel.category_id = ".$category_id."
+					WHERE rel.category_id = ".$category_id." && prod.published = 1
 					GROUP BY brand.id
 					ORDER BY count_products DESC, brand.name";
 
@@ -157,7 +157,7 @@ class Brands extends \Phalcon\Mvc\Model
 					FROM brands b
 					INNER JOIN `".Products::TABLE."` product ON (product.brand_id = b.id)
 					INNER JOIN `".Prices::TABLE."` price ON (price.product_id = product.id)
-					WHERE price.id = ".(int)$price_id."
+					WHERE price.id = ".(int)$price_id." && product.published = 1
 					GROUP BY b.id ORDER BY name ASC";
 
 			$result = $this->_db->query($sql)->fetchAll();
