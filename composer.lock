@@ -1,0 +1,74 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
+    ],
+    "hash": "77ffc835cccbf2421a13651ef312dc89",
+    "packages": [
+        {
+            "name": "stanislav-web/phalcon-ulogin",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/stanislav-web/phalcon-ulogin.git",
+                "reference": "2b08da2071055d6dfc855d284e90b4791527bfb2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/stanislav-web/phalcon-ulogin/zipball/2b08da2071055d6dfc855d284e90b4791527bfb2",
+                "reference": "2b08da2071055d6dfc855d284e90b4791527bfb2",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "ULogin\\": "src/ULogin"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL3"
+            ],
+            "authors": [
+                {
+                    "name": "Stanislav WEB",
+                    "email": "stanisov@gmail.com",
+                    "homepage": "http://reds.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Phalcon ULogin. The authorization form uLogin through social networks",
+            "homepage": "https://github.com/stanislav-web/phalcon-ulogin",
+            "keywords": [
+                "authorization",
+                "phalcon",
+                "phalcon ulogin",
+                "phalcon ulogin widget",
+                "social",
+                "ulogin"
+            ],
+            "time": "2014-12-23 16:32:31"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "dev",
+    "stability-flags": {
+        "stanislav-web/phalcon-ulogin": 20
+    },
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": {
+        "php": ">=5.3"
+    },
+    "platform-dev": []
+}

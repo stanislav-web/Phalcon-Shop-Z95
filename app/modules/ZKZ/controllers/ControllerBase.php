@@ -25,7 +25,7 @@
 
 	class ControllerBase extends \Phalcon\Mvc\Controller
 	{
-	public
+	    public
 
 		/**
 		 * Определение моделей
@@ -39,6 +39,7 @@
 		$pricesModel        =   false,
 		$tagsModel			=	false,
 		$bannersModel		=	false;
+
 		protected
 
 			/**
@@ -83,7 +84,13 @@
 			 */
 			$_shopCategories = null,
 
-		/**
+            /**
+             * Количество товара в категориях
+             * @var null
+             */
+            $_countProducts     =   null,
+
+        /**
 		 * По умолчанию, хлебные крошки
 		 * @var null
 		 */
@@ -178,7 +185,8 @@
 			$this->_shop = $this->shopModel->get(['code'	=>	$this->router->getModuleName()],[], 1, true);
 
 		// Получение категорий и подкатегорий для текущего магазина
-		$this->_shopCategories = $this->categoriesModel->getShopCategories($this->_shop['id'], true);
+        $this->_shopCategories  =    $this->categoriesModel->getShopCategories($this->_shop['id'], true);
+        $this->_countProducts   =    $this->categoriesModel->getCategoriesCountProducts();
 
 		// Инициализация навигации
 

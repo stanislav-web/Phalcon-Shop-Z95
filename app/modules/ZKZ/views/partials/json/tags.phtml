@@ -84,7 +84,7 @@
 								<label>
 									<input type="checkbox" rel="<?=$val['id'];?>" href="?<?=urldecode(http_build_query($url)); ?>" class="link page isAjaxTag" value="<?=$val['id'];?>" <?=(!empty($query['tags']) && in_array($val['id'], $query['tags'])) ? 'checked': '';?>>
 									<a style="color: #777" rel="<?=$val['id'];?>" class="link page isAjaxTag" href="?<?=urldecode(http_build_query($url)); ?>"><?=$val['name'];?>
-										<!--(<?=$val['count_products'];?>)-->
+										(<?=$val['count_products'];?>)
 									</a>
 								</label>
 							</div>

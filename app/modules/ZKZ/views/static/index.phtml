@@ -26,7 +26,7 @@
 	<?php if(isset($banners['inner']) && !empty($banners['inner'])): ?>
 		<div class="inner_teaser">
 			<a href="<?=$this->url->get(['for' => 'sale']);?>" >
-				<?= $this->tag->image(array('f/t/'.$banners['inner'][0]['image'])); ?>
+				<?=$this->tag->image(array('f/t/'.$banners['inner'][0]['image'])); ?>
 			</a>
 		</div>
 	<?endif;?>

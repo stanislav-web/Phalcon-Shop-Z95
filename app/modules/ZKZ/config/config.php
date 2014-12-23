@@ -31,11 +31,12 @@
 			'memcache_port'				=>	11211,		// Порт для Memcache
 		],
 		// Коннект к базе
+
 		'database'  => [
 			'adapter'     => 'Mysql',
 			'host'        => 'localhost',
-			'username'    => 'root',
-			'password'    => 'd9eb77mms',
+			'username'    => 'stanislavw',
+			'password'    => 'fuUTPr5gNA',
 			'dbname'      => 'Shop',
 			'persistent'  => false
 		],

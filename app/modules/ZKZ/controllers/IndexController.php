@@ -1,8 +1,9 @@
 <?php
 	namespace Modules\ZKZ\Controllers;
 	use \Helpers\Catalogue;
+    use Phalcon\Exception;
 
-	/**
+    /**
 	 * Class IndexController Главная страница и статика
 	 *
 	 * Доступ к моделям
@@ -69,7 +70,8 @@
 			$this->view->setVars([
 				'banners'			=>	$this->banners,
 				'tree'				=>	Catalogue::categoriesToTree($this->_shopCategories, 0, true),
-				'subcategories'		=>	Catalogue::arrayToAssoc($subCategories, 'id'),
+                'subcategories'		=>	Catalogue::arrayToAssoc($subCategories, 'id'),
+                'count_products'	=>	Catalogue::arrayToAssoc($this->_countProducts, 'category_id'),
 				'title'				=>	$title,
 			]);
 

@@ -100,6 +100,24 @@ class JsonController extends ControllerBase
 				// Выдача сайд бара для виртуалок, выдаю категории с подсчетом количества по сумме в дочерних категориях
 
 				$sex = $this->session->get('sex'); // получаю пол
+
+                // объединяю категории с их количеством
+
+                $count_products =	Catalogue::arrayToAssoc($this->_countProducts, 'category_id');
+
+
+                $this->_shopCategories = call_user_func(function() use ($count_products) {
+
+                    $categories = Catalogue::arrayToAssoc($this->_shopCategories, 'id');
+
+                    foreach($categories as $cid => $values)
+                        if(isset($count_products[$cid]))
+                            $categories[$cid]['count_products']   =  $count_products[$cid]['count_products'];
+                    else
+                        $categories[$cid]['count_products'] =   0;
+                    return $categories;
+                });
+
 				if(null != $sex)
 				{
 					$genderCategories = Catalogue::categoriesToTree(
@@ -109,8 +127,8 @@ class JsonController extends ControllerBase
 
 					$tagsCloud['categories'] = $genderCategories;
 				}
-					else
-						$tagsCloud['categories'] = Catalogue::categoriesToTree(Catalogue::arrayToAssoc($this->_shopCategories, 'id'), 0, false, 'count_products');
+				else
+					$tagsCloud['categories'] = Catalogue::categoriesToTree(Catalogue::arrayToAssoc($this->_shopCategories, 'id'), 0, false, 'count_products');
 
 			}
 			// сортировка внутри сайд бара между секциями.. по количеству товаров внутри

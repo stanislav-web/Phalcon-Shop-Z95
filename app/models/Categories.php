@@ -92,6 +92,36 @@
 			return $result;
 		}
 
+        /**
+         * Подсчет количества товаров category_id => products_count
+         * @param bool $cache
+         * @return null
+         */
+        public function getCategoriesCountProducts($cache = false)
+        {
+            $result = null;
+            if($cache && $this->_cache)
+            {
+                $_cache = $this->getDI()->get('backendCache');
+                $md5 = md5(strtolower(__FUNCTION__));
+                $result = $_cache->get($md5.'.cache');
+            }
+
+            if($result === null) {
+
+                $sql = "SELECT rel.`category_id`, COUNT(prod.`id`) AS count_products
+				      FROM products prod
+				      INNER JOIN `products_relationship` rel ON (rel.`product_id` = prod.id)
+				      WHERE prod.published = 1 && rel.`tag_id` = 0
+				      GROUP BY rel.`category_id`";
+
+                $result = $this->_db->query($sql)->fetchAll();
+
+                // Сохраняем запрос в кэше
+                if($cache && $this->_cache) $_cache->save($md5.'.cache', $result);
+            }
+            return $result;
+        }
 
 		/**
 		 * Получение категорий с дочерними по конкретному магазину
@@ -112,19 +142,13 @@
 
 			if($result === null)
 			{
-
-                $sql = "
-                        SELECT STRAIGHT_JOIN cat.id, cat.name, cat.parent_id, cat.sex, cat.alias, shop.sort,
-	                      (
-		                    SELECT COALESCE(COUNT(`product_id`) , 0)
-		                      FROM products prod
-		                      INNER JOIN products_relationship pr ON (pr.product_id = prod.id)
-		                      WHERE cat.id = pr.category_id  && prod.published = 1
-	                      ) AS count_products
-
-	                    FROM categories cat
-	                    LEFT JOIN `category_shop_relationship` shop ON ( shop.category_id = cat.id)
-	                    WHERE shop.`shop_id` = ".(int)$shop_id;
+                $sql = "SELECT cat.id, cat.name, cat.parent_id, cat.sex,  cat.alias, shop.sort,
+		                  IF(parent.alias IS NULL, CONCAT('/', cat.alias), CONCAT('/', parent.alias, '/', cat.alias) ) AS url
+                          FROM categories cat
+                          LEFT JOIN `category_shop_relationship` shop ON (shop.category_id = cat.id)
+                          LEFT JOIN categories parent ON (parent.id = cat.parent_id)
+                          WHERE shop.shop_id = ".(int)$shop_id."
+                          GROUP BY cat.id";
 
 				$result = $this->_db->query($sql)->fetchAll();
 
@@ -157,7 +181,8 @@
 
 			if($result === null) // Выполняем запрос из MySQL
 			{
-				$sql =	"SELECT STRAIGHT_JOIN shop_rel.category_id AS id, cat.name AS name,
+
+				$sql =    "SELECT shop_rel.category_id AS id, cat.name AS name,
 						(
 							SELECT CONCAT('{\"', p.id, '\":', p.preview, '}')
 									FROM products p
@@ -165,19 +190,15 @@
 		                            WHERE pr.category_id = cat.`id` && p.published = 1
 		                    ORDER BY p.rating DESC LIMIT 1
 						) AS img,
-						(
-							SELECT alias FROM ".Categories::TABLE." c
-							WHERE c.id = cat.parent_id
-						) AS parent_alias, cat.alias AS alias,
 
 						COUNT(prod_rel.product_id) AS count_products
-						FROM ".Common::TABLE_CAT_SHOP_REL." shop_rel
+						FROM ".self::REL." shop_rel
 						LEFT JOIN ".self::TABLE." cat ON (shop_rel.category_id = cat.id)
-						LEFT JOIN ".Common::TABLE_PRODUCTS_REL." prod_rel ON (prod_rel.category_id = cat.id)
+						LEFT JOIN ".Products::REL." prod_rel ON (prod_rel.category_id = cat.id)
 						LEFT JOIN ".Products::TABLE." prod ON (prod.id = prod_rel.product_id)
 
-						WHERE shop_rel.shop_id = ".$shop_id." ".$conditional." && prod.published = 1
-						GROUP BY cat.id
+						WHERE shop_rel.shop_id = ".$shop_id." ".$conditional." && prod.published = 1  && prod_rel.tag_id = 0
+						GROUP BY prod_rel.category_id
 						ORDER BY shop_rel.category_parent_id, shop_rel.sort";
 
 				$result = $this->_db->query($sql)->fetchAll();

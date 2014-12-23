@@ -14,8 +14,8 @@ $config = new Phalcon\Config([
 	'database'  => [
 		'adapter'     => 'Mysql',
 		'host'        => 'localhost',
-		'username'    => 'root',
-		'password'    => 'd9eb77mms',
+		'username'    => 'stanislavw',
+		'password'    => 'fuUTPr5gNA',
 		'dbname'      => 'Shop',
 		'persistent'  => false
 	]

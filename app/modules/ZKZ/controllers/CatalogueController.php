@@ -474,7 +474,8 @@ class CatalogueController extends ControllerBase
 				'banners'			=>	$this->banners,
 				'tree'				=>	Catalogue::categoriesToTree($this->_shopCategories, 0, true),
 				'subcategories'		=>	Catalogue::arrayToAssoc($subCategories, 'id'),
-				'title'				=>	$title,
+                'count_products'	=>	Catalogue::arrayToAssoc($this->_countProducts, 'category_id'),
+                'title'				=>	$title,
 			]);
 		}
 

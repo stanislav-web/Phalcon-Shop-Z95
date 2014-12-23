@@ -87,14 +87,14 @@
 								'url'        => '/catalogue/woman/swimwear',
 								'controller' => 'catalogue',
 								'action'     => 'index',
-							],
-							[
+                                'close'      => '</div>'
+                            ],
+							/**[
 								'name'       => 'Шарфы, платки, перчатки',
 								'url'        => '/catalogue/woman/scarves-hats-gloves',
 								'controller' => 'catalogue',
 								'action'     => 'index',
-								'close'      => '</div>'
-							],
+							],**/
 							[
 								'open'       => '<div class="block left">',
 								'name'       => 'Аксессуары',
@@ -604,12 +604,14 @@
 								'controller' => 'catalogue',
 								'action'     => 'index',
 							],
+                            /**
 							[
 								'name'       => 'Шарфы, платки, перчатки',
 								'url'        => '/catalogue/woman/scarves-hats-gloves',
 								'controller' => 'catalogue',
 								'action'     => 'index',
 							],
+                             * */
 						]
 					],
 					[
