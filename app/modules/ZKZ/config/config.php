@@ -8,7 +8,6 @@
 
 		'mailer' => [
 			'driver' 	 => 'mail',
-			//'sendmail' 	 => '/usr/sbin/sendmail -t -i -f stanislavw@gmail.com',
 			'from'		 => [
 				'email' => 'shopFrom@z95.com',
 				'name'	=> 'ZKZ Shop'
@@ -36,8 +35,8 @@
 			'adapter'     => 'Mysql',
 			'host'        => 'localhost',
 			'username'    => 'stanislavw',
-			'password'    => 'fuUTPr5gNA',
-			'dbname'      => 'Shop',
+			'password'    => '',
+			'dbname'      => '',
 			'persistent'  => false
 		],
 		// Настройка директорий
