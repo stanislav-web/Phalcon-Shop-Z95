@@ -2,7 +2,7 @@
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/stanislav-web/Phalcon/badges/quality-score.png?b=Test)](https://scrutinizer-ci.com/g/stanislav-web/Phalcon/?branch=Test) [![Build Status](https://scrutinizer-ci.com/g/stanislav-web/Phalcon/badges/build.png?b=Test)](https://scrutinizer-ci.com/g/stanislav-web/Phalcon/build-status/Test)
 =======
 
-[ Переведен в приватную рeпу на поддержку ]
+[ Переведен в приватную рeпу на поддержку в ноябре 2014. Поэтому код сильно устарел и используется как прототип]
 
 ##### Реализация highload брендовой сети магазинов Z95.
 ##### Реализован и запущен в продакшн [http://z95.kz](http://z95.kz) Казахстан
