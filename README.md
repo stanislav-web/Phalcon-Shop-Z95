@@ -1,5 +1,5 @@
-####Phalcon Z95.ru (Z95.com.ua, Z95.kz) Shop
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/stanislav-web/Phalcon/badges/quality-score.png?b=Test)](https://scrutinizer-ci.com/g/stanislav-web/Phalcon/?branch=Test) [![Build Status](https://scrutinizer-ci.com/g/stanislav-web/Phalcon/badges/build.png?b=Test)](https://scrutinizer-ci.com/g/stanislav-web/Phalcon/build-status/Test)
+####Phalcon Z95.ru (Z95.ua, Z95.kz) Shop
+[![Build Status](https://scrutinizer-ci.com/g/stanislav-web/Phalcon/badges/build.png?b=Test)](https://scrutinizer-ci.com/g/stanislav-web/Phalcon/build-status/Test)
 =======
 
 [ Переведен в приватную рeпу на поддержку в ноябре 2014. Поэтому код сильно устарел и используется как прототип]
